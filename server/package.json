@@ -1,0 +1,26 @@
+{
+  "name": "pencil-tutor-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pencil Tutor server: /api/watch, /api/ask, /api/health (Vercel Functions, no framework)",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "sync-problems": "cp ../shared/problems.json data/problems.json"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^4.0.118",
+    "@ai-sdk/openai": "^4.0.115",
+    "ai": "^7.0.170",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
