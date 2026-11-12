@@ -1,0 +1,94 @@
+name: PencilTutor
+
+options:
+  bundleIdPrefix: com.edwardtran
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+# Base.xcconfig pulls in Secrets.example.xcconfig, then the git-ignored Secrets.xcconfig if present.
+configFiles:
+  Debug: Config/Base.xcconfig
+  Release: Config/Base.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "2"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  PencilTutor:
+    type: application
+    platform: iOS
+    sources:
+      - path: PencilTutor
+        excludes:
+          - Info.plist
+    info:
+      path: PencilTutor/Info.plist
+      properties:
+        CFBundleDisplayName: Pencil Tutor
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSMicrophoneUsageDescription: Pencil Tutor listens while you hold the Ask button so it can answer your question about the problem.
+        SERVER_URL: $(SERVER_URL)
+        APP_ACCESS_TOKEN: $(APP_ACCESS_TOKEN)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor
+        PRODUCT_NAME: PencilTutor
+    postBuildScripts:
+      - name: Bundle problem prompts
+        script: /usr/bin/python3 "$SRCROOT/Scripts/bundle_problems.py"
+        basedOnDependencyAnalysis: false
+
+  PencilTutorTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PencilTutorTests
+    dependencies:
+      - target: PencilTutor
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor.tests
+
+  PencilTutorUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PencilTutorUITests
+    dependencies:
+      - target: PencilTutor
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor.uitests
+
+schemes:
+  PencilTutor:
+    build:
+      targets:
+        PencilTutor: all
+        PencilTutorTests: [test]
+        PencilTutorUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - PencilTutorTests
+        - PencilTutorUITests
+    archive:
+      config: Release

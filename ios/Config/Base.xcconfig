@@ -1,0 +1,3 @@
+// Defaults first (placeholders), then the real secrets override them when the file exists.
+#include "Secrets.example.xcconfig"
+#include? "Secrets.xcconfig"

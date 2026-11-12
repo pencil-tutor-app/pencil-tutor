@@ -1,0 +1,148 @@
+name: ios
+
+# Builds the iPad app for iPadOS 26, runs the unit tests and the UI tests on an iPad simulator, and saves the
+# UI test screenshots as PNG files in the "ios-screenshots" artifact. Nothing here runs on a laptop.
+#
+# Runner: macos-26 has Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
+# Source: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+# Xcode 27 is only a public preview on the runner image, so 26.6 is pinned.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "shared/problems.json"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios/**"
+      - "shared/problems.json"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      PROJECT: ios/PencilTutor.xcodeproj
+      SCHEME: PencilTutor
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          echo "iphonesimulator SDK: $(xcrun --sdk iphonesimulator --show-sdk-version)"
+          xcrun simctl list runtimes
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate the Xcode project
+        working-directory: ios
+        run: |
+          xcodegen --version
+          xcodegen generate
+
+      - name: Pick and boot an iPad simulator
+        run: |
+          UDID=$(python3 ios/Scripts/ci_pick_simulator.py)
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+
+      - name: Build app and tests
+        run: |
+          mkdir -p ios/artifacts/logs ios/results
+          if ! xcodebuild build-for-testing \
+              -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+              -destination "id=$UDID" -derivedDataPath ios/build \
+              CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/build.log 2>&1; then
+            echo "BUILD FAILED. Errors:"
+            grep -E "error:|warning: unable|\*\* BUILD" ios/artifacts/logs/build.log | head -n 60 || true
+            echo "--- last 80 lines ---"
+            tail -n 80 ios/artifacts/logs/build.log
+            exit 1
+          fi
+          echo "build ok"
+          grep -E "bundle_problems:" ios/artifacts/logs/build.log || echo "note: bundle_problems output not found in log"
+
+      - name: Unit tests
+        run: |
+          if ! xcodebuild test-without-building \
+              -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+              -destination "id=$UDID" -derivedDataPath ios/build \
+              -only-testing:PencilTutorTests \
+              -resultBundlePath ios/results/unit.xcresult \
+              CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/unit-tests.log 2>&1; then
+            echo "UNIT TESTS FAILED. Failures:"
+            grep -E "error:|failed|Test Case .* failed" ios/artifacts/logs/unit-tests.log | head -n 60 || true
+            echo "--- last 60 lines ---"
+            tail -n 60 ios/artifacts/logs/unit-tests.log
+            exit 1
+          fi
+          grep -E "Executed [0-9]+ tests" ios/artifacts/logs/unit-tests.log | tail -n 1
+
+      - name: UI tests (scripted tutor, screenshots)
+        run: |
+          if ! xcodebuild test-without-building \
+              -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+              -destination "id=$UDID" -derivedDataPath ios/build \
+              -only-testing:PencilTutorUITests \
+              -resultBundlePath ios/results/ui.xcresult \
+              CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/ui-tests.log 2>&1; then
+            echo "UI TESTS FAILED. Failures:"
+            grep -E "error:|failed|Test Case .* failed" ios/artifacts/logs/ui-tests.log | head -n 60 || true
+            echo "--- last 60 lines ---"
+            tail -n 60 ios/artifacts/logs/ui-tests.log
+            exit 1
+          fi
+          grep -E "Executed [0-9]+ tests" ios/artifacts/logs/ui-tests.log | tail -n 1
+
+      - name: Export screenshots as PNG files
+        if: always()
+        run: |
+          if [ -d ios/results/ui.xcresult ]; then
+            python3 ios/Scripts/ci_export_screenshots.py ios/results/ui.xcresult ios/artifacts/screenshots
+            ls -l ios/artifacts/screenshots
+          else
+            echo "no ui.xcresult to export (the UI test step did not produce one)"
+          fi
+
+      - name: Copy the app's on-device session log from the simulator
+        if: always()
+        run: |
+          mkdir -p ios/artifacts/session-logs
+          APP_DATA=$(xcrun simctl get_app_container "$UDID" com.edwardtran.penciltutor data 2>/dev/null || true)
+          if [ -n "$APP_DATA" ] && ls "$APP_DATA"/Documents/session-*.jsonl >/dev/null 2>&1; then
+            cp "$APP_DATA"/Documents/session-*.jsonl ios/artifacts/session-logs/
+            ls -l ios/artifacts/session-logs
+          else
+            echo "no session log found in the simulator container ($APP_DATA)"
+          fi
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-screenshots
+          path: ios/artifacts/screenshots
+          if-no-files-found: warn
+
+      - name: Upload result bundles and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-results-and-logs
+          path: |
+            ios/results
+            ios/artifacts/logs
+            ios/artifacts/session-logs
+          if-no-files-found: warn
