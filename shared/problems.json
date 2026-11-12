@@ -1,0 +1,210 @@
+[
+  {
+    "id": "u3-01",
+    "source": "unit 3 extra practice, warm-up 1",
+    "prompt_latex": "7x - 4 = 3x + 16",
+    "prompt_plain": "7x − 4 = 3x + 16",
+    "prompt_parts": [{ "text": "7x − 4 = 3x + 16" }],
+    "worked_solution": [
+      "7x − 4 − 3x = 3x + 16 − 3x, so 4x − 4 = 16",
+      "4x = 16 + 4 = 20",
+      "x = 20 / 4 = 5",
+      "Check: 7(5) − 4 = 31 and 3(5) + 16 = 31"
+    ],
+    "final_answer": "x = 5"
+  },
+  {
+    "id": "u3-04",
+    "source": "unit 3 extra practice, warm-up 4",
+    "prompt_latex": "-4(2p + 5) = 12",
+    "prompt_plain": "−4(2p + 5) = 12",
+    "prompt_parts": [{ "text": "−4(2p + 5) = 12" }],
+    "worked_solution": [
+      "−8p − 20 = 12",
+      "−8p = 12 + 20 = 32",
+      "p = 32 / (−8) = −4",
+      "Check: −4(2(−4) + 5) = −4(−3) = 12"
+    ],
+    "final_answer": "p = −4"
+  },
+  {
+    "id": "u3-05",
+    "source": "unit 3 extra practice, warm-up 5",
+    "prompt_latex": "-(y - 6) = 10",
+    "prompt_plain": "−(y − 6) = 10",
+    "prompt_parts": [{ "text": "−(y − 6) = 10" }],
+    "worked_solution": [
+      "The minus in front means −1, so it multiplies both terms: −y + 6 = 10",
+      "−y = 4",
+      "y = −4",
+      "Check: −(−4 − 6) = −(−10) = 10"
+    ],
+    "final_answer": "y = −4"
+  },
+  {
+    "id": "u3-06",
+    "source": "unit 3 extra practice, warm-up 6",
+    "prompt_latex": "\\dfrac{a}{3} + \\dfrac{a}{4} = 14",
+    "prompt_plain": "a/3 + a/4 = 14",
+    "prompt_parts": [
+      { "frac": { "num": "a", "den": "3" } },
+      { "text": " + " },
+      { "frac": { "num": "a", "den": "4" } },
+      { "text": " = 14" }
+    ],
+    "worked_solution": [
+      "The LCM of 3 and 4 is 12. Multiply every term by 12.",
+      "12 · a/3 + 12 · a/4 = 12 · 14",
+      "4a + 3a = 168",
+      "7a = 168",
+      "a = 24",
+      "Check: 24/3 + 24/4 = 8 + 6 = 14"
+    ],
+    "final_answer": "a = 24"
+  },
+  {
+    "id": "u3-07",
+    "source": "unit 3 extra practice, warm-up 7",
+    "prompt_latex": "\\dfrac{2k}{5} - 3 = 1",
+    "prompt_plain": "2k/5 − 3 = 1",
+    "prompt_parts": [
+      { "frac": { "num": "2k", "den": "5" } },
+      { "text": " − 3 = 1" }
+    ],
+    "worked_solution": [
+      "Multiply every term by 5, including the −3 and the 1.",
+      "2k − 15 = 5",
+      "2k = 20",
+      "k = 10",
+      "Check: 2(10)/5 − 3 = 4 − 3 = 1"
+    ],
+    "final_answer": "k = 10"
+  },
+  {
+    "id": "u3-10",
+    "source": "unit 3 extra practice, warm-up 10",
+    "prompt_latex": "8 - 3(x + 2) = 5",
+    "prompt_plain": "8 − 3(x + 2) = 5",
+    "prompt_parts": [{ "text": "8 − 3(x + 2) = 5" }],
+    "worked_solution": [
+      "Expand first: the −3 multiplies both terms in the bracket.",
+      "8 − 3x − 6 = 5",
+      "2 − 3x = 5",
+      "−3x = 3",
+      "x = −1",
+      "Check: 8 − 3(−1 + 2) = 8 − 3(1) = 5"
+    ],
+    "final_answer": "x = −1"
+  },
+  {
+    "id": "u3-11",
+    "source": "unit 3 extra practice, core 11",
+    "prompt_latex": "6(x - 2) - 4(x + 1) = 10",
+    "prompt_plain": "6(x − 2) − 4(x + 1) = 10",
+    "prompt_parts": [{ "text": "6(x − 2) − 4(x + 1) = 10" }],
+    "worked_solution": [
+      "Expand both brackets. The second is −4, so it makes both inside terms negative.",
+      "6x − 12 − 4x − 4 = 10",
+      "2x − 16 = 10",
+      "2x = 26",
+      "x = 13",
+      "Check: 6(11) − 4(14) = 66 − 56 = 10"
+    ],
+    "final_answer": "x = 13"
+  },
+  {
+    "id": "u3-12",
+    "source": "unit 3 extra practice, core 12",
+    "prompt_latex": "3(2r + 5) = -(r - 6) + 23",
+    "prompt_plain": "3(2r + 5) = −(r − 6) + 23",
+    "prompt_parts": [{ "text": "3(2r + 5) = −(r − 6) + 23" }],
+    "worked_solution": [
+      "6r + 15 = −r + 6 + 23",
+      "6r + 15 = −r + 29",
+      "6r + r = 29 − 15",
+      "7r = 14",
+      "r = 2",
+      "Check: left side 3(4 + 5) = 27; right side −(2 − 6) + 23 = 4 + 23 = 27"
+    ],
+    "final_answer": "r = 2"
+  },
+  {
+    "id": "u3-13",
+    "source": "unit 3 extra practice, core 13",
+    "prompt_latex": "\\dfrac{x + 4}{3} = \\dfrac{x - 2}{2}",
+    "prompt_plain": "(x + 4)/3 = (x − 2)/2",
+    "prompt_parts": [
+      { "frac": { "num": "x + 4", "den": "3" } },
+      { "text": " = " },
+      { "frac": { "num": "x − 2", "den": "2" } }
+    ],
+    "worked_solution": [
+      "The LCM of 3 and 2 is 6. Each numerator has two terms, so it stays inside a bracket.",
+      "6 · (x + 4)/3 = 6 · (x − 2)/2, so 2(x + 4) = 3(x − 2)",
+      "2x + 8 = 3x − 6",
+      "8 + 6 = 3x − 2x",
+      "14 = x",
+      "Check: (14 + 4)/3 = 6 and (14 − 2)/2 = 6"
+    ],
+    "final_answer": "x = 14"
+  },
+  {
+    "id": "u3-15",
+    "source": "unit 3 extra practice, core 15",
+    "prompt_latex": "\\dfrac{2}{3}(x - 1) = \\dfrac{1}{2}(x + 3)",
+    "prompt_plain": "(2/3)(x − 1) = (1/2)(x + 3)",
+    "prompt_parts": [
+      { "frac": { "num": "2", "den": "3" } },
+      { "text": "(x − 1) = " },
+      { "frac": { "num": "1", "den": "2" } },
+      { "text": "(x + 3)" }
+    ],
+    "worked_solution": [
+      "Multiply both sides by 6.",
+      "4(x − 1) = 3(x + 3)",
+      "4x − 4 = 3x + 9",
+      "4x − 3x = 9 + 4",
+      "x = 13",
+      "Check: (2/3)(12) = 8 and (1/2)(16) = 8"
+    ],
+    "final_answer": "x = 13"
+  },
+  {
+    "id": "u3-19",
+    "source": "unit 3 extra practice, core 19",
+    "prompt_latex": "\\dfrac{5}{6}v + 2 = \\dfrac{1}{3}v + 7",
+    "prompt_plain": "(5/6)v + 2 = (1/3)v + 7",
+    "prompt_parts": [
+      { "frac": { "num": "5", "den": "6" } },
+      { "text": "v + 2 = " },
+      { "frac": { "num": "1", "den": "3" } },
+      { "text": "v + 7" }
+    ],
+    "worked_solution": [
+      "The LCM of 6 and 3 is 6. Multiply every term, including the 2 and the 7.",
+      "5v + 12 = 2v + 42",
+      "5v − 2v = 42 − 12",
+      "3v = 30",
+      "v = 10",
+      "Check: (5/6)(10) + 2 = 31/3 and (1/3)(10) + 7 = 31/3"
+    ],
+    "final_answer": "v = 10"
+  },
+  {
+    "id": "u3-20",
+    "source": "unit 3 extra practice, core 20",
+    "prompt_latex": "-2(3 - 4x) + 5 = 3(x + 4) + 2",
+    "prompt_plain": "−2(3 − 4x) + 5 = 3(x + 4) + 2",
+    "prompt_parts": [{ "text": "−2(3 − 4x) + 5 = 3(x + 4) + 2" }],
+    "worked_solution": [
+      "Left side: −2 × 3 = −6 and −2 × (−4x) = +8x.",
+      "−6 + 8x + 5 = 3x + 12 + 2",
+      "8x − 1 = 3x + 14",
+      "8x − 3x = 14 + 1",
+      "5x = 15",
+      "x = 3",
+      "Check: left side −2(3 − 12) + 5 = 23; right side 3(7) + 2 = 23"
+    ],
+    "final_answer": "x = 3"
+  }
+]
