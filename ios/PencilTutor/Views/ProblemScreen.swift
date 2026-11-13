@@ -14,7 +14,8 @@ struct ProblemScreen: View {
             // Buttons sit above the page: the floating Pencil tool picker covers the bottom of the screen.
             controlBar
             Divider()
-            ZStack(alignment: .bottom) {
+            // Messages sit at the top of the page: the floating Pencil tool picker covers the bottom.
+            ZStack(alignment: .top) {
                 InkCanvas(session: session)
                 MarksOverlay(marks: session.marks)
                 if let message = session.statusMessage {
@@ -24,7 +25,7 @@ struct ProblemScreen: View {
                         .frame(maxWidth: 560, alignment: .leading)
                         .background(RoundedRectangle(cornerRadius: 14).fill(Color(white: 0.12, opacity: 0.92)))
                         .foregroundStyle(Color.white)
-                        .padding(.bottom, 16)
+                        .padding(.top, 12)
                         .onTapGesture { session.dismissStatus() }
                         .accessibilityIdentifier("statusBanner")
                 }

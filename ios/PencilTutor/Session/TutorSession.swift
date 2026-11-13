@@ -275,7 +275,12 @@ final class TutorSession: ObservableObject {
             env.log.record("decision", fields)
             lastDecisionLabel = "wait"
             appendHistory(action: "wait", line: nil, hint: nil)
-            if trigger == .manual { setStatus("I don't see a problem so far. Keep going.") }
+            if trigger == .manual {
+                // The student asked, so answer out loud as well: silence after a button press reads as broken.
+                let verdict = "Looks good so far. Keep going."
+                setStatus(verdict)
+                env.speech.speak(verdict, purpose: "check_ok")
+            }
         default:
             fields["problem"] = "unknown action"
             env.log.record("error", ["where": "watch", "detail": "bad_response: unknown action '\(response.action)'"])
