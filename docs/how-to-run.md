@@ -42,7 +42,7 @@ everything works as before: `POST /api/ask`, then `POST /api/speak` (`gpt-4o-min
 `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`), then the best installed device voice. **`gpt-4o-mini-tts` shuts down on 2027-01-06**
 (https://developers.openai.com/api/docs/deprecations); after that `/api/speak` fails and the app uses the device voice
 (for a nicer one, download an Enhanced or Premium English voice: Settings, Accessibility, Spoken Content, Voices). There is
-no replacement `audio/speech` model, so there is nothing to migrate that path to.
+named replacement, `gpt-realtime-2.1-mini`, is a Realtime model (OpenAI's text-to-speech guide says to migrate to it "using the Realtime API"; a third-party article says it does not support `v1/audio/speech`; neither was checked against the model page), so `/api/speak` is not migrated.
 
 **Session log events** (export from the share button; Debug builds also log the words as `student_said`, `tutor_said`,
 `live_commentary_sent` text and `page_report`; Release builds log ids, sizes, counts and reason labels only):

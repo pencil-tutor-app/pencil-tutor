@@ -74,9 +74,9 @@ usage seconds are logged so the first real lessons can say.
 
 Responses delegation, sideband WebSocket (a Vercel function cannot hold one), custom voices, session storage and forking,
 automatic reconnect, a page summary or per-ink-change description, a guarantee that a hint never lands mid-sentence
-(Live has no completed-turn event, and Live handles being interrupted itself), a new TTS path (`gpt-realtime-2.1-mini` is
-not an `audio/speech` model; the old `/api/speak` ages out on its shutdown date and the device voice remains its
-fallback).
+(Live has no completed-turn event, and Live handles being interrupted itself), a new TTS path (OpenAI's named replacement
+`gpt-realtime-2.1-mini` is a Realtime model; whether it works on `v1/audio/speech` was not checked on its model page; the
+old `/api/speak` ages out on its shutdown date and the device voice remains its fallback).
 
 ## Verification
 
