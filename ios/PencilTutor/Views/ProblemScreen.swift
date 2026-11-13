@@ -33,7 +33,73 @@ struct ProblemScreen: View {
         }
         .navigationTitle("Problem")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { session.begin() }
         .onDisappear { session.stop() }
+    }
+
+    /// The tutor's voice control. Live voice: a mute toggle. Fallback or a build without live voice: hold to ask, as before.
+    @ViewBuilder
+    private var voiceControl: some View {
+        switch session.voice {
+        case .live(let micOn):
+            Button {
+                session.micTapped()
+            } label: {
+                Label(micOn ? "Mic on" : "Muted", systemImage: micOn ? "mic.fill" : "mic.slash.fill")
+                    .font(.body.weight(.semibold))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Capsule().fill(micOn ? Color.green : Color.gray))
+                    .foregroundStyle(Color.white)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("micToggleButton")
+        case .connecting:
+            Label("Connecting voice...", systemImage: "waveform")
+                .font(.body.weight(.semibold))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(Color.gray.opacity(0.25)))
+                .accessibilityIdentifier("voiceConnecting")
+        case .idleClosed:
+            Button {
+                session.micTapped()
+            } label: {
+                Label("Tap to talk", systemImage: "mic.fill")
+                    .font(.body.weight(.semibold))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Capsule().fill(Color.blue))
+                    .foregroundStyle(Color.white)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("micReopenButton")
+        case .fallback:
+            holdToAsk
+            Button {
+                session.micTapped()
+            } label: {
+                Label("Reconnect voice", systemImage: "arrow.clockwise")
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("reconnectVoiceButton")
+        case .notStarted:
+            holdToAsk
+        }
+    }
+
+    private var holdToAsk: some View {
+        Label(session.isRecording ? "Listening..." : "Hold to ask", systemImage: session.isRecording ? "waveform" : "mic.fill")
+            .font(.body.weight(.semibold))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(session.isRecording ? Color.red : Color.blue))
+            .foregroundStyle(Color.white)
+            .onLongPressGesture(minimumDuration: 0, maximumDistance: 80, perform: {}, onPressingChanged: { pressing in
+                session.holdToTalkChanged(pressed: pressing)
+            })
+            .accessibilityAddTraits(.isButton)
+            .accessibilityIdentifier("holdToTalkButton")
     }
 
     private var controlBar: some View {
@@ -47,17 +113,7 @@ struct ProblemScreen: View {
             .disabled(session.isBusy)
             .accessibilityIdentifier("checkMyWorkButton")
 
-            Label(session.isRecording ? "Listening..." : "Hold to ask", systemImage: session.isRecording ? "waveform" : "mic.fill")
-                .font(.body.weight(.semibold))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Capsule().fill(session.isRecording ? Color.red : Color.blue))
-                .foregroundStyle(Color.white)
-                .onLongPressGesture(minimumDuration: 0, maximumDistance: 80, perform: {}, onPressingChanged: { pressing in
-                    session.holdToTalkChanged(pressed: pressing)
-                })
-                .accessibilityAddTraits(.isButton)
-                .accessibilityIdentifier("holdToTalkButton")
+            voiceControl
 
             Button {
                 session.clearMarks()

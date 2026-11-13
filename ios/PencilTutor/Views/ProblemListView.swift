@@ -5,9 +5,11 @@ struct ProblemListView: View {
     @State private var showSettings = false
     @State private var exportItem: ExportItem?
     @State private var exportMessage: String?
+    @State private var path: [Problem] = []
+    @State private var openedFromLaunchArgument = false
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List {
                 if let notice = env.notice {
                     Text(notice)
@@ -32,6 +34,7 @@ struct ProblemListView: View {
             .navigationDestination(for: Problem.self) { problem in
                 ProblemScreen(problem: problem, env: env)
             }
+            .onAppear(perform: openProblemFromLaunchArgument)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button {
@@ -59,6 +62,18 @@ struct ProblemListView: View {
             } message: {
                 Text(exportMessage ?? "")
             }
+        }
+    }
+
+    /// `--open-problem <id>` (device smoke test): open that problem once, as if it had been tapped.
+    private func openProblemFromLaunchArgument() {
+        guard !openedFromLaunchArgument, let id = LaunchOptions.openProblemID else { return }
+        openedFromLaunchArgument = true
+        if let problem = env.problems.first(where: { $0.id == id }) {
+            env.log.record("launch_open_problem", ["problem_id": id])
+            path = [problem]
+        } else {
+            env.log.record("error", ["where": "launch_open_problem", "detail": "no problem with id \(id)"])
         }
     }
 

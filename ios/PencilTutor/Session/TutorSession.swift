@@ -24,6 +24,10 @@ struct Mark: Identifiable, Equatable {
 }
 
 /// One problem attempt: watches the ink, decides when to look, asks the tutor, and shows what comes back.
+///
+/// Voice: while a problem is open the tutor talks through a GPT-Live session (`LiveVoice`). If that cannot connect or
+/// drops, the session falls back to the earlier path (hold to ask, `/api/ask`, `/api/speak`, device voice) and says why in
+/// the log. `voice` says which of those the screen is in.
 @MainActor
 final class TutorSession: ObservableObject {
     enum LookTrigger: String {
@@ -31,9 +35,22 @@ final class TutorSession: ObservableObject {
         case manual
     }
 
+    /// Which voice path this screen is on. The mic control on screen follows it.
+    enum VoiceMode: Equatable {
+        /// No live voice in this build (scripted UI tests, unconfigured server): hold to ask only.
+        case notStarted
+        case connecting
+        case live(micOn: Bool)
+        /// Live failed or dropped. Hold to ask works; `reason` is also in the session log.
+        case fallback(reason: String)
+        /// Live was closed for being idle or for the app going to the background. The old path speaks hints; the mic button reopens Live.
+        case idleClosed
+    }
+
     let problem: Problem
     let sessionID = UUID().uuidString
 
+    @Published private(set) var voice: VoiceMode = .notStarted
     @Published private(set) var marks: [Mark] = []
     @Published private(set) var statusMessage: String?
     @Published private(set) var isRecording = false {
@@ -66,6 +83,16 @@ final class TutorSession: ObservableObject {
     private var history: [HistoryWire] = []
     private var checkTask: Task<Void, Never>?
     private var statusToken = 0
+
+    private var live: LiveVoice?
+    private var begun = false
+    /// Set by `stop()`. Answers that arrive after the screen closed are dropped and logged, never spoken.
+    private var stopped = false
+    private var delegationTasks: [String: Task<Void, Never>] = [:]
+    private var backgroundObserver: NSObjectProtocol?
+    /// The previous screen's live session may still be shutting down when the next problem opens. One live audio owner at a
+    /// time: a new connection waits for this to finish.
+    private static var previousTeardown: Task<Void, Never>?
 
     init(problem: Problem, env: AppEnvironment, now: @escaping () -> Date = { Date() }) {
         self.problem = problem
@@ -105,6 +132,7 @@ final class TutorSession: ObservableObject {
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
         env.log.record("ink_changed", ["strokes": strokes.count, "lines": lines.count, "revision": drawingRevision])
+        live?.noteActivity()
         scheduleCheck()
     }
 
@@ -138,6 +166,14 @@ final class TutorSession: ObservableObject {
     }
 
     func holdToTalkChanged(pressed: Bool) {
+        // While the live voice owns the microphone, hold-to-ask is not on screen; this is a guard, not a path.
+        switch voice {
+        case .live, .connecting:
+            if pressed { env.log.record("ask_ignored", ["why": "live voice owns the microphone"]) }
+            return
+        case .notStarted, .fallback, .idleClosed:
+            break
+        }
         if pressed {
             guard !isRecording, !askInFlight, !talkHeld else { return }
             talkHeld = true
@@ -149,10 +185,250 @@ final class TutorSession: ObservableObject {
     }
 
     func stop() {
+        stopped = true
         checkTask?.cancel()
+        delegationTasks.values.forEach { $0.cancel() }
+        delegationTasks = [:]
         env.speech.stop()
         if isRecording { _ = recorder.stop(); isRecording = false }
+        if let backgroundObserver {
+            NotificationCenter.default.removeObserver(backgroundObserver)
+            self.backgroundObserver = nil
+        }
+        if let closing = live {
+            live = nil
+            let previous = Self.previousTeardown
+            Self.previousTeardown = Task {
+                await previous?.value
+                await closing.close(reason: "problem_closed")
+            }
+        }
         env.log.record("problem_closed", ["problem_id": problem.id, "looks": looksStarted])
+    }
+
+    // MARK: - Live voice
+
+    /// Opens the live voice when the screen appears. Idempotent.
+    func begin() {
+        guard !begun else { return }
+        begun = true
+        guard env.makeLiveTransport != nil else {
+            env.log.record("live_skipped", ["reason": env.liveOffReason ?? "unknown", "problem_id": problem.id])
+            return
+        }
+        backgroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.appDidEnterBackground() }
+        }
+        startLive(greet: true, trigger: "problem_opened")
+    }
+
+    /// The mic control. While live it mutes and unmutes; after an idle close or a fallback it asks for the live voice again.
+    func micTapped() {
+        switch voice {
+        case .live(let micOn):
+            live?.setMic(on: !micOn)
+            voice = .live(micOn: !micOn)
+        case .idleClosed:
+            startLive(greet: false, trigger: "mic_tapped_after_close")
+        case .fallback:
+            startLive(greet: false, trigger: "reconnect_tapped")
+        case .connecting, .notStarted:
+            break
+        }
+    }
+
+    private func startLive(greet: Bool, trigger: String) {
+        guard !stopped, let makeTransport = env.makeLiveTransport else { return }
+        voice = .connecting
+        env.speech.stop()
+        if isRecording { _ = recorder.stop(); isRecording = false }
+        talkHeld = false
+        env.log.record("live_starting", ["trigger": trigger, "problem_id": problem.id])
+
+        let voiceSession = LiveVoice(
+            problemID: problem.id, appSessionID: sessionID, transport: makeTransport(),
+            createSession: { [env] request in try await env.client.createLiveSession(request) },
+            ensureMicrophone: { await AudioRecorder.requestPermission() },
+            log: env.log
+        )
+        voiceSession.onDelegation = { [weak self, weak voiceSession] delegation in
+            guard let self, let voiceSession else { return }
+            self.beginDelegation(delegation, from: voiceSession)
+        }
+        voiceSession.onEnded = { [weak self, weak voiceSession] reason in
+            guard let self, let voiceSession, self.live === voiceSession else { return }
+            self.liveEnded(reason: reason)
+        }
+        live = voiceSession
+
+        let previous = Self.previousTeardown
+        Task { [weak self] in
+            await previous?.value
+            let failure = await voiceSession.connect(greet: greet)
+            guard let self else { return }
+            if self.stopped || self.live !== voiceSession {
+                if failure == nil { await voiceSession.close(reason: "superseded_while_connecting") }
+                return
+            }
+            if let failure {
+                self.switchToFallback(reason: failure.reason)
+            } else {
+                self.voice = .live(micOn: true)
+            }
+        }
+    }
+
+    private func switchToFallback(reason: String) {
+        env.log.record("live_fallback", ["reason": reason, "to": "hold_to_ask_ask_and_speak", "problem_id": problem.id])
+        live = nil
+        voice = .fallback(reason: reason)
+        setStatus(reason == "microphone_denied" ? TutorError.microphoneDenied.studentMessage
+                  : "Voice chat isn't working right now. You can still hold the button to ask me a question.")
+    }
+
+    /// The live session ended without the app asking (idle, dropped, ended by OpenAI).
+    private func liveEnded(reason: String) {
+        live = nil
+        if reason == "idle" {
+            env.log.record("live_paused", ["reason": reason, "next": "hints speak the old way; mic button reopens live"])
+            voice = .idleClosed
+            setStatus("Voice paused. Tap the microphone when you want to talk again.")
+        } else {
+            switchToFallback(reason: reason)
+        }
+    }
+
+    private func appDidEnterBackground() {
+        guard let closing = live, !stopped else { return }
+        env.log.record("live_paused", ["reason": "app_backgrounded", "next": "mic button reopens live"])
+        live = nil
+        voice = .idleClosed
+        let previous = Self.previousTeardown
+        Self.previousTeardown = Task {
+            await previous?.value
+            await closing.close(reason: "app_backgrounded")
+        }
+    }
+
+    /// One place every spoken line goes through, so there is one audio owner: the live voice while it is connected,
+    /// the earlier speech path otherwise (fallback, idle close, no live voice in this build).
+    private func tell(_ text: String, purpose: String) {
+        if let live, live.say(text, purpose: purpose) {
+            env.log.record("speech_route", ["purpose": purpose, "via": "live"])
+            return
+        }
+        env.log.record("speech_route", ["purpose": purpose, "via": "speech_output", "voice": Self.voiceLabel(voice)])
+        env.speech.speak(text, purpose: purpose)
+    }
+
+    private static func voiceLabel(_ mode: VoiceMode) -> String {
+        switch mode {
+        case .notStarted: return "not_started"
+        case .connecting: return "connecting"
+        case .live: return "live"
+        case .fallback: return "fallback"
+        case .idleClosed: return "idle_closed"
+        }
+    }
+
+    private func pushVerdict(lineCount: Int, flaggedLine: Int?, hintWritten: String?) {
+        live?.pushContext(LiveContext.verdict(lineCount: lineCount, flaggedLine: flaggedLine, hintWritten: hintWritten), label: "look_verdict")
+    }
+
+    // MARK: - Delegation: GPT-Live cannot see, so it asks us to read the page
+
+    private func beginDelegation(_ delegation: LiveVoice.Delegation, from session: LiveVoice) {
+        guard live === session, !stopped else {
+            env.log.record("live_delegation_dropped", ["delegation_id": delegation.id, "reason": "session_replaced_or_screen_closed"])
+            return
+        }
+        delegationTasks[delegation.id] = Task { [weak self] in
+            await self?.answer(delegation, from: session)
+            self?.delegationTasks[delegation.id] = nil
+        }
+    }
+
+    /// Captures the page now, asks `/api/consult`, and returns the report to the live voice. A result that arrives after the
+    /// session closed is dropped. If the drawing changed while the page was being read, the page is read once more; if it
+    /// changed again, the report goes out marked as possibly out of date.
+    private func answer(_ delegation: LiveVoice.Delegation, from session: LiveVoice) async {
+        var attempt = 0
+        while true {
+            attempt += 1
+            guard live === session, !stopped, session.isStillWaiting(on: delegation.id) else {
+                env.log.record("live_delegation_dropped", ["delegation_id": delegation.id, "reason": "session_ended_or_screen_closed", "attempt": attempt])
+                return
+            }
+            guard let canvas else {
+                session.failDelegation(id: delegation.id, reason: "the page is not on screen")
+                return
+            }
+            let revisionSent = drawingRevision
+            let lines = grouper.group(Self.inkStrokes(from: canvas.drawing))
+            guard !lines.isEmpty else {
+                env.log.record("live_consult_skipped", ["delegation_id": delegation.id, "why": "no ink on the page"])
+                session.answerDelegation(id: delegation.id, text: LiveContext.emptyPage)
+                return
+            }
+            do {
+                let snapshot = try PageSnapshotter.make(drawing: canvas.drawing, canvasSize: canvas.bounds.size, lines: lines)
+                let request = ConsultRequest(
+                    sessionId: sessionID, problemId: problem.id, drawingRevision: revisionSent,
+                    imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent
+                )
+                env.log.record("live_consult_started", [
+                    "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
+                    "image_bytes": snapshot.png.count, "question_chars": delegation.question.count, "recent_turns": delegation.recent.count
+                ])
+                let started = now()
+                let response = try await env.client.consult(request)
+                let latency = Int(now().timeIntervalSince(started) * 1000)
+                guard live === session, !stopped, !Task.isCancelled, session.isStillWaiting(on: delegation.id) else {
+                    env.log.record("live_delegation_dropped", [
+                        "delegation_id": delegation.id, "reason": "late_result_after_close", "latency_ms": latency
+                    ])
+                    return
+                }
+                let pageChanged = drawingRevision != revisionSent
+                var fields: [String: Any] = [
+                    "delegation_id": delegation.id, "attempt": attempt, "latency_ms": latency,
+                    "answer_chars": response.answerText.count, "page_changed": pageChanged,
+                    "model": response.model ?? "?", "request_id": response.requestId ?? "?"
+                ]
+                if let serverMs = response.latencyMs { fields["server_latency_ms"] = serverMs }
+                if pageChanged && attempt == 1 {
+                    fields["next"] = "read the page again"
+                    env.log.record("live_consult_stale", fields)
+                    continue
+                }
+                if Self.logsWords { fields["page_report"] = response.answerText }
+                env.log.record("live_consult_answered", fields)
+                session.answerDelegation(
+                    id: delegation.id,
+                    text: response.answerText + (pageChanged ? LiveContext.outOfDateNote : ""),
+                    stale: pageChanged
+                )
+                return
+            } catch {
+                let (_, detail) = TutorError.describe(error)
+                env.log.record("error", ["where": "live_consult", "delegation_id": delegation.id, "detail": detail])
+                if live === session, !stopped {
+                    session.failDelegation(id: delegation.id, reason: Self.plainReason(error))
+                }
+                return
+            }
+        }
+    }
+
+    private static func plainReason(_ error: Error) -> String {
+        switch error as? TutorError {
+        case .some(.timedOut): return "it took too long"
+        case .some(.offline): return "no internet connection"
+        case .some(.snapshotFailed): return "the picture of the page failed"
+        default: return "a problem on the server"
+        }
     }
 
     // MARK: - When to look
@@ -256,7 +532,12 @@ final class TutorSession: ObservableObject {
             ])
             let response = try await env.client.watch(request)
             let latency = Int(now().timeIntervalSince(started) * 1000)
-            handle(response, trigger: trigger, sentLines: lines, sentRevision: revision, latencyMs: latency)
+            if stopped {
+                // The screen closed while the look was in flight: no mark, no speech.
+                env.log.record("look_dropped", ["reason": "screen_closed", "latency_ms": latency, "action": response.action])
+            } else {
+                handle(response, trigger: trigger, sentLines: lines, sentRevision: revision, latencyMs: latency)
+            }
         } catch {
             let (student, detail) = TutorError.describe(error)
             env.log.record("error", ["where": "watch", "trigger": trigger.rawValue, "detail": detail,
@@ -268,7 +549,7 @@ final class TutorSession: ObservableObject {
         }
         lookInFlight = false
         isBusy = false
-        scheduleCheck()
+        if !stopped { scheduleCheck() }
     }
 
     private func handle(_ response: WatchResponse, trigger: LookTrigger, sentLines: [InkLine], sentRevision: Int, latencyMs: Int) {
@@ -291,11 +572,11 @@ final class TutorSession: ObservableObject {
             lastDecisionLabel = "wait"
             appendHistory(action: "wait", line: nil, hint: nil)
             removeMarksOnFixedLines()
+            pushVerdict(lineCount: sentLines.count, flaggedLine: nil, hintWritten: nil)
             if trigger == .manual {
                 // The student asked, so answer out loud as well: silence after a button press reads as broken.
-                let verdict = "Looks good so far. Keep going."
-                setStatus(verdict)
-                env.speech.speak(verdict, purpose: "check_ok")
+                setStatus(LiveContext.checkLooksGood)
+                tell(LiveContext.checkLooksGood, purpose: "check_ok")
             }
         default:
             fields["problem"] = "unknown action"
@@ -371,7 +652,9 @@ final class TutorSession: ObservableObject {
         fields["line_moved"] = currentLine.map { $0.index != lineNumber } ?? false
         env.log.record("decision", fields)
         appendHistory(action: "interrupt", line: lineNumber, hint: hintWritten)
-        env.speech.speak(response.hintSpoken ?? hintWritten, purpose: "hint")
+        // The circle is on the page and the live voice is told about it first, then given the hint to say.
+        pushVerdict(lineCount: sentLines.count, flaggedLine: lineNumber, hintWritten: hintWritten)
+        tell(response.hintSpoken ?? hintWritten, purpose: "hint")
     }
 
     private func appendHistory(action: String, line: Int?, hint: String?) {
@@ -447,8 +730,12 @@ final class TutorSession: ObservableObject {
                 answered["tutor_said"] = response.answerText
             }
             env.log.record("ask_answered", answered)
-            setStatus(response.answerText, seconds: 20)
-            env.speech.speak(response.answerText, purpose: "answer")
+            if stopped {
+                env.log.record("speech_skipped", ["purpose": "answer", "reason": "screen_closed"])
+            } else {
+                setStatus(response.answerText, seconds: 20)
+                env.speech.speak(response.answerText, purpose: "answer")
+            }
         } catch {
             reportAskError(error)
         }
