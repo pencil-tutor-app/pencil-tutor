@@ -1,4 +1,4 @@
-import { apiKeyFor, appVersion, ConfigError, roleConfig, scriptedState, type Env, type Role } from "./config.js";
+import { apiKeyFor, appVersion, ConfigError, liveSettings, roleConfig, scriptedState, type Env, type Role } from "./config.js";
 import { RequestCtx } from "./http.js";
 import { problemCount } from "./problems.js";
 
@@ -8,7 +8,7 @@ export function handleHealth(request: Request, env: Env = process.env): Response
   const scripted = scriptedState(env);
 
   const models: Record<string, { provider: string; model: string } | { error: string }> = {};
-  for (const role of ["watch", "ask", "stt", "speak"] as Role[]) {
+  for (const role of ["watch", "ask", "stt", "speak", "live"] as Role[]) {
     try {
       const { provider, model } = roleConfig(role, env);
       models[role] = { provider, model };
@@ -32,6 +32,7 @@ export function handleHealth(request: Request, env: Env = process.env): Response
       scripted: scripted.on,
       scripted_refused_in_production: scripted.refusedInProduction,
       models,
+      live_voice: liveSettings(env).voice,
       problems: problemCount,
     },
     "ok",

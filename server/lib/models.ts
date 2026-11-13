@@ -111,15 +111,18 @@ export async function runWatchModel(args: {
   }
 }
 
+// Reads the page picture and answers in words. /api/ask uses it with ASK_POLICY; /api/consult (the Live delegation
+// target) reuses it with CONSULT_POLICY, so both go through the same image handling, timeout and failure labels.
 export async function runAskModel(args: {
   model: LanguageModel;
   promptText: string;
   image: ImageInfo;
+  system?: string;
 }): Promise<{ kind: "answer"; text: string } | ModelFailure> {
   try {
     const result = await generateText({
       model: args.model,
-      system: ASK_POLICY,
+      system: args.system ?? ASK_POLICY,
       messages: [
         {
           role: "user",

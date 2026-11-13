@@ -11,9 +11,11 @@ import {
 } from "./config.js";
 import { checkAuth, type RequestCtx } from "./http.js";
 import { logLine } from "./log.js";
+import type { LiveGateway } from "./live.js";
 import { realModels, type ModelFactory } from "./models.js";
 
-export type Deps = { env: Env; models: ModelFactory };
+// `live` is the one place the server talks to OpenAI's Live endpoint; tests pass a fake. Unset means the real one.
+export type Deps = { env: Env; models: ModelFactory; live?: LiveGateway };
 export const defaultDeps = (): Deps => ({ env: process.env, models: realModels });
 
 export type GateOpen = {

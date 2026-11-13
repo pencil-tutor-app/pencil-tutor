@@ -2,8 +2,8 @@
 
 export type Env = Record<string, string | undefined>;
 export type Provider = "openai" | "google";
-export type Role = "watch" | "ask" | "stt" | "speak";
-type ProviderRole = Exclude<Role, "speak">;
+export type Role = "watch" | "ask" | "stt" | "speak" | "live";
+type ProviderRole = Exclude<Role, "speak" | "live">;
 
 // Defaults verified against the vendors' own docs on 2026-11-13. Sources are listed in server/README.md.
 export const DEFAULT_MODELS: Record<Provider, Record<ProviderRole, string>> = {
@@ -11,7 +11,22 @@ export const DEFAULT_MODELS: Record<Provider, Record<ProviderRole, string>> = {
   google: { watch: "gemini-4-argon", ask: "gemini-3.8-flash", stt: "gemini-3.5-transcribe" },
 };
 
-// Text-to-speech is OpenAI only (the speak role has no provider setting).
+// The conversational voice: OpenAI GPT-Live-1 over WebRTC (https://developers.openai.com/api/docs/models/gpt-live-1).
+// `gleam` is the North American, feminine voice OpenAI lists as a natural (recorded, not generated) voice
+// (https://developers.openai.com/api/docs/guides/live-conversations#voice-options). Chosen from the docs, not by ear:
+// change it with LIVE_VOICE in Vercel and redeploy. Live is OpenAI only.
+export const DEFAULT_LIVE_MODEL = "gpt-live-1";
+export const DEFAULT_LIVE_VOICE = "gleam";
+
+export type LiveSettings = { voice: string };
+
+export function liveSettings(env: Env): LiveSettings {
+  return { voice: env.LIVE_VOICE?.trim() || DEFAULT_LIVE_VOICE };
+}
+
+// Text-to-speech is OpenAI only (the speak role has no provider setting). This is the FALLBACK voice now.
+// OpenAI lists gpt-4o-mini-tts as deprecated with shutdown on 2027-01-06
+// (https://developers.openai.com/api/docs/deprecations); after that date the app falls back to the device voice.
 export const DEFAULT_SPEAK_MODEL = "gpt-4o-mini-tts";
 export const DEFAULT_SPEAK_VOICE = "coral";
 export const DEFAULT_SPEAK_INSTRUCTIONS =
@@ -50,6 +65,9 @@ function parseProvider(value: string | undefined, varName: string): Provider {
 export function roleConfig(role: Role, env: Env): RoleConfig {
   if (role === "speak") {
     return { role, provider: "openai", model: env.SPEAK_MODEL?.trim() || DEFAULT_SPEAK_MODEL };
+  }
+  if (role === "live") {
+    return { role, provider: "openai", model: env.LIVE_MODEL?.trim() || DEFAULT_LIVE_MODEL };
   }
   if (role === "stt") {
     const sttModel = env.STT_MODEL?.trim();

@@ -1,13 +1,15 @@
 # Pencil Tutor server
 
-Vercel Functions in TypeScript, no framework, no database, no storage. Four endpoints. The iPad's voice is OpenAI text-to-speech from `/api/speak`; the device synthesizer is only its fallback (plan amendment 11).
+Vercel Functions in TypeScript, no framework, no database, no storage. Six endpoints. The tutor's voice is OpenAI GPT-Live-1 over WebRTC: `/api/live-session` relays the connection and `/api/consult` reads the page for it. `/api/ask` plus `/api/speak` are the fallback path and the device synthesizer is the last fallback (`docs/live-voice-plan.md`).
 
 | endpoint | auth | purpose |
 |---|---|---|
 | `GET /api/health` | none | version, which keys exist (yes/no), configured models |
 | `POST /api/watch` | bearer | page picture in, `wait` or `interrupt` out |
 | `POST /api/ask` | bearer | spoken question (m4a) + page picture in, transcript + answer text out |
-| `POST /api/speak` | bearer | text in, mp3 audio out |
+| `POST /api/speak` | bearer | text in, mp3 audio out (fallback voice; `gpt-4o-mini-tts` is deprecated, shutdown 2027-01-06) |
+| `POST /api/live-session` | bearer | the iPad's WebRTC offer in, GPT-Live-1's answer out (the OpenAI key stays here) |
+| `POST /api/consult` | bearer | the page reader GPT-Live delegates to: the student's words and a page picture in, report text out |
 
 Every endpoint except health needs `Authorization: Bearer <APP_ACCESS_TOKEN>`. Anything else is `401 {error:"unauthorized"}`, including when the server has no token configured yet.
 
@@ -86,9 +88,29 @@ Response 200: the raw mp3 bytes, `Content-Type: audio/mpeg`, headers `X-Latency-
 
 Settings (Vercel env, all optional): `SPEAK_MODEL` (default `gpt-4o-mini-tts`), `SPEAK_VOICE` (default `coral`), `SPEAK_INSTRUCTIONS` (default "Warm, patient math tutor talking to a 14-year-old. Calm, encouraging, natural pace. Say math aloud plainly."). Speech is OpenAI only and uses `OPENAI_API_KEY`. Built on the AI SDK's `generateSpeech` with `openai.speech(...)`, `outputFormat: "mp3"`.
 
+### `POST /api/live-session`
+
+The iPad makes a WebRTC offer; this endpoint creates the GPT-Live session with the project key and hands back the answer. OpenAI documents no ephemeral client secret for Live, so the server relays the SDP offer and answer ([connection guide](https://developers.openai.com/api/docs/guides/voice-webrtc?api=live)). The key never reaches the app.
+
+Request: `{"session_id": "any string", "problem_id": "u3-04", "sdp": "<the offer, starts with v=0, at most 64 KB>"}`.
+
+Response 200: `{session_id, sdp, model, voice, latency_ms, request_id}`. `session_id` is OpenAI's Live session id and `sdp` is the answer to apply as the remote description. The app then uses the data channel `oai-events` (create it before the offer; do not send `session.start`).
+
+The session it creates: `model` from `LIVE_MODEL` (default `gpt-live-1`), `audio.output.voice` from `LIVE_VOICE` (default `gleam`), `instructions` = `LIVE_TUTOR_INSTRUCTIONS` in `lib/policy.ts` plus the problem statement (never the worked solution), a developer greeting message, `delegation: {type: "client"}`, and `client.data_channel.allowed_client_events` = exactly `session.input_audio.mute`, `session.input_audio.unmute`, `session.thinking.append`, `session.commentary.append`, `session.close`.
+
+Errors: 401 token, 405 method, 400/413 body, 422 invalid request (`sdp` missing, over 64 KB or not an SDP; unknown `problem_id`), 502 provider error (`reason` is `provider_http_<status>` and similar, never OpenAI's message), 504 provider timeout (15 s), 503 missing key, or scripted mode (it has no real session to give).
+
+### `POST /api/consult`
+
+GPT-Live cannot take images. When it delegates ("check my work"), the iPad captures the page and calls this endpoint over HTTPS; the report goes back to Live as `session.commentary.append`.
+
+Request: `{session_id, problem_id, drawing_revision?, image_png_base64, question, recent}`. `question` is what the student just said (1 to 800 characters, from Live's own transcript). `recent` is up to 8 turns `{role: "student"|"tutor", text (at most 400)}`. Image rules are the same as `/api/watch`.
+
+Response 200: `{answer_text, drawing_revision?, model, latency_ms, request_id}`. The answer says what is written, whether the latest step is right, wrong or unfinished, and one nudge; never the final answer (`CONSULT_POLICY` in `lib/policy.ts`). It uses the ask model (`ASK_MODEL`) through the same `runAskModel` as `/api/ask`. Scripted mode returns a fixed report.
+
 ### `GET /api/health`
 
-`{ok, version, vercel_env, openai_key_present, gemini_key_present, app_token_set, scripted, scripted_refused_in_production, models:{watch,ask,stt,speak}, problems}`. No secrets, ever.
+`{ok, version, vercel_env, openai_key_present, gemini_key_present, app_token_set, scripted, scripted_refused_in_production, models:{watch,ask,stt,speak,live}, live_voice, problems}`. No secrets, ever.
 
 ## Missing key and scripted mode
 
@@ -125,6 +147,9 @@ Capability proof, per default:
 - OpenAI model list (all latest models take text and image): https://developers.openai.com/api/docs/models
 - AI SDK structured output (`generateText` + `Output.object`): https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data ; transcription (`transcribe`): https://ai-sdk.dev/docs/ai-sdk-core/transcription
 
+- `gpt-live-1`: Input "Audio, Text", Output "Audio, Text", image not supported, $0.05 per minute of session, endpoint `v1/live/sessions`, 50 concurrent sessions on the Build tier. https://developers.openai.com/api/docs/models/gpt-live-1
+- `gpt-4o-mini-tts` (the fallback voice): Deprecated, shutdown Jan 6, 2027, notice Oct 1, 2026. https://developers.openai.com/api/docs/deprecations
+
 Also checked: `gpt-6-luna` takes text and image (cheaper, an option for ask). `gpt-6-astra` is listed at $10/$50 per million tokens, not used by default. `gpt-realtime-2.1` was not verified and is not used (this path is request and response, not a live session).
 
 Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is too slow, set `WATCH_MODEL=gpt-6.1-terra` or `gpt-6-luna`.
@@ -135,17 +160,17 @@ Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is t
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). `/api/speak` logs `text_chars, audio_bytes, purpose, voice, model, latency_ms`.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). `/api/speak` logs `text_chars, audio_bytes, purpose, voice, model, latency_ms`. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 
-- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (auth, key, scripted), `watch.ts`, `ask.ts`, `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
+- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (auth, key, scripted), `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
 - `data/problems.json` is a copy of `../shared/problems.json` because `vercel deploy` uploads only `server/`. A test fails if they differ. Refresh with `npm run sync-problems`.
 - `test/` Node's test runner via `tsx`: `npm test`. Typecheck: `npm run typecheck` (CI runs both, `.github/workflows/server.yml`).
 
 ## Deploy
 
-Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `APP_ACCESS_TOKEN`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`. Do not set `TUTOR_SCRIPTED` on the production environment.
+Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `APP_ACCESS_TOKEN`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). Do not set `TUTOR_SCRIPTED` on the production environment.
 
 ## Problem bank: `shared/problems.json`
 

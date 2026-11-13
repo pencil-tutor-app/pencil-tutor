@@ -9,7 +9,7 @@ export class RequestCtx {
   readonly fields: LogFields;
 
   constructor(
-    readonly endpoint: "watch" | "ask" | "speak" | "health",
+    readonly endpoint: "watch" | "ask" | "speak" | "health" | "live-session" | "consult",
     readonly method: string,
   ) {
     this.fields = { request_id: this.id, endpoint, method };
