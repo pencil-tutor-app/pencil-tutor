@@ -1,6 +1,6 @@
 # Pencil Tutor
 
-A native iPad app (SwiftUI + PencilKit). A student picks a BC Math 9 equation, works it by hand with an Apple Pencil, and an AI tutor watches the page. When a finished line holds a clear mistake, the tutor circles that line in red, writes a short hint beside it and says the hint out loud. The student can also hold a button and ask a question by voice.
+A native iPad app (SwiftUI + PencilKit). A student picks a BC Math 9 equation, works it by hand with an Apple Pencil, and an AI tutor watches the page. When a finished line holds a clear mistake, the tutor circles that line in red, writes a short hint beside it and says the hint out loud. The student can also just talk to the tutor: the voice is OpenAI GPT-Live-1 (`gpt-live-1`) over WebRTC, open while a problem is on screen, with a mic mute button. If the live voice cannot connect, hold-to-ask with `/api/ask` and `/api/speak` takes over (`docs/live-voice-plan.md`).
 
 Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the sections above it). Server: `server/README.md`.
 
@@ -9,11 +9,11 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 | path | what |
 |---|---|
 | `ios/` | the iPad app. `project.yml` is the XcodeGen spec; there is no hand-written `.xcodeproj` |
-| `ios/PencilTutor/` | app source: `Core` (models, line grouping, look policy, log), `Net` (client behind a protocol), `Drawing` (canvas, snapshot), `Audio`, `Session`, `Views` |
+| `ios/PencilTutor/` | app source: `Core` (models, line grouping, look policy, log), `Net` (client behind a protocol), `Drawing` (canvas, snapshot), `Audio` (fallback speech and recorder), `Live` (the GPT-Live session: protocol, transcript, WebRTC transport, controller), `Session`, `Views` |
 | `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size |
 | `ios/PencilTutorUITests/` | simulator UI tests against the in-process scripted tutor; they attach the screenshots |
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
-| `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/health` |
+| `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |
 | `shared/problems.json` | the 12 curated problems. The build copies it into the app **without** `worked_solution` and `final_answer` (`ios/Scripts/bundle_problems.py`) |
 | `.github/workflows/ios.yml` | builds, runs unit tests and UI tests on a GitHub macOS runner, uploads screenshots |
 

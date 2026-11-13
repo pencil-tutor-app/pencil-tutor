@@ -16,19 +16,46 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   clean problem being left alone (artifact `ios-screenshots`).
 - **Content:** 12 algebra problems from BC Math 9 unit 3, with worked
   solutions held on the server only (`shared/problems.json`).
+- **Voice:** OpenAI `gpt-live-1` (see Voice below). Server endpoints: watch, ask, speak, consult, live-session, health.
 - **Watcher model:** OpenAI `gpt-6.1-sol`. To try Gemini, set `WATCH_PROVIDER`
   to `google` and `WATCH_MODEL` to `gemini-4-argon` in Vercel, then redeploy.
 
 ## Voice
 
-The tutor's voice is OpenAI text-to-speech from our server (`POST /api/speak`,
-`gpt-4o-mini-tts`, voice `coral`). Change it in Vercel, then redeploy:
-`SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS` (tone prompt). If the server
-is slow (over 4 s) or down, the app speaks with the best installed device voice
-instead; the session log shows `speech_started` (source `server`, `cache` or
-`device`, with latency) and `speech_fallback` (with the reason). For a nicer
-fallback, download an Enhanced or Premium English voice on the iPad (Settings,
-Accessibility, Spoken Content, Voices).
+**Live voice (GPT-Live-1).** While a problem is open the student talks to the tutor naturally: OpenAI's `gpt-live-1`
+over WebRTC, $0.05 per minute of open session. The OpenAI key never reaches the iPad: the app sends its connection offer to
+our server (`POST /api/live-session`), which relays it to OpenAI. Change the voice or model in Vercel, then redeploy:
+`LIVE_VOICE` (default `gleam`; English options: quartz, ripple, vesper, willow, stone, gleam, meridian, beacon, delta,
+cinder, plus marin and the older named voices) and `LIVE_MODEL` (default `gpt-live-1`). The voice was picked from the
+documented voice table, **not by ear**: if it does not sound like a warm, patient tutor, try `willow`, `meridian` or
+`marin` and say which one wins. The tutor's personality is `LIVE_TUTOR_INSTRUCTIONS` in `server/lib/policy.ts`.
+
+On screen: the mic button toggles mute (green "Mic on", grey "Muted"). "Check my work", watch hints and the "looks good"
+line are spoken by the same live voice. When the student asks the tutor to look at the page, GPT-Live cannot see, so it
+delegates: the app captures the page and `POST /api/consult` reads it; the report comes back and the tutor says it in its own
+words. After 5 minutes with no ink and no speech the session closes itself to stop the meter; hints then speak through the
+old path and the mic button ("Tap to talk") reopens Live. Sessions also end after about 2 hours (OpenAI's limit) and when
+the app goes to the background.
+
+**Fallback (the earlier voice).** If Live cannot connect or drops, the screen shows hold-to-ask plus "Reconnect voice", and
+everything works as before: `POST /api/ask`, then `POST /api/speak` (`gpt-4o-mini-tts`, voice `coral`; `SPEAK_MODEL`,
+`SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`), then the best installed device voice. **`gpt-4o-mini-tts` shuts down on 2027-01-06**
+(https://developers.openai.com/api/docs/deprecations); after that `/api/speak` fails and the app uses the device voice
+(for a nicer one, download an Enhanced or Premium English voice: Settings, Accessibility, Spoken Content, Voices). There is
+no replacement `audio/speech` model, so there is nothing to migrate that path to.
+
+**Session log events** (export from the share button; Debug builds also log the words as `student_said`, `tutor_said`,
+`live_commentary_sent` text and `page_report`; Release builds log ids, sizes, counts and reason labels only):
+`live_starting`, `live_connect`, `live_offer_ready`, `live_answer_received` (server latency), `live_connected` (total
+latency), `live_connect_failed` / `live_fallback` (the reason), `live_commentary_sent`, `live_context_pushed`,
+`live_context_acknowledged` (ack time), `live_delegation_requested`, `live_consult_started`, `live_consult_answered`
+(latency), `live_delegation_answered` (latency), `live_hint_held` / `live_hint_released`, `live_mic`, `live_usage`
+(seconds), `live_idle_close`, `live_paused`, `live_disconnected` (reason, final usage seconds), `speech_route` (live or the
+old path). Speech via the old path still logs `speech_started` and `speech_fallback`.
+
+**Not verified by any machine:** how the voice sounds, interruption feel, echo of the tutor's voice into the iPad
+microphone, and whether a paraphrased hint ever changes a sign or number in real use (a headless sample of six wordings kept
+every sign, number and line reference).
 
 ## Install on the iPad (morning, one time)
 
@@ -48,6 +75,16 @@ Edward does steps 1 to 3; the agent does the rest.
    `xcrun devicectl device install app ...` (exact commands in `README.md`).
 5. First launch on the iPad: Settings, General, VPN & Device Management, trust
    your Apple ID.
+
+After any `xcodegen generate`, check the signing team in `ios/PencilTutor.xcodeproj/project.pbxproj`
+(`grep DEVELOPMENT_TEAM`). xcodegen leaves it out of the project file; the build still takes it from
+`Secrets.xcconfig`, but the project file should carry `9AKCDYB7T4` as well. The project file is git-ignored, so
+putting it back is a local `sed` (what the agent did on 2026-11-13).
+
+**Device smoke test without tapping:** launch with `--open-problem u3-01` (for example
+`xcrun devicectl device process launch --device <id> --terminate-existing com.edwardtran.penciltutor --open-problem u3-01`).
+The app opens that problem at once, so the live session connects with nobody touching the iPad, and the session log
+(`devicectl device copy from ... Documents/session-*.jsonl`) shows `live_connected` or the fallback reason.
 
 ## What was measured (2026-11-13, synthetic pages, not real handwriting)
 

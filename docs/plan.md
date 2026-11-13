@@ -112,7 +112,7 @@ plus `{request_id, model, latency_ms}`. Errors: `{error, reason}` with HTTP
   time.
 
 ## Out of scope for version one
-Live streaming voice (GPT-Live / realtime), explaining from Edward's concept
+Live streaming voice (GPT-Live / realtime; **reversed by amendment 12**), explaining from Edward's concept
 notes, accounts, multiple pages per problem, photo import of homework, iPadOS 27
 handwriting recognition, analytics, App Store / TestFlight.
 
@@ -161,6 +161,33 @@ when the server fails, takes over 4 s, or the text is over 600 characters.
 Hold-to-talk still wins: nothing plays while the student is recording. The
 server now has four endpoints: watch, ask, speak, health. Contract and settings
 are in `server/README.md`.
+
+### Amendment 12 (2026-11-13): the voice moves to GPT-Live-1; amendment 11's voice is now the fallback
+
+Why: `gpt-4o-mini-tts` is an old model, and OpenAI's deprecations page lists it as deprecated with shutdown on
+2027-01-06 (https://developers.openai.com/api/docs/deprecations). The current voice model is GPT-Live-1 (`gpt-live-1`),
+a full-duplex voice model: the student now talks to the tutor naturally while a problem is on screen, instead of holding
+a button and waiting for a spoken answer. "Live streaming voice (GPT-Live / realtime)" in the out-of-scope list above is
+therefore reversed.
+
+What changed:
+- The iPad opens a GPT-Live session when a problem opens, over WebRTC (`stasel/WebRTC`). The OpenAI key stays on the
+  server: `POST /api/live-session` relays the SDP offer and answer. OpenAI documents no ephemeral secret for Live.
+- GPT-Live takes no images. When it must judge the work it delegates; the app captures the page and calls the new
+  `POST /api/consult` (same ask model and image handling as `/api/ask`), and returns the report as
+  `session.commentary.append`. Watch hints and the "Check my work" verdict are said by the same voice, and the latest page
+  check is pushed as `session.thinking.append`.
+- Hold-to-talk becomes a mic mute toggle while live. If Live cannot connect or drops, the earlier path (hold to ask,
+  `/api/ask`, `/api/speak`, device voice) takes over and the reason is logged. No automatic reconnect.
+- Voice `gleam` (default, set with `LIVE_VOICE`), chosen from the documented voice table (North American, feminine,
+  recorded rather than generated), not by ear.
+
+Cost: voice is $0.05 per minute of open session (billed per second, $3.00 per hour), plus the normal ask and watch model
+rates for each page look. A session that sees no ink and no speech for 5 minutes closes itself (a chosen default). No claim
+is made that it is cheaper, faster or better sounding than the old path; latencies and usage seconds are in the session log.
+
+Plan and its review: `docs/live-voice-plan.md`, `docs/live-voice-plan.review.md` (verdict CUT; page summaries, auto
+reconnect and hint-timing gates were cut). Server contract: `server/README.md`. Running it: `docs/how-to-run.md`.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
