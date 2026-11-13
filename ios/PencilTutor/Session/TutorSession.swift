@@ -10,6 +10,17 @@ struct Mark: Identifiable, Equatable {
     /// In canvas points.
     let box: CGRect
     let hint: String
+    /// The ink under the mark when it was placed. If it changes and the tutor then sees no problem,
+    /// the student fixed the line and the mark comes off (first device run, 2026-11-13: marks stayed forever).
+    let inkSignature: String
+
+    static func inkSignature(in box: CGRect, strokes: [InkStroke]) -> String {
+        strokes
+            .filter { $0.bounds.intersects(box) }
+            .map { "\(Int($0.bounds.minX)),\(Int($0.bounds.minY)),\(Int($0.bounds.width)),\(Int($0.bounds.height))" }
+            .sorted()
+            .joined(separator: ";")
+    }
 }
 
 /// One problem attempt: watches the ink, decides when to look, asks the tutor, and shows what comes back.
@@ -275,6 +286,7 @@ final class TutorSession: ObservableObject {
             env.log.record("decision", fields)
             lastDecisionLabel = "wait"
             appendHistory(action: "wait", line: nil, hint: nil)
+            removeMarksOnFixedLines()
             if trigger == .manual {
                 // The student asked, so answer out loud as well: silence after a button press reads as broken.
                 let verdict = "Looks good so far. Keep going."
@@ -288,6 +300,22 @@ final class TutorSession: ObservableObject {
             if trigger == .manual { setStatus(TutorError.badResponse(detail: "").studentMessage) }
         }
         refreshTestStatus()
+    }
+
+    /// Called when the tutor sees no problem: a mark whose ink changed since it was placed was fixed, so it comes off.
+    /// A mark on an untouched line stays (the tutor waits because it already said its piece).
+    private func removeMarksOnFixedLines() {
+        guard !marks.isEmpty, let canvas else { return }
+        let strokesNow = Self.inkStrokes(from: canvas.drawing)
+        let fixed = marks.filter { Mark.inkSignature(in: $0.box, strokes: strokesNow) != $0.inkSignature }
+        guard !fixed.isEmpty else {
+            env.log.record("marks_kept", ["count": marks.count, "why": "marked lines unchanged"])
+            return
+        }
+        let fixedIDs = Set(fixed.map(\.id))
+        marks.removeAll { fixedIDs.contains($0.id) }
+        env.log.record("marks_cleared", ["count": fixed.count, "lines": fixed.map(\.lineIndex),
+                                         "why": "line rewritten and the tutor sees no problem", "remaining": marks.count])
     }
 
     private func applyInterrupt(_ response: WatchResponse, fields: [String: Any], sentLines: [InkLine], echoedRevision: Int) {
@@ -320,7 +348,9 @@ final class TutorSession: ObservableObject {
         }
 
         let box = currentLine?.box ?? sentLine.box
-        marks.append(Mark(lineIndex: lineNumber, box: box, hint: hintWritten))
+        let strokesNow = canvas.map { Self.inkStrokes(from: $0.drawing) } ?? []
+        marks.append(Mark(lineIndex: lineNumber, box: box, hint: hintWritten,
+                          inkSignature: Mark.inkSignature(in: box, strokes: strokesNow)))
         lastInterruptionAt = now()
         lastDecisionLabel = "interrupt"
         fields["hint_chars"] = hintWritten.count
