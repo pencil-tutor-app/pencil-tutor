@@ -6,6 +6,11 @@ final class AppEnvironment: ObservableObject {
     let settings: TutorSettings
     let speech: SpeechOutput
     let client: TutorClient
+    /// Makes the live voice connection. Nil when there is no server to relay it (scripted UI tests, unconfigured builds):
+    /// those runs keep the hold-to-ask path and never open a live session.
+    let makeLiveTransport: (@MainActor () -> LiveTransport)?
+    /// Why live voice is off, as a log label (nil when it is on).
+    let liveOffReason: String?
     let problems: [Problem]
     /// Plain-words notice for the problem list when something is wrong (nil when all is well).
     let notice: String?
@@ -20,17 +25,23 @@ final class AppEnvironment: ObservableObject {
         if LaunchOptions.scriptedClient {
             // UI tests: no network, so speech uses the device voice only.
             self.client = ScriptedTutorClient()
+            self.makeLiveTransport = nil
+            self.liveOffReason = "scripted_client"
             self.speech = SpeechOutput(log: log, remote: nil, deviceOnlyReason: "scripted_client")
             log.record("app_launch", ["mode": "scripted"])
         } else {
             let config = AppConfig.load()
             if let url = config.serverURL, let token = config.accessToken {
                 self.client = HTTPTutorClient(baseURL: url, token: token, log: log)
+                self.makeLiveTransport = { LiveWebRTCTransport() }
+                self.liveOffReason = nil
                 self.speech = SpeechOutput(log: log, remote: SpeechOutput.Remote(baseURL: url, token: token))
                 log.record("app_launch", ["mode": "live", "server_host": url.host ?? "?"])
             } else {
                 let reason = config.missingReason ?? "unknown"
                 self.client = UnconfiguredTutorClient(reason: reason)
+                self.makeLiveTransport = nil
+                self.liveOffReason = "server_not_configured"
                 self.speech = SpeechOutput(log: log, remote: nil, deviceOnlyReason: "server_not_configured")
                 log.record("app_launch", ["mode": "unconfigured", "reason": reason])
             }

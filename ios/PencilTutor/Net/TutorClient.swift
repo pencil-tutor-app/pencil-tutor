@@ -4,6 +4,10 @@ import Foundation
 protocol TutorClient {
     func watch(_ request: WatchRequest) async throws -> WatchResponse
     func ask(_ request: AskRequest) async throws -> AskResponse
+    /// The page reader the live voice delegates to (text question + page picture in, report out).
+    func consult(_ request: ConsultRequest) async throws -> ConsultResponse
+    /// Relays the WebRTC offer to OpenAI through our server; the OpenAI key stays on the server.
+    func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse
 }
 
 /// Used when SERVER_URL or APP_ACCESS_TOKEN are not set. The student can still write; every call says why it cannot work.
@@ -15,6 +19,14 @@ struct UnconfiguredTutorClient: TutorClient {
     }
 
     func ask(_ request: AskRequest) async throws -> AskResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func consult(_ request: ConsultRequest) async throws -> ConsultResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
         throw TutorError.notConfigured(reason: reason)
     }
 }
@@ -54,6 +66,22 @@ struct ScriptedTutorClient: TutorClient {
             model: "scripted",
             latencyMs: Int(Self.latencyNanoseconds / 1_000_000)
         )
+    }
+
+    func consult(_ request: ConsultRequest) async throws -> ConsultResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        return ConsultResponse(
+            answerText: "Scripted page report. Look at your last line.",
+            drawingRevision: request.drawingRevision,
+            requestId: "scripted-consult",
+            model: "scripted",
+            latencyMs: Int(Self.latencyNanoseconds / 1_000_000)
+        )
+    }
+
+    /// Scripted runs never open a live voice session (no network in UI tests), so this is a refusal with a reason.
+    func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
+        throw TutorError.notConfigured(reason: "scripted client has no live session")
     }
 
     func ask(_ request: AskRequest) async throws -> AskResponse {

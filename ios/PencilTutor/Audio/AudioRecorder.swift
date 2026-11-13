@@ -14,6 +14,11 @@ final class AudioRecorder {
     private var recorder: AVAudioRecorder?
 
     func ensurePermission() async -> Bool {
+        await Self.requestPermission()
+    }
+
+    /// Also used by the live voice session, which owns the microphone while it is open.
+    static func requestPermission() async -> Bool {
         switch AVAudioApplication.shared.recordPermission {
         case .granted:
             return true

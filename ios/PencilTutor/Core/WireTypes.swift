@@ -122,6 +122,75 @@ struct SpeakRequest: Codable, Equatable {
     }
 }
 
+/// One earlier turn of the live conversation, sent with a consult so the page reader can resolve "that one".
+struct ConsultTurnWire: Codable, Equatable {
+    var role: String   // "student" or "tutor"
+    var text: String
+}
+
+/// POST /api/consult: the page reader GPT-Live delegates to. `question` is what the student just said, from Live's own transcript.
+struct ConsultRequest: Codable, Equatable {
+    var sessionId: String
+    var problemId: String
+    var drawingRevision: Int
+    var imagePngBase64: String
+    var question: String
+    var recent: [ConsultTurnWire]
+
+    private enum CodingKeys: String, CodingKey {
+        case sessionId = "session_id"
+        case problemId = "problem_id"
+        case drawingRevision = "drawing_revision"
+        case imagePngBase64 = "image_png_base64"
+        case question, recent
+    }
+}
+
+struct ConsultResponse: Codable, Equatable {
+    var answerText: String
+    var drawingRevision: Int?
+    var requestId: String?
+    var model: String?
+    var latencyMs: Int?
+
+    private enum CodingKeys: String, CodingKey {
+        case model
+        case answerText = "answer_text"
+        case drawingRevision = "drawing_revision"
+        case requestId = "request_id"
+        case latencyMs = "latency_ms"
+    }
+}
+
+/// POST /api/live-session: our WebRTC offer in, OpenAI's answer out. The OpenAI key never reaches the app.
+struct LiveSessionRequest: Codable, Equatable {
+    var sessionId: String
+    var problemId: String
+    var sdp: String
+
+    private enum CodingKeys: String, CodingKey {
+        case sessionId = "session_id"
+        case problemId = "problem_id"
+        case sdp
+    }
+}
+
+struct LiveSessionResponse: Codable, Equatable {
+    var sessionId: String
+    var sdp: String
+    var model: String?
+    var voice: String?
+    var latencyMs: Int?
+    var requestId: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case sdp, model, voice
+        case sessionId = "session_id"
+        case latencyMs = "latency_ms"
+        case requestId = "request_id"
+    }
+}
+
 /// `{error, reason}` body the server sends with a 401, 422 or 503.
 struct ServerErrorBody: Codable {
     var error: String?

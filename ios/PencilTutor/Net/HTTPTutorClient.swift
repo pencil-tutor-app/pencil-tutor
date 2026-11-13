@@ -48,6 +48,14 @@ final class HTTPTutorClient: TutorClient {
         try await post(path: "api/ask", body: request, timeout: 60)
     }
 
+    func consult(_ request: ConsultRequest) async throws -> ConsultResponse {
+        try await post(path: "api/consult", body: request, timeout: 40)
+    }
+
+    func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
+        try await post(path: "api/live-session", body: request, timeout: 20)
+    }
+
     private func post<Body: Encodable, Reply: Decodable>(path: String, body: Body, timeout: TimeInterval) async throws -> Reply {
         var urlRequest = URLRequest(url: baseURL.appendingPathComponent(path), timeoutInterval: timeout)
         urlRequest.httpMethod = "POST"
