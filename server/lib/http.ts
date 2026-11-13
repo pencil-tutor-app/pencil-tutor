@@ -9,7 +9,7 @@ export class RequestCtx {
   readonly fields: LogFields;
 
   constructor(
-    readonly endpoint: "watch" | "ask" | "health",
+    readonly endpoint: "watch" | "ask" | "speak" | "health",
     readonly method: string,
   ) {
     this.fields = { request_id: this.id, endpoint, method };
@@ -27,6 +27,23 @@ export class RequestCtx {
     return new Response(JSON.stringify({ ...body, request_id: this.id }), {
       status,
       headers: { "content-type": "application/json", "cache-control": "no-store", "x-request-id": this.id },
+    });
+  }
+
+  // Binary reply (audio). Same single log line as respond(); `extra` headers carry the small facts the client wants.
+  respondBytes(bytes: Uint8Array, contentType: string, outcome: string, reason: string, extra: Record<string, string> = {}): Response {
+    const latency_ms = Date.now() - this.startedAt;
+    logLine("info", { ...this.fields, status: 200, outcome, reason, latency_ms });
+    return new Response(bytes as BodyInit, {
+      status: 200,
+      headers: {
+        "content-type": contentType,
+        "content-length": String(bytes.length),
+        "cache-control": "no-store",
+        "x-request-id": this.id,
+        "x-latency-ms": String(latency_ms),
+        ...extra,
+      },
     });
   }
 

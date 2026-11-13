@@ -2,13 +2,29 @@
 
 export type Env = Record<string, string | undefined>;
 export type Provider = "openai" | "google";
-export type Role = "watch" | "ask" | "stt";
+export type Role = "watch" | "ask" | "stt" | "speak";
+type ProviderRole = Exclude<Role, "speak">;
 
 // Defaults verified against the vendors' own docs on 2026-11-13. Sources are listed in server/README.md.
-export const DEFAULT_MODELS: Record<Provider, Record<Role, string>> = {
+export const DEFAULT_MODELS: Record<Provider, Record<ProviderRole, string>> = {
   openai: { watch: "gpt-6.1-sol", ask: "gpt-6.1-terra", stt: "gpt-transcribe" },
   google: { watch: "gemini-4-argon", ask: "gemini-3.8-flash", stt: "gemini-3.5-transcribe" },
 };
+
+// Text-to-speech is OpenAI only (the speak role has no provider setting).
+export const DEFAULT_SPEAK_MODEL = "gpt-4o-mini-tts";
+export const DEFAULT_SPEAK_VOICE = "coral";
+export const DEFAULT_SPEAK_INSTRUCTIONS =
+  "Warm, patient math tutor talking to a 14-year-old. Calm, encouraging, natural pace. Say math aloud plainly.";
+
+export type SpeakSettings = { voice: string; instructions: string };
+
+export function speakSettings(env: Env): SpeakSettings {
+  return {
+    voice: env.SPEAK_VOICE?.trim() || DEFAULT_SPEAK_VOICE,
+    instructions: env.SPEAK_INSTRUCTIONS?.trim() || DEFAULT_SPEAK_INSTRUCTIONS,
+  };
+}
 
 // First name is the one reported in the 503 message; the others are also accepted.
 export const KEY_NAMES: Record<Provider, string[]> = {
@@ -32,6 +48,9 @@ function parseProvider(value: string | undefined, varName: string): Provider {
 }
 
 export function roleConfig(role: Role, env: Env): RoleConfig {
+  if (role === "speak") {
+    return { role, provider: "openai", model: env.SPEAK_MODEL?.trim() || DEFAULT_SPEAK_MODEL };
+  }
   if (role === "stt") {
     const sttModel = env.STT_MODEL?.trim();
     if (sttModel) {

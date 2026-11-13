@@ -14,21 +14,24 @@ final class AppEnvironment: ObservableObject {
         let log = SessionLog()
         self.log = log
         self.settings = TutorSettings(useStartingDefaultsOnly: LaunchOptions.scriptedClient)
-        self.speech = SpeechOutput(log: log)
 
         var loadedProblems: [Problem] = []
         var notice: String?
         if LaunchOptions.scriptedClient {
+            // UI tests: no network, so speech uses the device voice only.
             self.client = ScriptedTutorClient()
+            self.speech = SpeechOutput(log: log, remote: nil, deviceOnlyReason: "scripted_client")
             log.record("app_launch", ["mode": "scripted"])
         } else {
             let config = AppConfig.load()
             if let url = config.serverURL, let token = config.accessToken {
                 self.client = HTTPTutorClient(baseURL: url, token: token, log: log)
+                self.speech = SpeechOutput(log: log, remote: SpeechOutput.Remote(baseURL: url, token: token))
                 log.record("app_launch", ["mode": "live", "server_host": url.host ?? "?"])
             } else {
                 let reason = config.missingReason ?? "unknown"
                 self.client = UnconfiguredTutorClient(reason: reason)
+                self.speech = SpeechOutput(log: log, remote: nil, deviceOnlyReason: "server_not_configured")
                 log.record("app_launch", ["mode": "unconfigured", "reason": reason])
             }
         }

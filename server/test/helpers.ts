@@ -45,6 +45,10 @@ export function askBody(overrides: Record<string, unknown> = {}) {
   };
 }
 
+export function speakBody(overrides: Record<string, unknown> = {}) {
+  return { session_id: "s1", text: "Take another look at line two.", purpose: "hint", ...overrides };
+}
+
 export function post(path: string, body: unknown, token: string | null = TOKEN): Request {
   const headers: Record<string, string> = { "content-type": "application/json" };
   if (token !== null) headers.authorization = `Bearer ${token}`;
@@ -89,8 +93,35 @@ export function fakeModels(text: string | (() => never)) {
         response: { timestamp: new Date(), modelId: "fake-stt" },
       }),
     }),
+    speech: () => {
+      throw new Error("no speech model expected in this test");
+    },
   };
   return { models, prompts };
+}
+
+// A fake speech provider: returns `bytes`, or throws if `bytes` is a function. The call options it saw are kept.
+export function fakeSpeech(bytes: Uint8Array | (() => never)) {
+  const calls: { model: string; text: string; voice?: string; instructions?: string; outputFormat?: string }[] = [];
+  const models: ModelFactory = {
+    language: () => {
+      throw new Error("no language model expected in this test");
+    },
+    transcription: () => {
+      throw new Error("no transcription model expected in this test");
+    },
+    speech: (cfg) => ({
+      specificationVersion: "v4",
+      provider: "fake",
+      modelId: cfg.model,
+      doGenerate: async (options) => {
+        calls.push({ model: cfg.model, text: options.text, voice: options.voice, instructions: options.instructions, outputFormat: options.outputFormat });
+        if (typeof bytes === "function") bytes();
+        return { audio: bytes as Uint8Array, warnings: [], response: { timestamp: new Date(), modelId: cfg.model } };
+      },
+    }),
+  };
+  return { models, calls };
 }
 
 export const liveEnv = (extra: Record<string, string | undefined> = {}) => ({
@@ -109,6 +140,9 @@ export function deps(env: Record<string, string | undefined>, models?: ModelFact
           throw new Error("no model expected in this test");
         },
         transcription: () => {
+          throw new Error("no model expected in this test");
+        },
+        speech: () => {
           throw new Error("no model expected in this test");
         },
       } satisfies ModelFactory),

@@ -1,12 +1,13 @@
 # Pencil Tutor server
 
-Vercel Functions in TypeScript, no framework, no database, no storage. Three endpoints. The iPad speaks answers with its own synthesizer; there is no TTS endpoint.
+Vercel Functions in TypeScript, no framework, no database, no storage. Four endpoints. The iPad's voice is OpenAI text-to-speech from `/api/speak`; the device synthesizer is only its fallback (plan amendment 11).
 
 | endpoint | auth | purpose |
 |---|---|---|
 | `GET /api/health` | none | version, which keys exist (yes/no), configured models |
 | `POST /api/watch` | bearer | page picture in, `wait` or `interrupt` out |
 | `POST /api/ask` | bearer | spoken question (m4a) + page picture in, transcript + answer text out |
+| `POST /api/speak` | bearer | text in, mp3 audio out |
 
 Every endpoint except health needs `Authorization: Bearer <APP_ACCESS_TOKEN>`. Anything else is `401 {error:"unauthorized"}`, including when the server has no token configured yet.
 
@@ -73,9 +74,21 @@ Request:
 
 `drawing_revision` is optional here (echoed if sent). Audio over 2.5 MB: 422 `invalid_audio`. Response 200: `{transcript, answer_text, drawing_revision?, model, latency_ms, request_id}`. A silent recording returns `transcript: ""` and an "ask again" line without calling the language model.
 
+### `POST /api/speak`
+
+Request: `{"session_id": "any string", "text": "Take another look at line two.", "purpose": "hint"}`.
+
+- `text`: 1 to 600 characters (not blank), else 422 `invalid_request`.
+- `purpose`: optional short lowercase label (`[a-z0-9_]{1,40}`, e.g. `hint`, `answer`, `check_ok`); it is logged, so free text is a 422.
+- Order of checks is the same as `/api/ask`: token (401), POST (405), key or scripted mode (503), body (400/413/422).
+
+Response 200: the raw mp3 bytes, `Content-Type: audio/mpeg`, headers `X-Latency-Ms` (server time) and `x-request-id`. Errors are the usual JSON `{error, reason, request_id}`: 502 provider error, 504 provider timeout, 503 missing key. Scripted mode returns a fixed 1668-byte silent mp3 (4 valid MPEG frames) with no key and no network.
+
+Settings (Vercel env, all optional): `SPEAK_MODEL` (default `gpt-4o-mini-tts`), `SPEAK_VOICE` (default `coral`), `SPEAK_INSTRUCTIONS` (default "Warm, patient math tutor talking to a 14-year-old. Calm, encouraging, natural pace. Say math aloud plainly."). Speech is OpenAI only and uses `OPENAI_API_KEY`. Built on the AI SDK's `generateSpeech` with `openai.speech(...)`, `outputFormat: "mp3"`.
+
 ### `GET /api/health`
 
-`{ok, version, vercel_env, openai_key_present, gemini_key_present, app_token_set, scripted, scripted_refused_in_production, models:{watch,ask,stt}, problems}`. No secrets, ever.
+`{ok, version, vercel_env, openai_key_present, gemini_key_present, app_token_set, scripted, scripted_refused_in_production, models:{watch,ask,stt,speak}, problems}`. No secrets, ever.
 
 ## Missing key and scripted mode
 
@@ -122,7 +135,7 @@ Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is t
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, reasons, tokens, keys (only sizes and counts).
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). `/api/speak` logs `text_chars, audio_bytes, purpose, voice, model, latency_ms`.
 
 ## Files
 
@@ -132,7 +145,7 @@ One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint
 
 ## Deploy
 
-Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `APP_ACCESS_TOKEN`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`. Do not set `TUTOR_SCRIPTED` on the production environment.
+Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `APP_ACCESS_TOKEN`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`. Do not set `TUTOR_SCRIPTED` on the production environment.
 
 ## Problem bank: `shared/problems.json`
 

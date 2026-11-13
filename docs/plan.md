@@ -125,7 +125,9 @@ handwriting recognition, analytics, App Store / TestFlight.
 2. Problem card: no WebView or KaTeX. Render the fixed prompts natively (a
    small SwiftUI fraction view is enough) or as bundled pre-rendered images.
 3. Voice out: device speech synthesizer only. No `/api/speak`, no server TTS.
-4. Server: `/api/watch`, `/api/ask`, `/api/health` only. Capability checks per
+   **Reversed by amendment 11 below (2026-11-13): the device voice was judged
+   unacceptable, server TTS is back.**
+4. Server: `/api/watch`, `/api/ask`, `/api/health` only (plus `/api/speak`, see amendment 11). Capability checks per
    role: the watch and ask models must take images; the transcription model
    must take audio. Provider is a setting (OpenAI or Gemini), because both keys
    exist and Gemini topped a handwriting-grading leaderboard.
@@ -146,6 +148,19 @@ handwriting recognition, analytics, App Store / TestFlight.
    deployment; the same synthetic set is re-run against the deployed watch
    endpoint.
 10. One handoff doc only: `docs/how-to-run.md`.
+
+### Amendment 11 (2026-11-13, after first real use): amendment 3 is reversed
+
+Edward used the app on the iPad and judged the on-device voice unacceptable
+(robotic). So `POST /api/speak` is back, as originally planned: OpenAI
+text-to-speech (`gpt-4o-mini-tts`, voice `coral`, mp3) served by our own
+server, same bearer token, same scripted-mode and missing-key rules as
+`/api/ask`. The iPad plays it with `AVAudioPlayer`, caches identical text in
+memory, and falls back to the device synthesizer (best installed English voice)
+when the server fails, takes over 4 s, or the text is over 600 characters.
+Hold-to-talk still wins: nothing plays while the student is recording. The
+server now has four endpoints: watch, ask, speak, health. Contract and settings
+are in `server/README.md`.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a

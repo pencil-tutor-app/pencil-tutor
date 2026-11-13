@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Pencil Tutor server: /api/watch, /api/ask, /api/health (Vercel Functions, no framework)",
+  "description": "Pencil Tutor server: /api/watch, /api/ask, /api/speak, /api/health (Vercel Functions, no framework)",
   "engines": {
     "node": ">=22"
   },

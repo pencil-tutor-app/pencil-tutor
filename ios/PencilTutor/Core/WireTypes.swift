@@ -110,6 +110,18 @@ struct AskResponse: Codable, Equatable {
     }
 }
 
+/// POST /api/speak: text 1 to 600 characters, `purpose` a short lowercase label. The reply is audio/mpeg bytes, not JSON.
+struct SpeakRequest: Codable, Equatable {
+    var sessionId: String
+    var text: String
+    var purpose: String
+
+    private enum CodingKeys: String, CodingKey {
+        case sessionId = "session_id"
+        case text, purpose
+    }
+}
+
 /// `{error, reason}` body the server sends with a 401, 422 or 503.
 struct ServerErrorBody: Codable {
     var error: String?

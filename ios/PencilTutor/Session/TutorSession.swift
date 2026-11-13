@@ -36,7 +36,9 @@ final class TutorSession: ObservableObject {
 
     @Published private(set) var marks: [Mark] = []
     @Published private(set) var statusMessage: String?
-    @Published private(set) var isRecording = false
+    @Published private(set) var isRecording = false {
+        didSet { syncSpeechWithMicrophone() }
+    }
     @Published private(set) var isBusy = false
     /// Read by UI tests only (see `LaunchOptions.showTestStatus`).
     @Published private(set) var testStatus = "strokes=0 lines=0 looks=0 last=none"
@@ -55,7 +57,9 @@ final class TutorSession: ObservableObject {
     private var penDownAt: Date?
     private var lookInFlight = false
     private var askInFlight = false
-    private var talkHeld = false
+    private var talkHeld = false {
+        didSet { syncSpeechWithMicrophone() }
+    }
     private var looksStarted = 0
     private var lastDecisionLabel = "none"
     private var lastLoggedSkip = ""
@@ -302,6 +306,14 @@ final class TutorSession: ObservableObject {
         refreshTestStatus()
     }
 
+    /// Test builds (Debug) also log the words: what the student asked and what the tutor said. Edward asked for the
+    /// full conversation in the log to tune the tutor (2026-11-13). Release builds keep counts only.
+    #if DEBUG
+    static let logsWords = true
+    #else
+    static let logsWords = false
+    #endif
+
     /// Called when the tutor sees no problem: a mark whose ink changed since it was placed was fixed, so it comes off.
     /// A mark on an untouched line stays (the tutor waits because it already said its piece).
     private func removeMarksOnFixedLines() {
@@ -355,6 +367,7 @@ final class TutorSession: ObservableObject {
         lastDecisionLabel = "interrupt"
         fields["hint_chars"] = hintWritten.count
         fields["hint_written"] = hintWritten
+        if Self.logsWords { fields["hint_spoken"] = response.hintSpoken ?? "" }
         fields["line_moved"] = currentLine.map { $0.index != lineNumber } ?? false
         env.log.record("decision", fields)
         appendHistory(action: "interrupt", line: lineNumber, hint: hintWritten)
@@ -367,6 +380,12 @@ final class TutorSession: ObservableObject {
     }
 
     // MARK: - Hold to talk
+
+    /// The tutor never talks over the student: while the button is down or the microphone is recording, speech is
+    /// blocked and anything already playing is cut off. A server voice that arrives late is dropped the same way.
+    private func syncSpeechWithMicrophone() {
+        env.speech.microphoneBusy = isRecording || talkHeld
+    }
 
     private func beginRecording() async {
         env.speech.stop()
@@ -421,8 +440,13 @@ final class TutorSession: ObservableObject {
                                            "image_bytes": snapshot.png.count, "lines": lines.count])
             let response = try await env.client.ask(request)
             let latency = Int(now().timeIntervalSince(started) * 1000)
-            env.log.record("ask_answered", ["latency_ms": latency, "answer_chars": response.answerText.count,
-                                            "model": response.model ?? "?", "request_id": response.requestId ?? "?"])
+            var answered: [String: Any] = ["latency_ms": latency, "answer_chars": response.answerText.count,
+                                           "model": response.model ?? "?", "request_id": response.requestId ?? "?"]
+            if Self.logsWords {
+                answered["student_said"] = response.transcript ?? ""
+                answered["tutor_said"] = response.answerText
+            }
+            env.log.record("ask_answered", answered)
             setStatus(response.answerText, seconds: 20)
             env.speech.speak(response.answerText, purpose: "answer")
         } catch {

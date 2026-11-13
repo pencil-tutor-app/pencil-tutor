@@ -5,9 +5,11 @@ import {
   NoObjectGeneratedError,
   NoOutputGeneratedError,
   Output,
+  generateSpeech,
   generateText,
   transcribe,
   type LanguageModel,
+  type SpeechModel,
   type TranscriptionModel,
 } from "ai";
 import type { RoleConfig } from "./config.js";
@@ -18,6 +20,7 @@ import { ASK_POLICY, WATCH_POLICY, WatchDecisionSchema } from "./policy.js";
 export interface ModelFactory {
   language(cfg: RoleConfig, apiKey: string): LanguageModel;
   transcription(cfg: RoleConfig, apiKey: string): TranscriptionModel;
+  speech(cfg: RoleConfig, apiKey: string): SpeechModel;
 }
 
 export const realModels: ModelFactory = {
@@ -28,6 +31,10 @@ export const realModels: ModelFactory = {
     return cfg.provider === "openai"
       ? createOpenAI({ apiKey }).transcription(cfg.model)
       : createGoogleGenerativeAI({ apiKey }).transcription(cfg.model);
+  },
+  // Text-to-speech is OpenAI only; the speak role never resolves to another provider.
+  speech(cfg, apiKey) {
+    return createOpenAI({ apiKey }).speech(cfg.model);
   },
 };
 
@@ -49,6 +56,29 @@ export function classifyFailure(err: unknown): ModelFailure {
 const WATCH_TIMEOUT_MS = 40_000;
 const ASK_TIMEOUT_MS = 30_000;
 const STT_TIMEOUT_MS = 20_000;
+const SPEAK_TIMEOUT_MS = 20_000;
+
+export async function runSpeech(args: {
+  model: SpeechModel;
+  text: string;
+  voice: string;
+  instructions: string;
+}): Promise<{ kind: "audio"; bytes: Uint8Array } | ModelFailure> {
+  try {
+    const result = await generateSpeech({
+      model: args.model,
+      text: args.text,
+      voice: args.voice,
+      outputFormat: "mp3",
+      instructions: args.instructions,
+      abortSignal: AbortSignal.timeout(SPEAK_TIMEOUT_MS),
+      maxRetries: 1,
+    });
+    return { kind: "audio", bytes: result.audio.uint8Array };
+  } catch (err) {
+    return classifyFailure(err);
+  }
+}
 
 export async function runWatchModel(args: {
   model: LanguageModel;

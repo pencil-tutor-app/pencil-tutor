@@ -8,7 +8,7 @@ export function handleHealth(request: Request, env: Env = process.env): Response
   const scripted = scriptedState(env);
 
   const models: Record<string, { provider: string; model: string } | { error: string }> = {};
-  for (const role of ["watch", "ask", "stt"] as Role[]) {
+  for (const role of ["watch", "ask", "stt", "speak"] as Role[]) {
     try {
       const { provider, model } = roleConfig(role, env);
       models[role] = { provider, model };

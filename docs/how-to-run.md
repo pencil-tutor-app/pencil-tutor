@@ -19,6 +19,17 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
 - **Watcher model:** OpenAI `gpt-6.1-sol`. To try Gemini, set `WATCH_PROVIDER`
   to `google` and `WATCH_MODEL` to `gemini-4-argon` in Vercel, then redeploy.
 
+## Voice
+
+The tutor's voice is OpenAI text-to-speech from our server (`POST /api/speak`,
+`gpt-4o-mini-tts`, voice `coral`). Change it in Vercel, then redeploy:
+`SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS` (tone prompt). If the server
+is slow (over 4 s) or down, the app speaks with the best installed device voice
+instead; the session log shows `speech_started` (source `server`, `cache` or
+`device`, with latency) and `speech_fallback` (with the reason). For a nicer
+fallback, download an Enhanced or Premium English voice on the iPad (Settings,
+Accessibility, Spoken Content, Voices).
+
 ## Install on the iPad (morning, one time)
 
 Edward does steps 1 to 3; the agent does the rest.
