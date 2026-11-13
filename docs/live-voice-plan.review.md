@@ -1,0 +1,28 @@
+VERDICT: CUT
+
+The core design is workable. The [shutdown date](https://developers.openai.com/api/docs/deprecations), [price and modalities](https://developers.openai.com/api/docs/models/gpt-live-1), and [WebRTC relay](https://developers.openai.com/api/docs/guides/voice-webrtc) check out. Cut the extra page-description pipeline and strengthen the actual iPad check. No files changed.
+
+1. **Unbacked claims.** The source defaults to `gpt-4o-mini-tts`, but permits an override ([config.ts:15](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/server/lib/config.ts:15), [config.ts:52](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/server/lib/config.ts:52)). The deployed health fetch failed, so deployed configuration and this project’s Live access remain unverified.
+
+   “WebSocket cannot run from the iPad” gives the wrong reason ([plan:21](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/docs/live-voice-plan.md:21)). Native Apple networking supports [WebSocket handshake headers](https://developer.apple.com/documentation/network/websocket/additionalheaders(_:)). Keeping the project key off-device justifies the relay.
+
+   “Images do not fit” is too absolute. The app caps PNGs at 400,000 bytes, which is a ceiling, not a measured size ([PageSnapshot.swift:17](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/Drawing/PageSnapshot.swift:17)). [Responses delegation supports visual inputs](https://developers.openai.com/api/docs/guides/live-delegation#add-images-and-visual-context). Reusing the existing HTTPS image path is sufficient justification for client delegation.
+
+   The “six client events” are unnamed; enumerate and validate them against the API. Five minutes and one retry are chosen defaults, not measured values ([plan:39](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/docs/live-voice-plan.md:39)). No comparison establishes better voice or latency. Per R38, record those results during the real lesson check.
+
+2. **The smallest version.** Keep the authenticated SDP endpoint, one Live audio owner, and `/api/consult` using the existing image validation, ask prompt and `runAskModel` ([ask.ts:75](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/server/lib/ask.ts:75)). Capture the current page when consultation is requested. Forward existing watch hints and manual-check speech through Live. Keep enough transcript for follow-up questions, bounded closure, and the existing fallback. That covers conversation, page questions and unsolicited hints without another page-understanding pipeline.
+
+3. **Delete list.**
+   - Remove `page_summary` and descriptions pushed after ink changes. The local line model contains geometry and timestamps, not recognized equations ([LineGrouping.swift:12](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/Core/LineGrouping.swift:12)). Consultation already reads the image; adding summaries changes watch output and creates stale context.
+   - Remove automatic reconnect from the first version. Immediate fallback already preserves tutoring and avoids restoring context and routing old delegation results into a replacement session.
+   - Remove the new headless WebRTC client as a required release gate. Spend that effort exercising the actual iPad path. Keep focused protocol tests and existing CI.
+   - Remove the guarantee that hints never arrive mid-sentence. [Live transcripts have no completed-turn event](https://developers.openai.com/api/docs/guides/live-conversations#transcript-deltas); transcript grouping cannot establish that guarantee.
+
+4. **Untestable steps.** Health, an SDP answer, a transcript and `live_connected` prove configuration or connection, not audible device behavior ([plan:71](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/docs/live-voice-plan.md:71)). Replace that acceptance with one recorded iPad pass: ask about handwritten work, receive a watch hint, interrupt speech, mute/unmute, disconnect, use fallback, idle-close and reopen. Capture audio and session logs. Report voice quality unverified if nobody listens. Current UI tests explicitly use a network-free scripted client ([AppEnvironment.swift:20](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/App/AppEnvironment.swift:20)). Run builds on CI.
+
+5. **Traps.**
+   - **Competing audio owners.** Existing speech selects `.playback`; recording selects `.playAndRecord` ([SpeechOutput.swift:299](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/Audio/SpeechOutput.swift:299), [AudioRecorder.swift:30](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/Audio/AudioRecorder.swift:30)). Live and fallback must hand over ownership explicitly.
+   - **Late speech and lingering sessions.** `stop()` does not cancel the launched watch/ask requests ([TutorSession.swift:151](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/ios/PencilTutor/Session/TutorSession.swift:151)). Reject late consult results after page changes or closure. Define how watch hints speak after idle closure without requiring a mic tap.
+   - **Changed mathematical meaning.** Watch validates hint text before speaking ([decision.ts:39](/Users/edwardtran/side-projects/smart-math-bc/pencil-tutor/server/lib/decision.ts:39)); Live paraphrases afterward. Check actual spoken hints for changed signs, leaked answers and invented corrections.
+
+6. **Needs Edward.** None for this review, per R26. The technical gaps above are for the builder to resolve.
