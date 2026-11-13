@@ -65,6 +65,12 @@ final class TutorSession: ObservableObject {
         self.canvas = canvas
     }
 
+    /// Canvas diagnostics (touch types, swipe-back blocking, canvas size) go to the session log.
+    /// Counts and labels only, never ink content.
+    func noteCanvas(_ type: String, _ fields: [String: Any] = [:]) {
+        env.log.record(type, fields.merging(["problem_id": problem.id]) { current, _ in current })
+    }
+
     func penDidTouchDown() {
         penDown = true
         penDownAt = now()
@@ -83,6 +89,7 @@ final class TutorSession: ObservableObject {
         let strokes = Self.inkStrokes(from: canvas.drawing)
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
+        env.log.record("ink_changed", ["strokes": strokes.count, "lines": lines.count, "revision": drawingRevision])
         scheduleCheck()
     }
 
@@ -100,6 +107,12 @@ final class TutorSession: ObservableObject {
     }
 
     func erasePage() {
+        if let canvas, !canvas.drawing.strokes.isEmpty {
+            // Undoable from the tool picker's undo button, so a fast wipe is never a lost page.
+            let previous = canvas.drawing
+            canvas.undoManager?.registerUndo(withTarget: canvas) { $0.drawing = previous }
+            canvas.undoManager?.setActionName("Erase page")
+        }
         canvas?.drawing = PKDrawing()
         marks = []
         env.log.record("page_erased", ["problem_id": problem.id])

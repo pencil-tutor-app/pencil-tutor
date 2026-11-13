@@ -11,6 +11,9 @@ struct ProblemScreen: View {
         VStack(spacing: 0) {
             ProblemCardView(problem: session.problem)
             Divider()
+            // Buttons sit above the page: the floating Pencil tool picker covers the bottom of the screen.
+            controlBar
+            Divider()
             ZStack(alignment: .bottom) {
                 InkCanvas(session: session)
                 MarksOverlay(marks: session.marks)
@@ -26,8 +29,6 @@ struct ProblemScreen: View {
                         .accessibilityIdentifier("statusBanner")
                 }
             }
-            Divider()
-            controlBar
         }
         .navigationTitle("Problem")
         .navigationBarTitleDisplayMode(.inline)
