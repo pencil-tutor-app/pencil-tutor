@@ -6,7 +6,14 @@ enum TutorError: Error {
     case notConfigured(reason: String)
     case offline(detail: String)
     case timedOut
-    case unauthorized
+    /// HTTP 401: the code is missing or wrong. `reason` is the server's label (`unknown_code`, `malformed_code`, ...).
+    case unauthorized(reason: String)
+    /// HTTP 403 `code_disabled`.
+    case codeTurnedOff
+    /// HTTP 403 `hours_used_up`. Carries the allowance the server sent with it, when there was one.
+    case hoursUsedUp(allowance: Allowance?)
+    /// HTTP 403 `live_not_in_plan` (from /api/live-session only).
+    case liveNotInPlan
     case rejected(status: Int, reason: String)
     case serverUnavailable(status: Int, reason: String)
     case badResponse(detail: String)
@@ -25,7 +32,13 @@ enum TutorError: Error {
         case .timedOut:
             return "The tutor is taking too long. Try again in a moment."
         case .unauthorized:
-            return "The tutor didn't let this app in. Please tell your teacher."
+            return AllowanceText.wrongCode
+        case .codeTurnedOff:
+            return AllowanceText.codeTurnedOff
+        case .hoursUsedUp:
+            return AllowanceText.usedUp
+        case .liveNotInPlan:
+            return "Voice chat isn't part of this plan. You can still tap the microphone to ask a question."
         case .rejected:
             return "The tutor couldn't read that. Try again."
         case .serverUnavailable:
@@ -37,7 +50,7 @@ enum TutorError: Error {
         case .microphoneDenied:
             return "I need the microphone to hear you. Turn it on in Settings."
         case .recordingTooShort:
-            return "Hold the button a little longer while you talk."
+            return "I didn't catch that. Tap the microphone, ask your question, then tap it again."
         case .recordingFailed:
             return "I couldn't record that. Try again."
         case .problemBankMissing:
@@ -45,13 +58,16 @@ enum TutorError: Error {
         }
     }
 
-    /// Full detail for the session log. Never contains keys or tokens.
+    /// Full detail for the session log. Never contains keys, codes or tokens.
     var logDetail: String {
         switch self {
         case .notConfigured(let reason): return "not_configured: \(reason)"
         case .offline(let detail): return "offline: \(detail)"
         case .timedOut: return "timed_out"
-        case .unauthorized: return "unauthorized (HTTP 401)"
+        case .unauthorized(let reason): return "unauthorized (HTTP 401): \(reason)"
+        case .codeTurnedOff: return "code_disabled (HTTP 403)"
+        case .hoursUsedUp: return "hours_used_up (HTTP 403)"
+        case .liveNotInPlan: return "live_not_in_plan (HTTP 403)"
         case .rejected(let status, let reason): return "rejected HTTP \(status): \(reason)"
         case .serverUnavailable(let status, let reason): return "server_unavailable HTTP \(status): \(reason)"
         case .badResponse(let detail): return "bad_response: \(detail)"

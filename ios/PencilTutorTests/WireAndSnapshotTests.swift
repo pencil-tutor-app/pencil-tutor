@@ -49,6 +49,48 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertNil(waited.line)
     }
 
+    func testRepliesCarryTheAllowanceWhenTheServerSendsOne() throws {
+        let allowance = #""allowance":{"month":"2026-11","used_seconds":120,"cap_seconds":28800,"remaining_seconds":28680,"remaining_minutes":478,"percent_used":0.4,"state":"ok","notice":null}"#
+        let watch = #"{"action":"wait","line":null,"reason":"fine","hint_spoken":null,"hint_written":null,"drawing_revision":3,"model":"m","latency_ms":10,"request_id":"x",\#(allowance)}"#
+        XCTAssertEqual(try JSONDecoder().decode(WatchResponse.self, from: Data(watch.utf8)).allowance?.remainingMinutes, 478)
+
+        let ask = #"{"transcript":"t","answer_text":"a","model":"m","latency_ms":1,"request_id":"r",\#(allowance)}"#
+        XCTAssertEqual(try JSONDecoder().decode(AskResponse.self, from: Data(ask.utf8)).allowance?.state, .ok)
+
+        let consult = #"{"answer_text":"a","model":"m","latency_ms":1,"request_id":"r",\#(allowance)}"#
+        XCTAssertNotNil(try JSONDecoder().decode(ConsultResponse.self, from: Data(consult.utf8)).allowance)
+
+        let live = #"{"session_id":"s","sdp":"v=0","model":"m","voice":"v","latency_ms":1,"request_id":"r",\#(allowance)}"#
+        XCTAssertNotNil(try JSONDecoder().decode(LiveSessionResponse.self, from: Data(live.utf8)).allowance)
+
+        // A server that sends none (older build, scripted mode) is fine too.
+        let bare = #"{"transcript":"t","answer_text":"a"}"#
+        XCTAssertNil(try JSONDecoder().decode(AskResponse.self, from: Data(bare.utf8)).allowance)
+    }
+
+    func testErrorBodyCarriesTheAllowance() throws {
+        let body = #"{"error":"hours_used_up","reason":"month_cap_reached","request_id":"r","allowance":{"month":"2026-11","used_seconds":28800,"cap_seconds":28800,"remaining_seconds":0,"remaining_minutes":0,"percent_used":100,"state":"used_up","notice":null}}"#
+        let decoded = try JSONDecoder().decode(ServerErrorBody.self, from: Data(body.utf8))
+        XCTAssertEqual(decoded.error, "hours_used_up")
+        XCTAssertEqual(decoded.allowance?.state, .usedUp)
+    }
+
+    func testSpeakRequestLeavesTheTextOutForTheAllowanceNotices() throws {
+        let notice = try jsonObject(SpeakRequest(sessionId: "s1", text: nil, purpose: "allowance_low"))
+        XCTAssertEqual(Set(notice.keys), ["session_id", "purpose"], "the server composes these two sentences itself")
+        let normal = try jsonObject(SpeakRequest(sessionId: "s1", text: "Check the signs.", purpose: "hint"))
+        XCTAssertEqual(Set(normal.keys), ["session_id", "text", "purpose"])
+    }
+
+    func testScriptedClientAnswersMeAndHeartbeatWithAHealthyAllowance() async throws {
+        let client = ScriptedTutorClient()
+        let me = try await client.me()
+        XCTAssertFalse(me.plan.live, "live voice is off by default")
+        XCTAssertEqual(me.allowance.state, .ok)
+        let beat = try await client.heartbeat(HeartbeatRequest(sessionId: "s", problemId: "u3-04"))
+        XCTAssertTrue(beat.ok)
+    }
+
     func testAskResponseDecodes() throws {
         let body = #"{"transcript":"what next","answer_text":"Try dividing by 3.","model":"m","latency_ms":3000,"request_id":"r"}"#
         let decoded = try JSONDecoder().decode(AskResponse.self, from: Data(body.utf8))

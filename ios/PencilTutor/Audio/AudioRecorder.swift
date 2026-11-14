@@ -1,15 +1,17 @@
 import AVFoundation
 import Foundation
 
-/// Records the student's question as a small m4a file while the Ask button is held.
+/// Records the student's question as a small m4a file between two taps of the microphone button.
 final class AudioRecorder {
     struct Recording {
         let url: URL
         let duration: TimeInterval
     }
 
-    /// Anything shorter than this is treated as an accidental tap.
+    /// Anything shorter than this is treated as an accidental tap pair.
     static let minimumSeconds: TimeInterval = 0.6
+    /// Recording stops and sends by itself at this length, so a forgotten second tap never records for ever.
+    static let maximumSeconds: TimeInterval = 30
 
     private var recorder: AVAudioRecorder?
 

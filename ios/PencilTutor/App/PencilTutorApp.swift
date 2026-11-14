@@ -6,8 +6,9 @@ struct PencilTutorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ProblemListView()
+            RootView()
                 .environmentObject(env)
+                .environmentObject(env.account)
                 .preferredColorScheme(.light)
         }
     }

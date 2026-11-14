@@ -49,9 +49,8 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        NSMicrophoneUsageDescription: Pencil Tutor listens so you can talk with the tutor about the problem. Tap the microphone button to mute it.
+        NSMicrophoneUsageDescription: Pencil Tutor listens so you can ask the tutor a question. Tap the microphone button, ask, then tap it again to send.
         SERVER_URL: $(SERVER_URL)
-        APP_ACCESS_TOKEN: $(APP_ACCESS_TOKEN)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor

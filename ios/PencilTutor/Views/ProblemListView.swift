@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProblemListView: View {
     @EnvironmentObject private var env: AppEnvironment
+    @EnvironmentObject private var account: StudentAccount
     @State private var showSettings = false
     @State private var exportItem: ExportItem?
     @State private var exportMessage: String?
@@ -15,6 +16,11 @@ struct ProblemListView: View {
                     Text(notice)
                         .foregroundStyle(.red)
                         .accessibilityIdentifier("problemListNotice")
+                }
+                if let block = account.block {
+                    Text(block.message)
+                        .font(.body.weight(.medium))
+                        .accessibilityIdentifier("problemListBlocked")
                 }
                 ForEach(env.problems) { problem in
                     NavigationLink(value: problem) {
@@ -36,6 +42,9 @@ struct ProblemListView: View {
             }
             .onAppear(perform: openProblemFromLaunchArgument)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    AllowanceChip()
+                }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button {
                         exportLog()
@@ -53,6 +62,7 @@ struct ProblemListView: View {
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView(settings: env.settings, log: env.log)
+                    .environmentObject(account)
             }
             .sheet(item: $exportItem) { item in
                 ShareSheet(items: [item.url])

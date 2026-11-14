@@ -3,11 +3,25 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var settings: TutorSettings
     let log: SessionLog
+    @EnvironmentObject private var account: StudentAccount
     @Environment(\.dismiss) private var dismiss
+    @State private var confirmingCodeChange = false
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    LabeledContent("Your code", value: account.maskedCode ?? "None")
+                        .accessibilityIdentifier("settingsCode")
+                    LabeledContent("Time left this month", value: account.allowance?.chipText ?? "Checking...")
+                        .accessibilityIdentifier("settingsMinutesLeft")
+                    Button("Use a different code") { confirmingCodeChange = true }
+                        .accessibilityIdentifier("useDifferentCodeButton")
+                } header: {
+                    Text("Your tutoring time")
+                } footer: {
+                    Text("Your hours start fresh on the 1st of every month.")
+                }
                 Section {
                     SettingsStepper(
                         title: "Pen idle before the tutor looks",
@@ -32,6 +46,15 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .confirmationDialog("Use a different code?", isPresented: $confirmingCodeChange, titleVisibility: .visible) {
+                Button("Use a different code", role: .destructive) {
+                    account.signOut(reason: "settings_use_different_code")
+                    dismiss()
+                }
+                Button("Keep this code", role: .cancel) {}
+            } message: {
+                Text("You will need to type a code again to talk to the tutor.")
+            }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {

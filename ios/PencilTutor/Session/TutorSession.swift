@@ -25,9 +25,14 @@ struct Mark: Identifiable, Equatable {
 
 /// One problem attempt: watches the ink, decides when to look, asks the tutor, and shows what comes back.
 ///
-/// Voice: while a problem is open the tutor talks through a GPT-Live session (`LiveVoice`). If that cannot connect or
-/// drops, the session falls back to the earlier path (hold to ask, `/api/ask`, `/api/speak`, device voice) and says why in
-/// the log. `voice` says which of those the screen is in.
+/// Voice: the base plan is tap to ask (tap the microphone, ask, tap again; `/api/ask` answers and `/api/speak` says it in the
+/// tutor's voice, with the device voice as the last fallback). When the student's plan includes live voice
+/// (`/api/me` says `live: true`, default false) a problem also opens a GPT-Live session (`LiveVoice`); if that cannot connect
+/// or drops, the session falls back to tap to ask and says why in the log. `voice` says which of those the screen is in.
+///
+/// Hours: the account tells this session when the month's hours are used up or the code is turned off. Then it stops
+/// looking, asking and talking, and leaves drawing alone. While a problem is open and the student is active it also sends
+/// a heartbeat every minute so the server can count the time (`ActivityMeter`).
 @MainActor
 final class TutorSession: ObservableObject {
     enum LookTrigger: String {
@@ -37,11 +42,11 @@ final class TutorSession: ObservableObject {
 
     /// Which voice path this screen is on. The mic control on screen follows it.
     enum VoiceMode: Equatable {
-        /// No live voice in this build (scripted UI tests, unconfigured server): hold to ask only.
+        /// No live voice (the default: base plan, scripted UI tests, unconfigured server): tap to ask only.
         case notStarted
         case connecting
         case live(micOn: Bool)
-        /// Live failed or dropped. Hold to ask works; `reason` is also in the session log.
+        /// Live failed or dropped. Tap to ask works; `reason` is also in the session log.
         case fallback(reason: String)
         /// Live was closed for being idle or for the app going to the background. The old path speaks hints; the mic button reopens Live.
         case idleClosed
@@ -74,9 +79,16 @@ final class TutorSession: ObservableObject {
     private var penDownAt: Date?
     private var lookInFlight = false
     private var askInFlight = false
-    private var talkHeld = false {
+    /// The student tapped the microphone and recording is starting or running (a permission prompt may still be open).
+    private var talkRequested = false {
         didSet { syncSpeechWithMicrophone() }
     }
+    private var autoStopTask: Task<Void, Never>?
+    private var activity = ActivityMeter()
+    private var heartbeatTask: Task<Void, Never>?
+    private var lastHeartbeatLabel = ""
+    private var inForeground = true
+    private var blockObserver: AnyCancellable?
     private var looksStarted = 0
     private var lastDecisionLabel = "none"
     private var lastLoggedSkip = ""
@@ -90,6 +102,7 @@ final class TutorSession: ObservableObject {
     private var stopped = false
     private var delegationTasks: [String: Task<Void, Never>] = [:]
     private var backgroundObserver: NSObjectProtocol?
+    private var foregroundObserver: NSObjectProtocol?
     /// The previous screen's live session may still be shutting down when the next problem opens. One live audio owner at a
     /// time: a new connection waits for this to finish.
     private static var previousTeardown: Task<Void, Never>?
@@ -99,6 +112,10 @@ final class TutorSession: ObservableObject {
         self.env = env
         self.now = now
         env.log.record("problem_opened", ["problem_id": problem.id])
+        // The first value arrives at once; later ones when the hours run out, come back, or the code is turned off.
+        blockObserver = env.account.$block.removeDuplicates().sink { [weak self] block in
+            self?.accountBlockChanged(block)
+        }
     }
 
     // MARK: - Canvas events
@@ -128,6 +145,7 @@ final class TutorSession: ObservableObject {
         guard let canvas else { return }
         drawingRevision += 1
         lastInkAt = now()
+        activity.note(.ink, at: now())
         let strokes = Self.inkStrokes(from: canvas.drawing)
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
@@ -165,35 +183,63 @@ final class TutorSession: ObservableObject {
         refreshTestStatus(strokes: 0, lines: 0)
     }
 
-    func holdToTalkChanged(pressed: Bool) {
-        // While the live voice owns the microphone, hold-to-ask is not on screen; this is a guard, not a path.
-        switch voice {
-        case .live, .connecting:
-            if pressed { env.log.record("ask_ignored", ["why": "live voice owns the microphone"]) }
+    /// The base plan's microphone button: tap once to start recording a question, tap again to stop and send it. Recording
+    /// also stops and sends by itself at 30 seconds, and is dropped if the student leaves the problem.
+    func tapToTalkTapped() {
+        if let block = env.account.block {
+            env.log.record("ask_ignored", ["why": block.logLabel])
+            setStatus(block.message)
             return
-        case .notStarted, .fallback, .idleClosed:
+        }
+        // While the live voice owns the microphone, the tap-to-ask button is not on screen; this is a guard, not a path.
+        switch voice {
+        case .live, .connecting, .idleClosed:
+            env.log.record("ask_ignored", ["why": "live voice owns the microphone"])
+            return
+        case .notStarted, .fallback:
             break
         }
-        if pressed {
-            guard !isRecording, !askInFlight, !talkHeld else { return }
-            talkHeld = true
-            Task { await beginRecording() }
+        if isRecording {
+            env.log.record("ask_stop_tapped", [:])
+            Task { await finishRecording(reason: "second_tap") }
+        } else if talkRequested {
+            // The permission prompt or the start is still going: a second tap takes the request back.
+            talkRequested = false
+            env.log.record("ask_cancelled", ["why": "tapped again before recording started"])
+        } else if askInFlight {
+            env.log.record("ask_ignored", ["why": "the last question is still being answered"])
+            setStatus("One moment, I'm still thinking about your last question.")
         } else {
-            talkHeld = false
-            if isRecording { Task { await finishRecording() } }
+            talkRequested = true
+            Task { await beginRecording() }
         }
     }
 
     func stop() {
         stopped = true
         checkTask?.cancel()
+        heartbeatTask?.cancel()
+        heartbeatTask = nil
+        autoStopTask?.cancel()
+        autoStopTask = nil
+        blockObserver = nil
         delegationTasks.values.forEach { $0.cancel() }
         delegationTasks = [:]
         env.speech.stop()
-        if isRecording { _ = recorder.stop(); isRecording = false }
+        if isRecording {
+            _ = recorder.stop()
+            isRecording = false
+            env.log.record("ask_cancelled", ["why": "left the problem while recording"])
+        }
+        talkRequested = false
+        if begun { env.account.problemClosed() }
         if let backgroundObserver {
             NotificationCenter.default.removeObserver(backgroundObserver)
             self.backgroundObserver = nil
+        }
+        if let foregroundObserver {
+            NotificationCenter.default.removeObserver(foregroundObserver)
+            self.foregroundObserver = nil
         }
         if let closing = live {
             live = nil
@@ -208,23 +254,123 @@ final class TutorSession: ObservableObject {
 
     // MARK: - Live voice
 
-    /// Opens the live voice when the screen appears. Idempotent.
+    /// Runs when the screen appears. Idempotent. Counts the time (heartbeat), checks the code and plan with the server
+    /// (`/api/me`), and opens live voice only if the plan includes it.
     func begin() {
         guard !begun else { return }
         begun = true
-        guard env.makeLiveTransport != nil else {
-            env.log.record("live_skipped", ["reason": env.liveOffReason ?? "unknown", "problem_id": problem.id])
-            return
-        }
         backgroundObserver = NotificationCenter.default.addObserver(
             forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
         ) { [weak self] _ in
             Task { @MainActor in self?.appDidEnterBackground() }
         }
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.appWillEnterForeground() }
+        }
+        env.account.problemOpened()
+        startHeartbeatLoop()
+        Task { await openLiveVoiceIfThePlanAllows() }
+    }
+
+    /// Asks the server about the plan (this also wakes the database), then decides about live voice. The default plan has
+    /// no live voice, so the usual outcome is a log line saying why and nothing else.
+    private func openLiveVoiceIfThePlanAllows() async {
+        await env.account.refresh(reason: "problem_opened")
+        guard !stopped else { return }
+        guard env.makeLiveTransport != nil else {
+            env.log.record("live_skipped", ["reason": env.liveOffReason ?? "unknown", "problem_id": problem.id])
+            return
+        }
+        if let block = env.account.block {
+            env.log.record("live_skipped", ["reason": block.logLabel, "problem_id": problem.id])
+            return
+        }
+        guard env.account.liveAllowed else {
+            env.log.record("live_skipped", [
+                "reason": env.account.plan == nil ? "plan_unknown_so_base_plan" : "plan_live_false", "problem_id": problem.id
+            ])
+            return
+        }
         startLive(greet: true, trigger: "problem_opened")
     }
 
-    /// The mic control. While live it mutes and unmutes; after an idle close or a fallback it asks for the live voice again.
+    // MARK: - Hours: heartbeat and blocked mode
+
+    private func startHeartbeatLoop() {
+        heartbeatTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: UInt64(ActivityMeter.heartbeatInterval * 1_000_000_000))
+                guard !Task.isCancelled, let self else { return }
+                await self.heartbeatTick()
+            }
+        }
+    }
+
+    private func heartbeatTick() async {
+        let at = now()
+        let decision = activity.decide(now: at, problemOpen: !stopped, inForeground: inForeground, blocked: env.account.isBlocked)
+        guard case .send(let kind, let secondsAgo) = decision else {
+            // Logged when the reason changes, so a quiet student shows one line and not one a minute.
+            if decision.label != lastHeartbeatLabel {
+                lastHeartbeatLabel = decision.label
+                env.log.record("heartbeat_skipped", ["reason": decision.label, "problem_id": problem.id])
+            }
+            return
+        }
+        lastHeartbeatLabel = ""
+        activity.noteHeartbeatSent(at: at)
+        env.log.record("heartbeat_sending", ["after": kind.rawValue, "seconds_since_activity": secondsAgo, "problem_id": problem.id])
+        do {
+            let reply = try await env.client.heartbeat(HeartbeatRequest(sessionId: sessionID, problemId: problem.id))
+            env.log.record("heartbeat_ok", [
+                "remaining_minutes": reply.allowance.remainingMinutes, "state": reply.allowance.state.rawValue,
+                "elapsed_ms": Int(now().timeIntervalSince(at) * 1000)
+            ])
+        } catch {
+            let (_, detail) = TutorError.describe(error)
+            env.log.record("heartbeat_failed", ["detail": detail, "next": "try again in a minute"])
+        }
+    }
+
+    /// The hours ran out or the code was turned off (or it came back). The tutor stops looking, asking and talking;
+    /// drawing is untouched.
+    private func accountBlockChanged(_ block: StudentAccount.Block?) {
+        guard let block else { return }
+        env.log.record("session_blocked", ["reason": block.logLabel, "problem_id": problem.id])
+        checkTask?.cancel()
+        autoStopTask?.cancel()
+        autoStopTask = nil
+        if isRecording {
+            _ = recorder.stop()
+            isRecording = false
+            env.log.record("ask_cancelled", ["why": block.logLabel])
+        }
+        talkRequested = false
+        if live != nil {
+            closeLive(reason: block.logLabel)
+            voice = .notStarted
+        }
+    }
+
+    private func closeLive(reason: String) {
+        guard let closing = live else { return }
+        live = nil
+        let previous = Self.previousTeardown
+        Self.previousTeardown = Task {
+            await previous?.value
+            await closing.close(reason: reason)
+        }
+    }
+
+    private func appWillEnterForeground() {
+        inForeground = true
+        env.log.record("app_foreground", ["problem_id": problem.id])
+    }
+
+    /// The live mic control. While live it mutes and unmutes; after an idle close or a fallback it asks for the live voice
+    /// again. Only on screen when the student's plan includes live voice.
     func micTapped() {
         switch voice {
         case .live(let micOn):
@@ -244,7 +390,9 @@ final class TutorSession: ObservableObject {
         voice = .connecting
         env.speech.stop()
         if isRecording { _ = recorder.stop(); isRecording = false }
-        talkHeld = false
+        autoStopTask?.cancel()
+        autoStopTask = nil
+        talkRequested = false
         env.log.record("live_starting", ["trigger": trigger, "problem_id": problem.id])
 
         let voiceSession = LiveVoice(
@@ -281,11 +429,11 @@ final class TutorSession: ObservableObject {
     }
 
     private func switchToFallback(reason: String) {
-        env.log.record("live_fallback", ["reason": reason, "to": "hold_to_ask_ask_and_speak", "problem_id": problem.id])
+        env.log.record("live_fallback", ["reason": reason, "to": "tap_to_ask_ask_and_speak", "problem_id": problem.id])
         live = nil
         voice = .fallback(reason: reason)
         setStatus(reason == "microphone_denied" ? TutorError.microphoneDenied.studentMessage
-                  : "Voice chat isn't working right now. You can still hold the button to ask me a question.")
+                  : "Voice chat isn't working right now. You can still tap the microphone to ask me a question.")
     }
 
     /// The live session ended without the app asking (idle, dropped, ended by OpenAI).
@@ -301,6 +449,8 @@ final class TutorSession: ObservableObject {
     }
 
     private func appDidEnterBackground() {
+        inForeground = false
+        env.log.record("app_background", ["problem_id": problem.id])
         guard let closing = live, !stopped else { return }
         env.log.record("live_paused", ["reason": "app_backgrounded", "next": "mic button reopens live"])
         live = nil
@@ -436,6 +586,10 @@ final class TutorSession: ObservableObject {
 
     private func scheduleCheck() {
         checkTask?.cancel()
+        if let block = env.account.block {
+            noteSkip("skip: \(block.logLabel)")
+            return
+        }
         // A pen-down with no matching pen-up (a cancelled touch) must not block looking forever.
         let penStillDown = penDown && (penDownAt.map { now().timeIntervalSince($0) < 15 } ?? false)
         if penDown && !penStillDown {
@@ -477,6 +631,11 @@ final class TutorSession: ObservableObject {
     // MARK: - Looking
 
     private func startLook(trigger: LookTrigger) {
+        if let block = env.account.block {
+            env.log.record("look_skipped", ["trigger": trigger.rawValue, "why": block.logLabel])
+            if trigger == .manual { setStatus(block.message) }
+            return
+        }
         guard !lookInFlight else {
             env.log.record("look_skipped", ["trigger": trigger.rawValue, "why": "a request is already in flight"])
             if trigger == .manual { setStatus("One moment, I'm still looking.") }
@@ -498,6 +657,7 @@ final class TutorSession: ObservableObject {
 
         let revision = drawingRevision
         lastLookRevision = revision
+        activity.note(.look, at: now())
         lookInFlight = true
         isBusy = true
         looksStarted += 1
@@ -665,40 +825,56 @@ final class TutorSession: ObservableObject {
         if history.count > 10 { history.removeFirst(history.count - 10) }
     }
 
-    // MARK: - Hold to talk
+    // MARK: - Tap to talk
 
-    /// The tutor never talks over the student: while the button is down or the microphone is recording, speech is
-    /// blocked and anything already playing is cut off. A server voice that arrives late is dropped the same way.
+    /// The tutor never talks over the student: while the microphone is recording or about to, speech is blocked and
+    /// anything already playing is cut off. A server voice that arrives late is dropped the same way.
     private func syncSpeechWithMicrophone() {
-        env.speech.microphoneBusy = isRecording || talkHeld
+        env.speech.microphoneBusy = isRecording || talkRequested
     }
 
     private func beginRecording() async {
         env.speech.stop()
         guard await recorder.ensurePermission() else {
             reportAskError(TutorError.microphoneDenied)
-            talkHeld = false
+            talkRequested = false
             return
         }
-        guard talkHeld else {
-            env.log.record("ask_cancelled", ["why": "button released before recording could start"])
+        guard talkRequested, !stopped, env.account.block == nil else {
+            env.log.record("ask_cancelled", ["why": "tapped again, left the problem or hours ran out before recording could start"])
+            talkRequested = false
             return
         }
         do {
             try recorder.start()
             isRecording = true
-            env.log.record("ask_recording_started", [:])
+            activity.note(.question, at: now())
+            env.log.record("ask_recording_started", ["max_seconds": AudioRecorder.maximumSeconds])
+            startAutoStop()
         } catch {
             reportAskError(error)
-            talkHeld = false
-            return
+            talkRequested = false
         }
-        if !talkHeld { await finishRecording() }
     }
 
-    private func finishRecording() async {
+    /// Stops and sends the question by itself at 30 seconds, so a forgotten second tap never records for ever.
+    private func startAutoStop() {
+        autoStopTask?.cancel()
+        autoStopTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(AudioRecorder.maximumSeconds * 1_000_000_000))
+            guard !Task.isCancelled, let self, self.isRecording else { return }
+            self.env.log.record("ask_auto_stopped", ["after_seconds": AudioRecorder.maximumSeconds])
+            await self.finishRecording(reason: "auto_stop_after_\(Int(AudioRecorder.maximumSeconds))s")
+        }
+    }
+
+    private func finishRecording(reason: String) async {
+        autoStopTask?.cancel()
+        autoStopTask = nil
         guard isRecording, let recording = recorder.stop() else { return }
         isRecording = false
+        talkRequested = false
+        env.log.record("ask_recording_stopped", ["reason": reason, "seconds": recording.duration])
         defer { try? FileManager.default.removeItem(at: recording.url) }
 
         guard recording.duration >= AudioRecorder.minimumSeconds else {

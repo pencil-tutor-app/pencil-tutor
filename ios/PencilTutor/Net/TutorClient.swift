@@ -8,9 +8,60 @@ protocol TutorClient {
     func consult(_ request: ConsultRequest) async throws -> ConsultResponse
     /// Relays the WebRTC offer to OpenAI through our server; the OpenAI key stays on the server.
     func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse
+    /// GET /api/me: checks the code, says whether live voice is in the plan, reports the allowance. Free, not metered.
+    func me() async throws -> MeResponse
+    /// POST /api/heartbeat: tells the server a problem is open and the student is active.
+    func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse
 }
 
-/// Used when SERVER_URL or APP_ACCESS_TOKEN are not set. The student can still write; every call says why it cannot work.
+/// Wraps a client so every reply's allowance, and every refusal about codes or hours, reaches the `StudentAccount`.
+/// Screens never have to remember to do this themselves. `me()` is passed straight through: the account makes that call
+/// itself and handles the result.
+struct MeteredTutorClient: TutorClient {
+    let inner: TutorClient
+    let account: StudentAccount
+
+    func watch(_ request: WatchRequest) async throws -> WatchResponse {
+        try await report { try await inner.watch(request) } allowance: { $0.allowance }
+    }
+
+    func ask(_ request: AskRequest) async throws -> AskResponse {
+        try await report { try await inner.ask(request) } allowance: { $0.allowance }
+    }
+
+    func consult(_ request: ConsultRequest) async throws -> ConsultResponse {
+        try await report { try await inner.consult(request) } allowance: { $0.allowance }
+    }
+
+    func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
+        try await report { try await inner.createLiveSession(request) } allowance: { $0.allowance }
+    }
+
+    func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
+        try await report { try await inner.heartbeat(request) } allowance: { $0.allowance }
+    }
+
+    func me() async throws -> MeResponse {
+        try await inner.me()
+    }
+
+    private func report<Reply>(_ call: () async throws -> Reply, allowance: (Reply) -> Allowance?) async throws -> Reply {
+        do {
+            let reply = try await call()
+            if let seen = allowance(reply) {
+                await account.apply(allowance: seen, source: "reply")
+            }
+            return reply
+        } catch {
+            if let tutorError = error as? TutorError {
+                await account.handle(serverError: tutorError)
+            }
+            throw error
+        }
+    }
+}
+
+/// Used when SERVER_URL is not set. The student can still write; every call says why it cannot work.
 struct UnconfiguredTutorClient: TutorClient {
     let reason: String
 
@@ -29,6 +80,14 @@ struct UnconfiguredTutorClient: TutorClient {
     func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
         throw TutorError.notConfigured(reason: reason)
     }
+
+    func me() async throws -> MeResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
 }
 
 /// Deterministic in-process tutor for UI tests (`--scripted-client`). It mirrors the server's scripted mode
@@ -37,6 +96,20 @@ struct UnconfiguredTutorClient: TutorClient {
 struct ScriptedTutorClient: TutorClient {
     static let plantedProblemID = "u3-04"
     static let latencyNanoseconds: UInt64 = 300_000_000
+
+    /// A plain, healthy allowance (8 hours, a few minutes used) so the screens have something to show in scripted runs.
+    static let allowance = Allowance(
+        month: "2026-11", usedSeconds: 120, capSeconds: 28_800, remainingSeconds: 28_680, remainingMinutes: 478,
+        percentUsed: 0.4, state: .ok
+    )
+
+    func me() async throws -> MeResponse {
+        MeResponse(plan: PlanInfo(live: false, capMinutes: 480), allowance: Self.allowance, requestId: "scripted-me")
+    }
+
+    func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
+        HeartbeatResponse(ok: true, allowance: Self.allowance, requestId: "scripted-heartbeat")
+    }
 
     func watch(_ request: WatchRequest) async throws -> WatchResponse {
         try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
