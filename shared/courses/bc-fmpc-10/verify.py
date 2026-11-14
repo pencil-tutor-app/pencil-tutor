@@ -557,16 +557,16 @@ line_problem("f10-21", points_on((3, 4), 2), bind=("y = 2x − 5", "(3, 4)"), fi
 # perpendicular to 3x + 2y = 6 (slope -3/2) through (6, 1): slope 2/3
 _given = [(F(x), F(6 - 3 * x, 2)) for x in (-2, 0, 2, 4)]
 line_problem("f10-22", points_on((6, 1), F(2, 3), dx=3), other=_given, bind=("3x + 2y = 6", "(6, 1)"), final_eq="y = (2/3)x − 3")
-_table = [(0, 5), (1, 8), (2, 11), (3, 14)]
+_table = [(0, 12), (1, 9), (2, 6), (3, 3)]
 _m = F(_table[1][1] - _table[0][1], _table[1][0] - _table[0][0])
 _pts23 = [(F(x), F(y)) for x, y in _table] + [(F(10), F(_table[0][1]) + _m * 10)]
 
 
 def _check_y_at_10(c):
-    c.expect(c.final().endswith(f"y = {_pts23[-1][1]} when x = 10"), "y at x = 10 should be 35")
+    c.expect(c.final().replace("−", "-").endswith(f"y = {_pts23[-1][1]} when x = 10"), "y at x = 10 should be -18")
 
 
-line_problem("f10-23", _pts23, bind=("x = 0, 1, 2, 3", "y = 5, 8, 11, 14"), final_eq="y = 3x + 5", extra=_check_y_at_10)
+line_problem("f10-23", _pts23, bind=("x = 0, 1, 2, 3", "y = 12, 9, 6, 3"), final_eq="y = −3x + 12", extra=_check_y_at_10)
 
 
 # ---- E: arithmetic sequences ----------------------------------------------
@@ -731,7 +731,7 @@ def factor_problem(pid, constants):
 
 
 factor_problem("f10-41", [4, 5])
-factor_problem("f10-42", [4, -7])
+factor_problem("f10-42", [4, -6])
 
 
 def _difference_of_squares(c):

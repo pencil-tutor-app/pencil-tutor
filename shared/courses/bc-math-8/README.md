@@ -73,10 +73,29 @@ third-party libraries):
 1. Per-problem: recomputes each of the 70 answers independently (brute-force equation solving over integers, sample-space
    enumeration for probability, divisor search for factoring, etc.) and requires the answer, plus key intermediate values,
    to appear in `final_answer` / `worked_solution`.
-2. Arithmetic scan: every standalone `a op b ... = c` chain in every worked-solution line (98 found) is evaluated and
+2. Arithmetic scan: every standalone `a op b ... = c` chain in every worked-solution line (96 found after the 2026-11-15 review) is evaluated and
    compared. Lines with brackets, roots, variables or mixed numbers are checked by method 1 instead.
 
 Result at commit time: 70 problems, 0 failures.
 
 Judgment items a human should still glance at: decimal approximations in m8-08, m8-44, m8-45, m8-53 and m8-56 (rounded values
 checked mechanically; wording of "to the nearest tenth" is a teaching choice).
+
+## Review (teacher-quality pass, 2026-11-15)
+
+Checked all 70 problems for: one clear answer, grade 8 wording, Canadian/metric context, fit to the BC Math 8 standard,
+worked solution one step per line with no skipped steps, final answer matching the ask, difficulty ramp, no names or
+recognisable textbook items.
+
+- Reviewed 70, fixed 9, dropped 0, unchanged 61.
+- m8-39: prompt showed raw `{x/4}`; now a proper fraction (latex, plain and parts).
+- m8-50: US feet replaced by metres (17 m ladder, 8 m out, reaches 15 m); verify.py updated.
+- m8-08: "nearest tenth" was argued from 30.25 vs 29.16 only; added the 5.45² = 29.7025 halfway test.
+- m8-53: added the 7.3² = 53.29 bound so the choice of 7.2 is shown.
+- m8-66: per-mL prices (0.0060 vs 0.0056) replaced by a common 1500 mL comparison ($9.00 vs $8.40), hand-friendly.
+- m8-18: proportion was set up but never used; now a single unit-rate method.
+- m8-31: added the skipped `−(−3)` step. m8-34: merged a dangling `= −9` line. m8-29: dropped the unneeded "tick marks" clause.
+- Most common finding: a skipped or half-used step in the worked solution (5 of 9).
+- verify.py: passes (70 problems, 96 chains, 0 failures).
+- Unsure: m8-15 ("went up 120%" means 220% of the start; clear to a teacher, but some students read it as 120%);
+  m8-69 ends on a non-integer 3.125 months, kept because it is the point of the question.
