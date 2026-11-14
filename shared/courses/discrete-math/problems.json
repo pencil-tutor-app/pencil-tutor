@@ -1,0 +1,1401 @@
+[
+  {
+    "id": "dm-01",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Let } p=\\text{``it is raining''},\\ q=\\text{``I carry an umbrella''}.\\ \\text{(a) Write ``I carry an umbrella only if it is raining'' symbolically. (b) Write ``It is not raining, yet I carry an umbrella''. (c) Show (a) is equivalent to } \\neg p \\to \\neg q.",
+    "prompt_plain": "Let p = \"it is raining\" and q = \"I carry an umbrella\". (a) Write \"I carry an umbrella only if it is raining\" in symbols. (b) Write \"It is not raining, yet I carry an umbrella\". (c) Show (a) is equivalent to ¬p → ¬q.",
+    "prompt_parts": [
+      {
+        "text": "Let p = \"it is raining\" and q = \"I carry an umbrella\". (a) Write \"I carry an umbrella only if it is raining\" in symbols. (b) Write \"It is not raining, yet I carry an umbrella\". (c) Show (a) is equivalent to ¬p → ¬q."
+      }
+    ],
+    "worked_solution": [
+      "(a) \"A only if B\" means A → B, so the statement is q → p",
+      "(b) \"yet\" means and, so it is ¬p ∧ q",
+      "(c) Rewrite the implication as an or: q → p ≡ ¬q ∨ p",
+      "Rewrite the other one the same way: ¬p → ¬q ≡ ¬(¬p) ∨ ¬q ≡ p ∨ ¬q",
+      "p ∨ ¬q and ¬q ∨ p are the same by commutativity, so the two are equivalent (q → p is the contrapositive of ¬p → ¬q)"
+    ],
+    "final_answer": "(a) q → p; (b) ¬p ∧ q; (c) q → p ≡ ¬p → ¬q",
+    "level": "college"
+  },
+  {
+    "id": "dm-02",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Build the truth table of } (p \\lor q)\\to \\neg r. \\text{ In how many of the 8 rows is it false?}",
+    "prompt_plain": "Build the truth table of (p ∨ q) → ¬r. In how many of the 8 rows is it false?",
+    "prompt_parts": [
+      {
+        "text": "Build the truth table of (p ∨ q) → ¬r. In how many of the 8 rows is it false?"
+      }
+    ],
+    "worked_solution": [
+      "An implication is false only when the hypothesis is true and the conclusion is false",
+      "Conclusion ¬r is false exactly when r = T",
+      "With r = T, the hypothesis p ∨ q is true for (p,q) = (T,T), (T,F), (F,T) and false for (F,F)",
+      "So the false rows (p,q,r) are TTT, TFT, FTT",
+      "The other 5 rows are true"
+    ],
+    "final_answer": "False in exactly 3 of the 8 rows: TTT, TFT, FTT",
+    "level": "college"
+  },
+  {
+    "id": "dm-03",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Use the laws of logic (no truth table) to show } (p\\to q)\\land(p\\to\\neg q)\\equiv\\neg p.",
+    "prompt_plain": "Use the laws of logic (no truth table) to show (p → q) ∧ (p → ¬q) ≡ ¬p.",
+    "prompt_parts": [
+      {
+        "text": "Use the laws of logic (no truth table) to show (p → q) ∧ (p → ¬q) ≡ ¬p."
+      }
+    ],
+    "worked_solution": [
+      "(p → q) ∧ (p → ¬q) ≡ (¬p ∨ q) ∧ (¬p ∨ ¬q)   (implication as or)",
+      "≡ ¬p ∨ (q ∧ ¬q)   (distributive law, factoring out ¬p)",
+      "≡ ¬p ∨ F   (q ∧ ¬q is a contradiction)",
+      "≡ ¬p   (identity law)"
+    ],
+    "final_answer": "(p → q) ∧ (p → ¬q) ≡ ¬p",
+    "level": "college"
+  },
+  {
+    "id": "dm-04",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{State the converse, inverse and contrapositive of ``If an integer is divisible by 6, then it is divisible by 3''. Which of the four statements are true?}",
+    "prompt_plain": "State the converse, inverse and contrapositive of \"If an integer is divisible by 6, then it is divisible by 3\". Which of the four statements (with the original) are true?",
+    "prompt_parts": [
+      {
+        "text": "State the converse, inverse and contrapositive of \"If an integer is divisible by 6, then it is divisible by 3\". Which of the four statements (with the original) are true?"
+      }
+    ],
+    "worked_solution": [
+      "Original p → q with p: divisible by 6, q: divisible by 3. True, since 6 = 2·3",
+      "Converse q → p: if divisible by 3 then divisible by 6. False: 3 is a counterexample",
+      "Inverse ¬p → ¬q: if not divisible by 6 then not divisible by 3. False: 3 again",
+      "Contrapositive ¬q → ¬p: if not divisible by 3 then not divisible by 6. True, and it always matches the original"
+    ],
+    "final_answer": "Original and contrapositive are true; converse and inverse are false (counterexample 3)",
+    "level": "college"
+  },
+  {
+    "id": "dm-05",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Negate } \\forall x\\in\\mathbb{R}\\ \\exists y\\in\\mathbb{R}\\ (xy=1) \\text{ so no negation symbol is left in front of a quantifier, then decide which of the statement and its negation is true.}",
+    "prompt_plain": "Negate ∀x ∈ ℝ ∃y ∈ ℝ (xy = 1) with no negation symbol left in front of a quantifier, then decide which of the statement and its negation is true.",
+    "prompt_parts": [
+      {
+        "text": "Negate ∀x ∈ ℝ ∃y ∈ ℝ (xy = 1) with no negation symbol left in front of a quantifier, then decide which of the statement and its negation is true."
+      }
+    ],
+    "worked_solution": [
+      "¬∀x ∃y (xy = 1) ≡ ∃x ¬∃y (xy = 1)   (negation flips ∀ to ∃)",
+      "≡ ∃x ∀y ¬(xy = 1)   (negation flips ∃ to ∀)",
+      "≡ ∃x ∀y (xy ≠ 1)",
+      "Try x = 0: for every y, 0·y = 0 ≠ 1, so the negation holds",
+      "So the original is false (0 has no reciprocal)"
+    ],
+    "final_answer": "Negation: ∃x ∀y (xy ≠ 1), which is true (x = 0); the original is false",
+    "level": "college"
+  },
+  {
+    "id": "dm-06",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Premises: } p\\to q,\\ q\\to r,\\ \\neg r. \\text{ Derive } \\neg p \\text{ and name each rule of inference used.}",
+    "prompt_plain": "Premises: p → q, q → r, ¬r. Derive ¬p and name each rule of inference used.",
+    "prompt_parts": [
+      {
+        "text": "Premises: p → q, q → r, ¬r. Derive ¬p and name each rule of inference used."
+      }
+    ],
+    "worked_solution": [
+      "1. p → q   (premise)",
+      "2. q → r   (premise)",
+      "3. p → r   (hypothetical syllogism on 1 and 2)",
+      "4. ¬r   (premise)",
+      "5. ¬p   (modus tollens on 3 and 4)"
+    ],
+    "final_answer": "¬p follows (hypothetical syllogism, then modus tollens)",
+    "level": "college"
+  },
+  {
+    "id": "dm-07",
+    "source": "logic and truth tables, original",
+    "prompt_latex": "\\text{Is this argument valid? ``If I study, I pass. I did not study. Therefore I did not pass.'' Justify.}",
+    "prompt_plain": "Is this argument valid? \"If I study, I pass. I did not study. Therefore I did not pass.\" Justify.",
+    "prompt_parts": [
+      {
+        "text": "Is this argument valid? \"If I study, I pass. I did not study. Therefore I did not pass.\" Justify."
+      }
+    ],
+    "worked_solution": [
+      "Let p: I study, q: I pass. The argument is (p → q) ∧ ¬p ⊢ ¬q",
+      "It is valid only if no row makes both premises true and the conclusion false",
+      "Take p = F, q = T: p → q is T, ¬p is T, but ¬q is F",
+      "That row is a counterexample (I could pass without studying)",
+      "This is the fallacy of denying the hypothesis"
+    ],
+    "final_answer": "Invalid; counterexample p = F, q = T",
+    "level": "college"
+  },
+  {
+    "id": "dm-08",
+    "source": "methods of proof, original",
+    "prompt_latex": "\\text{Prove directly: if } a \\text{ and } b \\text{ are odd integers then } a+b \\text{ is even and } ab \\text{ is odd.}",
+    "prompt_plain": "Prove directly: if a and b are odd integers then a + b is even and ab is odd.",
+    "prompt_parts": [
+      {
+        "text": "Prove directly: if a and b are odd integers then a + b is even and ab is odd."
+      }
+    ],
+    "worked_solution": [
+      "Let a = 2k + 1 and b = 2m + 1 for integers k and m",
+      "a + b = 2k + 2m + 2 = 2(k + m + 1), twice an integer, so even",
+      "ab = (2k + 1)(2m + 1) = 4km + 2k + 2m + 1",
+      "ab = 2(2km + k + m) + 1, which is one more than twice an integer, so odd"
+    ],
+    "final_answer": "Odd + odd is even, and odd × odd is odd",
+    "level": "college"
+  },
+  {
+    "id": "dm-09",
+    "source": "methods of proof, original",
+    "prompt_latex": "\\text{Prove by contrapositive: for an integer } n,\\ \\text{if } n^2 \\text{ is even then } n \\text{ is even.}",
+    "prompt_plain": "Prove by contrapositive: for an integer n, if n² is even then n is even.",
+    "prompt_parts": [
+      {
+        "text": "Prove by contrapositive: for an integer n, if n² is even then n is even."
+      }
+    ],
+    "worked_solution": [
+      "The contrapositive is: if n is odd then n² is odd",
+      "Let n = 2k + 1 for an integer k",
+      "n² = 4k² + 4k + 1 = 2(2k² + 2k) + 1, which is odd",
+      "The contrapositive is proved, so the original statement is true"
+    ],
+    "final_answer": "If n² is even then n is even",
+    "level": "college"
+  },
+  {
+    "id": "dm-10",
+    "source": "methods of proof, original",
+    "prompt_latex": "\\text{Prove by contradiction (or cases mod 4) that there are no integers } x,y \\text{ with } x^2-4y=2.",
+    "prompt_plain": "Prove that there are no integers x, y with x² − 4y = 2.",
+    "prompt_parts": [
+      {
+        "text": "Prove that there are no integers x, y with x² − 4y = 2."
+      }
+    ],
+    "worked_solution": [
+      "Suppose x² − 4y = 2 for some integers x and y",
+      "Then x² = 4y + 2, so x² leaves remainder 2 when divided by 4",
+      "If x is even, x = 2k, then x² = 4k², remainder 0",
+      "If x is odd, x = 2k + 1, then x² = 4k² + 4k + 1 = 4(k² + k) + 1, remainder 1",
+      "A square is never 2 mod 4, which contradicts x² = 4y + 2"
+    ],
+    "final_answer": "No integer solutions exist, since squares are 0 or 1 mod 4",
+    "level": "college"
+  },
+  {
+    "id": "dm-11",
+    "source": "methods of proof, original",
+    "prompt_latex": "\\text{Prove that } \\log_2 3 \\text{ is irrational.}",
+    "prompt_plain": "Prove that log₂ 3 is irrational.",
+    "prompt_parts": [
+      {
+        "text": "Prove that log₂ 3 is irrational."
+      }
+    ],
+    "worked_solution": [
+      "Suppose log₂ 3 = p/q with positive integers p and q (it is positive since 3 > 1)",
+      "Then 2^(p/q) = 3; raising both sides to the power q gives 2^p = 3^q",
+      "Since p ≥ 1, 2^p is even",
+      "3^q is a product of odd numbers, so it is odd",
+      "An even number cannot equal an odd number: contradiction"
+    ],
+    "final_answer": "log₂ 3 is irrational",
+    "level": "college"
+  },
+  {
+    "id": "dm-12",
+    "source": "sets, original",
+    "prompt_latex": "A=\\{2,4,6,8,10\\},\\ B=\\{x\\in\\mathbb{Z}:1\\le x\\le4\\}.\\ \\text{Find } |\\mathcal{P}(A)|,\\ |A\\times B|, \\text{ and the number of subsets of } A\\times B \\text{ with exactly 2 elements.}",
+    "prompt_plain": "A = {2, 4, 6, 8, 10}, B = {x ∈ ℤ : 1 ≤ x ≤ 4}. Find |P(A)|, |A × B|, and the number of subsets of A × B with exactly 2 elements.",
+    "prompt_parts": [
+      {
+        "text": "A = {2, 4, 6, 8, 10}, B = {x ∈ ℤ : 1 ≤ x ≤ 4}. Find |P(A)|, |A × B|, and the number of subsets of A × B with exactly 2 elements."
+      }
+    ],
+    "worked_solution": [
+      "|A| = 5 and B = {1, 2, 3, 4} so |B| = 4",
+      "|P(A)| = 2^5 = 32",
+      "|A × B| = 5 · 4 = 20",
+      "Subsets of A × B with 2 elements: choose 2 of the 20 pairs, C(20,2) = 20·19/2 = 190"
+    ],
+    "final_answer": "|P(A)| = 32, |A × B| = 20, and 190 two-element subsets",
+    "level": "college"
+  },
+  {
+    "id": "dm-13",
+    "source": "sets, original",
+    "prompt_latex": "U=\\{1,\\dots,10\\},\\ A=\\{1,2,3,4,5,6\\},\\ B=\\{4,5,6,7,8\\},\\ C=\\{2,4,6,8,10\\}.\\ \\text{Find } (A\\cup B)\\cap C^{c} \\text{ and } A\\triangle B.",
+    "prompt_plain": "U = {1, …, 10}, A = {1, 2, 3, 4, 5, 6}, B = {4, 5, 6, 7, 8}, C = {2, 4, 6, 8, 10}. Find (A ∪ B) ∩ Cᶜ and the symmetric difference A △ B.",
+    "prompt_parts": [
+      {
+        "text": "U = {1, …, 10}, A = {1, 2, 3, 4, 5, 6}, B = {4, 5, 6, 7, 8}, C = {2, 4, 6, 8, 10}. Find (A ∪ B) ∩ Cᶜ and the symmetric difference A △ B."
+      }
+    ],
+    "worked_solution": [
+      "A ∪ B = {1, 2, 3, 4, 5, 6, 7, 8}",
+      "Cᶜ = U − C = {1, 3, 5, 7, 9}",
+      "(A ∪ B) ∩ Cᶜ = {1, 3, 5, 7}",
+      "A − B = {1, 2, 3} and B − A = {7, 8}",
+      "A △ B = (A − B) ∪ (B − A) = {1, 2, 3, 7, 8}"
+    ],
+    "final_answer": "(A ∪ B) ∩ Cᶜ = {1, 3, 5, 7}; A △ B = {1, 2, 3, 7, 8}",
+    "level": "college"
+  },
+  {
+    "id": "dm-14",
+    "source": "sets, original",
+    "prompt_latex": "\\text{Prove by the method of subsets: } A\\setminus(B\\cup C)=(A\\setminus B)\\cap(A\\setminus C).",
+    "prompt_plain": "Prove by showing each side is a subset of the other: A − (B ∪ C) = (A − B) ∩ (A − C).",
+    "prompt_parts": [
+      {
+        "text": "Prove by showing each side is a subset of the other: A − (B ∪ C) = (A − B) ∩ (A − C)."
+      }
+    ],
+    "worked_solution": [
+      "(⊆) Let x ∈ A − (B ∪ C). Then x ∈ A and x ∉ B ∪ C",
+      "x ∉ B ∪ C means x ∉ B and x ∉ C",
+      "So x ∈ A and x ∉ B, giving x ∈ A − B; likewise x ∈ A − C",
+      "Hence x ∈ (A − B) ∩ (A − C)",
+      "(⊇) Let x ∈ (A − B) ∩ (A − C). Then x ∈ A, x ∉ B and x ∉ C",
+      "So x ∉ B ∪ C, hence x ∈ A − (B ∪ C)",
+      "Each side is a subset of the other, so they are equal"
+    ],
+    "final_answer": "A − (B ∪ C) = (A − B) ∩ (A − C)",
+    "level": "college"
+  },
+  {
+    "id": "dm-15",
+    "source": "sets, original",
+    "prompt_latex": "\\text{Use a membership table to prove } A\\setminus(B\\cap C)=(A\\setminus B)\\cup(A\\setminus C).",
+    "prompt_plain": "Use a membership table to prove A − (B ∩ C) = (A − B) ∪ (A − C).",
+    "prompt_parts": [
+      {
+        "text": "Use a membership table to prove A − (B ∩ C) = (A − B) ∪ (A − C)."
+      }
+    ],
+    "worked_solution": [
+      "Write 1 if the element is in the set and 0 if not; columns A B C | A−(B∩C) | (A−B)∪(A−C)",
+      "0 0 0 | 0 | 0     0 0 1 | 0 | 0     0 1 0 | 0 | 0     0 1 1 | 0 | 0",
+      "1 0 0 | 1 | 1     1 0 1 | 1 | 1     1 1 0 | 1 | 1     1 1 1 | 0 | 0",
+      "(For example, row 1 1 0: B ∩ C is 0, so A − (B ∩ C) is 1; A − C is 1, so the union is 1)",
+      "The last two columns match in all 8 rows"
+    ],
+    "final_answer": "The two columns agree in every row, so the sets are equal",
+    "level": "college"
+  },
+  {
+    "id": "dm-16",
+    "source": "sets, original",
+    "prompt_latex": "\\text{Simplify } (A\\cup B)\\cap(A\\cup B^{c}) \\text{ using set identities, naming each law.}",
+    "prompt_plain": "Simplify (A ∪ B) ∩ (A ∪ Bᶜ) using set identities, naming each law.",
+    "prompt_parts": [
+      {
+        "text": "Simplify (A ∪ B) ∩ (A ∪ Bᶜ) using set identities, naming each law."
+      }
+    ],
+    "worked_solution": [
+      "(A ∪ B) ∩ (A ∪ Bᶜ) = A ∪ (B ∩ Bᶜ)   (distributive law, factoring out A)",
+      "= A ∪ ∅   (complement law: B ∩ Bᶜ = ∅)",
+      "= A   (identity law)"
+    ],
+    "final_answer": "(A ∪ B) ∩ (A ∪ Bᶜ) = A",
+    "level": "college"
+  },
+  {
+    "id": "dm-17",
+    "source": "functions, original",
+    "prompt_latex": "f:\\mathbb{Z}\\to\\mathbb{Z},\\ f(n)=3n+1.\\ \\text{Is } f \\text{ injective? surjective?}",
+    "prompt_plain": "f: ℤ → ℤ, f(n) = 3n + 1. Is f injective? Is it surjective?",
+    "prompt_parts": [
+      {
+        "text": "f: ℤ → ℤ, f(n) = 3n + 1. Is f injective? Is it surjective?"
+      }
+    ],
+    "worked_solution": [
+      "Injective: suppose f(a) = f(b), so 3a + 1 = 3b + 1",
+      "Then 3a = 3b and a = b, so f is one-to-one",
+      "Surjective: is there n with 3n + 1 = 2?",
+      "3n = 1 gives n = 1/3, not an integer, so 2 has no preimage",
+      "f is not onto (its range is the integers that are 1 mod 3)"
+    ],
+    "final_answer": "Injective but not surjective, so not a bijection",
+    "level": "college"
+  },
+  {
+    "id": "dm-18",
+    "source": "functions, original",
+    "prompt_latex": "f:\\mathbb{R}\\to\\mathbb{R},\\ f(x)=x^2-4x+5.\\ \\text{Find the range of } f \\text{ and decide if } f \\text{ is injective.}",
+    "prompt_plain": "f: ℝ → ℝ, f(x) = x² − 4x + 5. Find the range of f and decide whether f is injective.",
+    "prompt_parts": [
+      {
+        "text": "f: ℝ → ℝ, f(x) = x² − 4x + 5. Find the range of f and decide whether f is injective."
+      }
+    ],
+    "worked_solution": [
+      "Complete the square: f(x) = (x − 2)² + 1",
+      "(x − 2)² ≥ 0, so f(x) ≥ 1, with equality at x = 2",
+      "Every y ≥ 1 is hit: (x − 2)² = y − 1 has solutions x = 2 ± √(y − 1)",
+      "So the range is [1, ∞)",
+      "Not injective: f(1) = 2 = f(3) with 1 ≠ 3"
+    ],
+    "final_answer": "Range [1, ∞); not injective (f(1) = f(3) = 2)",
+    "level": "college"
+  },
+  {
+    "id": "dm-19",
+    "source": "functions, original",
+    "prompt_latex": "f(x)=2x+3,\\ g(x)=x^2-1.\\ \\text{Find } f\\circ g \\text{ and } g\\circ f \\text{ as formulas, and evaluate both at } 2.",
+    "prompt_plain": "f(x) = 2x + 3 and g(x) = x² − 1. Find f ∘ g and g ∘ f as formulas, and evaluate both at x = 2.",
+    "prompt_parts": [
+      {
+        "text": "f(x) = 2x + 3 and g(x) = x² − 1. Find f ∘ g and g ∘ f as formulas, and evaluate both at x = 2."
+      }
+    ],
+    "worked_solution": [
+      "(f ∘ g)(x) = f(g(x)) = 2(x² − 1) + 3 = 2x² + 1",
+      "(g ∘ f)(x) = g(f(x)) = (2x + 3)² − 1 = 4x² + 12x + 8",
+      "At x = 2: (f ∘ g)(2) = 2(4) + 1 = 9",
+      "(g ∘ f)(2) = 4(4) + 24 + 8 = 48",
+      "Check directly: g(2) = 3 and f(3) = 9; f(2) = 7 and g(7) = 48"
+    ],
+    "final_answer": "f∘g = 2x² + 1, g∘f = 4x² + 12x + 8; values 9 and 48",
+    "level": "college"
+  },
+  {
+    "id": "dm-20",
+    "source": "functions, original",
+    "prompt_latex": "f(x)=\\dfrac{2x-1}{x+3} \\text{ from } \\mathbb{R}\\setminus\\{-3\\} \\text{ to } \\mathbb{R}\\setminus\\{2\\}.\\ \\text{Find } f^{-1}.",
+    "prompt_plain": "f(x) = (2x − 1)/(x + 3) from ℝ − {−3} to ℝ − {2}. Find f⁻¹(y).",
+    "prompt_parts": [
+      {
+        "text": "f(x) = (2x − 1)/(x + 3) from ℝ − {−3} to ℝ − {2}. Find f⁻¹(y)."
+      }
+    ],
+    "worked_solution": [
+      "Set y = (2x − 1)/(x + 3) and solve for x",
+      "y(x + 3) = 2x − 1, so xy + 3y = 2x − 1",
+      "Collect x terms: xy − 2x = −1 − 3y, so x(y − 2) = −(3y + 1)",
+      "x = −(3y + 1)/(y − 2) = (3y + 1)/(2 − y), valid since y ≠ 2",
+      "Check: f((3y + 1)/(2 − y)) = (2(3y + 1) − (2 − y)) / ((3y + 1) + 3(2 − y)) = 7y/7 = y"
+    ],
+    "final_answer": "f⁻¹(y) = (3y + 1)/(2 − y)",
+    "level": "college"
+  },
+  {
+    "id": "dm-21",
+    "source": "functions, original",
+    "prompt_latex": "f:\\mathbb{Z}\\to\\mathbb{Z},\\ f(x)=x^2-3.\\ \\text{Find } f(\\{-2,-1,0,1\\}) \\text{ and } f^{-1}(\\{-2,1,6,13\\}).",
+    "prompt_plain": "f: ℤ → ℤ, f(x) = x² − 3. Find the image f({−2, −1, 0, 1}) and the preimage f⁻¹({−2, 1, 6, 13}).",
+    "prompt_parts": [
+      {
+        "text": "f: ℤ → ℤ, f(x) = x² − 3. Find the image f({−2, −1, 0, 1}) and the preimage f⁻¹({−2, 1, 6, 13})."
+      }
+    ],
+    "worked_solution": [
+      "f(−2) = 1, f(−1) = −2, f(0) = −3, f(1) = −2",
+      "Image = {−3, −2, 1} (repeats listed once)",
+      "Preimage: solve x² − 3 = k for each k",
+      "k = −2: x² = 1, x = ±1.   k = 1: x² = 4, x = ±2",
+      "k = 6: x² = 9, x = ±3.   k = 13: x² = 16, x = ±4",
+      "Preimage = {−4, −3, −2, −1, 1, 2, 3, 4}"
+    ],
+    "final_answer": "Image {−3, −2, 1}; preimage {±1, ±2, ±3, ±4}",
+    "level": "college"
+  },
+  {
+    "id": "dm-22",
+    "source": "functions, original",
+    "prompt_latex": "\\text{Prove that } \\lfloor n/2\\rfloor+\\lceil n/2\\rceil=n \\text{ for every integer } n.",
+    "prompt_plain": "Prove that ⌊n/2⌋ + ⌈n/2⌉ = n for every integer n.",
+    "prompt_parts": [
+      {
+        "text": "Prove that ⌊n/2⌋ + ⌈n/2⌉ = n for every integer n."
+      }
+    ],
+    "worked_solution": [
+      "Every integer is even or odd, so split into two cases",
+      "Case n = 2k: n/2 = k is an integer, so ⌊n/2⌋ = ⌈n/2⌉ = k and the sum is 2k = n",
+      "Case n = 2k + 1: n/2 = k + 1/2, so ⌊n/2⌋ = k and ⌈n/2⌉ = k + 1",
+      "The sum is 2k + 1 = n",
+      "Both cases give n"
+    ],
+    "final_answer": "⌊n/2⌋ + ⌈n/2⌉ = n for all integers n",
+    "level": "college"
+  },
+  {
+    "id": "dm-23",
+    "source": "sequences and summation, original",
+    "prompt_latex": "a_0=4,\\ a_{n+1}=2a_n-3.\\ \\text{List } a_0,\\dots,a_4,\\ \\text{guess a closed form, and check it satisfies the recurrence.}",
+    "prompt_plain": "a₀ = 4 and a_{n+1} = 2aₙ − 3. List a₀ through a₄, guess a closed form, and check it satisfies the recurrence.",
+    "prompt_parts": [
+      {
+        "text": "a₀ = 4 and a_{n+1} = 2aₙ − 3. List a₀ through a₄, guess a closed form, and check it satisfies the recurrence."
+      }
+    ],
+    "worked_solution": [
+      "a₀ = 4, a₁ = 2(4) − 3 = 5, a₂ = 2(5) − 3 = 7, a₃ = 2(7) − 3 = 11, a₄ = 2(11) − 3 = 19",
+      "Differences: 1, 2, 4, 8, so aₙ = 4 + (1 + 2 + … + 2^(n−1)) = 4 + (2ⁿ − 1)",
+      "Guess aₙ = 2ⁿ + 3. Check a₀ = 1 + 3 = 4",
+      "Recurrence: 2(2ⁿ + 3) − 3 = 2^(n+1) + 6 − 3 = 2^(n+1) + 3 = a_{n+1}"
+    ],
+    "final_answer": "aₙ = 2ⁿ + 3 (terms 4, 5, 7, 11, 19)",
+    "level": "college"
+  },
+  {
+    "id": "dm-24",
+    "source": "sequences and summation, original",
+    "prompt_latex": "\\text{Evaluate } \\sum_{k=1}^{20}(3k-2).",
+    "prompt_plain": "Evaluate Σ_{k=1}^{20} (3k − 2).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate Σ_{k=1}^{20} (3k − 2)."
+      }
+    ],
+    "worked_solution": [
+      "Split: Σ(3k − 2) = 3·Σk − 2·20",
+      "Σ_{k=1}^{20} k = 20·21/2 = 210",
+      "3(210) − 40 = 630 − 40 = 590"
+    ],
+    "final_answer": "590",
+    "level": "college"
+  },
+  {
+    "id": "dm-25",
+    "source": "sequences and summation, original",
+    "prompt_latex": "\\text{Evaluate } \\sum_{k=0}^{7}3\\cdot2^{k}.",
+    "prompt_plain": "Evaluate Σ_{k=0}^{7} 3·2^k.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate Σ_{k=0}^{7} 3·2^k."
+      }
+    ],
+    "worked_solution": [
+      "Geometric sum with first term 3, ratio 2, and 8 terms",
+      "Σ 3·2^k = 3(2⁸ − 1)/(2 − 1)",
+      "= 3(256 − 1) = 3(255) = 765"
+    ],
+    "final_answer": "765",
+    "level": "college"
+  },
+  {
+    "id": "dm-26",
+    "source": "sequences and summation, original",
+    "prompt_latex": "\\text{Show } \\sum_{k=1}^{n}\\frac{1}{k(k+1)}=\\frac{n}{n+1} \\text{ by telescoping, and evaluate for } n=99.",
+    "prompt_plain": "Show Σ_{k=1}^{n} 1/(k(k+1)) = n/(n + 1) by telescoping, then evaluate for n = 99.",
+    "prompt_parts": [
+      {
+        "text": "Show Σ_{k=1}^{n} 1/(k(k+1)) = n/(n + 1) by telescoping, then evaluate for n = 99."
+      }
+    ],
+    "worked_solution": [
+      "Partial fractions: 1/(k(k + 1)) = 1/k − 1/(k + 1)",
+      "Sum = (1 − 1/2) + (1/2 − 1/3) + … + (1/n − 1/(n + 1))",
+      "All middle terms cancel, leaving 1 − 1/(n + 1) = n/(n + 1)",
+      "For n = 99: 99/100"
+    ],
+    "final_answer": "n/(n + 1); for n = 99 the sum is 99/100",
+    "level": "college"
+  },
+  {
+    "id": "dm-27",
+    "source": "algorithms and growth of functions, original",
+    "prompt_latex": "\\text{Show } 3n^2+5n+7 \\text{ is } O(n^2) \\text{ by giving witnesses } C \\text{ and } k.",
+    "prompt_plain": "Show 3n² + 5n + 7 is O(n²) by giving witnesses C and k with 3n² + 5n + 7 ≤ C·n² for all n ≥ k.",
+    "prompt_parts": [
+      {
+        "text": "Show 3n² + 5n + 7 is O(n²) by giving witnesses C and k with 3n² + 5n + 7 ≤ C·n² for all n ≥ k."
+      }
+    ],
+    "worked_solution": [
+      "For n ≥ 1 we have n ≤ n², so 5n ≤ 5n²",
+      "For n ≥ 1 we have 1 ≤ n², so 7 ≤ 7n²",
+      "Therefore 3n² + 5n + 7 ≤ 3n² + 5n² + 7n² = 15n²",
+      "Take C = 15 and k = 1"
+    ],
+    "final_answer": "Witnesses C = 15, k = 1, so 3n² + 5n + 7 is O(n²)",
+    "level": "college"
+  },
+  {
+    "id": "dm-28",
+    "source": "algorithms and growth of functions, original",
+    "prompt_latex": "\\text{Order from slowest to fastest growing: } n^3,\\ 2^n,\\ 100n,\\ n!,\\ n\\log_2 n.",
+    "prompt_plain": "Order from slowest to fastest growing: n³, 2ⁿ, 100n, n!, n log₂ n. Justify each step briefly.",
+    "prompt_parts": [
+      {
+        "text": "Order from slowest to fastest growing: n³, 2ⁿ, 100n, n!, n log₂ n. Justify each step briefly."
+      }
+    ],
+    "worked_solution": [
+      "100n is O(n), the smallest here (constants do not change growth class)",
+      "n log₂ n beats n because log₂ n → ∞, but n log₂ n ≤ n² ≤ n³",
+      "n³ is a polynomial and 2ⁿ is exponential; n³/2ⁿ → 0",
+      "n!/2ⁿ = (1·2·3·…·n)/(2·2·…·2) → ∞ since every factor after the second is at least 1.5",
+      "Order: 100n, n log₂ n, n³, 2ⁿ, n!"
+    ],
+    "final_answer": "100n < n log₂ n < n³ < 2ⁿ < n! (in growth rate)",
+    "level": "college"
+  },
+  {
+    "id": "dm-29",
+    "source": "algorithms and growth of functions, original",
+    "prompt_latex": "\\text{How many times does the line } x \\leftarrow x+1 \\text{ run? \\quad for } i=1..n:\\ \\text{for } j=i..n:\\ x\\leftarrow x+1. \\text{ Evaluate for } n=10 \\text{ and give the } \\Theta \\text{ class.}",
+    "prompt_plain": "How many times does x ← x + 1 run? for i = 1 to n: for j = i to n: x ← x + 1. Evaluate for n = 10 and give the Θ class.",
+    "prompt_parts": [
+      {
+        "text": "How many times does x ← x + 1 run? for i = 1 to n: for j = i to n: x ← x + 1. Evaluate for n = 10 and give the Θ class."
+      }
+    ],
+    "worked_solution": [
+      "For a given i, j runs from i to n: n − i + 1 times",
+      "Total = Σ_{i=1}^{n} (n − i + 1) = n + (n − 1) + … + 1",
+      "= n(n + 1)/2",
+      "For n = 10: 10·11/2 = 55",
+      "n(n + 1)/2 = n²/2 + n/2, which is Θ(n²)"
+    ],
+    "final_answer": "n(n + 1)/2 times; 55 for n = 10; Θ(n²)",
+    "level": "college"
+  },
+  {
+    "id": "dm-30",
+    "source": "algorithms and growth of functions, original",
+    "prompt_latex": "i\\leftarrow1;\\ \\textbf{while } i<n:\\ i\\leftarrow 2i.\\ \\text{How many iterations for } n=1000, \\text{ and what is the } \\Theta \\text{ class?}",
+    "prompt_plain": "i ← 1; while i < n: i ← 2i. How many iterations run for n = 1000, and what is the Θ class?",
+    "prompt_parts": [
+      {
+        "text": "i ← 1; while i < n: i ← 2i. How many iterations run for n = 1000, and what is the Θ class?"
+      }
+    ],
+    "worked_solution": [
+      "i takes the values 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 while i < 1000",
+      "After 512 the loop sets i = 1024, which fails i < 1000",
+      "That is 10 iterations (the powers 2⁰ through 2⁹)",
+      "In general the loop runs while 2^t < n, i.e. ⌈log₂ n⌉ times",
+      "⌈log₂ 1000⌉ = 10, and the class is Θ(log n)"
+    ],
+    "final_answer": "10 iterations for n = 1000; Θ(log n)",
+    "level": "college"
+  },
+  {
+    "id": "dm-31",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Use the Euclidean algorithm to find } \\gcd(1274,504).",
+    "prompt_plain": "Use the Euclidean algorithm to find gcd(1274, 504).",
+    "prompt_parts": [
+      {
+        "text": "Use the Euclidean algorithm to find gcd(1274, 504)."
+      }
+    ],
+    "worked_solution": [
+      "1274 = 2·504 + 266",
+      "504 = 1·266 + 238",
+      "266 = 1·238 + 28",
+      "238 = 8·28 + 14",
+      "28 = 2·14 + 0",
+      "The last nonzero remainder is 14"
+    ],
+    "final_answer": "gcd(1274, 504) = 14",
+    "level": "college"
+  },
+  {
+    "id": "dm-32",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Find integers } s,t \\text{ with } 91s+35t=\\gcd(91,35).",
+    "prompt_plain": "Find integers s and t with 91s + 35t = gcd(91, 35).",
+    "prompt_parts": [
+      {
+        "text": "Find integers s and t with 91s + 35t = gcd(91, 35)."
+      }
+    ],
+    "worked_solution": [
+      "91 = 2·35 + 21",
+      "35 = 1·21 + 14",
+      "21 = 1·14 + 7",
+      "14 = 2·7 + 0, so gcd = 7",
+      "Back-substitute: 7 = 21 − 14 = 21 − (35 − 21) = 2·21 − 35",
+      "21 = 91 − 2·35, so 7 = 2(91 − 2·35) − 35 = 2·91 − 5·35",
+      "Check: 182 − 175 = 7"
+    ],
+    "final_answer": "gcd = 7 = 2·91 + (−5)·35, so s = 2, t = −5",
+    "level": "college"
+  },
+  {
+    "id": "dm-33",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Solve } 7x\\equiv4 \\pmod{15}.",
+    "prompt_plain": "Solve 7x ≡ 4 (mod 15).",
+    "prompt_parts": [
+      {
+        "text": "Solve 7x ≡ 4 (mod 15)."
+      }
+    ],
+    "worked_solution": [
+      "gcd(7, 15) = 1, so 7 has an inverse mod 15",
+      "15 = 2·7 + 1, so 1 = 15 − 2·7, giving 7·(−2) ≡ 1 (mod 15)",
+      "The inverse is −2 ≡ 13 (mod 15)",
+      "Multiply both sides by 13: x ≡ 13·4 = 52 ≡ 7 (mod 15)",
+      "Check: 7·7 = 49 = 3·15 + 4 ✓"
+    ],
+    "final_answer": "x ≡ 7 (mod 15)",
+    "level": "college"
+  },
+  {
+    "id": "dm-34",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Find } 3^{100} \\bmod 7 \\text{ using Fermat's little theorem.}",
+    "prompt_plain": "Find 3^100 mod 7 using Fermat's little theorem.",
+    "prompt_parts": [
+      {
+        "text": "Find 3^100 mod 7 using Fermat's little theorem."
+      }
+    ],
+    "worked_solution": [
+      "7 is prime and 7 ∤ 3, so 3⁶ ≡ 1 (mod 7)",
+      "100 = 16·6 + 4",
+      "3^100 = (3⁶)^16 · 3⁴ ≡ 1^16 · 3⁴ (mod 7)",
+      "3⁴ = 81 = 11·7 + 4",
+      "So 3^100 ≡ 4 (mod 7)"
+    ],
+    "final_answer": "3^100 ≡ 4 (mod 7)",
+    "level": "college"
+  },
+  {
+    "id": "dm-35",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Prove: if } a\\equiv b \\pmod n \\text{ and } c\\equiv d \\pmod n \\text{ then } ac\\equiv bd \\pmod n.",
+    "prompt_plain": "Prove: if a ≡ b (mod n) and c ≡ d (mod n), then ac ≡ bd (mod n).",
+    "prompt_parts": [
+      {
+        "text": "Prove: if a ≡ b (mod n) and c ≡ d (mod n), then ac ≡ bd (mod n)."
+      }
+    ],
+    "worked_solution": [
+      "By definition, a = b + nk and c = d + nm for some integers k and m",
+      "ac = (b + nk)(d + nm) = bd + bnm + dnk + n²km",
+      "ac = bd + n(bm + dk + nkm)",
+      "bm + dk + nkm is an integer, so n divides ac − bd",
+      "Hence ac ≡ bd (mod n)"
+    ],
+    "final_answer": "a ≡ b and c ≡ d (mod n) imply ac ≡ bd (mod n)",
+    "level": "college"
+  },
+  {
+    "id": "dm-36",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Find all } x \\text{ with } x\\equiv3 \\pmod 5 \\text{ and } x\\equiv4 \\pmod 7.",
+    "prompt_plain": "Find all x with x ≡ 3 (mod 5) and x ≡ 4 (mod 7).",
+    "prompt_parts": [
+      {
+        "text": "Find all x with x ≡ 3 (mod 5) and x ≡ 4 (mod 7)."
+      }
+    ],
+    "worked_solution": [
+      "From the first, x = 3 + 5k for an integer k",
+      "Substitute into the second: 3 + 5k ≡ 4 (mod 7), so 5k ≡ 1 (mod 7)",
+      "5·3 = 15 ≡ 1 (mod 7), so 3 is the inverse of 5, giving k ≡ 3 (mod 7)",
+      "x = 3 + 5(3) = 18, and the solutions repeat every 5·7 = 35",
+      "Check: 18 = 3·5 + 3 and 18 = 2·7 + 4 ✓"
+    ],
+    "final_answer": "x ≡ 18 (mod 35)",
+    "level": "college"
+  },
+  {
+    "id": "dm-37",
+    "source": "divisibility and modular arithmetic, original",
+    "prompt_latex": "\\text{Write } -47 \\text{ as } 6q+r \\text{ with } 0\\le r<6 \\text{ (division algorithm), and give } -47 \\bmod 6.",
+    "prompt_plain": "Write −47 as 6q + r with 0 ≤ r < 6 (division algorithm) and give −47 mod 6.",
+    "prompt_parts": [
+      {
+        "text": "Write −47 as 6q + r with 0 ≤ r < 6 (division algorithm) and give −47 mod 6."
+      }
+    ],
+    "worked_solution": [
+      "The remainder must be non-negative, so q cannot be −7 (that gives r = −5)",
+      "Try q = −8: 6(−8) = −48",
+      "−47 = 6(−8) + 1, and 0 ≤ 1 < 6 ✓",
+      "So q = −8 and r = 1"
+    ],
+    "final_answer": "−47 = 6(−8) + 1, so q = −8, r = 1 and −47 mod 6 = 1",
+    "level": "college"
+  },
+  {
+    "id": "dm-38",
+    "source": "representation of integers, original",
+    "prompt_latex": "\\text{Convert } 10110110_2 \\text{ to decimal and to hexadecimal.}",
+    "prompt_plain": "Convert 10110110₂ to decimal and to hexadecimal.",
+    "prompt_parts": [
+      {
+        "text": "Convert 10110110₂ to decimal and to hexadecimal."
+      }
+    ],
+    "worked_solution": [
+      "Place values: 128, 64, 32, 16, 8, 4, 2, 1 under bits 1 0 1 1 0 1 1 0",
+      "128 + 32 + 16 + 4 + 2 = 182",
+      "Group in fours from the right: 1011 | 0110",
+      "1011₂ = 11 = B and 0110₂ = 6",
+      "So the hex is B6, and check: 11·16 + 6 = 182"
+    ],
+    "final_answer": "182 in decimal, B6 in hexadecimal",
+    "level": "college"
+  },
+  {
+    "id": "dm-39",
+    "source": "representation of integers, original",
+    "prompt_latex": "\\text{Convert } 2025 \\text{ to base 8, then to binary by grouping bits.}",
+    "prompt_plain": "Convert 2025 to base 8, then to binary by grouping bits.",
+    "prompt_parts": [
+      {
+        "text": "Convert 2025 to base 8, then to binary by grouping bits."
+      }
+    ],
+    "worked_solution": [
+      "2025 ÷ 8 = 253 remainder 1",
+      "253 ÷ 8 = 31 remainder 5",
+      "31 ÷ 8 = 3 remainder 7",
+      "3 ÷ 8 = 0 remainder 3",
+      "Read remainders bottom to top: 3751₈",
+      "Each octal digit is 3 bits: 3 = 011, 7 = 111, 5 = 101, 1 = 001",
+      "Joining gives 011 111 101 001, so 11111101001₂"
+    ],
+    "final_answer": "2025 = 3751₈ = 11111101001₂",
+    "level": "college"
+  },
+  {
+    "id": "dm-40",
+    "source": "mathematical induction, original",
+    "prompt_latex": "\\text{Prove by induction: } \\sum_{k=1}^{n}k(k+1)=\\dfrac{n(n+1)(n+2)}{3} \\text{ for all } n\\ge1.",
+    "prompt_plain": "Prove by induction: Σ_{k=1}^{n} k(k + 1) = n(n + 1)(n + 2)/3 for all n ≥ 1.",
+    "prompt_parts": [
+      {
+        "text": "Prove by induction: Σ_{k=1}^{n} k(k + 1) = n(n + 1)(n + 2)/3 for all n ≥ 1."
+      }
+    ],
+    "worked_solution": [
+      "Base case n = 1: left side 1·2 = 2; right side 1·2·3/3 = 2 ✓",
+      "Inductive hypothesis: assume Σ_{k=1}^{m} k(k + 1) = m(m + 1)(m + 2)/3 for some m ≥ 1",
+      "Add the next term: Σ_{k=1}^{m+1} = m(m + 1)(m + 2)/3 + (m + 1)(m + 2)",
+      "Factor out (m + 1)(m + 2): = (m + 1)(m + 2)(m/3 + 1)",
+      "= (m + 1)(m + 2)(m + 3)/3, which is the formula with n = m + 1",
+      "By induction the formula holds for all n ≥ 1"
+    ],
+    "final_answer": "Σ_{k=1}^{n} k(k + 1) = n(n + 1)(n + 2)/3 for all n ≥ 1",
+    "level": "college"
+  },
+  {
+    "id": "dm-41",
+    "source": "mathematical induction, original",
+    "prompt_latex": "\\text{Prove by induction that } 6 \\mid 7^n-1 \\text{ for all } n\\ge0.",
+    "prompt_plain": "Prove by induction that 6 divides 7ⁿ − 1 for all n ≥ 0.",
+    "prompt_parts": [
+      {
+        "text": "Prove by induction that 6 divides 7ⁿ − 1 for all n ≥ 0."
+      }
+    ],
+    "worked_solution": [
+      "Base case n = 0: 7⁰ − 1 = 0 = 6·0 ✓",
+      "Inductive hypothesis: assume 7^m − 1 = 6t for some integer t",
+      "7^(m+1) − 1 = 7·7^m − 1 = 7(7^m − 1) + 7 − 1",
+      "= 7(6t) + 6 = 6(7t + 1)",
+      "That is a multiple of 6, so the claim holds for m + 1 and so for all n ≥ 0"
+    ],
+    "final_answer": "6 divides 7ⁿ − 1 for all n ≥ 0",
+    "level": "college"
+  },
+  {
+    "id": "dm-42",
+    "source": "mathematical induction, original",
+    "prompt_latex": "\\text{Prove by induction that } n!>2^n \\text{ for all integers } n\\ge4.",
+    "prompt_plain": "Prove by induction that n! > 2ⁿ for all integers n ≥ 4.",
+    "prompt_parts": [
+      {
+        "text": "Prove by induction that n! > 2ⁿ for all integers n ≥ 4."
+      }
+    ],
+    "worked_solution": [
+      "Base case n = 4: 4! = 24 and 2⁴ = 16, and 24 > 16 ✓",
+      "Inductive hypothesis: assume m! > 2^m for some m ≥ 4",
+      "(m + 1)! = (m + 1)·m! > (m + 1)·2^m",
+      "Since m ≥ 4, m + 1 ≥ 5 > 2, so (m + 1)·2^m > 2·2^m = 2^(m+1)",
+      "Therefore (m + 1)! > 2^(m+1), and the claim holds for all n ≥ 4"
+    ],
+    "final_answer": "n! > 2ⁿ for all n ≥ 4",
+    "level": "college"
+  },
+  {
+    "id": "dm-43",
+    "source": "mathematical induction, original",
+    "prompt_latex": "\\text{Prove by strong induction that every integer } n\\ge12 \\text{ can be written as } 4a+5b \\text{ with } a,b\\ge0 \\text{ integers.}",
+    "prompt_plain": "Prove by strong induction that every integer n ≥ 12 can be written as 4a + 5b with integers a, b ≥ 0.",
+    "prompt_parts": [
+      {
+        "text": "Prove by strong induction that every integer n ≥ 12 can be written as 4a + 5b with integers a, b ≥ 0."
+      }
+    ],
+    "worked_solution": [
+      "Base cases (four of them, because the step reaches back 4): 12 = 4·3 + 5·0, 13 = 4·2 + 5·1",
+      "14 = 4·1 + 5·2, 15 = 4·0 + 5·3",
+      "Inductive step: let n ≥ 16 and assume every k with 12 ≤ k < n has the form 4a + 5b",
+      "n − 4 ≥ 12 and n − 4 < n, so n − 4 = 4a + 5b for some a, b ≥ 0",
+      "Then n = 4(a + 1) + 5b with a + 1, b ≥ 0",
+      "So every n ≥ 12 works (and 11 does not, so 12 is the best start)"
+    ],
+    "final_answer": "Every n ≥ 12 equals 4a + 5b with a, b ≥ 0",
+    "level": "college"
+  },
+  {
+    "id": "dm-44",
+    "source": "mathematical induction, original",
+    "prompt_latex": "a_1=1,\\ a_2=3,\\ a_n=a_{n-1}+2a_{n-2}.\\ \\text{Prove by strong induction that } a_n=\\dfrac{2^{n+1}+(-1)^n}{3}.",
+    "prompt_plain": "a₁ = 1, a₂ = 3, aₙ = a_{n−1} + 2a_{n−2} for n ≥ 3. Prove by strong induction that aₙ = (2^(n+1) + (−1)ⁿ)/3.",
+    "prompt_parts": [
+      {
+        "text": "a₁ = 1, a₂ = 3, aₙ = a_{n−1} + 2a_{n−2} for n ≥ 3. Prove by strong induction that aₙ = (2^(n+1) + (−1)ⁿ)/3."
+      }
+    ],
+    "worked_solution": [
+      "Base n = 1: (2² + (−1))/3 = 3/3 = 1 ✓.  Base n = 2: (2³ + 1)/3 = 9/3 = 3 ✓",
+      "Inductive step: let n ≥ 3 and assume the formula for n − 1 and n − 2",
+      "aₙ = a_{n−1} + 2a_{n−2} = (2ⁿ + (−1)^(n−1))/3 + 2(2^(n−1) + (−1)^(n−2))/3",
+      "The powers of 2 add: 2ⁿ + 2·2^(n−1) = 2ⁿ + 2ⁿ = 2^(n+1)",
+      "The signs add: (−1)^(n−1) + 2(−1)^(n−2) = (−1)ⁿ·(−1) + 2(−1)ⁿ = (−1)ⁿ",
+      "So aₙ = (2^(n+1) + (−1)ⁿ)/3, completing the step"
+    ],
+    "final_answer": "aₙ = (2^(n+1) + (−1)ⁿ)/3 for all n ≥ 1",
+    "level": "college"
+  },
+  {
+    "id": "dm-45",
+    "source": "mathematical induction, original",
+    "prompt_latex": "\\text{Prove by induction that } 3^n\\ge n^2 \\text{ for all } n\\ge0. \\text{ Why do you need three base cases?}",
+    "prompt_plain": "Prove by induction that 3ⁿ ≥ n² for all n ≥ 0. Why do you need base cases up to n = 2?",
+    "prompt_parts": [
+      {
+        "text": "Prove by induction that 3ⁿ ≥ n² for all n ≥ 0. Why do you need base cases up to n = 2?"
+      }
+    ],
+    "worked_solution": [
+      "Base cases: n = 0: 1 ≥ 0; n = 1: 3 ≥ 1; n = 2: 9 ≥ 4. All true ✓",
+      "Inductive hypothesis: assume 3^m ≥ m² for some m ≥ 2",
+      "3^(m+1) = 3·3^m ≥ 3m² = m² + 2m²",
+      "For m ≥ 2, 2m² ≥ 2m + 1 (since 2m² − 2m − 1 = 2m(m − 1) − 1 ≥ 3 for m ≥ 2)",
+      "So 3^(m+1) ≥ m² + 2m + 1 = (m + 1)²",
+      "The step needs m ≥ 2: at m = 1 it would say 3·1 ≥ 4, which is false, so n = 2 must be checked by hand"
+    ],
+    "final_answer": "3ⁿ ≥ n² for all n ≥ 0; the inductive step only works from m = 2",
+    "level": "college"
+  },
+  {
+    "id": "dm-46",
+    "source": "recursion and recurrence relations, original",
+    "prompt_latex": "a_0=2,\\ a_n=3a_{n-1}+1.\\ \\text{Solve by unrolling to get a closed form, and check } a_2.",
+    "prompt_plain": "a₀ = 2 and aₙ = 3a_{n−1} + 1. Solve by unrolling to get a closed form, and check a₂.",
+    "prompt_parts": [
+      {
+        "text": "a₀ = 2 and aₙ = 3a_{n−1} + 1. Solve by unrolling to get a closed form, and check a₂."
+      }
+    ],
+    "worked_solution": [
+      "aₙ = 3a_{n−1} + 1 = 3(3a_{n−2} + 1) + 1 = 9a_{n−2} + 3 + 1",
+      "Keep going: aₙ = 3ⁿa₀ + (3^(n−1) + … + 3 + 1)",
+      "The bracket is a geometric sum equal to (3ⁿ − 1)/2",
+      "aₙ = 2·3ⁿ + (3ⁿ − 1)/2 = (4·3ⁿ + 3ⁿ − 1)/2 = (5·3ⁿ − 1)/2",
+      "Check: a₁ = 3(2) + 1 = 7 and a₂ = 3(7) + 1 = 22; formula at n = 2: (45 − 1)/2 = 22 ✓"
+    ],
+    "final_answer": "aₙ = (5·3ⁿ − 1)/2",
+    "level": "college"
+  },
+  {
+    "id": "dm-47",
+    "source": "recursion and recurrence relations, original",
+    "prompt_latex": "a_n=5a_{n-1}-6a_{n-2},\\ a_0=1,\\ a_1=4.\\ \\text{Solve using the characteristic equation.}",
+    "prompt_plain": "aₙ = 5a_{n−1} − 6a_{n−2}, a₀ = 1, a₁ = 4. Solve using the characteristic equation.",
+    "prompt_parts": [
+      {
+        "text": "aₙ = 5a_{n−1} − 6a_{n−2}, a₀ = 1, a₁ = 4. Solve using the characteristic equation."
+      }
+    ],
+    "worked_solution": [
+      "Characteristic equation: r² − 5r + 6 = 0",
+      "(r − 2)(r − 3) = 0, so r = 2 or r = 3",
+      "General solution: aₙ = A·2ⁿ + B·3ⁿ",
+      "n = 0: A + B = 1.  n = 1: 2A + 3B = 4",
+      "Subtract 2×(first) from the second: B = 2, then A = −1",
+      "aₙ = 2·3ⁿ − 2ⁿ. Check a₂ = 5(4) − 6(1) = 14 and 2·9 − 4 = 14 ✓"
+    ],
+    "final_answer": "aₙ = 2·3ⁿ − 2ⁿ",
+    "level": "college"
+  },
+  {
+    "id": "dm-48",
+    "source": "recursion and recurrence relations, original",
+    "prompt_latex": "\\text{Let } b_n \\text{ be the number of bit strings of length } n \\text{ with no two consecutive 0s. Find a recurrence, initial values, and } b_6.",
+    "prompt_plain": "Let bₙ be the number of bit strings of length n with no two consecutive 0s. Find a recurrence, the initial values, and b₆.",
+    "prompt_parts": [
+      {
+        "text": "Let bₙ be the number of bit strings of length n with no two consecutive 0s. Find a recurrence, the initial values, and b₆."
+      }
+    ],
+    "worked_solution": [
+      "b₁ = 2 (strings 0 and 1) and b₂ = 3 (01, 10, 11; 00 is not allowed)",
+      "For n ≥ 3 split by the last bit",
+      "Ends in 1: any valid string of length n − 1 followed by 1, giving b_{n−1} strings",
+      "Ends in 0: the bit before must be 1, so it is a valid string of length n − 2 followed by 10, giving b_{n−2} strings",
+      "bₙ = b_{n−1} + b_{n−2}",
+      "b₃ = 5, b₄ = 8, b₅ = 13, b₆ = 21"
+    ],
+    "final_answer": "bₙ = b_{n−1} + b_{n−2} with b₁ = 2, b₂ = 3; b₆ = 21",
+    "level": "college"
+  },
+  {
+    "id": "dm-49",
+    "source": "recursion and recurrence relations, original",
+    "prompt_latex": "T(1)=0,\\ T(n)=2T(n/2)+n \\text{ for } n=2^k.\\ \\text{Find a closed form and } T(16).",
+    "prompt_plain": "T(1) = 0 and T(n) = 2T(n/2) + n for n = 2^k. Find a closed form and T(16).",
+    "prompt_parts": [
+      {
+        "text": "T(1) = 0 and T(n) = 2T(n/2) + n for n = 2^k. Find a closed form and T(16)."
+      }
+    ],
+    "worked_solution": [
+      "Unroll: T(n) = 2T(n/2) + n = 2(2T(n/4) + n/2) + n = 4T(n/4) + 2n",
+      "After j levels: T(n) = 2^j T(n/2^j) + j·n",
+      "Stop at j = k where n/2^k = 1, so T(n) = 2^k·T(1) + k·n = k·n",
+      "With k = log₂ n: T(n) = n log₂ n",
+      "T(16) = 16·4 = 64; check by building up: T(2) = 2, T(4) = 8, T(8) = 24, T(16) = 64"
+    ],
+    "final_answer": "T(n) = n log₂ n, so T(16) = 64",
+    "level": "college"
+  },
+  {
+    "id": "dm-50",
+    "source": "counting, original",
+    "prompt_latex": "\\text{A code is two distinct letters from A--Z followed by three digits, the first digit not 0. How many codes are there?}",
+    "prompt_plain": "A code is two distinct letters from A–Z followed by three digits, where the first digit is not 0. How many codes are there?",
+    "prompt_parts": [
+      {
+        "text": "A code is two distinct letters from A–Z followed by three digits, where the first digit is not 0. How many codes are there?"
+      }
+    ],
+    "worked_solution": [
+      "First letter: 26 choices. Second letter must differ: 25 choices",
+      "First digit: 9 choices (1 through 9)",
+      "Second and third digits: 10 choices each",
+      "Product rule: 26 · 25 · 9 · 10 · 10",
+      "= 650 · 900 = 585 000"
+    ],
+    "final_answer": "585 000 codes",
+    "level": "college"
+  },
+  {
+    "id": "dm-51",
+    "source": "counting, original",
+    "prompt_latex": "\\text{How many distinct arrangements of the letters of STATISTICS are there?}",
+    "prompt_plain": "How many distinct arrangements of the letters of STATISTICS are there?",
+    "prompt_parts": [
+      {
+        "text": "How many distinct arrangements of the letters of STATISTICS are there?"
+      }
+    ],
+    "worked_solution": [
+      "There are 10 letters: S appears 3 times, T 3 times, I 2 times, A once, C once",
+      "If all letters were different there would be 10! arrangements",
+      "Divide out the swaps of repeated letters: 3! for S, 3! for T, 2! for I",
+      "10!/(3!·3!·2!) = 3 628 800 / 72",
+      "= 50 400"
+    ],
+    "final_answer": "50 400 arrangements",
+    "level": "college"
+  },
+  {
+    "id": "dm-52",
+    "source": "counting, original",
+    "prompt_latex": "\\text{A committee of 5 is chosen from 7 men and 6 women with at least 2 women. How many committees?}",
+    "prompt_plain": "A committee of 5 is chosen from 7 men and 6 women and must include at least 2 women. How many committees are possible?",
+    "prompt_parts": [
+      {
+        "text": "A committee of 5 is chosen from 7 men and 6 women and must include at least 2 women. How many committees are possible?"
+      }
+    ],
+    "worked_solution": [
+      "Count all committees and subtract the bad ones",
+      "All: C(13,5) = 1287",
+      "No women: C(7,5) = 21",
+      "Exactly one woman: 6·C(7,4) = 6·35 = 210",
+      "Good = 1287 − 21 − 210 = 1056"
+    ],
+    "final_answer": "1056 committees",
+    "level": "college"
+  },
+  {
+    "id": "dm-53",
+    "source": "counting, original",
+    "prompt_latex": "\\text{How many integers from 1 to 300 are divisible by 2, 3 or 5?}",
+    "prompt_plain": "How many integers from 1 to 300 are divisible by 2, 3 or 5?",
+    "prompt_parts": [
+      {
+        "text": "How many integers from 1 to 300 are divisible by 2, 3 or 5?"
+      }
+    ],
+    "worked_solution": [
+      "Let A, B, C be the multiples of 2, 3, 5. |A| = 150, |B| = 100, |C| = 60",
+      "Pairs: |A∩B| = multiples of 6 = 50, |A∩C| = multiples of 10 = 30, |B∩C| = multiples of 15 = 20",
+      "Triple: |A∩B∩C| = multiples of 30 = 10",
+      "Inclusion–exclusion: 150 + 100 + 60 − 50 − 30 − 20 + 10",
+      "= 310 − 100 + 10 = 220"
+    ],
+    "final_answer": "220 integers",
+    "level": "college"
+  },
+  {
+    "id": "dm-54",
+    "source": "counting, original",
+    "prompt_latex": "\\text{Show that any 6 numbers chosen from } \\{1,\\dots,10\\} \\text{ contain two that add to 11.}",
+    "prompt_plain": "Show that any 6 numbers chosen from {1, …, 10} contain two that add to 11.",
+    "prompt_parts": [
+      {
+        "text": "Show that any 6 numbers chosen from {1, …, 10} contain two that add to 11."
+      }
+    ],
+    "worked_solution": [
+      "Make pigeonholes from pairs that sum to 11: {1,10}, {2,9}, {3,8}, {4,7}, {5,6}",
+      "That is 5 holes and every number from 1 to 10 sits in exactly one",
+      "Six chosen numbers go into 5 holes, so by the pigeonhole principle some hole gets two numbers",
+      "Those two numbers are the pair in that hole, so they add to 11"
+    ],
+    "final_answer": "Some pair {k, 11 − k} must be chosen, so two chosen numbers sum to 11",
+    "level": "college"
+  },
+  {
+    "id": "dm-55",
+    "source": "counting, original",
+    "prompt_latex": "\\text{How many cards must be drawn from a standard 52-card deck to guarantee 3 cards of the same suit?}",
+    "prompt_plain": "How many cards must be drawn from a standard 52-card deck to guarantee 3 cards of the same suit?",
+    "prompt_parts": [
+      {
+        "text": "How many cards must be drawn from a standard 52-card deck to guarantee 3 cards of the same suit?"
+      }
+    ],
+    "worked_solution": [
+      "There are 4 suits (pigeonholes)",
+      "Worst case: draw 2 of every suit without getting 3 of any: 4·2 = 8 cards",
+      "The 9th card must be a third card of some suit",
+      "Generalized pigeonhole: the smallest N with ⌈N/4⌉ ≥ 3 is N = 9"
+    ],
+    "final_answer": "9 cards",
+    "level": "college"
+  },
+  {
+    "id": "dm-56",
+    "source": "counting, original",
+    "prompt_latex": "\\text{Find the coefficient of } x^3y^4 \\text{ in } (2x-y)^7.",
+    "prompt_plain": "Find the coefficient of x³y⁴ in (2x − y)⁷.",
+    "prompt_parts": [
+      {
+        "text": "Find the coefficient of x³y⁴ in (2x − y)⁷."
+      }
+    ],
+    "worked_solution": [
+      "Binomial theorem: the term with x³y⁴ is C(7,3)·(2x)³·(−y)⁴",
+      "C(7,3) = 35",
+      "(2x)³ = 8x³ and (−y)⁴ = y⁴",
+      "Coefficient = 35·8·1 = 280"
+    ],
+    "final_answer": "280",
+    "level": "college"
+  },
+  {
+    "id": "dm-57",
+    "source": "counting, original",
+    "prompt_latex": "\\text{How many solutions in positive integers does } x_1+x_2+x_3+x_4=12 \\text{ have?}",
+    "prompt_plain": "How many solutions in positive integers does x₁ + x₂ + x₃ + x₄ = 12 have?",
+    "prompt_parts": [
+      {
+        "text": "How many solutions in positive integers does x₁ + x₂ + x₃ + x₄ = 12 have?"
+      }
+    ],
+    "worked_solution": [
+      "Positive means each xᵢ ≥ 1. Let yᵢ = xᵢ − 1 ≥ 0",
+      "Then y₁ + y₂ + y₃ + y₄ = 12 − 4 = 8 in non-negative integers",
+      "Stars and bars: 8 stars and 3 bars, C(8 + 3, 3) = C(11,3)",
+      "= 11·10·9/6 = 165"
+    ],
+    "final_answer": "165 solutions",
+    "level": "college"
+  },
+  {
+    "id": "dm-58",
+    "source": "counting, original",
+    "prompt_latex": "\\text{Four letters are put at random into four addressed envelopes. In how many ways does no letter go in its own envelope? Use inclusion--exclusion.}",
+    "prompt_plain": "Four letters are put into four addressed envelopes, one letter per envelope. In how many ways does no letter land in its own envelope? Use inclusion–exclusion.",
+    "prompt_parts": [
+      {
+        "text": "Four letters are put into four addressed envelopes, one letter per envelope. In how many ways does no letter land in its own envelope? Use inclusion–exclusion."
+      }
+    ],
+    "worked_solution": [
+      "Total arrangements: 4! = 24",
+      "Let Aᵢ be the arrangements where letter i is in its own envelope",
+      "Single: 4 sets, each (4 − 1)! = 6, total 4·6 = 24",
+      "Pairs: C(4,2) = 6 sets, each 2! = 2, total 12. Triples: C(4,3) = 4 sets, each 1! = 1, total 4. All four: 1",
+      "Bad = 24 − 12 + 4 − 1 = 15 (this is |A₁ ∪ … ∪ A₄|)",
+      "Good = 24 − 15 = 9"
+    ],
+    "final_answer": "9 ways (derangements of 4)",
+    "level": "college"
+  },
+  {
+    "id": "dm-59",
+    "source": "probability, original",
+    "prompt_latex": "\\text{Two fair dice are rolled. Find P(the sum is 9 or the dice show a double).}",
+    "prompt_plain": "Two fair dice are rolled. Find P(the sum is 9 or the dice show a double).",
+    "prompt_parts": [
+      {
+        "text": "Two fair dice are rolled. Find P(the sum is 9 or the dice show a double)."
+      }
+    ],
+    "worked_solution": [
+      "Sample space: 36 equally likely ordered pairs",
+      "Sum 9: (3,6), (4,5), (5,4), (6,3), so 4 outcomes",
+      "Doubles: (1,1) through (6,6), so 6 outcomes",
+      "Overlap: a double has an even sum, so none sum to 9; overlap is 0",
+      "P = (4 + 6 − 0)/36 = 10/36 = 5/18"
+    ],
+    "final_answer": "5/18",
+    "level": "college"
+  },
+  {
+    "id": "dm-60",
+    "source": "probability, original",
+    "prompt_latex": "\\text{Three cards are dealt from a 52-card deck. Find P(all three are the same suit).}",
+    "prompt_plain": "Three cards are dealt from a 52-card deck. Find P(all three are the same suit).",
+    "prompt_parts": [
+      {
+        "text": "Three cards are dealt from a 52-card deck. Find P(all three are the same suit)."
+      }
+    ],
+    "worked_solution": [
+      "Total hands: C(52,3) = 22 100 equally likely",
+      "Favourable: choose the suit (4 ways) then 3 of its 13 cards: 4·C(13,3) = 4·286 = 1144",
+      "P = 1144/22 100",
+      "Divide top and bottom by 52: 22/425 ≈ 0.0518"
+    ],
+    "final_answer": "22/425 (about 5.2%)",
+    "level": "college"
+  },
+  {
+    "id": "dm-61",
+    "source": "probability, original",
+    "prompt_latex": "\\text{A bit string of length 8 is chosen uniformly at random. Find P(exactly 3 ones) and P(at least 2 ones).}",
+    "prompt_plain": "A bit string of length 8 is chosen uniformly at random. Find P(exactly 3 ones) and P(at least 2 ones).",
+    "prompt_parts": [
+      {
+        "text": "A bit string of length 8 is chosen uniformly at random. Find P(exactly 3 ones) and P(at least 2 ones)."
+      }
+    ],
+    "worked_solution": [
+      "There are 2⁸ = 256 equally likely strings",
+      "Exactly 3 ones: choose the positions, C(8,3) = 56, so P = 56/256 = 7/32",
+      "At least 2 ones: use the complement (0 or 1 ones)",
+      "0 ones: 1 string. 1 one: C(8,1) = 8 strings. Total 9",
+      "P = 1 − 9/256 = 247/256"
+    ],
+    "final_answer": "P(exactly 3 ones) = 7/32; P(at least 2 ones) = 247/256",
+    "level": "college"
+  },
+  {
+    "id": "dm-62",
+    "source": "relations, original",
+    "prompt_latex": "A=\\{1,2,3,4\\},\\ R=\\{(1,1),(2,2),(3,3),(4,4),(1,2),(2,1),(3,4),(4,3)\\}.\\ \\text{Show } R \\text{ is an equivalence relation and list its classes.}",
+    "prompt_plain": "A = {1, 2, 3, 4} and R = {(1,1), (2,2), (3,3), (4,4), (1,2), (2,1), (3,4), (4,3)}. Show R is an equivalence relation and list its equivalence classes.",
+    "prompt_parts": [
+      {
+        "text": "A = {1, 2, 3, 4} and R = {(1,1), (2,2), (3,3), (4,4), (1,2), (2,1), (3,4), (4,3)}. Show R is an equivalence relation and list its equivalence classes."
+      }
+    ],
+    "worked_solution": [
+      "Reflexive: (1,1), (2,2), (3,3), (4,4) are all in R ✓",
+      "Symmetric: (1,2) ↔ (2,1) and (3,4) ↔ (4,3) both present ✓",
+      "Transitive: the only chains are (1,2),(2,1) → (1,1) ✓, (2,1),(1,2) → (2,2) ✓, (3,4),(4,3) → (3,3) ✓, (4,3),(3,4) → (4,4) ✓; all are in R",
+      "Classes: [1] = [2] = {1, 2} and [3] = [4] = {3, 4}"
+    ],
+    "final_answer": "R is an equivalence relation with classes {1, 2} and {3, 4}",
+    "level": "college"
+  },
+  {
+    "id": "dm-63",
+    "source": "relations, original",
+    "prompt_latex": "\\text{On the positive integers let } a\\,R\\,b \\iff a \\mid b. \\text{ Decide reflexive, symmetric, antisymmetric, transitive.}",
+    "prompt_plain": "On the positive integers let a R b mean a divides b. Decide whether R is reflexive, symmetric, antisymmetric, transitive.",
+    "prompt_parts": [
+      {
+        "text": "On the positive integers let a R b mean a divides b. Decide whether R is reflexive, symmetric, antisymmetric, transitive."
+      }
+    ],
+    "worked_solution": [
+      "Reflexive: a | a for every a ✓",
+      "Symmetric: 2 | 4 but 4 ∤ 2, so no ✗",
+      "Antisymmetric: if a | b and b | a with a, b > 0 then a ≤ b and b ≤ a, so a = b ✓",
+      "Transitive: if b = ak and c = bm then c = a(km), so a | c ✓",
+      "Reflexive, antisymmetric and transitive: R is a partial order"
+    ],
+    "final_answer": "Reflexive, antisymmetric, transitive; not symmetric (a partial order)",
+    "level": "college"
+  },
+  {
+    "id": "dm-64",
+    "source": "relations, original",
+    "prompt_latex": "R=\\{(1,2),(2,3),(3,1),(3,3)\\} \\text{ on } \\{1,2,3\\}.\\ \\text{Write the zero-one matrix and decide: reflexive, irreflexive, symmetric, antisymmetric, transitive.}",
+    "prompt_plain": "R = {(1,2), (2,3), (3,1), (3,3)} on {1, 2, 3}. Write the zero-one matrix of R and decide: reflexive, irreflexive, symmetric, antisymmetric, transitive.",
+    "prompt_parts": [
+      {
+        "text": "R = {(1,2), (2,3), (3,1), (3,3)} on {1, 2, 3}. Write the zero-one matrix of R and decide: reflexive, irreflexive, symmetric, antisymmetric, transitive."
+      }
+    ],
+    "worked_solution": [
+      "Row i, column j is 1 if (i,j) ∈ R: row 1 = [0 1 0], row 2 = [0 0 1], row 3 = [1 0 1]",
+      "Not reflexive: (1,1) is missing (diagonal has a 0)",
+      "Not irreflexive: (3,3) is in R (diagonal has a 1)",
+      "Not symmetric: (1,2) is in R but (2,1) is not",
+      "Antisymmetric: no pair a ≠ b has both (a,b) and (b,a), so yes ✓",
+      "Not transitive: (1,2) and (2,3) are in R but (1,3) is not"
+    ],
+    "final_answer": "Only antisymmetric; not reflexive, irreflexive, symmetric or transitive",
+    "level": "college"
+  },
+  {
+    "id": "dm-65",
+    "source": "relations, original",
+    "prompt_latex": "R=\\{(1,2),(2,3),(3,4)\\} \\text{ on } \\{1,2,3,4\\}.\\ \\text{Find the transitive closure of } R.",
+    "prompt_plain": "R = {(1,2), (2,3), (3,4)} on {1, 2, 3, 4}. Find the transitive closure of R.",
+    "prompt_parts": [
+      {
+        "text": "R = {(1,2), (2,3), (3,4)} on {1, 2, 3, 4}. Find the transitive closure of R."
+      }
+    ],
+    "worked_solution": [
+      "Keep adding (a,c) whenever (a,b) and (b,c) are present",
+      "(1,2),(2,3) → (1,3).  (2,3),(3,4) → (2,4)",
+      "Now (1,3),(3,4) → (1,4).  Also (1,2),(2,4) → (1,4), same pair",
+      "No new pairs appear after that",
+      "Closure = {(1,2), (2,3), (3,4), (1,3), (2,4), (1,4)}, i.e. every (i,j) with i < j"
+    ],
+    "final_answer": "Transitive closure = all 6 pairs (i, j) with i < j",
+    "level": "college"
+  },
+  {
+    "id": "dm-66",
+    "source": "finite state machines and formal languages (optional topics), original",
+    "prompt_latex": "\\text{Design a finite-state machine (DFA) that accepts exactly the binary strings ending in 01. Give the transition table and trace } 110101.",
+    "prompt_plain": "Design a finite-state machine (DFA) that accepts exactly the binary strings ending in 01. Give the transition table and trace the input 110101.",
+    "prompt_parts": [
+      {
+        "text": "Design a finite-state machine (DFA) that accepts exactly the binary strings ending in 01. Give the transition table and trace the input 110101."
+      }
+    ],
+    "worked_solution": [
+      "States: q0 = start / last symbol not helpful, q1 = last symbol was 0, q2 = last two symbols were 01 (accepting)",
+      "q0: on 0 go to q1, on 1 stay at q0",
+      "q1: on 0 stay at q1, on 1 go to q2",
+      "q2: on 0 go to q1 (the new 0 may start another 01), on 1 go to q0",
+      "Trace 110101: q0 →1 q0 →1 q0 →0 q1 →1 q2 →0 q1 →1 q2",
+      "Ends in q2, the accepting state, so 110101 is accepted (it does end in 01)"
+    ],
+    "final_answer": "DFA with states q0, q1, q2 (accept q2); 110101 is accepted",
+    "level": "college"
+  },
+  {
+    "id": "dm-67",
+    "source": "finite state machines and formal languages (optional topics), original",
+    "prompt_latex": "G:\\ S\\to aSb \\mid ab. \\text{ Derive } aaabbb, \\text{ state the language, and decide if } aab \\text{ is in it.}",
+    "prompt_plain": "Grammar G: S → aSb | ab. Derive aaabbb, describe the language generated, and decide whether aab belongs to it.",
+    "prompt_parts": [
+      {
+        "text": "Grammar G: S → aSb | ab. Derive aaabbb, describe the language generated, and decide whether aab belongs to it."
+      }
+    ],
+    "worked_solution": [
+      "Derivation: S ⇒ aSb ⇒ aaSbb ⇒ aaabbb  (apply S → aSb twice, then S → ab)",
+      "Each use of S → aSb adds one a on the left and one b on the right",
+      "The final step S → ab ends the string, so we always get equal numbers of a's then b's",
+      "Language = { aⁿbⁿ : n ≥ 1 }",
+      "aab has 2 a's and 1 b, so it is not of the form aⁿbⁿ and is not generated",
+      "This grammar is context-free (one non-terminal on the left)"
+    ],
+    "final_answer": "L(G) = {aⁿbⁿ : n ≥ 1}; aaabbb is in it, aab is not",
+    "level": "college"
+  },
+  {
+    "id": "dm-68",
+    "source": "graphs and trees (MATH 2230 and SFU MACM 101 reach-ahead), original",
+    "prompt_latex": "\\text{A simple graph is 3-regular (every vertex has degree 3) with 12 edges. How many vertices does it have? Could a 3-regular graph have 5 vertices?}",
+    "prompt_plain": "A simple graph is 3-regular (every vertex has degree 3) and has 12 edges. How many vertices does it have? Could a 3-regular graph have 5 vertices?",
+    "prompt_parts": [
+      {
+        "text": "A simple graph is 3-regular (every vertex has degree 3) and has 12 edges. How many vertices does it have? Could a 3-regular graph have 5 vertices?"
+      }
+    ],
+    "worked_solution": [
+      "Handshake lemma: the sum of all degrees equals 2 × (number of edges)",
+      "Sum of degrees = 2·12 = 24",
+      "Each vertex contributes 3, so 3v = 24 and v = 8",
+      "With v = 5 the degree sum would be 15, which is odd",
+      "The degree sum is always even, so no 3-regular graph has 5 vertices"
+    ],
+    "final_answer": "8 vertices; no, 5 vertices would force an odd degree sum of 15",
+    "level": "college"
+  },
+  {
+    "id": "dm-69",
+    "source": "graphs and trees (MATH 2230 and SFU MACM 101 reach-ahead), original",
+    "prompt_latex": "\\text{A full binary tree (every internal vertex has exactly 2 children) has 10 leaves. How many internal vertices and total vertices does it have?}",
+    "prompt_plain": "A full binary tree (every internal vertex has exactly 2 children) has 10 leaves. How many internal vertices and how many vertices in total does it have?",
+    "prompt_parts": [
+      {
+        "text": "A full binary tree (every internal vertex has exactly 2 children) has 10 leaves. How many internal vertices and how many vertices in total does it have?"
+      }
+    ],
+    "worked_solution": [
+      "Let i be the number of internal vertices; the total number of vertices is n = i + 10",
+      "A tree on n vertices has n − 1 edges",
+      "Each internal vertex has exactly 2 children, so the number of edges is 2i",
+      "So i + 10 − 1 = 2i, which gives i = 9",
+      "Total vertices = 9 + 10 = 19 (and 18 edges)"
+    ],
+    "final_answer": "9 internal vertices, 19 vertices in total",
+    "level": "college"
+  },
+  {
+    "id": "dm-70",
+    "source": "graphs and trees (MATH 2230 and SFU MACM 101 reach-ahead), original",
+    "prompt_latex": "\\text{Weighted graph on } A,B,C,D,E \\text{ with edges } AB{=}4,\\ AC{=}2,\\ BC{=}1,\\ BD{=}5,\\ CD{=}8,\\ CE{=}10,\\ DE{=}2. \\text{ Find a minimum spanning tree by Kruskal's algorithm and its weight.}",
+    "prompt_plain": "Weighted graph on vertices A, B, C, D, E with edges AB = 4, AC = 2, BC = 1, BD = 5, CD = 8, CE = 10, DE = 2. Use Kruskal's algorithm to find a minimum spanning tree and its total weight.",
+    "prompt_parts": [
+      {
+        "text": "Weighted graph on vertices A, B, C, D, E with edges AB = 4, AC = 2, BC = 1, BD = 5, CD = 8, CE = 10, DE = 2. Use Kruskal's algorithm to find a minimum spanning tree and its total weight."
+      }
+    ],
+    "worked_solution": [
+      "Sort the edges by weight: BC 1, AC 2, DE 2, AB 4, BD 5, CD 8, CE 10",
+      "Take BC (1): joins B and C",
+      "Take AC (2): joins A to {B, C}",
+      "Take DE (2): joins D and E, a separate component",
+      "Skip AB (4): A and B are already connected, it would form a cycle",
+      "Take BD (5): joins {A, B, C} to {D, E}. Now 4 edges connect all 5 vertices, so stop",
+      "Total = 1 + 2 + 2 + 5 = 10"
+    ],
+    "final_answer": "MST edges BC, AC, DE, BD with total weight 10",
+    "level": "college"
+  }
+]
