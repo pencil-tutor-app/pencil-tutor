@@ -327,7 +327,8 @@ times less. The unmeasured US$0.05 per minute estimate was about five times too 
 Edward: "add a lasso tool and/or the selection tool to junk delete and make it infinite canvas-like." Code in `ios/PencilTutor/Drawing/`
 (`InkCanvas.swift`, `PageSnapshot.swift`), `Views/MarksOverlay.swift`, `Session/TutorSession.swift`. Not yet run on the iPad.
 
-**Lasso.** The system tool picker (`PKToolPicker`) already carries the lasso in its default items (pens, eraser, lasso, ruler). The
+**Lasso.** (Superseded in part by Amendment 16: the system tool picker is gone, the lasso is now a wheel item, the page also scrolls
+sideways and zooms.) The system tool picker (`PKToolPicker`) already carries the lasso in its default items (pens, eraser, lasso, ruler). The
 header only says "default tool items", so the app does not trust that: on every problem screen it reads `picker.toolItems`, logs the
 item kinds (`tool_picker_items`, with `has_lasso`) and adds a `PKToolPickerLassoItem` itself if one were ever missing. A lasso
 delete, cut, paste or move changes the drawing and arrives through `canvasViewDrawingDidChange` like a written stroke, so the revision
@@ -362,6 +363,75 @@ that and keeps the cost of a look about constant:
 **Not settled.** Whether the Pencil lasso feels right with the picker's own selection menu, whether the overlay stays glued during a
 fast fling (the overlay follows SwiftUI state, one step behind UIKit; if it lags on the iPad, host the marks inside the scroll view),
 and how the tutor reads a 0.55-scale page of real handwriting: no eval covers pages taller than one screen.
+
+### Amendment 16 (2026-11-14): edge-to-edge page, floating chrome, our own tool wheel, an endless page in every direction
+
+Edward: "a lot of white space under the problem section... just make good use of white space"; "I really like the way Concepts put that
+tool wheel... I want to use it like that for real." The first device log showed a 660 pt tall canvas on a landscape iPad: the problem
+card, control bar and dividers took the rest. Inspiration is Concepts' mechanics and feel only; the icons (SF Symbols), colours and
+layout are ours. This replaces the system `PKToolPicker` of amendment 15 (and its `tool_picker_items` / `tool_picker_shown` logs) and
+the vertical-only page. Not yet run on the iPad. Code: `Drawing/InkCanvas.swift` (canvas, wheel logic), `Drawing/PageSnapshot.swift`
+(`PageGeometry`, `PageSnapshotter`), `Views/ProblemScreen.swift` (layout, wheel drawing), `Views/ProblemCardView.swift`,
+`Views/MarksOverlay.swift`, `Session/TutorSession.swift`.
+
+**Layout.** The page fills the screen edge to edge (under the status bar and home indicator); the navigation bar is hidden. Everything
+else floats on `.ultraThinMaterial` over it: a Back button and the problem card top-left (a card with the problem set as written;
+tap folds it to a one-line pill, tap again opens it; the choice is remembered in `@AppStorage "problemCard.collapsed"`); one slim
+action pill top-right (Check my work, the voice control, Clear marks and Erase page as icon buttons, the hours chip, the busy spinner);
+the caption banner on its own row under the pill, so it never covers an action (still goes on tap or when the student writes); the
+tool wheel's handle in a bottom corner. On a narrow window the pill drops under the card (`ViewThatFits`). Every accessibility
+identifier is unchanged; new ones: `backButton`, `toolWheelHandle`, `toolWheel_<pen|marker|eraser|lasso|undo|redo>`,
+`toolWheel_colour_<black|blue|red|green>`, `toolWheel_width_<thin|medium|thick>`. The old stack (card about 90 pt + control bar about 56 pt +
+dividers + navigation bar) is gone, so the canvas is the screen: the `canvas_on_screen` log line gives the new size to compare with
+the 660 pt before.
+
+**Tool wheel.** A 56 pt round handle (default bottom-right, drag it and it snaps to the nearest edge; position kept in UserDefaults)
+shows the current tool and colour. Tap: a ring opens, the handle slides inward just enough for the whole ring to fit on the page.
+Inner ring: pen, highlighter, eraser, lasso (`PKLassoTool`), undo, redo. Outer ring: black, blue, red, green and thin, medium, thick.
+A tool tap selects and closes; a colour or width tap changes the pen and keeps the ring open (choosing one while the eraser or lasso
+is on goes back to the last inking tool); writing, scrolling or tapping the handle closes it. Highlighter + black is yellow. The eraser
+is the vector eraser (a touch removes a stroke). Undo and redo go through the canvas's `undoManager`, so Erase page is undone from the
+wheel as before. The pen, colour and width are kept for the next problem. The Pencil's double-tap and squeeze (`UIPencilInteraction`)
+do what Settings > Apple Pencil says: switch to the eraser and back, switch to the previous tool, or open the wheel; ignore and system
+shortcuts do nothing. The wheel also shows under `--any-input` (UI tests): it is one closed handle in the bottom-right corner, outside
+the area the tests draw in, so showing it exercises the real tool path for free. `TutorSession.penDidTouchDown(tool:)` and the lasso
+flow through `canvasViewDrawingDidChange` are unchanged. Logs (labels only): `wheel_ready` (undo manager present, Pencil actions),
+`wheel_opened` / `wheel_closed` (reason), `tool_selected` (tool, colour, width, source), `wheel_undo` / `wheel_redo` (and `_unavailable`
+with the reason), `pencil_double_tap` / `pencil_squeeze` (action, result), `wheel_handle_moved` (edge), `problem_card_toggled`.
+
+**An endless page in every direction.** Fingers pan and pinch (0.5x to 3x), the Pencil writes. Drawing coordinates are still the
+canvas's content coordinates and are unzoomed ("page points"); the scroll view reports zoomed sizes, and screen = page x zoom - offset.
+A scroll view has no negative content coordinates, so: the first screen sits 3000 pt in from the top-left corner (`homeReserve`), the
+page is the first screen and the ink plus one screen on every side (`PageGeometry.contentSize`), and it grows right and down by
+resizing (`page_grew`, direction + new size). If ink comes within a screen of the left or top edge (more than about 1800 pt left of or
+above the first screen) the whole drawing, the scroll position and the tutor's marks move right/down by `reanchorShift` (a multiple of
+100 pt, back to a 3000 pt reserve), `page_reanchored` is logged, and the undo history is dropped, because its steps describe the old
+coordinates; a look in flight at that moment is discarded by the existing same-ink check. That is the only time coordinates change.
+Erase page resets zoom to 1 and scrolls back to the first screen. `zoom_settled` logs each finished pinch, with the content size the
+scroll view reports against the size expected (if they differ the session corrects it and logs `zoom_content_corrected`).
+
+**Tutor marks and the picture.** `MarksOverlay` multiplies the mark by the zoom and shifts by the offset; only the circle scales, the
+callout keeps its reading size. The page scrolls to a mark that is off screen or within 80 screen points of an edge, in both directions
+(`PageGeometry.offsetToReveal`), and the zoom stays as the student set it. `PageSnapshotter.region` is now 2D: ink on the first screen
+gives the same picture as always (first screen, longer side 1024 px); otherwise the box around all the ink + 40 pt, at least one screen,
+joined with the first screen when the ink touches it, scale down to fit 1024 px; below the 0.55 scale floor (about 1860 pt) the window
+slides, as large as the limit allows, ending just past the newest line in both directions. Lines whose middle is outside the window are
+not sent. Line boxes go to the server relative to the picture's top-left corner (`LineWire(regionOrigin:)`). On a picture wider than
+one screen the line numbers sit beside their lines instead of in the far-left margin. The line grouper only uses relative distances
+(vertical overlap, a 160 pt side gap, the leftmost ink), so it does not care where on the plane the ink is (unit tested at +6000/+5000).
+
+**Not settled (unverified on a device).**
+- PencilKit zoom: whether `PKCanvasView.contentSize` is scaled by the zoom like a plain `UIScrollView` (the code assumes so and logs the
+  difference), whether the Pencil keeps writing at the right size and place while zoomed, whether a pinch conflicts with the Pencil's
+  first touch, and whether stroke width on the page changes with the zoom.
+- Handwriting size: if strokes are drawn at a constant on-screen size, zooming in makes handwriting smaller in page points. The tutor's
+  0.55 scale floor, the line grouper's 160 pt side gap and the 80 pt callout allowance all assume about 35 pt writing at zoom 1.
+- The overlay follows SwiftUI state one step behind UIKit; a fast fling or pinch may show the circle lagging for a frame or two.
+- The 3000 pt reserve and 100 pt shift steps are guesses; a re-anchor drops undo and has not been seen on a device.
+- Whether an edge-to-edge page under the status bar and home indicator feels right, and whether the floating pill covers writing at the
+  top right (the caption row and the pill are about 60 pt tall; the card folds away).
+- A two-handed student: a resting palm on the wheel handle opens it; the handle is outside the default writing area but it is not
+  hidden while writing.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
