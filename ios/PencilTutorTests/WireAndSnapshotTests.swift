@@ -154,6 +154,120 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertEqual(wire.box.x, Double(lines[0].box.minX * snapshot.scale), accuracy: 0.001)
     }
 
+    // MARK: - The endless page
+
+    /// A short horizontal-ish pen stroke whose left end is at (x, y), for building pages in tests.
+    private func penStroke(x: CGFloat, y: CGFloat) -> PKStroke {
+        var points: [PKStrokePoint] = []
+        for step in 0..<12 {
+            points.append(PKStrokePoint(location: CGPoint(x: x + CGFloat(step) * 20, y: y + CGFloat(step % 3) * 6),
+                                        timeOffset: Double(step) * 0.01, size: CGSize(width: 4, height: 4),
+                                        opacity: 1, force: 1, azimuth: 0, altitude: .pi / 2))
+        }
+        return PKStroke(ink: PKInk(.pen, color: .black), path: PKStrokePath(controlPoints: points, creationDate: Date()))
+    }
+
+    func testPageThatFitsTheFirstScreenGetsTheSamePictureAsBefore() {
+        let screen = CGSize(width: 1180, height: 820)
+        let short = PageSnapshotter.region(canvasSize: screen, inkBottom: 600)
+        XCTAssertEqual(short.rect, CGRect(x: 0, y: 0, width: 1180, height: 820))
+        XCTAssertEqual(short.scale, 1024 / 1180, accuracy: 0.0001, "the old rule: longer side of the screen at 1024 px")
+        let empty = PageSnapshotter.region(canvasSize: screen, inkBottom: nil)
+        XCTAssertEqual(empty.rect, short.rect)
+        // Ink 10 pt from the bottom edge still fits: its 40 pt margin is blank paper, not a reason to grow the picture.
+        XCTAssertEqual(PageSnapshotter.region(canvasSize: screen, inkBottom: 780).rect.height, 820)
+    }
+
+    func testPictureGrowsDownToTheLowestInkAndShrinksToStayWithin1024Pixels() {
+        let screen = CGSize(width: 1180, height: 820)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBottom: 1500)
+        XCTAssertEqual(region.rect.minY, 0)
+        XCTAssertEqual(region.rect.maxY, 1540, accuracy: 0.001, "lowest ink plus the 40 pt margin")
+        XCTAssertEqual(region.scale, 1024 / 1540, accuracy: 0.0001)
+        XCTAssertLessThanOrEqual(region.rect.height * region.scale, 1024.001)
+        XCTAssertLessThanOrEqual(region.rect.width * region.scale, 1024.001)
+    }
+
+    func testVeryLongPageSlidesTheWindowInsteadOfShrinkingPastLegible() {
+        let screen = CGSize(width: 1180, height: 820)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBottom: 4000)
+        XCTAssertEqual(region.scale, PageSnapshotter.minLegibleScale, accuracy: 0.0001)
+        XCTAssertEqual(region.rect.maxY, 4040, accuracy: 0.001, "the window ends under the lowest ink")
+        XCTAssertEqual(region.rect.height, 1024 / PageSnapshotter.minLegibleScale, accuracy: 0.01)
+        XCTAssertEqual(region.rect.minY, 4040 - region.rect.height, accuracy: 0.01)
+        XCTAssertLessThanOrEqual(region.rect.height * region.scale, 1024.001)
+    }
+
+    func testLongPageSnapshotCoversTheLowInkAndLineBoxesAreMeasuredFromThePictureTop() throws {
+        var strokes: [PKStroke] = []
+        for row in 0..<3 { strokes.append(penStroke(x: 100, y: 200 + CGFloat(row) * 40)) }   // near the top
+        strokes.append(penStroke(x: 100, y: 1500))                                            // two screens down
+        let drawing = PKDrawing(strokes: strokes)
+        let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
+        XCTAssertEqual(lines.count, 4)
+
+        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: CGSize(width: 1180, height: 820), lines: lines)
+        XCTAssertGreaterThan(snapshot.region.maxY, 1500, "the low ink is inside the picture")
+        XCTAssertLessThanOrEqual(max(snapshot.pixelWidth, snapshot.pixelHeight), 1024)
+        XCTAssertLessThanOrEqual(snapshot.png.count, PageSnapshotter.maxBytes)
+        XCTAssertTrue(lines.allSatisfy { snapshot.shows($0) }, "nothing slid out of a page this size")
+
+        let low = try XCTUnwrap(lines.last)
+        let wire = LineWire(low, scale: snapshot.scale, regionTop: snapshot.region.minY)
+        XCTAssertEqual(wire.box.y, Double((low.box.minY - snapshot.region.minY) * snapshot.scale), accuracy: 0.001)
+        XCTAssertLessThan(wire.box.y + wire.box.h, Double(snapshot.pixelHeight), "the box is inside the image the server gets")
+    }
+
+    func testWindowThatSlidesDropsLinesAboveItAndMeasuresFromItsTop() throws {
+        let top = LineGrouper().group(TutorSession.inkStrokes(from: PKDrawing(strokes: [penStroke(x: 100, y: 100)])))[0]
+        let bottomStroke = penStroke(x: 100, y: 4000)
+        let drawing = PKDrawing(strokes: [penStroke(x: 100, y: 100), bottomStroke])
+        let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
+        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: CGSize(width: 1180, height: 820), lines: lines)
+        XCTAssertGreaterThan(snapshot.region.minY, 0)
+        XCTAssertFalse(snapshot.shows(top), "work far above the window is not in the picture, so its line is not sent")
+        XCTAssertTrue(snapshot.shows(lines[1]))
+        let wire = LineWire(lines[1], scale: snapshot.scale, regionTop: snapshot.region.minY)
+        XCTAssertGreaterThan(wire.box.y, 0)
+        XCTAssertLessThan(wire.box.y, Double(snapshot.pixelHeight))
+    }
+
+    func testPageIsInkPlusOneScreenAndNeverShorterThanTheScreen() {
+        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: nil), 820)
+        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: 300), 1120)
+        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: 790.2), 1611, "rounded up to whole points")
+        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: -50), 820, "never shorter than the screen")
+        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: .infinity), 820, "a bad bound cannot blow the page up")
+    }
+
+    func testScrollOffsetIsKeptInsideThePage() {
+        XCTAssertEqual(PageGeometry.maxOffsetY(contentHeight: 1620, viewportHeight: 820), 800)
+        XCTAssertEqual(PageGeometry.maxOffsetY(contentHeight: 820, viewportHeight: 820), 0)
+        XCTAssertEqual(PageGeometry.clampedOffsetY(2000, contentHeight: 1620, viewportHeight: 820), 800, "page shrank under the screen")
+        XCTAssertEqual(PageGeometry.clampedOffsetY(-40, contentHeight: 1620, viewportHeight: 820), 0)
+    }
+
+    func testMarkBelowTheScreenScrollsIntoViewAndAVisibleOneStaysPut() throws {
+        let onScreen = CGRect(x: 100, y: 300, width: 500, height: 40)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: onScreen, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620))
+
+        let below = CGRect(x: 100, y: 1200, width: 500, height: 40)
+        let target = PageGeometry.offsetToReveal(box: below, currentOffsetY: 0, viewportHeight: 820, contentHeight: 2400)
+        XCTAssertEqual(try XCTUnwrap(target), 1220 - 820 * 0.35, accuracy: 0.001, "the mark lands about a third of the way down")
+
+        let scrolledPast = PageGeometry.offsetToReveal(box: onScreen, currentOffsetY: 700, viewportHeight: 820, contentHeight: 1620)
+        XCTAssertEqual(try XCTUnwrap(scrolledPast), 320 - 820 * 0.35, accuracy: 0.001, "scrolls back up to a mark above the screen")
+
+        // Too close to the bottom edge for its callout: scrolls so the callout has room.
+        let edge = CGRect(x: 100, y: 760, width: 500, height: 40)
+        XCTAssertNotNil(PageGeometry.offsetToReveal(box: edge, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620))
+
+        // Clamped to the end of the page, and no pointless scroll when it is already as far as it can go.
+        let last = CGRect(x: 100, y: 1560, width: 500, height: 40)
+        XCTAssertEqual(try XCTUnwrap(PageGeometry.offsetToReveal(box: last, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620)), 800)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: last, currentOffsetY: 800, viewportHeight: 820, contentHeight: 1620))
+    }
+
     func testSessionLogWritesOneJSONObjectPerLineAndNoSecrets() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent("log-test-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

@@ -57,6 +57,9 @@ final class TutorSession: ObservableObject {
 
     @Published private(set) var voice: VoiceMode = .notStarted
     @Published private(set) var marks: [Mark] = []
+    /// How far the page is scrolled and how tall it is. The marks overlay follows it; not `@Published` here on purpose
+    /// (a scroll changes it every frame and must not redraw the whole screen).
+    let viewport = CanvasViewport()
     @Published private(set) var statusMessage: String?
     @Published private(set) var isRecording = false {
         didSet { syncSpeechWithMicrophone() }
@@ -77,6 +80,9 @@ final class TutorSession: ObservableObject {
     private var lastInterruptionAt: Date?
     private var penDown = false
     private var penDownAt: Date?
+    /// The tool of the latest gesture ("ink", "lasso", "eraser", "other"), so the log can say what produced a change.
+    private var lastTool = "ink"
+    private var lastStrokeCount = 0
     private var lookInFlight = false
     private var askInFlight = false
     /// The student tapped the microphone and recording is starting or running (a permission prompt may still be open).
@@ -122,6 +128,69 @@ final class TutorSession: ObservableObject {
 
     func attach(canvas: PKCanvasView) {
         self.canvas = canvas
+        syncPageSize(reason: "canvas_attached")
+    }
+
+    // MARK: - The endless page
+
+    /// Keeps the page as tall as the ink plus one screen (`PageGeometry.contentHeight`), as wide as the view, and the scroll
+    /// position inside it. Runs after every drawing change (so it grows as the student writes and shrinks when ink is deleted
+    /// or erased), when the view changes size, and when a page is erased. Logs only when the height actually changes.
+    func syncPageSize(reason: String) {
+        guard let canvas else { return }
+        let visible = canvas.bounds.size
+        guard visible.width > 1, visible.height > 1 else {
+            // Not laid out yet; the resize callback calls this again once it has a size.
+            env.log.record("page_resize_deferred", ["reason": reason, "why": "canvas not laid out yet", "problem_id": problem.id])
+            return
+        }
+        let inkBottom = canvas.drawing.strokes.map { $0.renderBounds.maxY }.filter { $0.isFinite }.max()
+        let height = PageGeometry.contentHeight(viewportHeight: visible.height, inkBottom: inkBottom)
+        let target = CGSize(width: visible.width, height: height)
+        if canvas.contentSize != target {
+            let before = canvas.contentSize
+            canvas.contentSize = target
+            env.log.record("page_resized", [
+                "reason": reason, "from_height": Int(before.height), "to_height": Int(height), "width": Int(visible.width),
+                "ink_bottom": inkBottom.map { Int($0) } ?? -1, "screen_height": Int(visible.height), "problem_id": problem.id
+            ])
+        }
+        // A shrink (erase, delete, lasso cut) can leave the screen past the new end of the page: pull it back.
+        // (A rubber-band overscroll above the top is left alone; only a screen past the end is pulled back.)
+        let clamped = PageGeometry.clampedOffsetY(canvas.contentOffset.y, contentHeight: height, viewportHeight: visible.height)
+        if canvas.contentOffset.y > clamped + 0.5 || canvas.contentOffset.x != 0 {
+            let from = canvas.contentOffset
+            canvas.setContentOffset(CGPoint(x: 0, y: clamped), animated: false)
+            env.log.record("page_scroll_clamped", ["from_y": Int(from.y), "to_y": Int(clamped), "reason": reason, "problem_id": problem.id])
+        }
+        viewport.update(offset: canvas.contentOffset, contentSize: target)
+    }
+
+    func viewportDidScroll(to offset: CGPoint) {
+        viewport.update(offset: offset)
+    }
+
+    /// One log line per finished scroll (not per frame), so the log shows where the student has been looking.
+    func viewportDidSettle(at offset: CGPoint) {
+        viewport.update(offset: offset)
+        env.log.record("page_scrolled", ["offset_y": Int(offset.y), "page_height": Int(viewport.contentSize.height), "problem_id": problem.id])
+    }
+
+    /// When the tutor circles a line that is off screen (or too close to the edge for its callout), the page scrolls to it.
+    private func scrollToShow(_ box: CGRect, lineIndex: Int) {
+        guard let canvas else { return }
+        let visibleHeight = canvas.bounds.height
+        let pageHeight = max(canvas.contentSize.height, visibleHeight)
+        guard let target = PageGeometry.offsetToReveal(box: box, currentOffsetY: canvas.contentOffset.y,
+                                                       viewportHeight: visibleHeight, contentHeight: pageHeight) else {
+            env.log.record("mark_in_view", ["line": lineIndex, "offset_y": Int(canvas.contentOffset.y), "problem_id": problem.id])
+            return
+        }
+        env.log.record("scrolled_to_mark", [
+            "line": lineIndex, "from_y": Int(canvas.contentOffset.y), "to_y": Int(target),
+            "mark_top": Int(box.minY), "mark_bottom": Int(box.maxY), "problem_id": problem.id
+        ])
+        canvas.setContentOffset(CGPoint(x: 0, y: target), animated: true)
     }
 
     /// Canvas diagnostics (touch types, swipe-back blocking, canvas size) go to the session log.
@@ -130,10 +199,17 @@ final class TutorSession: ObservableObject {
         env.log.record(type, fields.merging(["problem_id": problem.id]) { current, _ in current })
     }
 
-    func penDidTouchDown() {
+    /// A gesture with a canvas tool began. `tool` is "ink", "lasso", "eraser" or "other". A lasso loop or a selection drag is
+    /// not writing: it only holds the look back while it lasts (like a pen that is down), and whether it changed the page is
+    /// decided later by `drawingDidChange`, which fires only if the ink really changed (a delete, cut, paste or move).
+    func penDidTouchDown(tool: String = "ink") {
         penDown = true
         penDownAt = now()
+        lastTool = tool
         checkTask?.cancel()
+        if tool != "ink" {
+            env.log.record("tool_began", ["tool": tool, "revision": drawingRevision, "problem_id": problem.id])
+        }
     }
 
     func penDidLiftOff() {
@@ -149,7 +225,15 @@ final class TutorSession: ObservableObject {
         let strokes = Self.inkStrokes(from: canvas.drawing)
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
-        env.log.record("ink_changed", ["strokes": strokes.count, "lines": lines.count, "revision": drawingRevision])
+        // strokes_delta below zero means ink went away (lasso delete or cut, eraser); zero with the lasso is a move; above
+        // zero is writing or a paste. last_tool is the tool of the latest gesture (an undo from the picker keeps the old label).
+        env.log.record("ink_changed", [
+            "strokes": strokes.count, "lines": lines.count, "revision": drawingRevision,
+            "strokes_delta": strokes.count - lastStrokeCount, "last_tool": lastTool
+        ])
+        lastStrokeCount = strokes.count
+        syncPageSize(reason: "ink_changed")
+        removeMarksWhoseInkIsGone(strokes: strokes)
         live?.noteActivity()
         // The caption is a backup for the voice; once the student writes again it is in the way, so it goes.
         if statusMessage != nil {
@@ -176,16 +260,38 @@ final class TutorSession: ObservableObject {
         if let canvas, !canvas.drawing.strokes.isEmpty {
             // Undoable from the tool picker's undo button, so a fast wipe is never a lost page.
             let previous = canvas.drawing
-            canvas.undoManager?.registerUndo(withTarget: canvas) { $0.drawing = previous }
+            canvas.undoManager?.registerUndo(withTarget: canvas) { [weak self] restored in
+                restored.drawing = previous
+                // Undo runs on the main thread. The page must grow back to hold the restored ink even on OS versions where
+                // setting the drawing does not call the delegate.
+                MainActor.assumeIsolated { self?.syncPageSize(reason: "erase_undone") }
+            }
             canvas.undoManager?.setActionName("Erase page")
         }
         canvas?.drawing = PKDrawing()
         marks = []
-        env.log.record("page_erased", ["problem_id": problem.id])
+        env.log.record("page_erased", ["problem_id": problem.id, "was_scrolled_to_y": Int(canvas?.contentOffset.y ?? 0)])
+        // Back to a one-screen page at the top. (`syncPageSize` shrinks the content; the offset is set first so a long page
+        // does not flash an empty stretch on its way back.)
+        canvas?.setContentOffset(.zero, animated: false)
+        lastStrokeCount = 0
+        syncPageSize(reason: "page_erased")
         // Setting the drawing calls drawingDidChange through the delegate on some OS versions and not others,
         // so bump the revision here as well. A double bump is harmless.
         drawingRevision += 1
         refreshTestStatus(strokes: 0, lines: 0)
+    }
+
+    /// Ink under a mark that is gone (deleted or cut with the lasso, erased, or moved elsewhere) takes its mark with it: a red
+    /// circle around blank paper helps nobody. Ink that is merely edited keeps its mark; the next look decides about that.
+    private func removeMarksWhoseInkIsGone(strokes: [InkStroke]) {
+        guard !marks.isEmpty else { return }
+        let gone = marks.filter { $0.inkSignature != "" && Mark.inkSignature(in: $0.box, strokes: strokes).isEmpty }
+        guard !gone.isEmpty else { return }
+        let goneIDs = Set(gone.map(\.id))
+        marks.removeAll { goneIDs.contains($0.id) }
+        env.log.record("marks_cleared", ["count": gone.count, "lines": gone.map(\.lineIndex),
+                                         "why": "ink under the mark was deleted or moved away", "remaining": marks.count])
     }
 
     /// The base plan's microphone button: tap once to start recording a question, tap again to stop and send it. Recording
@@ -536,7 +642,9 @@ final class TutorSession: ObservableObject {
                 )
                 env.log.record("live_consult_started", [
                     "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
-                    "image_bytes": snapshot.png.count, "question_chars": delegation.question.count, "recent_turns": delegation.recent.count
+                    "image_bytes": snapshot.png.count, "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
+                    "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))",
+                    "question_chars": delegation.question.count, "recent_turns": delegation.recent.count
                 ])
                 let started = now()
                 let response = try await env.client.consult(request)
@@ -682,6 +790,9 @@ final class TutorSession: ObservableObject {
         do {
             let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: size, lines: lines)
             env.log.savePageImage(snapshot.png, kind: "watch", lookID: lookID)  // Debug builds only
+            // Only the lines inside the picture are sent, with boxes measured from the picture's top edge. On a page that
+            // fits the picture this is every line, unchanged; on a long page the window may start below the first lines.
+            let shownLines = lines.filter { snapshot.shows($0) }
             let request = WatchRequest(
                 sessionId: sessionID,
                 problemId: problem.id,
@@ -689,13 +800,14 @@ final class TutorSession: ObservableObject {
                 imagePngBase64: snapshot.png.base64EncodedString(),
                 imageWidth: snapshot.pixelWidth,
                 imageHeight: snapshot.pixelHeight,
-                lines: lines.map { LineWire($0, scale: snapshot.scale) },
+                lines: shownLines.map { LineWire($0, scale: snapshot.scale, regionTop: snapshot.region.minY) },
                 history: Array(history.suffix(10)),
                 clientTime: TimeText.iso(started)
             )
             env.log.record("look_started", [
-                "trigger": trigger.rawValue, "revision": revision, "lines": lines.count,
+                "trigger": trigger.rawValue, "revision": revision, "lines": lines.count, "lines_sent": shownLines.count,
                 "image_bytes": snapshot.png.count, "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
+                "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))", "scale": String(format: "%.3f", snapshot.scale),
                 "history_items": request.history.count
             ])
             let response = try await env.client.watch(request)
@@ -704,7 +816,7 @@ final class TutorSession: ObservableObject {
                 // The screen closed while the look was in flight: no mark, no speech.
                 env.log.record("look_dropped", ["reason": "screen_closed", "latency_ms": latency, "action": response.action])
             } else {
-                handle(response, trigger: trigger, sentLines: lines, sentRevision: revision, latencyMs: latency)
+                handle(response, trigger: trigger, sentLines: shownLines, sentRevision: revision, latencyMs: latency)
             }
         } catch {
             let (student, detail) = TutorError.describe(error)
@@ -812,6 +924,7 @@ final class TutorSession: ObservableObject {
         let strokesNow = canvas.map { Self.inkStrokes(from: $0.drawing) } ?? []
         marks.append(Mark(lineIndex: lineNumber, box: box, hint: hintWritten,
                           inkSignature: Mark.inkSignature(in: box, strokes: strokesNow)))
+        scrollToShow(box, lineIndex: lineNumber)
         lastInterruptionAt = now()
         lastDecisionLabel = "interrupt"
         fields["hint_chars"] = hintWritten.count
@@ -904,7 +1017,9 @@ final class TutorSession: ObservableObject {
                 imagePngBase64: snapshot.png.base64EncodedString()
             )
             env.log.record("ask_started", ["audio_bytes": audio.count, "audio_seconds": recording.duration,
-                                           "image_bytes": snapshot.png.count, "lines": lines.count])
+                                           "image_bytes": snapshot.png.count, "lines": lines.count,
+                                           "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
+                                           "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))"])
             let response = try await env.client.ask(request)
             let latency = Int(now().timeIntervalSince(started) * 1000)
             var answered: [String: Any] = ["latency_ms": latency, "answer_chars": response.answerText.count,

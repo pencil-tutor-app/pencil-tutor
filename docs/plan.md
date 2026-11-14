@@ -48,7 +48,7 @@ Apple ID in Xcode and the iPad plugged in).
 
 ### iPad app (SwiftUI + PencilKit, deployment target iPadOS 26.0)
 - Problem list grouped by unit; problem screen with the problem card on top and
-  a PencilKit canvas below. Pencil-only drawing; finger scrolls.
+  a PencilKit canvas below. Pencil-only drawing; finger scrolls (the page is endless downward and has a lasso, amendment 15).
 - Problem card renders the LaTeX from the bank (fractions must render). A
   bundled offline KaTeX in a small WKWebView is acceptable.
 - Line tracking: strokes are grouped into lines by vertical overlap. Each line
@@ -321,6 +321,47 @@ times less. The unmeasured US$0.05 per minute estimate was about five times too 
 - The recalled note about the Vals AI SAGE benchmark was partly wrong. The archived SAGE v1 board (2026-10-08, not 11-12) lists Gemini 4
   Argon 53.65%, GPT-6 Luna 48.09%, GPT-6.1 Sol 46.54%, Claude Haiku 5.5 45.78%. Luna did beat Sol there, but Argon led those
   three, and v1.1 has replaced v1 (https://www.vals.ai/benchmarks/sage-v1). This is a different task from watching live pages.
+
+### Amendment 15 (2026-11-14): the page is endless downward, and the lasso is confirmed
+
+Edward: "add a lasso tool and/or the selection tool to junk delete and make it infinite canvas-like." Code in `ios/PencilTutor/Drawing/`
+(`InkCanvas.swift`, `PageSnapshot.swift`), `Views/MarksOverlay.swift`, `Session/TutorSession.swift`. Not yet run on the iPad.
+
+**Lasso.** The system tool picker (`PKToolPicker`) already carries the lasso in its default items (pens, eraser, lasso, ruler). The
+header only says "default tool items", so the app does not trust that: on every problem screen it reads `picker.toolItems`, logs the
+item kinds (`tool_picker_items`, with `has_lasso`) and adds a `PKToolPickerLassoItem` itself if one were ever missing. A lasso
+delete, cut, paste or move changes the drawing and arrives through `canvasViewDrawingDidChange` like a written stroke, so the revision
+bumps, the idle timer restarts and the tutor looks again once the page has been still for 2.5 s. A loop that only selects changes no
+ink, so it starts no look (`drawingRevision == lastLookRevision` keeps the look policy quiet); while a lasso gesture is down it holds
+the look back like a pen that is down. `ink_changed` now logs `strokes_delta` and `last_tool` (negative delta = deleted or erased,
+zero with the lasso = moved), `tool_began` marks every lasso or eraser gesture and `lasso_selection_changed` marks a selection. A red
+mark whose ink was deleted or moved away is removed (`marks_cleared`, why: ink deleted or moved away).
+
+**Endless page (vertical).** The canvas scrolls vertically only: no horizontal scroll (content width = view width), no zoom (range
+pinned to 1), `contentInsetAdjustmentBehavior = .never`. Finger scrolls and the Pencil writes (the default drawing policy);
+`--any-input` UI tests keep one-finger drawing and scroll with two fingers. Page height = lowest ink + one screen of blank paper,
+never less than one screen (`PageGeometry.contentHeight`); it grows as the student writes, shrinks when ink is deleted, and follows a
+rotation. Drawing coordinates are content coordinates, so ink, line boxes and marks share one coordinate space ("page points").
+
+**Tutor marks.** `MarksOverlay` lays the marks out in page points and shifts that layer by the canvas's scroll offset
+(`CanvasViewport`, published by the session), clipped to the visible canvas. The callout is placed against the whole page height.
+When the tutor circles a line that is off screen, or too close to the screen edge for its callout, the page scrolls to put the mark
+about a third of the way down (`scrolled_to_mark`). "Erase page" returns to the top and shrinks the page to one screen (undo
+restores both). The server returns a line number, not a position, so marks come from the app's own line boxes.
+
+**Page picture (`PageSnapshotter.region`).** The server still rejects any picture whose longer side is over 1024 px, so the rule keeps
+that and keeps the cost of a look about constant:
+1. A page that fits the first screen gets exactly the picture it always did (screen width x height, scale 1024 / longer side).
+2. Ink below the screen extends the picture down to the lowest ink plus 40 pt, and the scale drops so the longer side stays within
+   1024 px (1180 x 1540 pt page: 0.665).
+3. The scale never drops below 0.55 (35 pt handwriting stays about 19 px tall). Past about 1860 pt of page the window slides: it ends
+   under the lowest ink and starts as far up as fits. Lines whose middle is above the window are not sent that look (the numbers in
+   the margin and the `lines` boxes are measured from the window's top edge), so the tutor reads the newest work.
+`look_started`, `ask_started` and `live_consult_started` log `image_px`, `region` and (for looks) `lines_sent`.
+
+**Not settled.** Whether the Pencil lasso feels right with the picker's own selection menu, whether the overlay stays glued during a
+fast fling (the overlay follows SwiftUI state, one step behind UIKit; if it lags on the iPad, host the marks inside the scroll view),
+and how the tutor reads a 0.55-scale page of real handwriting: no eval covers pages taller than one screen.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a

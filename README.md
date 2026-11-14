@@ -10,7 +10,7 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 |---|---|
 | `ios/` | the iPad app. `project.yml` is the XcodeGen spec; there is no hand-written `.xcodeproj` |
 | `ios/PencilTutor/` | app source: `Core` (models, line grouping, look policy, log), `Net` (client behind a protocol), `Drawing` (canvas, snapshot), `Audio` (fallback speech and recorder), `Live` (the GPT-Live session: protocol, transcript, WebRTC transport, controller), `Session`, `Views` |
-| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size |
+| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and region, page height and scroll-to-mark |
 | `ios/PencilTutorUITests/` | simulator UI tests against the in-process scripted tutor; they attach the screenshots |
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
 | `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |

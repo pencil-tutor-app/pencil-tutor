@@ -22,7 +22,7 @@ struct ProblemScreen: View {
             // writing top-left; the floating Pencil tool picker covers the bottom). It goes away on tap or when the student writes.
             ZStack(alignment: .topTrailing) {
                 InkCanvas(session: session)
-                MarksOverlay(marks: session.marks)
+                MarksOverlay(marks: session.marks, viewport: session.viewport)
                 if let message = session.statusMessage {
                     Text(message)
                         .font(.system(size: 15))

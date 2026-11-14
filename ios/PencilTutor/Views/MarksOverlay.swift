@@ -2,18 +2,29 @@ import SwiftUI
 
 /// The tutor's marks, drawn above the canvas and separate from the student's ink.
 /// Touches pass straight through to the canvas underneath.
+///
+/// The page scrolls, the overlay does not: marks are laid out in page coordinates (the same numbers as the ink and the line
+/// boxes) inside a layer that is shifted up by the canvas's scroll offset, so a circle stays on its line while the page moves.
+/// The overlay's own frame is the visible canvas, so anything scrolled off screen is clipped. The callout is placed against
+/// the whole page (width of the view, height of the content), not against the screen, so a mark low on the page keeps its
+/// callout beside or under it instead of being squeezed back into the first screen.
 struct MarksOverlay: View {
     let marks: [Mark]
+    @ObservedObject var viewport: CanvasViewport
 
     var body: some View {
         GeometryReader { proxy in
+            let pageSize = CGSize(width: proxy.size.width, height: max(proxy.size.height, viewport.contentSize.height))
             ZStack(alignment: .topLeading) {
                 ForEach(marks) { mark in
-                    MarkView(mark: mark, canvasSize: proxy.size)
+                    MarkView(mark: mark, canvasSize: pageSize)
                 }
             }
+            .frame(width: pageSize.width, height: pageSize.height, alignment: .topLeading)
+            .offset(x: -viewport.offset.x, y: -viewport.offset.y)
             .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
+        .clipped()
         .allowsHitTesting(false)
     }
 }
