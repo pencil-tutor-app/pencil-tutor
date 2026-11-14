@@ -18,15 +18,29 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   (https://github.com/giaphutran12/pencil-tutor, private). CI draws on a
   simulated iPad and saves screenshots of a mistake being circled and of a
   clean problem being left alone (artifact `ios-screenshots`).
-- **Content:** 12 algebra problems from BC Math 9 unit 3, with worked
-  solutions held on the server only (`shared/problems.json`).
+- **Content:** the course banks under `shared/courses/` (BC Math 5 to 9, Foundations of Math and Pre-calculus 10, Pre-calculus 12,
+  Calculus 12, Foundations of Math 12, Calculus I, Linear Algebra, Discrete Mathematics; 846 problems at 13 courses) plus the
+  original 12 BC Math 9 unit 3 problems (`shared/problems.json`). Worked solutions are held on the server only. The iPad opens on
+  a course picker (Elementary, High school, College), then the course's problem list, then the page; it remembers the last course.
 - **Voice:** ElevenLabs Eleven v4 Turbo, tap-to-talk (see Voice below). GPT-Live is a premium option, off unless a
   code's plan has it. Server endpoints: watch, ask, speak, consult, live-session, me, heartbeat, health.
-- **Models:** high school problems (every problem in the bank) run on OpenAI `gpt-6-luna` for watch and for ask/consult;
-  `advanced` problems (college level and harder; none yet) run on `gpt-6.1-sol` (plan amendment 14, measured). To try
+- **Models:** grade 5 to 12 problems run on OpenAI `gpt-6-luna` for watch and for ask/consult; `college` and `advanced`
+  problems (the three college courses) run on `gpt-6.1-sol` (plan amendment 14, measured for high school only; amendment 18). To try
   another model, set `WATCH_MODEL` / `ASK_MODEL` (high school) or `WATCH_MODEL_ADVANCED` / `ASK_MODEL_ADVANCED` in Vercel
   and redeploy; for Gemini also set the matching `_PROVIDER` to `google`. Reasoning effort: `WATCH_EFFORT`, `ASK_EFFORT`
   (`none`, `low`, `medium`, `high`; unset means the provider default).
+
+## Adding a course (2026-11-14, amendment 18)
+
+1. Put `problems.json` (and a README) in `shared/courses/<slug>/`. Optionally add `course.json` with `title`, `group`
+   (`elementary`, `high_school`, `college`) and `grade` (`null` for college); without it the title and group come from the folder
+   name and the problems' level, and the build prints a note.
+2. `npm --prefix server run build-courses`. It validates every problem in every course, fails on a duplicate id anywhere, and
+   rewrites `shared/courses/index.json` (the manifest the iPad bundles) and `server/data/problems.json` (what the server loads).
+   Commit both. CI fails (`server/test/courses.test.ts`) when either is stale or a folder is missing from the manifest.
+3. Deploy the server (`vercel deploy --prod`, from `server/`) so the tutor knows the new problems, and rebuild and install the iPad
+   app so the picker lists the course. Both are needed: the app bundles the prompts and the server holds the solutions. An older app
+   keeps working; it just does not list the new course.
 
 ## Voice (the base plan, 2026-11-14)
 
