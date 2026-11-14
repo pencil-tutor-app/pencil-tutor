@@ -1,0 +1,1588 @@
+[
+  {
+    "id": "ca12-01",
+    "source": "BC Calculus 12 content: functions and graphs (parent functions from Pre-calculus 12, piecewise functions, inverse trigonometric functions); original",
+    "prompt_latex": "f(x) = x^{2} + 1 for x < 2, and f(x) = 3x - 1 for x \\ge  2. Find f(-1), f(2) and f(4).",
+    "prompt_plain": "f(x) = x² + 1 for x < 2, and f(x) = 3x − 1 for x ≥ 2. Find f(−1), f(2) and f(4).",
+    "prompt_parts": [
+      {
+        "text": "f(x) = x² + 1 for x < 2, and f(x) = 3x − 1 for x ≥ 2. Find f(−1), f(2) and f(4)."
+      }
+    ],
+    "worked_solution": [
+      "−1 < 2, so use x² + 1: f(−1) = 1 + 1 = 2",
+      "2 ≥ 2, so use 3x − 1: f(2) = 6 − 1 = 5",
+      "4 ≥ 2: f(4) = 12 − 1 = 11"
+    ],
+    "final_answer": "f(−1) = 2, f(2) = 5, f(4) = 11",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-02",
+    "source": "BC Calculus 12 content: functions and graphs (parent functions from Pre-calculus 12, piecewise functions, inverse trigonometric functions); original",
+    "prompt_latex": "Find the exact values of \\arccos(-1/2) and \\arctan(-1).",
+    "prompt_plain": "Find the exact values of arccos(−1/2) and arctan(−1).",
+    "prompt_parts": [
+      {
+        "text": "Find the exact values of arccos(−1/2) and arctan(−1)."
+      }
+    ],
+    "worked_solution": [
+      "arccos gives an angle in [0, π] with cosine −1/2: cos(2π/3) = −1/2, so 2π/3",
+      "arctan gives an angle in (−π/2, π/2) with tangent −1: −π/4"
+    ],
+    "final_answer": "arccos(−1/2) = 2π/3, arctan(−1) = −π/4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-03",
+    "source": "BC Calculus 12 content: functions and graphs (parent functions from Pre-calculus 12, piecewise functions, inverse trigonometric functions); original",
+    "prompt_latex": "State the domain of f(x) = \\sqrt{4 - x^{2}} / (x - 1).",
+    "prompt_plain": "State the domain of f(x) = √(4 − x²) / (x − 1).",
+    "prompt_parts": [
+      {
+        "text": "State the domain of f(x) = √(4 − x²) / (x − 1)."
+      }
+    ],
+    "worked_solution": [
+      "Square root needs 4 − x² ≥ 0, so x² ≤ 4 and −2 ≤ x ≤ 2",
+      "Denominator x − 1 ≠ 0, so x ≠ 1",
+      "Domain: −2 ≤ x ≤ 2 with x ≠ 1"
+    ],
+    "final_answer": "−2 ≤ x ≤ 2, x ≠ 1",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-04",
+    "source": "BC Calculus 12 content: functions and graphs (parent functions from Pre-calculus 12, piecewise functions, inverse trigonometric functions); original",
+    "prompt_latex": "Write f(x) = |x - 2| as a piecewise function.",
+    "prompt_plain": "Write f(x) = |x − 2| as a piecewise function.",
+    "prompt_parts": [
+      {
+        "text": "Write f(x) = |x − 2| as a piecewise function."
+      }
+    ],
+    "worked_solution": [
+      "|u| = u when u ≥ 0 and −u when u < 0",
+      "x − 2 ≥ 0 exactly when x ≥ 2",
+      "f(x) = x − 2 for x ≥ 2; f(x) = −(x − 2) = 2 − x for x < 2"
+    ],
+    "final_answer": "|x − 2| = x − 2 for x ≥ 2, and 2 − x for x < 2",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-05",
+    "source": "BC Calculus 12 content: functions and graphs (parent functions from Pre-calculus 12, piecewise functions, inverse trigonometric functions); original",
+    "prompt_latex": "Find the exact value of \\sin(\\arccos(3/5)).",
+    "prompt_plain": "Find the exact value of sin(arccos(3/5)).",
+    "prompt_parts": [
+      {
+        "text": "Find the exact value of sin(arccos(3/5))."
+      }
+    ],
+    "worked_solution": [
+      "Let θ = arccos(3/5), so cos θ = 3/5 with θ in [0, π]",
+      "Right triangle: adjacent 3, hypotenuse 5, opposite √(25 − 9) = 4",
+      "θ is in quadrant I, so sin θ = 4/5"
+    ],
+    "final_answer": "4/5",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-06",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Use x = 1.9, 1.99, 2.01 and 2.1 to estimate the limit as x \\to  2 of \\dfrac{x^{2} - 4}{x - 2}.",
+    "prompt_plain": "Use x = 1.9, 1.99, 2.01 and 2.1 to estimate the limit as x → 2 of (x² − 4)/(x − 2).",
+    "prompt_parts": [
+      {
+        "text": "Use x = 1.9, 1.99, 2.01 and 2.1 to estimate the limit as x → 2 of "
+      },
+      {
+        "frac": {
+          "num": "x² − 4",
+          "den": "x − 2"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "x = 1.9: (3.61 − 4)/(−0.1) = 3.9",
+      "x = 1.99: 3.99",
+      "x = 2.01: 4.01",
+      "x = 2.1: 4.1",
+      "Values approach 4 from both sides, so the limit is 4"
+    ],
+    "final_answer": "4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-07",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Evaluate the limit as x \\to  3 of \\dfrac{x^{2} - 9}{x - 3}.",
+    "prompt_plain": "Evaluate the limit as x → 3 of (x² − 9)/(x − 3).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → 3 of "
+      },
+      {
+        "frac": {
+          "num": "x² − 9",
+          "den": "x − 3"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Substituting gives 0/0, so factor",
+      "(x − 3)(x + 3)/(x − 3) = x + 3 for x ≠ 3",
+      "Limit = 3 + 3 = 6"
+    ],
+    "final_answer": "6",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-08",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Evaluate the limit as x \\to  0 of \\dfrac{\\sqrt{x + 4} - 2}{x}.",
+    "prompt_plain": "Evaluate the limit as x → 0 of (√(x + 4) − 2)/x.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → 0 of "
+      },
+      {
+        "frac": {
+          "num": "√(x + 4) − 2",
+          "den": "x"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "0/0 again. Multiply top and bottom by the conjugate √(x + 4) + 2",
+      "Top: (x + 4) − 4 = x",
+      "x / [x(√(x + 4) + 2)] = 1/(√(x + 4) + 2)",
+      "At x = 0: 1/(2 + 2) = 1/4"
+    ],
+    "final_answer": "1/4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-09",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Find the limit as x \\to  2 from the left and from the right of |x - 2| / (x - 2), and say whether the two sided limit exists.",
+    "prompt_plain": "Find the limit as x → 2 from the left and from the right of |x − 2| / (x − 2), and say whether the two sided limit exists.",
+    "prompt_parts": [
+      {
+        "text": "Find the limit as x → 2 from the left and from the right of |x − 2| / (x − 2), and say whether the two sided limit exists."
+      }
+    ],
+    "worked_solution": [
+      "From the left x < 2, so x − 2 < 0 and |x − 2| = −(x − 2): the quotient is −1",
+      "From the right x > 2, |x − 2| = x − 2: the quotient is 1",
+      "The one sided limits differ (−1 and 1), so the two sided limit does not exist"
+    ],
+    "final_answer": "left limit −1, right limit 1, so the limit does not exist",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-10",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Evaluate the limit as x \\to  -1 of \\dfrac{x^{3} + 1}{x + 1}.",
+    "prompt_plain": "Evaluate the limit as x → −1 of (x³ + 1)/(x + 1).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → −1 of "
+      },
+      {
+        "frac": {
+          "num": "x³ + 1",
+          "den": "x + 1"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Sum of cubes: x³ + 1 = (x + 1)(x² − x + 1)",
+      "Cancel x + 1: limit of x² − x + 1",
+      "At x = −1: 1 + 1 + 1 = 3"
+    ],
+    "final_answer": "3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-11",
+    "source": "BC Calculus 12 content: limits (from a table, graphically and algebraically; one-sided versus two-sided); original",
+    "prompt_latex": "Evaluate the limit as x \\to  0 of \\dfrac{\\sin 3x}{x}.",
+    "prompt_plain": "Evaluate the limit as x → 0 of (sin 3x)/x.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → 0 of "
+      },
+      {
+        "frac": {
+          "num": "sin 3x",
+          "den": "x"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Use lim sin u / u = 1 as u → 0",
+      "Multiply and divide by 3: (sin 3x)/x = 3 · (sin 3x)/(3x)",
+      "As x → 0, 3x → 0, so the limit is 3(1) = 3"
+    ],
+    "final_answer": "3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-12",
+    "source": "BC Calculus 12 content: limits to infinity (end behaviour, horizontal and vertical asymptotes); original",
+    "prompt_latex": "Evaluate the limit as x \\to  \\infty  of \\dfrac{3x^{2} - 5x + 1}{2x^{2} + 4}.",
+    "prompt_plain": "Evaluate the limit as x → ∞ of (3x² − 5x + 1)/(2x² + 4).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → ∞ of "
+      },
+      {
+        "frac": {
+          "num": "3x² − 5x + 1",
+          "den": "2x² + 4"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Divide every term by the highest power x²: (3 − 5/x + 1/x²)/(2 + 4/x²)",
+      "5/x, 1/x² and 4/x² → 0",
+      "Limit = 3/2"
+    ],
+    "final_answer": "3/2",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-13",
+    "source": "BC Calculus 12 content: limits to infinity (end behaviour, horizontal and vertical asymptotes); original",
+    "prompt_latex": "Evaluate the limit as x \\to  \\infty  of \\dfrac{4x + 1}{x^{2} - 3}.",
+    "prompt_plain": "Evaluate the limit as x → ∞ of (4x + 1)/(x² − 3).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → ∞ of "
+      },
+      {
+        "frac": {
+          "num": "4x + 1",
+          "den": "x² − 3"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Divide top and bottom by x²: (4/x + 1/x²)/(1 − 3/x²)",
+      "Numerator → 0, denominator → 1",
+      "Limit = 0 (denominator has the higher degree)"
+    ],
+    "final_answer": "0",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-14",
+    "source": "BC Calculus 12 content: limits to infinity (end behaviour, horizontal and vertical asymptotes); original",
+    "prompt_latex": "Evaluate the limit as x \\to  \\infty  of \\dfrac{2x^{3} - x}{x^{2} + 5}.",
+    "prompt_plain": "Evaluate the limit as x → ∞ of (2x³ − x)/(x² + 5).",
+    "prompt_parts": [
+      {
+        "text": "Evaluate the limit as x → ∞ of "
+      },
+      {
+        "frac": {
+          "num": "2x³ − x",
+          "den": "x² + 5"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Divide by x²: (2x − 1/x)/(1 + 5/x²)",
+      "Numerator → ∞, denominator → 1",
+      "The limit is ∞ (no finite limit): numerator degree is higher"
+    ],
+    "final_answer": "∞ (grows without bound, no finite limit)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-15",
+    "source": "BC Calculus 12 content: limits to infinity (end behaviour, horizontal and vertical asymptotes); original",
+    "prompt_latex": "Find the horizontal asymptotes of f(x) = \\dfrac{3x}{\\sqrt{x^{2} + 1}}.",
+    "prompt_plain": "Find the horizontal asymptotes of f(x) = 3x/(√(x² + 1)).",
+    "prompt_parts": [
+      {
+        "text": "Find the horizontal asymptotes of f(x) = "
+      },
+      {
+        "frac": {
+          "num": "3x",
+          "den": "√(x² + 1)"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "For x > 0 large, √(x² + 1) ≈ x, more exactly divide by x: 3 / √(1 + 1/x²) → 3",
+      "For x < 0, √(x²) = |x| = −x, so dividing by x flips the sign: the limit is −3",
+      "Horizontal asymptotes y = 3 (right) and y = −3 (left)"
+    ],
+    "final_answer": "y = 3 and y = −3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-16",
+    "source": "BC Calculus 12 content: limits to infinity (end behaviour, horizontal and vertical asymptotes); original",
+    "prompt_latex": "Find the limit as x \\to  3 from the left and from the right of \\dfrac{2}{x - 3}.",
+    "prompt_plain": "Find the limit as x → 3 from the left and from the right of 2/(x − 3).",
+    "prompt_parts": [
+      {
+        "text": "Find the limit as x → 3 from the left and from the right of "
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "x − 3"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Left: x slightly less than 3, so x − 3 is a tiny negative number and 2/(x − 3) is a huge negative: −∞",
+      "Right: x − 3 is a tiny positive number, so the quotient is a huge positive: +∞",
+      "Vertical asymptote at x = 3"
+    ],
+    "final_answer": "−∞ from the left, +∞ from the right",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-17",
+    "source": "BC Calculus 12 content: continuity (including the intermediate value theorem); original",
+    "prompt_latex": "f(x) = x^{2} + k for x < 2 and f(x) = 5x - 3 for x \\ge  2. Find k so that f is continuous at x = 2.",
+    "prompt_plain": "f(x) = x² + k for x < 2 and f(x) = 5x − 3 for x ≥ 2. Find k so that f is continuous at x = 2.",
+    "prompt_parts": [
+      {
+        "text": "f(x) = x² + k for x < 2 and f(x) = 5x − 3 for x ≥ 2. Find k so that f is continuous at x = 2."
+      }
+    ],
+    "worked_solution": [
+      "Left limit at 2: 4 + k. Right side value f(2) = 10 − 3 = 7",
+      "Continuity needs the left limit to equal f(2): 4 + k = 7",
+      "k = 3"
+    ],
+    "final_answer": "k = 3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-18",
+    "source": "BC Calculus 12 content: continuity (including the intermediate value theorem); original",
+    "prompt_latex": "Classify the discontinuity of f(x) = \\dfrac{x^{2} - 1}{x - 1} at x = 1 and say how to remove it.",
+    "prompt_plain": "Classify the discontinuity of f(x) = (x² − 1)/(x − 1) at x = 1 and say how to remove it.",
+    "prompt_parts": [
+      {
+        "text": "Classify the discontinuity of f(x) = "
+      },
+      {
+        "frac": {
+          "num": "x² − 1",
+          "den": "x − 1"
+        }
+      },
+      {
+        "text": " at x = 1 and say how to remove it."
+      }
+    ],
+    "worked_solution": [
+      "f(1) is undefined (0/0), so f is not continuous at 1",
+      "(x − 1)(x + 1)/(x − 1) = x + 1 for x ≠ 1, so the limit as x → 1 is 2",
+      "The limit exists, so it is a removable discontinuity (a hole at (1, 2))",
+      "Define f(1) = 2 to remove it"
+    ],
+    "final_answer": "removable discontinuity at x = 1; defining f(1) = 2 fixes it",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-19",
+    "source": "BC Calculus 12 content: continuity (including the intermediate value theorem); original",
+    "prompt_latex": "Show that f(x) = x^{3} + x - 3 has a root between x = 1 and x = 2.",
+    "prompt_plain": "Show that f(x) = x³ + x − 3 has a root between x = 1 and x = 2.",
+    "prompt_parts": [
+      {
+        "text": "Show that f(x) = x³ + x − 3 has a root between x = 1 and x = 2."
+      }
+    ],
+    "worked_solution": [
+      "f is a polynomial, so it is continuous on [1, 2]",
+      "f(1) = 1 + 1 − 3 = −1 (negative)",
+      "f(2) = 8 + 2 − 3 = 7 (positive)",
+      "By the intermediate value theorem, f takes the value 0 somewhere in (1, 2)"
+    ],
+    "final_answer": "f(1) = −1 < 0 < 7 = f(2) and f is continuous, so f(c) = 0 for some c in (1, 2)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-20",
+    "source": "BC Calculus 12 content: continuity (including the intermediate value theorem); original",
+    "prompt_latex": "Where is f(x) = \\dfrac{x + 1}{x^{2} - x - 6} discontinuous?",
+    "prompt_plain": "Where is f(x) = (x + 1)/(x² − x − 6) discontinuous?",
+    "prompt_parts": [
+      {
+        "text": "Where is f(x) = "
+      },
+      {
+        "frac": {
+          "num": "x + 1",
+          "den": "x² − x − 6"
+        }
+      },
+      {
+        "text": " discontinuous?"
+      }
+    ],
+    "worked_solution": [
+      "A rational function is discontinuous where the denominator is 0",
+      "x² − x − 6 = (x − 3)(x + 2) = 0",
+      "x = 3 or x = −2",
+      "Neither cancels with the numerator x + 1, so both are vertical asymptotes"
+    ],
+    "final_answer": "x = −2 and x = 3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-21",
+    "source": "BC Calculus 12 content: differentiation, rate of change (average versus instantaneous, definition of the derivative, notation, secant and tangent slopes); original",
+    "prompt_latex": "A cart's position is s(t) = 5t^{2} metres. Find its average velocity from t = 1 s to t = 3 s.",
+    "prompt_plain": "A cart's position is s(t) = 5t² metres. Find its average velocity from t = 1 s to t = 3 s.",
+    "prompt_parts": [
+      {
+        "text": "A cart's position is s(t) = 5t² metres. Find its average velocity from t = 1 s to t = 3 s."
+      }
+    ],
+    "worked_solution": [
+      "s(1) = 5 and s(3) = 45",
+      "Average rate = (s(3) − s(1))/(3 − 1) = 40/2",
+      "= 20 m/s"
+    ],
+    "final_answer": "20 m/s",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-22",
+    "source": "BC Calculus 12 content: differentiation, rate of change (average versus instantaneous, definition of the derivative, notation, secant and tangent slopes); original",
+    "prompt_latex": "Use the limit definition to find f'(x) for f(x) = x^{2} - 3x.",
+    "prompt_plain": "Use the limit definition to find f'(x) for f(x) = x² − 3x.",
+    "prompt_parts": [
+      {
+        "text": "Use the limit definition to find f'(x) for f(x) = x² − 3x."
+      }
+    ],
+    "worked_solution": [
+      "f'(x) = lim [f(x + h) − f(x)] / h as h → 0",
+      "f(x + h) = x² + 2xh + h² − 3x − 3h",
+      "f(x + h) − f(x) = 2xh + h² − 3h",
+      "Divide by h: 2x + h − 3",
+      "As h → 0: f'(x) = 2x − 3"
+    ],
+    "final_answer": "f'(x) = 2x − 3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-23",
+    "source": "BC Calculus 12 content: differentiation, rate of change (average versus instantaneous, definition of the derivative, notation, secant and tangent slopes); original",
+    "prompt_latex": "Use the limit definition to find f'(x) for f(x) = 1/x, then the slope of the tangent at x = 2.",
+    "prompt_plain": "Use the limit definition to find f'(x) for f(x) = 1/x, then the slope of the tangent at x = 2.",
+    "prompt_parts": [
+      {
+        "text": "Use the limit definition to find f'(x) for f(x) = 1/x, then the slope of the tangent at x = 2."
+      }
+    ],
+    "worked_solution": [
+      "[1/(x + h) − 1/x]/h",
+      "Common denominator: [(x − (x + h)) / (x(x + h))]/h = −h / (h x (x + h))",
+      "= −1/(x(x + h))",
+      "As h → 0: f'(x) = −1/x²",
+      "At x = 2: −1/4"
+    ],
+    "final_answer": "f'(x) = −1/x², slope at x = 2 is −1/4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-24",
+    "source": "BC Calculus 12 content: differentiation, rate of change (average versus instantaneous, definition of the derivative, notation, secant and tangent slopes); original",
+    "prompt_latex": "Find the equation of the tangent line to y = x^{2} at the point (3, 9).",
+    "prompt_plain": "Find the equation of the tangent line to y = x² at the point (3, 9).",
+    "prompt_parts": [
+      {
+        "text": "Find the equation of the tangent line to y = x² at the point (3, 9)."
+      }
+    ],
+    "worked_solution": [
+      "dy/dx = 2x, so the slope at x = 3 is 6",
+      "Point−slope form: y − 9 = 6(x − 3)",
+      "y = 6x − 18 + 9",
+      "y = 6x − 9"
+    ],
+    "final_answer": "y = 6x − 9",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-25",
+    "source": "BC Calculus 12 content: differentiation, rate of change (average versus instantaneous, definition of the derivative, notation, secant and tangent slopes); original",
+    "prompt_latex": "Use the limit definition to show that the derivative of f(x) = √x is 1/(2√x).",
+    "prompt_plain": "Use the limit definition to show that the derivative of f(x) = √x is 1/(2√x).",
+    "prompt_parts": [
+      {
+        "text": "Use the limit definition to show that the derivative of f(x) = √x is 1/(2√x)."
+      }
+    ],
+    "worked_solution": [
+      "[√(x + h) − √x]/h. Multiply top and bottom by the conjugate √(x + h) + √x",
+      "Top becomes (x + h) − x = h",
+      "h / [h(√(x + h) + √x)] = 1/(√(x + h) + √x)",
+      "As h → 0: 1/(2√x)"
+    ],
+    "final_answer": "f'(x) = 1/(2√x)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-26",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Differentiate y = x⁻^{2} + 4√x.",
+    "prompt_plain": "Differentiate y = x⁻² + 4√x.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = x⁻² + 4√x."
+      }
+    ],
+    "worked_solution": [
+      "Write 4√x as 4x^(1/2)",
+      "Power rule: d/dx x^n = n x^(n−1)",
+      "d/dx x⁻² = −2x⁻³",
+      "d/dx 4x^(1/2) = 2x^(−1/2)",
+      "dy/dx = −2x⁻³ + 2x⁻½"
+    ],
+    "final_answer": "dy/dx = −2x⁻³ + 2x⁻½",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-27",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Use the product rule to differentiate y = (x^{2} + 1)(3x - 2).",
+    "prompt_plain": "Use the product rule to differentiate y = (x² + 1)(3x − 2).",
+    "prompt_parts": [
+      {
+        "text": "Use the product rule to differentiate y = (x² + 1)(3x − 2)."
+      }
+    ],
+    "worked_solution": [
+      "(uv)' = u'v + uv' with u = x² + 1, v = 3x − 2",
+      "u' = 2x, v' = 3",
+      "dy/dx = 2x(3x − 2) + 3(x² + 1)",
+      "= 6x² − 4x + 3x² + 3",
+      "= 9x² − 4x + 3"
+    ],
+    "final_answer": "dy/dx = 9x² − 4x + 3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-28",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Use the quotient rule to differentiate y = \\dfrac{x + 1}{x - 2}.",
+    "prompt_plain": "Use the quotient rule to differentiate y = (x + 1)/(x − 2).",
+    "prompt_parts": [
+      {
+        "text": "Use the quotient rule to differentiate y = "
+      },
+      {
+        "frac": {
+          "num": "x + 1",
+          "den": "x − 2"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "(u/v)' = (u'v − uv')/v² with u = x + 1, v = x − 2",
+      "u' = 1, v' = 1",
+      "dy/dx = [(1)(x − 2) − (x + 1)(1)] / (x − 2)²",
+      "= (x − 2 − x − 1)/(x − 2)²",
+      "= −3/(x − 2)²"
+    ],
+    "final_answer": "dy/dx = −3/(x − 2)²",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-29",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Differentiate y = (3x^{2} - 1)^{5}.",
+    "prompt_plain": "Differentiate y = (3x² − 1)⁵.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = (3x² − 1)⁵."
+      }
+    ],
+    "worked_solution": [
+      "Chain rule: outer power 5, inner 3x² − 1",
+      "dy/dx = 5(3x² − 1)⁴ · (6x)",
+      "= 30x(3x² − 1)⁴"
+    ],
+    "final_answer": "dy/dx = 30x(3x² − 1)⁴",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-30",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Differentiate y = \\sqrt{x^{2} + 9}.",
+    "prompt_plain": "Differentiate y = √(x² + 9).",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = √(x² + 9)."
+      }
+    ],
+    "worked_solution": [
+      "y = (x² + 9)^(1/2)",
+      "dy/dx = (1/2)(x² + 9)^(−1/2) · 2x",
+      "= x / √(x² + 9)"
+    ],
+    "final_answer": "dy/dx = x/√(x² + 9)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-31",
+    "source": "BC Calculus 12 content: differentiation rules (power, product, quotient and chain); original",
+    "prompt_latex": "Differentiate y = x(2x + 1)^{3} and factor the result.",
+    "prompt_plain": "Differentiate y = x(2x + 1)³ and factor the result.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = x(2x + 1)³ and factor the result."
+      }
+    ],
+    "worked_solution": [
+      "Product rule with u = x, v = (2x + 1)³",
+      "v' = 3(2x + 1)² · 2 = 6(2x + 1)²",
+      "dy/dx = (1)(2x + 1)³ + x · 6(2x + 1)²",
+      "Factor out (2x + 1)²: (2x + 1)²[(2x + 1) + 6x]",
+      "= (2x + 1)²(8x + 1)"
+    ],
+    "final_answer": "dy/dx = (2x + 1)²(8x + 1)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-32",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = \\ln(3x^{2} + 1).",
+    "prompt_plain": "Differentiate y = ln(3x² + 1).",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = ln(3x² + 1)."
+      }
+    ],
+    "worked_solution": [
+      "d/dx ln u = u'/u with u = 3x² + 1",
+      "u' = 6x",
+      "dy/dx = 6x/(3x² + 1)"
+    ],
+    "final_answer": "dy/dx = 6x/(3x² + 1)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-33",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = x e^{-3x}.",
+    "prompt_plain": "Differentiate y = x e^(−3x).",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = x e^(−3x)."
+      }
+    ],
+    "worked_solution": [
+      "Product rule: u = x, v = e^(−3x)",
+      "u' = 1, v' = −3e^(−3x)",
+      "dy/dx = e^(−3x) + x(−3e^(−3x))",
+      "= e^(−3x)(1 − 3x)"
+    ],
+    "final_answer": "dy/dx = e^(−3x)(1 − 3x)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-34",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = \\sin(x^{2}).",
+    "prompt_plain": "Differentiate y = sin(x²).",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = sin(x²)."
+      }
+    ],
+    "worked_solution": [
+      "Chain rule: d/dx sin u = cos u · u'",
+      "u = x², u' = 2x",
+      "dy/dx = 2x cos(x²)"
+    ],
+    "final_answer": "dy/dx = 2x cos(x²)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-35",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = \\cos^{3}x.",
+    "prompt_plain": "Differentiate y = cos³x.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = cos³x."
+      }
+    ],
+    "worked_solution": [
+      "Write y = (cos x)³",
+      "Chain rule: 3(cos x)² · d/dx(cos x)",
+      "d/dx cos x = −sin x",
+      "dy/dx = −3cos²x sin x"
+    ],
+    "final_answer": "dy/dx = −3cos²x sin x",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-36",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = 5^{x}.",
+    "prompt_plain": "Differentiate y = 5^x.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = 5^x."
+      }
+    ],
+    "worked_solution": [
+      "Write 5^x = e^(x ln 5)",
+      "Chain rule: e^(x ln 5) · ln 5",
+      "dy/dx = 5^x ln 5"
+    ],
+    "final_answer": "dy/dx = 5^x ln 5",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-37",
+    "source": "BC Calculus 12 content: differentiation rules for transcendental functions (logarithmic, exponential, trigonometric); original",
+    "prompt_latex": "Differentiate y = \\dfrac{\\ln x}{x}.",
+    "prompt_plain": "Differentiate y = (ln x)/x.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = "
+      },
+      {
+        "frac": {
+          "num": "ln x",
+          "den": "x"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Quotient rule: u = ln x, v = x; u' = 1/x, v' = 1",
+      "dy/dx = [(1/x)(x) − (ln x)(1)]/x²",
+      "= (1 − ln x)/x²"
+    ],
+    "final_answer": "dy/dx = (1 − ln x)/x²",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-38",
+    "source": "BC Calculus 12 content: differentiation, higher order and implicit; original",
+    "prompt_latex": "For f(x) = x^{4} - 3x^{3} find f''(x) and f'''(x).",
+    "prompt_plain": "For f(x) = x⁴ − 3x³ find f''(x) and f'''(x).",
+    "prompt_parts": [
+      {
+        "text": "For f(x) = x⁴ − 3x³ find f''(x) and f'''(x)."
+      }
+    ],
+    "worked_solution": [
+      "f'(x) = 4x³ − 9x²",
+      "f''(x) = 12x² − 18x",
+      "f'''(x) = 24x − 18"
+    ],
+    "final_answer": "f''(x) = 12x² − 18x, f'''(x) = 24x − 18",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-39",
+    "source": "BC Calculus 12 content: differentiation, higher order and implicit; original",
+    "prompt_latex": "For x^{2} + y^{2} = 25, find dy/dx by implicit differentiation, then the tangent line at (3, 4).",
+    "prompt_plain": "For x² + y² = 25, find dy/dx by implicit differentiation, then the tangent line at (3, 4).",
+    "prompt_parts": [
+      {
+        "text": "For x² + y² = 25, find dy/dx by implicit differentiation, then the tangent line at (3, 4)."
+      }
+    ],
+    "worked_solution": [
+      "Differentiate both sides: 2x + 2y(dy/dx) = 0",
+      "dy/dx = −x/y",
+      "At (3, 4): slope = −3/4",
+      "y − 4 = −(3/4)(x − 3)",
+      "y = −(3/4)x + 9/4 + 4 = −(3/4)x + 25/4"
+    ],
+    "final_answer": "dy/dx = −x/y; tangent at (3, 4): y = −(3/4)x + 25/4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-40",
+    "source": "BC Calculus 12 content: differentiation, higher order and implicit; original",
+    "prompt_latex": "Find dy/dx for x^{2} + xy + y^{2} = 7, and the slope at (1, 2).",
+    "prompt_plain": "Find dy/dx for x² + xy + y² = 7, and the slope at (1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Find dy/dx for x² + xy + y² = 7, and the slope at (1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Differentiate: 2x + (y + x dy/dx) + 2y dy/dx = 0 (product rule on xy)",
+      "Group the dy/dx terms: (x + 2y) dy/dx = −(2x + y)",
+      "dy/dx = −(2x + y)/(x + 2y)",
+      "At (1, 2): −(2 + 2)/(1 + 4) = −4/5"
+    ],
+    "final_answer": "dy/dx = −(2x + y)/(x + 2y); slope at (1, 2) is −4/5",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-41",
+    "source": "BC Calculus 12 content: differentiation, higher order and implicit; original",
+    "prompt_latex": "For x^{2} + y^{2} = 25, find d^{2}y/dx^{2} at (3, 4).",
+    "prompt_plain": "For x² + y² = 25, find d²y/dx² at (3, 4).",
+    "prompt_parts": [
+      {
+        "text": "For x² + y² = 25, find d²y/dx² at (3, 4)."
+      }
+    ],
+    "worked_solution": [
+      "First derivative: y' = −x/y",
+      "Differentiate again with the quotient rule: y'' = −(y − x y')/y²",
+      "Substitute y' = −x/y: y'' = −(y + x²/y)/y² = −(y² + x²)/y³",
+      "x² + y² = 25, so y'' = −25/y³",
+      "At y = 4: −25/64"
+    ],
+    "final_answer": "d²y/dx² = −25/64 at (3, 4)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-42",
+    "source": "BC Calculus 12 content: applications of differentiation (graph of f, f' and f'', increasing and decreasing, concavity, mean value theorem, Newton's method); original",
+    "prompt_latex": "For f(x) = x^{3} - 6x^{2} + 9x, find where f is increasing and decreasing and the local extrema.",
+    "prompt_plain": "For f(x) = x³ − 6x² + 9x, find where f is increasing and decreasing and the local extrema.",
+    "prompt_parts": [
+      {
+        "text": "For f(x) = x³ − 6x² + 9x, find where f is increasing and decreasing and the local extrema."
+      }
+    ],
+    "worked_solution": [
+      "f'(x) = 3x² − 12x + 9 = 3(x − 1)(x − 3)",
+      "Critical numbers x = 1 and x = 3",
+      "Sign of f': x = 0 gives +9 (positive), x = 2 gives 3(1)(−1) = −3 (negative), x = 4 gives 9 (positive)",
+      "Increasing for x < 1 and x > 3, decreasing for 1 < x < 3",
+      "f(1) = 1 − 6 + 9 = 4: local max (1, 4). f(3) = 27 − 54 + 27 = 0: local min (3, 0)"
+    ],
+    "final_answer": "increasing for x < 1 and x > 3, decreasing for 1 < x < 3; local max (1, 4), local min (3, 0)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-43",
+    "source": "BC Calculus 12 content: applications of differentiation (graph of f, f' and f'', increasing and decreasing, concavity, mean value theorem, Newton's method); original",
+    "prompt_latex": "For f(x) = x^{3} - 6x^{2} + 9x, use f''(x) to find the concavity and the inflection point.",
+    "prompt_plain": "For f(x) = x³ − 6x² + 9x, use f''(x) to find the concavity and the inflection point.",
+    "prompt_parts": [
+      {
+        "text": "For f(x) = x³ − 6x² + 9x, use f''(x) to find the concavity and the inflection point."
+      }
+    ],
+    "worked_solution": [
+      "f'(x) = 3x² − 12x + 9",
+      "f''(x) = 6x − 12 = 0 at x = 2",
+      "x < 2: f'' < 0, concave down. x > 2: f'' > 0, concave up",
+      "Concavity changes at x = 2, f(2) = 8 − 24 + 18 = 2",
+      "Inflection point (2, 2)"
+    ],
+    "final_answer": "inflection point (2, 2); concave down for x < 2, concave up for x > 2",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-44",
+    "source": "BC Calculus 12 content: applications of differentiation (graph of f, f' and f'', increasing and decreasing, concavity, mean value theorem, Newton's method); original",
+    "prompt_latex": "Find the value of c guaranteed by the mean value theorem for f(x) = x^{3} on [0, 3].",
+    "prompt_plain": "Find the value of c guaranteed by the mean value theorem for f(x) = x³ on [0, 3].",
+    "prompt_parts": [
+      {
+        "text": "Find the value of c guaranteed by the mean value theorem for f(x) = x³ on [0, 3]."
+      }
+    ],
+    "worked_solution": [
+      "f is continuous and differentiable everywhere, so the theorem applies",
+      "Average slope = (f(3) − f(0))/(3 − 0) = 27/3 = 9",
+      "f'(c) = 3c² = 9, so c² = 3",
+      "c = √3 (the positive root, which lies in (0, 3))"
+    ],
+    "final_answer": "c = √3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-45",
+    "source": "BC Calculus 12 content: applications of differentiation (graph of f, f' and f'', increasing and decreasing, concavity, mean value theorem, Newton's method); original",
+    "prompt_latex": "Use Newton's method on f(x) = x^{2} - 7 with x_{0} = 3 to find x_{1} and x_{2}.",
+    "prompt_plain": "Use Newton's method on f(x) = x² − 7 with x₀ = 3 to find x₁ and x₂.",
+    "prompt_parts": [
+      {
+        "text": "Use Newton's method on f(x) = x² − 7 with x₀ = 3 to find x₁ and x₂."
+      }
+    ],
+    "worked_solution": [
+      "xₙ₊₁ = xₙ − f(xₙ)/f'(xₙ) with f'(x) = 2x",
+      "x₁ = 3 − (9 − 7)/6 = 3 − 1/3 = 8/3",
+      "f(8/3) = 64/9 − 7 = 1/9 and f'(8/3) = 16/3",
+      "x₂ = 8/3 − (1/9)/(16/3) = 8/3 − 1/48 = 127/48",
+      "127/48 ≈ 2.6458, close to √7 ≈ 2.6458"
+    ],
+    "final_answer": "x₁ = 8/3, x₂ = 127/48 ≈ 2.6458",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-46",
+    "source": "BC Calculus 12 content: applications of differentiation (graph of f, f' and f'', increasing and decreasing, concavity, mean value theorem, Newton's method); original",
+    "prompt_latex": "Find and classify the critical points of f(x) = x^{4} - 8x^{2} using the second derivative test.",
+    "prompt_plain": "Find and classify the critical points of f(x) = x⁴ − 8x² using the second derivative test.",
+    "prompt_parts": [
+      {
+        "text": "Find and classify the critical points of f(x) = x⁴ − 8x² using the second derivative test."
+      }
+    ],
+    "worked_solution": [
+      "f'(x) = 4x³ − 16x = 4x(x − 2)(x + 2), critical numbers −2, 0, 2",
+      "f''(x) = 12x² − 16",
+      "f''(0) = −16 < 0: local max, f(0) = 0",
+      "f''(2) = 32 > 0 and f''(−2) = 32 > 0: local minima",
+      "f(±2) = 16 − 32 = −16"
+    ],
+    "final_answer": "local max at (0, 0); local minima at (2, −16) and (−2, −16)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-47",
+    "source": "BC Calculus 12 content: applications of differentiation (related rates); original",
+    "prompt_latex": "A circular oil slick has radius growing at 2 cm/s. How fast is its area growing when the radius is 5 cm?",
+    "prompt_plain": "A circular oil slick has radius growing at 2 cm/s. How fast is its area growing when the radius is 5 cm?",
+    "prompt_parts": [
+      {
+        "text": "A circular oil slick has radius growing at 2 cm/s. How fast is its area growing when the radius is 5 cm?"
+      }
+    ],
+    "worked_solution": [
+      "A = πr²",
+      "Differentiate with respect to time: dA/dt = 2πr (dr/dt)",
+      "dA/dt = 2π(5)(2)",
+      "= 20π cm²/s (about 62.8 cm²/s)"
+    ],
+    "final_answer": "dA/dt = 20π cm²/s",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-48",
+    "source": "BC Calculus 12 content: applications of differentiation (related rates); original",
+    "prompt_latex": "A 13 m ladder leans on a wall. The base slides away at 0.5 m/s. How fast is the top sliding down when the base is 5 m from the wall?",
+    "prompt_plain": "A 13 m ladder leans on a wall. The base slides away at 0.5 m/s. How fast is the top sliding down when the base is 5 m from the wall?",
+    "prompt_parts": [
+      {
+        "text": "A 13 m ladder leans on a wall. The base slides away at 0.5 m/s. How fast is the top sliding down when the base is 5 m from the wall?"
+      }
+    ],
+    "worked_solution": [
+      "x² + y² = 169",
+      "Differentiate in time: 2x(dx/dt) + 2y(dy/dt) = 0",
+      "When x = 5: y = √(169 − 25) = 12",
+      "dy/dt = −x(dx/dt)/y = −(5)(0.5)/12 = −5/24",
+      "The top is sliding down at 5/24 m/s (about 0.21 m/s)"
+    ],
+    "final_answer": "the top slides down at 5/24 m/s (about 0.21 m/s)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-49",
+    "source": "BC Calculus 12 content: applications of differentiation (related rates); original",
+    "prompt_latex": "Air is pumped into a spherical balloon at 36\\pi  cm^{3}/s. How fast is the radius increasing when r = 3 cm?",
+    "prompt_plain": "Air is pumped into a spherical balloon at 36π cm³/s. How fast is the radius increasing when r = 3 cm?",
+    "prompt_parts": [
+      {
+        "text": "Air is pumped into a spherical balloon at 36π cm³/s. How fast is the radius increasing when r = 3 cm?"
+      }
+    ],
+    "worked_solution": [
+      "V = (4/3)πr³",
+      "dV/dt = 4πr² (dr/dt)",
+      "36π = 4π(9)(dr/dt) = 36π (dr/dt)",
+      "dr/dt = 1 cm/s"
+    ],
+    "final_answer": "dr/dt = 1 cm/s",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-50",
+    "source": "BC Calculus 12 content: applications of differentiation (optimization); original",
+    "prompt_latex": "A farmer has 120 m of fence for three sides of a rectangular pen; a river is the fourth side. Find the dimensions with the largest area.",
+    "prompt_plain": "A farmer has 120 m of fence for three sides of a rectangular pen; a river is the fourth side. Find the dimensions with the largest area.",
+    "prompt_parts": [
+      {
+        "text": "A farmer has 120 m of fence for three sides of a rectangular pen; a river is the fourth side. Find the dimensions with the largest area."
+      }
+    ],
+    "worked_solution": [
+      "Let the two sides perpendicular to the river be x, the side parallel be y: 2x + y = 120, so y = 120 − 2x",
+      "A = xy = 120x − 2x²",
+      "A' = 120 − 4x = 0 at x = 30",
+      "A'' = −4 < 0, so this is a maximum",
+      "y = 120 − 60 = 60. A = 30(60) = 1800 m²"
+    ],
+    "final_answer": "30 m by 60 m (60 m along the river), area 1800 m²",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-51",
+    "source": "BC Calculus 12 content: applications of differentiation (optimization); original",
+    "prompt_latex": "A closed cylinder must hold 54\\pi  cm^{3}. Find the radius and height that minimize the surface area.",
+    "prompt_plain": "A closed cylinder must hold 54π cm³. Find the radius and height that minimize the surface area.",
+    "prompt_parts": [
+      {
+        "text": "A closed cylinder must hold 54π cm³. Find the radius and height that minimize the surface area."
+      }
+    ],
+    "worked_solution": [
+      "V = πr²h = 54π, so h = 54/r²",
+      "S = 2πr² + 2πrh = 2πr² + 108π/r",
+      "S' = 4πr − 108π/r² = 0, so r³ = 27 and r = 3",
+      "S'' = 4π + 216π/r³ > 0: a minimum",
+      "h = 54/9 = 6. S = 18π + 36π = 54π cm²"
+    ],
+    "final_answer": "r = 3 cm, h = 6 cm, S = 54π cm²",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-52",
+    "source": "BC Calculus 12 content: applications of differentiation (optimization); original",
+    "prompt_latex": "A shop sells q = 100 - 2p items per day at price p dollars. Find the price that maximizes revenue and the maximum revenue.",
+    "prompt_plain": "A shop sells q = 100 − 2p items per day at price p dollars. Find the price that maximizes revenue and the maximum revenue.",
+    "prompt_parts": [
+      {
+        "text": "A shop sells q = 100 − 2p items per day at price p dollars. Find the price that maximizes revenue and the maximum revenue."
+      }
+    ],
+    "worked_solution": [
+      "R = p · q = p(100 − 2p) = 100p − 2p²",
+      "R' = 100 − 4p = 0, so p = 25",
+      "R'' = −4 < 0: a maximum",
+      "R(25) = 25(50) = 1250"
+    ],
+    "final_answer": "price $25, revenue $1250",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-53",
+    "source": "BC Calculus 12 content: applications of differentiation (optimization); original",
+    "prompt_latex": "Two positive numbers have product 36. Find them if their sum is as small as possible.",
+    "prompt_plain": "Two positive numbers have product 36. Find them if their sum is as small as possible.",
+    "prompt_parts": [
+      {
+        "text": "Two positive numbers have product 36. Find them if their sum is as small as possible."
+      }
+    ],
+    "worked_solution": [
+      "y = 36/x, so S = x + 36/x",
+      "S' = 1 − 36/x² = 0, so x² = 36 and x = 6",
+      "S'' = 72/x³ > 0 for x > 0: a minimum",
+      "Both numbers are 6, sum 12"
+    ],
+    "final_answer": "6 and 6, minimum sum 12",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-54",
+    "source": "BC Calculus 12 content: integration, approximations (Riemann sums, rectangle and trapezoidal methods); original",
+    "prompt_latex": "Approximate the area under y = x^{2} on [0, 4] with 4 equal rectangles using left endpoints, and then right endpoints.",
+    "prompt_plain": "Approximate the area under y = x² on [0, 4] with 4 equal rectangles using left endpoints, and then right endpoints.",
+    "prompt_parts": [
+      {
+        "text": "Approximate the area under y = x² on [0, 4] with 4 equal rectangles using left endpoints, and then right endpoints."
+      }
+    ],
+    "worked_solution": [
+      "Width Δx = (4 − 0)/4 = 1; endpoints 0, 1, 2, 3, 4",
+      "Left: 1[f(0) + f(1) + f(2) + f(3)] = 0 + 1 + 4 + 9 = 14",
+      "Right: 1[f(1) + f(2) + f(3) + f(4)] = 1 + 4 + 9 + 16 = 30",
+      "The true area 64/3 ≈ 21.3 lies between them"
+    ],
+    "final_answer": "left sum 14, right sum 30",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-55",
+    "source": "BC Calculus 12 content: integration, approximations (Riemann sums, rectangle and trapezoidal methods); original",
+    "prompt_latex": "Use the midpoint rectangle method with 4 rectangles to approximate the integral of x^{2} from 0 to 4.",
+    "prompt_plain": "Use the midpoint rectangle method with 4 rectangles to approximate the integral of x² from 0 to 4.",
+    "prompt_parts": [
+      {
+        "text": "Use the midpoint rectangle method with 4 rectangles to approximate the integral of x² from 0 to 4."
+      }
+    ],
+    "worked_solution": [
+      "Δx = 1; midpoints 0.5, 1.5, 2.5, 3.5",
+      "f values: 0.25, 2.25, 6.25, 12.25",
+      "Sum = 21, times Δx = 1 gives 21",
+      "Compare the exact value 64/3 ≈ 21.33"
+    ],
+    "final_answer": "21",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-56",
+    "source": "BC Calculus 12 content: integration, approximations (Riemann sums, rectangle and trapezoidal methods); original",
+    "prompt_latex": "Use the trapezoidal rule with 4 subintervals to approximate the integral of x^{2} from 0 to 4.",
+    "prompt_plain": "Use the trapezoidal rule with 4 subintervals to approximate the integral of x² from 0 to 4.",
+    "prompt_parts": [
+      {
+        "text": "Use the trapezoidal rule with 4 subintervals to approximate the integral of x² from 0 to 4."
+      }
+    ],
+    "worked_solution": [
+      "T = (Δx/2)[f(0) + 2f(1) + 2f(2) + 2f(3) + f(4)] with Δx = 1",
+      "= (1/2)[0 + 2 + 8 + 18 + 16]",
+      "= (1/2)(44) = 22",
+      "Slightly above 64/3 because x² is concave up"
+    ],
+    "final_answer": "22",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-57",
+    "source": "BC Calculus 12 content: integration, approximations (Riemann sums, rectangle and trapezoidal methods); original",
+    "prompt_latex": "A runner's speed in m/s at t = 0, 2, 4, 6 s is 0, 6, 8, 4. Use trapezoids to estimate the distance run in 6 s.",
+    "prompt_plain": "A runner's speed in m/s at t = 0, 2, 4, 6 s is 0, 6, 8, 4. Use trapezoids to estimate the distance run in 6 s.",
+    "prompt_parts": [
+      {
+        "text": "A runner's speed in m/s at t = 0, 2, 4, 6 s is 0, 6, 8, 4. Use trapezoids to estimate the distance run in 6 s."
+      }
+    ],
+    "worked_solution": [
+      "Distance = area under the speed graph",
+      "[0, 2]: (0 + 6)/2 · 2 = 6",
+      "[2, 4]: (6 + 8)/2 · 2 = 14",
+      "[4, 6]: (8 + 4)/2 · 2 = 12",
+      "Total 6 + 14 + 12 = 32 m"
+    ],
+    "final_answer": "32 m",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-58",
+    "source": "BC Calculus 12 content: integration (antiderivatives, definite and indefinite integrals, fundamental theorem of calculus); original",
+    "prompt_latex": "Find \\int  (6x^{2} - 4x + 5) dx.",
+    "prompt_plain": "Find ∫ (6x² − 4x + 5) dx.",
+    "prompt_parts": [
+      {
+        "text": "Find ∫ (6x² − 4x + 5) dx."
+      }
+    ],
+    "worked_solution": [
+      "Reverse the power rule: ∫ x^n dx = x^(n+1)/(n+1) + C",
+      "6x² → 2x³, −4x → −2x², 5 → 5x",
+      "2x³ − 2x² + 5x + C",
+      "Check by differentiating: 6x² − 4x + 5 ✓"
+    ],
+    "final_answer": "2x³ − 2x² + 5x + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-59",
+    "source": "BC Calculus 12 content: integration (antiderivatives, definite and indefinite integrals, fundamental theorem of calculus); original",
+    "prompt_latex": "Find \\int  (x⁻^{2} + 3√x) dx.",
+    "prompt_plain": "Find ∫ (x⁻² + 3√x) dx.",
+    "prompt_parts": [
+      {
+        "text": "Find ∫ (x⁻² + 3√x) dx."
+      }
+    ],
+    "worked_solution": [
+      "Write 3√x = 3x^(1/2)",
+      "∫ x⁻² dx = x⁻¹/(−1) = −1/x",
+      "∫ 3x^(1/2) dx = 3 · x^(3/2)/(3/2) = 2x^(3/2)",
+      "−1/x + 2x^(3/2) + C"
+    ],
+    "final_answer": "−1/x + 2x^(3/2) + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-60",
+    "source": "BC Calculus 12 content: integration (antiderivatives, definite and indefinite integrals, fundamental theorem of calculus); original",
+    "prompt_latex": "Evaluate \\int  from 1 to 3 of (2x + 1) dx.",
+    "prompt_plain": "Evaluate ∫ from 1 to 3 of (2x + 1) dx.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate ∫ from 1 to 3 of (2x + 1) dx."
+      }
+    ],
+    "worked_solution": [
+      "Antiderivative F(x) = x² + x",
+      "FTC: F(3) − F(1)",
+      "= (9 + 3) − (1 + 1) = 12 − 2",
+      "= 10"
+    ],
+    "final_answer": "10",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-61",
+    "source": "BC Calculus 12 content: integration (antiderivatives, definite and indefinite integrals, fundamental theorem of calculus); original",
+    "prompt_latex": "If G(x) = \\int  from 1 to x^{2} of e^{t} dt, find G'(x).",
+    "prompt_plain": "If G(x) = ∫ from 1 to x² of e^t dt, find G'(x).",
+    "prompt_parts": [
+      {
+        "text": "If G(x) = ∫ from 1 to x² of e^t dt, find G'(x)."
+      }
+    ],
+    "worked_solution": [
+      "FTC part 1 with an upper limit that is a function: d/dx ∫ from a to u(x) of f(t) dt = f(u(x)) · u'(x)",
+      "f(t) = e^t, u = x², u' = 2x",
+      "G'(x) = e^(x²) · 2x = 2x e^(x²)"
+    ],
+    "final_answer": "G'(x) = 2x e^(x²)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-62",
+    "source": "BC Calculus 12 content: integration (antiderivatives, definite and indefinite integrals, fundamental theorem of calculus); original",
+    "prompt_latex": "Evaluate \\int  from 0 to \\pi  of \\sin x dx.",
+    "prompt_plain": "Evaluate ∫ from 0 to π of sin x dx.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate ∫ from 0 to π of sin x dx."
+      }
+    ],
+    "worked_solution": [
+      "Antiderivative of sin x is −cos x",
+      "[−cos x] from 0 to π = −cos π − (−cos 0)",
+      "= −(−1) + 1 = 2"
+    ],
+    "final_answer": "2",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-63",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Use substitution to find \\int  2x(x^{2} + 1)^{3} dx.",
+    "prompt_plain": "Use substitution to find ∫ 2x(x² + 1)³ dx.",
+    "prompt_parts": [
+      {
+        "text": "Use substitution to find ∫ 2x(x² + 1)³ dx."
+      }
+    ],
+    "worked_solution": [
+      "Let u = x² + 1, so du = 2x dx",
+      "∫ u³ du = u⁴/4 + C",
+      "Back−substitute: (x² + 1)⁴/4 + C"
+    ],
+    "final_answer": "(x² + 1)⁴/4 + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-64",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Find \\int  \\dfrac{x}{x^{2} + 4} dx.",
+    "prompt_plain": "Find ∫ x/(x² + 4) dx.",
+    "prompt_parts": [
+      {
+        "text": "Find ∫ "
+      },
+      {
+        "frac": {
+          "num": "x",
+          "den": "x² + 4"
+        }
+      },
+      {
+        "text": " dx."
+      }
+    ],
+    "worked_solution": [
+      "Let u = x² + 4, so du = 2x dx and x dx = du/2",
+      "∫ (1/u)(du/2) = (1/2) ln|u| + C",
+      "x² + 4 > 0, so (1/2) ln(x² + 4) + C"
+    ],
+    "final_answer": "(1/2) ln(x² + 4) + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-65",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Evaluate \\int  from 0 to 1 of x e^{x^{2}} dx.",
+    "prompt_plain": "Evaluate ∫ from 0 to 1 of x e^(x²) dx.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate ∫ from 0 to 1 of x e^(x²) dx."
+      }
+    ],
+    "worked_solution": [
+      "Let u = x², du = 2x dx, so x dx = du/2",
+      "Change limits: x = 0 gives u = 0; x = 1 gives u = 1",
+      "(1/2) ∫ from 0 to 1 of e^u du = (1/2)[e^u] from 0 to 1",
+      "= (1/2)(e − 1)"
+    ],
+    "final_answer": "(e − 1)/2",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-66",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Use integration by parts to find \\int  x e^{x} dx.",
+    "prompt_plain": "Use integration by parts to find ∫ x e^x dx.",
+    "prompt_parts": [
+      {
+        "text": "Use integration by parts to find ∫ x e^x dx."
+      }
+    ],
+    "worked_solution": [
+      "∫ u dv = uv − ∫ v du",
+      "Choose u = x (gets simpler), dv = e^x dx. Then du = dx, v = e^x",
+      "= x e^x − ∫ e^x dx",
+      "= x e^x − e^x + C"
+    ],
+    "final_answer": "x e^x − e^x + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-67",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Use integration by parts to find \\int  x \\cos x dx.",
+    "prompt_plain": "Use integration by parts to find ∫ x cos x dx.",
+    "prompt_parts": [
+      {
+        "text": "Use integration by parts to find ∫ x cos x dx."
+      }
+    ],
+    "worked_solution": [
+      "u = x, dv = cos x dx, so du = dx, v = sin x",
+      "∫ x cos x dx = x sin x − ∫ sin x dx",
+      "= x sin x − (−cos x) + C",
+      "= x sin x + cos x + C"
+    ],
+    "final_answer": "x sin x + cos x + C",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-68",
+    "source": "BC Calculus 12 content: methods of integration (substitution, integration by parts); original",
+    "prompt_latex": "Evaluate \\int  from 1 to e of x \\ln x dx.",
+    "prompt_plain": "Evaluate ∫ from 1 to e of x ln x dx.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate ∫ from 1 to e of x ln x dx."
+      }
+    ],
+    "worked_solution": [
+      "Parts: u = ln x, dv = x dx, so du = dx/x, v = x²/2",
+      "= [(x²/2) ln x] from 1 to e − ∫ from 1 to e of (x/2) dx",
+      "First part: (e²/2)(1) − (1/2)(0) = e²/2",
+      "Second part: [x²/4] from 1 to e = (e² − 1)/4",
+      "e²/2 − (e² − 1)/4 = (2e² − e² + 1)/4 = (e² + 1)/4"
+    ],
+    "final_answer": "(e² + 1)/4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-69",
+    "source": "BC Calculus 12 content: applications of integration (area under and between curves, volume of solids, average value); original",
+    "prompt_latex": "Find the area enclosed by y = x^{2} and y = 2x.",
+    "prompt_plain": "Find the area enclosed by y = x² and y = 2x.",
+    "prompt_parts": [
+      {
+        "text": "Find the area enclosed by y = x² and y = 2x."
+      }
+    ],
+    "worked_solution": [
+      "Intersections: x² = 2x gives x = 0 and x = 2",
+      "On (0, 2), 2x is above x²",
+      "Area = ∫ from 0 to 2 of (2x − x²) dx = [x² − x³/3] from 0 to 2",
+      "= 4 − 8/3 = 4/3"
+    ],
+    "final_answer": "4/3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-70",
+    "source": "BC Calculus 12 content: applications of integration (area under and between curves, volume of solids, average value); original",
+    "prompt_latex": "Find the area under y = √x from x = 0 to x = 9.",
+    "prompt_plain": "Find the area under y = √x from x = 0 to x = 9.",
+    "prompt_parts": [
+      {
+        "text": "Find the area under y = √x from x = 0 to x = 9."
+      }
+    ],
+    "worked_solution": [
+      "Area = ∫ from 0 to 9 of x^(1/2) dx",
+      "= [(2/3)x^(3/2)] from 0 to 9",
+      "= (2/3)(27) − 0 = 18"
+    ],
+    "final_answer": "18",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-71",
+    "source": "BC Calculus 12 content: applications of integration (area under and between curves, volume of solids, average value); original",
+    "prompt_latex": "The region under y = √x from x = 0 to x = 4 is rotated about the x axis. Find the volume.",
+    "prompt_plain": "The region under y = √x from x = 0 to x = 4 is rotated about the x axis. Find the volume.",
+    "prompt_parts": [
+      {
+        "text": "The region under y = √x from x = 0 to x = 4 is rotated about the x axis. Find the volume."
+      }
+    ],
+    "worked_solution": [
+      "Disc method: V = π ∫ [f(x)]² dx",
+      "[√x]² = x",
+      "V = π ∫ from 0 to 4 of x dx = π[x²/2] from 0 to 4",
+      "= π(8) = 8π"
+    ],
+    "final_answer": "8π",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-72",
+    "source": "BC Calculus 12 content: applications of integration (area under and between curves, volume of solids, average value); original",
+    "prompt_latex": "The region between y = x and y = x^{2} is rotated about the x axis. Find the volume.",
+    "prompt_plain": "The region between y = x and y = x² is rotated about the x axis. Find the volume.",
+    "prompt_parts": [
+      {
+        "text": "The region between y = x and y = x² is rotated about the x axis. Find the volume."
+      }
+    ],
+    "worked_solution": [
+      "Intersections: x = 0 and x = 1; y = x is the outer curve",
+      "Washer method: V = π ∫ (R² − r²) dx = π ∫ from 0 to 1 of (x² − x⁴) dx",
+      "= π[x³/3 − x⁵/5] from 0 to 1",
+      "= π(1/3 − 1/5) = 2π/15"
+    ],
+    "final_answer": "2π/15",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-73",
+    "source": "BC Calculus 12 content: applications of integration (area under and between curves, volume of solids, average value); original",
+    "prompt_latex": "Find the average value of f(x) = x^{2} on [0, 3].",
+    "prompt_plain": "Find the average value of f(x) = x² on [0, 3].",
+    "prompt_parts": [
+      {
+        "text": "Find the average value of f(x) = x² on [0, 3]."
+      }
+    ],
+    "worked_solution": [
+      "Average value = (1/(b − a)) ∫ f(x) dx",
+      "= (1/3) ∫ from 0 to 3 of x² dx = (1/3)[x³/3] from 0 to 3",
+      "= (1/3)(9) = 3"
+    ],
+    "final_answer": "3",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-74",
+    "source": "BC Calculus 12 content: applications of integration (differential equations, initial value problems, slope fields); original",
+    "prompt_latex": "Solve dy/dx = 2xy with y(0) = 3.",
+    "prompt_plain": "Solve dy/dx = 2xy with y(0) = 3.",
+    "prompt_parts": [
+      {
+        "text": "Solve dy/dx = 2xy with y(0) = 3."
+      }
+    ],
+    "worked_solution": [
+      "Separate variables: dy/y = 2x dx",
+      "Integrate: ln|y| = x² + C",
+      "y = Ae^(x²) where A = e^C",
+      "y(0) = 3 gives A = 3",
+      "y = 3e^(x²)"
+    ],
+    "final_answer": "y = 3e^(x²)",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-75",
+    "source": "BC Calculus 12 content: applications of integration (differential equations, initial value problems, slope fields); original",
+    "prompt_latex": "Solve the initial value problem dy/dx = 6x^{2} - 2, y(1) = 4.",
+    "prompt_plain": "Solve the initial value problem dy/dx = 6x² − 2, y(1) = 4.",
+    "prompt_parts": [
+      {
+        "text": "Solve the initial value problem dy/dx = 6x² − 2, y(1) = 4."
+      }
+    ],
+    "worked_solution": [
+      "Integrate: y = 2x³ − 2x + C",
+      "Use y(1) = 4: 2 − 2 + C = 4, so C = 4",
+      "y = 2x³ − 2x + 4"
+    ],
+    "final_answer": "y = 2x³ − 2x + 4",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-76",
+    "source": "BC Calculus 12 content: applications of integration (differential equations, initial value problems, slope fields); original",
+    "prompt_latex": "A slope field is drawn for dy/dx = x - y. Find the slope at (2, 1), (0, 3) and (1, 1).",
+    "prompt_plain": "A slope field is drawn for dy/dx = x − y. Find the slope at (2, 1), (0, 3) and (1, 1).",
+    "prompt_parts": [
+      {
+        "text": "A slope field is drawn for dy/dx = x − y. Find the slope at (2, 1), (0, 3) and (1, 1)."
+      }
+    ],
+    "worked_solution": [
+      "Substitute each point into x − y",
+      "(2, 1): 2 − 1 = 1",
+      "(0, 3): 0 − 3 = −3",
+      "(1, 1): 1 − 1 = 0, a flat mark (the line y = x has all slopes 0)"
+    ],
+    "final_answer": "1, −3, 0",
+    "level": "high_school"
+  },
+  {
+    "id": "ca12-77",
+    "source": "BC Calculus 12 content: applications of integration (differential equations, initial value problems, slope fields); original",
+    "prompt_latex": "A population satisfies dP/dt = 0.05P with P(0) = 200. Solve for P(t) and find P(10) to 1 decimal place.",
+    "prompt_plain": "A population satisfies dP/dt = 0.05P with P(0) = 200. Solve for P(t) and find P(10) to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "A population satisfies dP/dt = 0.05P with P(0) = 200. Solve for P(t) and find P(10) to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "dP/P = 0.05 dt, so ln P = 0.05t + C",
+      "P = Ae^(0.05t) and P(0) = 200 gives A = 200",
+      "P(t) = 200e^(0.05t)",
+      "P(10) = 200e^(0.5) = 200(1.6487) ≈ 329.7"
+    ],
+    "final_answer": "P = 200e^(0.05t); P(10) ≈ 329.7",
+    "level": "high_school"
+  }
+]

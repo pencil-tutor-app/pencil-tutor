@@ -17,7 +17,7 @@ Full list of Content standards, copied from the page:
 6. rational functions: characteristics of graphs, including asymptotes, intercepts, point discontinuities, domain, end behaviour
 7. trigonometry: functions, equations, and identities: angles in standard position in both radians and degrees; unit circle, reference and coterminal angles, special angles; graphing primary trigonometric functions, including transformations and characteristics; solving first and second degree equations (restricted domains and all real numbers); solving problems in situational contexts; identities (Pythagorean, quotient, double angle, reciprocal, sum and difference)
 
-For this bank the seven headings were split into 15 groups so each group gets 4 to 7 problems.
+For this bank the seven headings were split into 15 groups so each group gets 4 to 8 problems.
 
 ## Standard to problem ids
 
@@ -41,7 +41,7 @@ For this bank the seven headings were split into 15 groups so each group gets 4 
 
 ## Skipped standards
 
-None skipped. The "conics" parent function mention in standard 1 (and "extrema"/graphing by technology wording) is covered only through the function families listed above; conics belong to Foundations of Mathematics 12 in this project. The Curricular Competencies (reasoning, communicating, reflecting, First Peoples perspectives) are not content and have no written-work problems.
+No Content standard is skipped. One partial: standard 1 lists conics as a family to transform; conics are covered in the Foundations of Mathematics 12 bank (`bc-fm-12`), and the transformation problems here use absolute value, radical, reciprocal, exponential, logarithmic and trigonometric families. The Curricular Competencies (reasoning, communicating, reflecting, First Peoples perspectives) are not content and have no written-work problems.
 
 ## Ontario and Alberta equivalents (closest courses)
 
