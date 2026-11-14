@@ -54,6 +54,17 @@ enum LaunchOptions {
         #endif
     }
 
+    /// `--silent`: Debug builds only. The whole voice path still runs (the speech request, the speech log lines with sizes and
+    /// latency) but every sound is played at volume 0, and live voice is not opened. For replay runs at night. In Release builds
+    /// this is always false, so a student can never end up with a muted tutor by a launch argument.
+    static var silent: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--silent")
+        #else
+        return false
+        #endif
+    }
+
     /// The small status line UI tests read. Only visible in scripted runs.
     static var showTestStatus: Bool { scriptedClient }
 }

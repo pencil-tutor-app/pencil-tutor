@@ -86,20 +86,38 @@ enum PageGeometry {
                 y: min(max(0, offset.y), max(0, contentSize.height - viewport.height)))
     }
 
+    /// Breathing room between the floating problem card and the first ink the page keeps clear of it (screen points).
+    static let cardMargin: CGFloat = 12
+
+    /// Where the first screen goes when a problem opens: the page's origin (`homeReserve`, where the first stroke is expected)
+    /// sits `topClearance` screen points below the top of the screen, so the writing starts under the floating problem card,
+    /// not beneath it. `topClearance` is how far down the card reaches (0 with no card). The paper above the origin is blank.
+    static func homeOffset(zoom: CGFloat, topClearance: CGFloat) -> CGPoint {
+        CGPoint(x: homeReserve * zoom, y: max(0, homeReserve * zoom - max(0, topClearance)))
+    }
+
     /// Where to scroll so a mark (and the callout beside or under it) is on screen. Nil when it already is.
     /// Each axis is handled on its own: where the mark is off screen or inside `calloutAllowance` of an edge, it is brought to the
     /// middle of the screen horizontally or about a third of the way down (room for a callout below it); an axis already in view
     /// does not move. The zoom does not change (the student chose it).
-    static func offsetToReveal(box: CGRect, offset: CGPoint, zoom: CGFloat, viewport: CGSize, contentSize: CGSize) -> CGPoint? {
+    /// `topClearance` is how far down the floating problem card reaches (screen points, 0 for none): a mark under the card, or
+    /// closer than `cardMargin` to it, counts as not in view, and the page scrolls until the mark is clear of the card.
+    static func offsetToReveal(box: CGRect, offset: CGPoint, zoom: CGFloat, viewport: CGSize, contentSize: CGSize,
+                               topClearance: CGFloat = 0) -> CGPoint? {
         let allowance = calloutAllowance / max(zoom, 0.01)
+        let clearOfCard = topClearance > 0 ? (topClearance + cardMargin) : 0
         let visible = visibleRect(offset: offset, viewport: viewport, zoom: zoom)
         let safe = visible.insetBy(dx: min(allowance, visible.width / 2), dy: min(allowance, visible.height / 2))
+        let safeTop = max(safe.minY, visible.minY + min(clearOfCard / max(zoom, 0.01), visible.height / 2))
         // Edges count as inside on both axes (CGRect.contains would exclude the far edge and scroll a mark that sits exactly on it).
         let inX = box.minX >= safe.minX && box.maxX <= safe.maxX
-        let inY = box.minY >= safe.minY && box.maxY <= safe.maxY
+        let inY = box.minY >= safeTop && box.maxY <= safe.maxY
         if inX && inY { return nil }
+        // About a third of the way down, but never so high that the top of the mark is back under the card.
+        let thirdDown = box.midY * zoom - viewport.height * 0.35
+        let belowCard = box.minY * zoom - clearOfCard
         let wanted = CGPoint(x: inX ? offset.x : box.midX * zoom - viewport.width * 0.5,
-                             y: inY ? offset.y : box.midY * zoom - viewport.height * 0.35)
+                             y: inY ? offset.y : (clearOfCard > 0 ? min(thirdDown, belowCard) : thirdDown))
         let target = clampedOffset(wanted, contentSize: contentSize, viewport: viewport)
         return abs(target.x - offset.x) < 1 && abs(target.y - offset.y) < 1 ? nil : target
     }

@@ -138,9 +138,17 @@ enum InkReplay {
                abs(canvas.contentOffset.x - PageGeometry.homeReserve * zoom) < 2 { break }
             try? await Task.sleep(for: .milliseconds(100))
         }
+        // The problem card is measured just after the first layout and home moves down to clear it; let the page hold still.
+        var steadyFor = 0
+        var lastOffset = canvas.contentOffset
+        while steadyFor < 4, clock.now - waitedFrom < .seconds(12) {
+            try? await Task.sleep(for: .milliseconds(200))
+            steadyFor = canvas.contentOffset == lastOffset ? steadyFor + 1 : 0
+            lastOffset = canvas.contentOffset
+        }
         let waitedMs = Int((clock.now - waitedFrom) / .milliseconds(1))
         // A short beat more for the account check and the first layout, as a student would take before writing.
-        try? await Task.sleep(for: .milliseconds(1500))
+        try? await Task.sleep(for: .milliseconds(1000))
 
         let origin = CGPoint(x: PageGeometry.homeReserve, y: PageGeometry.homeReserve)
         // Always the plain black pen at the default width, whatever the rail was last set to, so every run draws the same page.
@@ -150,7 +158,7 @@ enum InkReplay {
         session.noteCanvas("replay_started", [
             "script": script.id, "lines": script.lines.count, "strokes": script.strokeCount, "points": script.pointCount,
             "script_duration_ms": Int(durationS * 1000), "waited_ms": waitedMs,
-            "canvas": "\(Int(canvas.bounds.width))x\(Int(canvas.bounds.height))", "zoom": String(format: "%.2f", canvas.zoomScale),
+            "canvas": "\(Int(canvas.bounds.width))x\(Int(canvas.bounds.height))", "offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))", "zoom": String(format: "%.2f", canvas.zoomScale),
             "pen": "\(ink.inkType.rawValue) \(Int(width))"
         ])
 

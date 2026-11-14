@@ -155,9 +155,9 @@ struct CourseProblemsView: View {
             ForEach(problems) { problem in
                 NavigationLink(value: CourseRoute.problem(course: course, problem: problem)) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(problem.promptPlain)
-                            .font(.system(size: problem.promptPlain.count > 100 ? 19 : 22, design: .serif))
+                        MathLine.text(problem.promptPlain, size: problem.promptPlain.count > 100 ? 19 : 22)
                             .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityLabel(problem.promptPlain)
                         Text(problem.id)
                             .font(.caption)
                             .foregroundStyle(.secondary)

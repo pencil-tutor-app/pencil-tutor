@@ -145,6 +145,15 @@ struct ProblemScreen: View {
         ProblemCardView(problem: session.problem, heading: courseTitle) { collapsed in
             session.noteCanvas("problem_card_toggled", ["collapsed": collapsed])
         }
+        // How far down the card reaches, so the page starts below it and a mark is never left under it.
+        .background {
+            GeometryReader { geometry in
+                Color.clear.preference(key: CardBottomKey.self, value: geometry.frame(in: .global).maxY)
+            }
+        }
+        .onPreferenceChange(CardBottomKey.self) { bottom in
+            session.cardMeasured(bottomInWindow: bottom)
+        }
     }
 
     /// Check my work, the tutor's voice, Clear marks, Erase page and the hours left: one slim pill, as tall as the Back button.
@@ -268,6 +277,12 @@ struct ProblemScreen: View {
         .disabled(off)
         .accessibilityIdentifier("tapToTalkButton")
     }
+}
+
+/// The bottom edge of the problem card (or its folded pill) in window coordinates.
+private struct CardBottomKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
 // MARK: - Sizes shared by the floating chrome

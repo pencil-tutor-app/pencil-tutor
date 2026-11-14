@@ -89,6 +89,9 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
         self.session = URLSession(configuration: configuration)
         super.init()
         synthesizer.delegate = self
+        if LaunchOptions.silent {
+            log.record("voice_muted_for_test", ["why": "--silent launch argument", "paths": "server_audio,device_voice,live_skipped"])
+        }
     }
 
     // MARK: - Public API
@@ -367,6 +370,7 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
         let speech = AVSpeechUtterance(string: utterance.fallbackText)
         speech.voice = bestDeviceVoice()
         speech.rate = AVSpeechUtteranceDefaultSpeechRate * 0.95
+        if LaunchOptions.silent { speech.volume = 0 }      // `--silent`: spoken to nobody
         playback = Playback(purpose: utterance.purpose, chars: utterance.chars, source: "device", bytes: 0,
                             requestMs: requestMs, firstAudioMs: nil, provider: nil, fallbackHeader: nil, startedAt: Date())
         active = (utterance.purpose, utterance.chars)
@@ -413,6 +417,7 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
 
     @MainActor
     private func activateAudioSession(purpose: String) {
+        if LaunchOptions.silent { return }       // `--silent`: do not even duck whatever else the iPad is playing
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])

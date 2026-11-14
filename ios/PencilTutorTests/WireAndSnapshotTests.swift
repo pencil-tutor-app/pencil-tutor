@@ -351,6 +351,51 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertNil(PageGeometry.offsetToReveal(box: last, offset: CGPoint(x: 0, y: 800), zoom: 1, viewport: screen, contentSize: tight))
     }
 
+    // MARK: - The floating problem card (2026-11-15: a long prompt's card covered the first line of work)
+
+    func testHomeSitsBelowTheCardSoTheFirstLineStartsClearOfIt() {
+        // The page's origin (where the first stroke goes) appears `clearance` points below the top of the screen.
+        let offset = PageGeometry.homeOffset(zoom: 1, topClearance: 214)
+        XCTAssertEqual(offset, CGPoint(x: PageGeometry.homeReserve, y: PageGeometry.homeReserve - 214))
+        XCTAssertEqual(PageGeometry.homeReserve - offset.y, 214, "origin is 214 pt down the screen")
+        XCTAssertEqual(PageGeometry.homeOffset(zoom: 1, topClearance: 0), CGPoint(x: PageGeometry.homeReserve, y: PageGeometry.homeReserve),
+                       "no card, no change from before")
+        XCTAssertEqual(PageGeometry.homeOffset(zoom: 1, topClearance: -30).y, PageGeometry.homeReserve, "a bad measurement is ignored")
+        // Zoomed, the origin is still `clearance` screen points down.
+        let zoomed = PageGeometry.homeOffset(zoom: 2, topClearance: 100)
+        XCTAssertEqual(PageGeometry.homeReserve * 2 - zoomed.y, 100)
+    }
+
+    func testAMarkUnderTheCardIsScrolledClearOfIt() throws {
+        let content = CGSize(width: 9000, height: 8000)
+        // The page is at the top; the mark sits 90 pt down the screen, where a 214 pt card would cover it.
+        let offset = CGPoint(x: 0, y: 3000)
+        let hidden = CGRect(x: 120, y: 3090, width: 300, height: 40)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: hidden, offset: offset, zoom: 1, viewport: screen, contentSize: content),
+                     "without a card it is in view (it clears the 80 pt callout allowance)")
+        let moved = try XCTUnwrap(PageGeometry.offsetToReveal(box: hidden, offset: offset, zoom: 1, viewport: screen,
+                                                              contentSize: content, topClearance: 214))
+        let screenTop = hidden.minY - moved.y
+        XCTAssertGreaterThanOrEqual(screenTop, 214 + PageGeometry.cardMargin, "the top of the mark ends up below the card")
+    }
+
+    func testAMarkBelowTheCardStaysPut() {
+        let content = CGSize(width: 9000, height: 8000)
+        let offset = CGPoint(x: 0, y: 3000)
+        let clear = CGRect(x: 120, y: 3000 + 400, width: 300, height: 40)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: clear, offset: offset, zoom: 1, viewport: screen, contentSize: content, topClearance: 214))
+    }
+
+    func testTheClearanceCountsInScreenPointsAtAnyZoom() throws {
+        let content = CGSize(width: 12000, height: 10000)
+        // At 2x the mark's top is 60 pt down the screen: under a 214 pt card, so it must move down to at least 226 pt.
+        let offset = CGPoint(x: 5800, y: 5800)
+        let box = CGRect(x: 3000, y: 2930, width: 200, height: 20)      // screen y = 2930*2 - 5800 = 60
+        let moved = try XCTUnwrap(PageGeometry.offsetToReveal(box: box, offset: offset, zoom: 2, viewport: screen,
+                                                              contentSize: content, topClearance: 214))
+        XCTAssertGreaterThanOrEqual(box.minY * 2 - moved.y, 214 + PageGeometry.cardMargin - 0.001)
+    }
+
     func testRevealRespectsTheZoom() throws {
         // At 2x, page point (3100, 3050) is on screen at (6200 - offset.x, 6100 - offset.y).
         let content = CGSize(width: 12000, height: 10000)   // zoomed size

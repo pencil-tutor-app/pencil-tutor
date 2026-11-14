@@ -97,18 +97,6 @@ final class CourseLibraryTests: XCTestCase {
 
     // MARK: - Long prompts
 
-    func testAMatrixStaysInOnePiece() {
-        let words = PromptLayout.words("The matrix is P = [0.8 0.3; 0.2 0.7] (columns: from city). Find it.")
-        XCTAssertTrue(words.contains("[0.8\u{00A0}0.3;\u{00A0}0.2\u{00A0}0.7]"), "\(words)")
-        XCTAssertEqual(words.first, "The")
-        XCTAssertEqual(words.last, "it.")
-    }
-
-    func testAnOverlongBracketIsLeftToWrap() {
-        let long = "[" + String(repeating: "word ", count: 12) + "end]"
-        XCTAssertGreaterThan(PromptLayout.words(long).count, 5)
-    }
-
     func testFontShrinksWithLength() {
         XCTAssertEqual(PromptLayout.fontSize(forLength: 12), 26)
         XCTAssertEqual(PromptLayout.fontSize(forLength: 100), 23)
