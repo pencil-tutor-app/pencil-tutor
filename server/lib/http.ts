@@ -11,7 +11,7 @@ export class RequestCtx {
   allowance: Allowance | null = null;
 
   constructor(
-    readonly endpoint: "watch" | "ask" | "speak" | "health" | "live-session" | "consult" | "me" | "heartbeat" | "memory" | "privacy",
+    readonly endpoint: "watch" | "ask" | "speak" | "health" | "live-session" | "consult" | "me" | "heartbeat" | "memory" | "privacy" | "purchase" | "app-store-notifications",
     readonly method: string,
   ) {
     this.fields = { request_id: this.id, endpoint, method };

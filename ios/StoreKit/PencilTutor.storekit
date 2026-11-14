@@ -1,0 +1,57 @@
+{
+  "identifier" : "7A3D1E52",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_CA",
+    "_storefront" : "CAN"
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21500001",
+      "localizations" : [
+
+      ],
+      "name" : "Pencil Tutor",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.00",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6740000001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Eight hours of tutoring each month",
+              "displayName" : "Pencil Tutor monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "penciltutor.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Pencil Tutor monthly",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

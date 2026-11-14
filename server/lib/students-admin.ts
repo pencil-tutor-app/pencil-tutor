@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Db, Row } from "./db.js";
-import { allowanceOf, codeHash, generateCode, DEFAULT_MONTHLY_CAP_SECONDS, type Usage } from "./students.js";
+import { allowanceOf, codeHash, generateCode, DEFAULT_MONTHLY_CAP_SECONDS, SUBSCRIPTION_ENDED_SQL, type Usage } from "./students.js";
 
 // What Edward's local admin script (scripts/admin.ts) does to the database: create, list, top up, disable, enable, set the
 // live plan, delete test codes, and apply the migrations. It is never imported by the server's request path.
@@ -66,7 +66,7 @@ export class StudentAdmin {
 
   async list(month: string): Promise<AdminStudent[]> {
     const rows = await this.db.query(
-      `select s.code, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled, s.created_at,
+      `select s.code, s.plan_live, s.monthly_cap_seconds, (s.disabled_at is not null or ${SUBSCRIPTION_ENDED_SQL}) as disabled, s.created_at,
               coalesce(u.counted_seconds, 0) as counted_seconds, coalesce(u.bonus_seconds, 0) as bonus_seconds,
               coalesce(u.tts_chars, 0) as tts_chars
        from students s

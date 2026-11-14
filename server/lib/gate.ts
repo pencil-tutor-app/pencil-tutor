@@ -11,7 +11,9 @@ import {
   type Role,
   type RoleConfig,
 } from "./config.js";
+import type { AppStoreGateway } from "./app-store.js";
 import { DatabaseError, openDb } from "./db.js";
+import type { SubscriptionStore } from "./subscriptions.js";
 import { RequestCtx, readBearerCode } from "./http.js";
 import { logLine } from "./log.js";
 import type { LiveGateway } from "./live.js";
@@ -38,6 +40,9 @@ export type Deps = {
   voice?: VoiceGateway;
   // The opt-in student record (lib/record). Unset means the real one when STUDENT_RECORD=on, otherwise none.
   record?: RecordStore;
+  // The in-app subscription: Apple's signed-data checks, and where subscribers are recorded. Tests pass fakes.
+  appStore?: AppStoreGateway;
+  subscriptions?: SubscriptionStore;
   now?: () => Date;
 };
 export const defaultDeps = (): Deps => ({ env: process.env, models: realModels });
@@ -63,7 +68,7 @@ export type GateOpen = {
 };
 export type GateResult = GateOpen | { ok: false; response: Response };
 
-function resolveStore(deps: Deps): StudentStore | undefined {
+export function resolveStore(deps: Deps): StudentStore | undefined {
   if (deps.students) return deps.students;
   const db = openDb(deps.env);
   return db ? new PgStudentStore(db) : undefined;
@@ -115,7 +120,8 @@ export async function gate(ctx: RequestCtx, request: Request, deps: Deps, roles:
     return { ok: false, response: ctx.fail(401, "unauthorized", "unknown_code", "unauthorized:unknown_code") };
   }
   if (student.disabled) {
-    return { ok: false, response: ctx.fail(403, "code_disabled", "this code has been turned off", "code_disabled") };
+    const reason = student.subscriptionEnded ? "the subscription behind this code has ended" : "this code has been turned off";
+    return { ok: false, response: ctx.fail(403, "code_disabled", reason, "code_disabled") };
   }
   const allowance = allowanceOf(month, student.usage, student.capSeconds);
   ctx.allowance = allowance;

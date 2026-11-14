@@ -580,6 +580,56 @@ Three faults the self-driving handwriting replay found (`docs/evals/2026-11-15-h
 - **Replay tooling.** `ink_script.py` gains `--gap-scale` (cramped lines) and `--jitter` (rushed hand), `cases --pick COURSE:PROBLEM
   --matrix --mistake-only`, and `stress`. A matrix written in one equation line counts as one line (`app_lines` 1).
 
+### Amendment 20 (2026-11-14): an in-app subscription next to the codes
+
+Edward's call, already made: students normally buy from Edward directly and get an 8-character code (each code = minutes per month; the
+base plan is CA$19 a month for 8 hours = 480 minutes; no unlimited plans). Apple guideline 3.1.3(b) lets the app accept those codes
+only if the same service can also be bought in the app. So there is one auto-renewable subscription, CA$19 a month, 480 minutes a
+month, as the in-app alternative. Edward enrols in the App Store Small Business Program (15%). The app says nothing about buying
+outside the app. The developer account is Edward's personal one; nothing in the code depends on that: bundle id, product id, app
+Apple id and environments are configuration (`docs/app-store.md`).
+
+**Flow.** The code screen keeps its code box and gets Subscribe and Restore Purchases under it (`Views/SubscribeSection.swift`). Subscribe
+runs StoreKit 2 (`Purchases/StoreKitGateway.swift`); the signed transaction (JWS) goes to `POST /api/purchase`, which has no student
+code, because Apple's signature is the credential. The server verifies it with `@apple/app-store-server-library` (`lib/app-store.ts`),
+finds or makes the student that belongs to the subscription and returns `{code, plan, allowance, subscription}`. The app stores the
+code through `StudentAccount.signIn`, the same path as a typed code, so nothing else in the app changes, and only then finishes the
+transaction (`Purchases/SubscriptionManager.swift`). If anything before that fails the transaction stays unfinished and StoreKit hands
+it back on the next launch. A listener on `Transaction.updates` runs from launch; a renewal never replaces a code the student typed.
+
+**Data (migration `003_app_store_subscriptions.sql`, additive).** `students.app_store_original_transaction_id` (unique) links a student to
+an Apple subscription, so the same subscription always gets the same code, even when two calls race. `students.app_store_access_until` is
+the end of the paid period. Table `app_store_transactions` is a ledger with one row per Apple transaction (each renewal is a new
+transaction of the same subscription), which makes the app's calls and Apple's webhooks idempotent.
+
+**Rules.**
+- Renewal: the first time a new, current renewal transaction is seen (from the app or from the webhook, whichever is first) this month's
+  bonus is raised so the student has at least the full 480 minutes again (`bonus = max(bonus, used)`). It is relative to time used, so a
+  repeat changes nothing, it never lowers a top-up Edward gave, and the 80% and 100% notices re-arm.
+- Expiry and refund: the gate treats a subscriber whose `app_store_access_until` has passed as turned off (`403 code_disabled`, reason
+  `the subscription behind this code has ended`; one condition in the lookup SQL). Access runs to the latest expiry among transactions
+  that were not refunded, so an expiry needs no webhook, and a refund (REFUND or REVOKE notification) ends access at once; REFUND_REVERSED
+  restores it. A late older copy of a transaction never undoes a newer one (`signed_at` decides). A resubscribe maps to the same code.
+- `POST /api/app-store-notifications` (App Store Server Notifications V2): verified like a purchase; SUBSCRIBED, DID_RENEW, OFFER_REDEEMED,
+  EXPIRED, GRACE_PERIOD_EXPIRED, REFUND, REVOKE, REFUND_REVERSED and RENEWAL_EXTENDED are applied, everything else is acknowledged and
+  logged as ignored. A database failure answers 503 so Apple retries.
+- Environments: `APPLE_IAP_ENVIRONMENTS` (default `sandbox`) lists what is accepted. App Review and TestFlight purchases are sandbox
+  transactions even against the production server, so the launch value is `production,sandbox`; drop `sandbox` after approval.
+
+**Not settled / unverified.**
+- No real purchase has been made: that needs an App Store Connect app, the product and a sandbox tester (an Apple account). The Apple
+  signature check ran only against unsigned and wrong-environment strings; the Apple root certificate's fingerprint is tested.
+- The SQL ran on PGlite (Postgres in WebAssembly) in CI only, not on Neon. The migration has not been applied to production; run
+  `scripts/codes migrate` BEFORE deploying this server version, because the lookup reads the new columns.
+- Apple's Xcode StoreKit test transactions are signed by a local key, so the server refuses them by design; the `.storekit` file tests
+  the buying screens, not the server.
+- Apple's billing period and our calendar month differ: allowance still resets on the 1st (Vancouver), and a renewal also refills it, so a
+  heavy subscriber can get up to two full allowances in the 30 days around a mid-month renewal. Edward's call whether that matters.
+- The Subscribe button shows the App Store's price and renewal text, and Terms of Use and Privacy Policy links when
+  `TERMS_URL` and `PRIVACY_POLICY_URL` are set. Apple's subscription rules (3.1.2) require both; they are not mentions of outside payment.
+- Grace period and billing retry are off in these rules: a failed renewal ends access at the old expiry; DID_RENEW restores it if the
+  payment later succeeds.
+
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
   floor check only. Mitigation: session log turns real use into the test.

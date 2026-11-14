@@ -120,7 +120,8 @@ export type StudentRecord = {
   id: string;
   planLive: boolean;
   capSeconds: number; // the base monthly cap; top-ups for the month are in usage.bonusSeconds
-  disabled: boolean;
+  disabled: boolean; // turned off by hand, or the in-app subscription behind this code has ended
+  subscriptionEnded?: boolean; // the second reason, alone (for the log)
   usage: Usage;
 };
 
@@ -154,8 +155,16 @@ function usageFromRow(row: Record<string, unknown>): Usage {
   };
 }
 
+// A code that came from the in-app subscription (it has an Apple subscription id) stops working when the paid period is over or
+// was refunded. A subscriber with no access time recorded yet counts as ended: the safe side. Codes Edward made are untouched.
+// Exported so the admin list can show the same thing.
+export const SUBSCRIPTION_ENDED_SQL =
+  "(s.app_store_original_transaction_id is not null and coalesce(s.app_store_access_until, 'epoch'::timestamptz) <= now())";
+
 const LOOKUP_SQL = `
-select s.id, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled,
+select s.id, s.plan_live, s.monthly_cap_seconds,
+       (s.disabled_at is not null or ${SUBSCRIPTION_ENDED_SQL}) as disabled,
+       ${SUBSCRIPTION_ENDED_SQL} as subscription_ended,
        coalesce(u.counted_seconds, 0) as counted_seconds, coalesce(u.bonus_seconds, 0) as bonus_seconds,
        coalesce(u.tts_chars, 0) as tts_chars, u.last_activity_at,
        u.low_notice_at is not null as low_noticed, u.used_up_notice_at is not null as used_up_noticed
@@ -230,6 +239,7 @@ export class PgStudentStore implements StudentStore {
       planLive: Boolean(row.plan_live),
       capSeconds: toInt(row.monthly_cap_seconds),
       disabled: Boolean(row.disabled),
+      subscriptionEnded: Boolean(row.subscription_ended),
       usage: usageFromRow(row),
     };
   }

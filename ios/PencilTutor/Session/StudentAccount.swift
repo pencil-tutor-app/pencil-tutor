@@ -9,7 +9,7 @@ import Foundation
 ///
 /// Logging rule: the code itself never reaches the log; only `StudentCode.shortHash`.
 @MainActor
-final class StudentAccount: ObservableObject {
+final class StudentAccount: ObservableObject, PurchaseAccount {
     enum Phase: Equatable {
         case needsCode
         case ready
@@ -101,8 +101,10 @@ final class StudentAccount: ObservableObject {
 
     // MARK: - Signing in and out
 
-    /// Checks a typed code with the server (GET /api/me) and keeps it in the Keychain when it works.
-    func signIn(typed: String) async {
+    /// Checks a typed code with the server (GET /api/me) and keeps it in the Keychain when it works. The same path stores a code
+    /// that came from the in-app subscription, so the rest of the app cannot tell the two apart. True when the code was accepted.
+    @discardableResult
+    func signIn(typed: String) async -> Bool {
         let code = StudentCode.normalize(typed)
         if let problem = StudentCode.problem(with: code) {
             switch problem {
@@ -114,7 +116,7 @@ final class StudentAccount: ObservableObject {
                 codeMessage = AllowanceText.wrongCode
             }
             log.record("code_rejected_locally", ["reason": problem, "typed_chars": code.count])
-            return
+            return false
         }
         isChecking = true
         codeMessage = nil
@@ -133,6 +135,8 @@ final class StudentAccount: ObservableObject {
             apply(me: me, reason: "code_entered")
             phase = .ready
             log.record("code_accepted", ["code_hash": hash, "live": me.plan.live, "state": me.allowance.state.rawValue])
+            isChecking = false
+            return true
         } catch {
             holder.current = previous
             let (student, detail) = TutorError.describe(error)
@@ -140,6 +144,14 @@ final class StudentAccount: ObservableObject {
             log.record("code_refused", ["code_hash": hash, "detail": detail])
         }
         isChecking = false
+        return false
+    }
+
+    /// Whether this (normalized) code is the one in use now, a different one, or there is none. Lets the subscription flow avoid
+    /// replacing a code the student is using when a renewal arrives in the background.
+    func held(_ code: String) -> HeldCode {
+        guard let current = holder.current else { return .none }
+        return current == code ? .same : .different
     }
 
     /// "Use a different code": forgets the code and shows the code screen.

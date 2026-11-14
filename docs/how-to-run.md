@@ -133,6 +133,24 @@ server/scripts/codes forget-inactive [--months 12] [--yes]             # dry run
 
 **If you change the consent text** (`server/lib/record/notice.ts`), bump `NOTICE_VERSION`: the test that pins the text fails otherwise, and everyone is asked again. After editing `docs/privacy-policy.md` run `npm run sync-policy` in `server/`.
 
+## In-app subscription (Subscribe next to the code box)
+
+A student can also get a code by subscribing in the app (App Store, auto-renewing, 480 minutes a month); it is stored exactly like a
+typed code. Full click-steps for App Store Connect, with the blanks to fill: `docs/app-store.md`. Why and how: `docs/plan.md`,
+amendment 20. What you have to set:
+
+- **Server (Vercel, Production)**: `APPLE_IAP_PRODUCT_ID`, `APPLE_BUNDLE_ID`, `APPLE_APP_APPLE_ID` (needed once `production` is listed),
+  `APPLE_IAP_ENVIRONMENTS` (`sandbox` while testing, `production,sandbox` for App Review and launch). Optional: `IAP_MONTHLY_MINUTES`
+  (480), `APPLE_ONLINE_CHECKS=0`. Check `GET /api/health`: `subscription.configured`.
+- **Database**: `server/scripts/codes migrate` (adds migration 003) **before** the deploy, or every student gets 503.
+- **App (`ios/Config/Secrets.xcconfig`, git-ignored)**: `APP_BUNDLE_ID`, `IAP_PRODUCT_ID`, `DEVELOPMENT_TEAM`, optionally `TERMS_URL` and
+  `PRIVACY_POLICY_URL`. Defaults for the first three are in `Secrets.example.xcconfig` (`penciltutor.monthly` is the product id). After a
+  change to `ios/project.yml` run `xcodegen generate` in `ios/` and restore `DEVELOPMENT_TEAM` if the generated project dropped it.
+- **Try it in Xcode with no Apple account**: run the PencilTutor scheme; it uses `ios/StoreKit/PencilTutor.storekit`. Subscribe and Restore
+  Purchases work on screen, but the server refuses these test purchases (Apple did not sign them), so the app reports it could not finish.
+  A real end-to-end test needs a sandbox tester (`docs/app-store.md`, steps 7 and 9).
+- **Edward's codes still work as before.** `scripts/codes list` shows a subscriber whose subscription ended as OFF.
+
 ## Premium: live voice (GPT-Live-1, off by default)
 
 Only a code whose plan has `live: true` reaches this. While a problem is open the student talks to the tutor naturally: OpenAI's `gpt-live-1`

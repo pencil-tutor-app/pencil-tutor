@@ -51,9 +51,12 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         NSMicrophoneUsageDescription: Pencil Tutor listens so you can ask the tutor a question. Tap the microphone button, ask, then tap it again to send.
         SERVER_URL: $(SERVER_URL)
+        IAP_PRODUCT_ID: $(IAP_PRODUCT_ID)
+        PRIVACY_POLICY_URL: $(PRIVACY_POLICY_URL)
+        TERMS_URL: $(TERMS_URL)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
         PRODUCT_NAME: PencilTutor
     postBuildScripts:
       - name: Bundle problem prompts
@@ -70,7 +73,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor.tests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).tests
 
   PencilTutorUITests:
     type: bundle.ui-testing
@@ -82,7 +85,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.edwardtran.penciltutor.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).uitests
 
 schemes:
   PencilTutor:
@@ -93,6 +96,9 @@ schemes:
         PencilTutorUITests: [test]
     run:
       config: Debug
+      # Local purchase testing in Xcode with no Apple account (ios/StoreKit/PencilTutor.storekit). The product id there must equal
+      # IAP_PRODUCT_ID in the xcconfig. Apple's server cannot verify these test transactions, so /api/purchase refuses them by design.
+      storeKitConfiguration: StoreKit/PencilTutor.storekit
     test:
       config: Debug
       targets:

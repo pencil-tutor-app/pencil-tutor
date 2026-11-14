@@ -4,6 +4,7 @@ import SwiftUI
 /// Everything on this screen is plain words: a wrong code never shows a technical message.
 struct CodeEntryView: View {
     @EnvironmentObject private var account: StudentAccount
+    @EnvironmentObject private var env: AppEnvironment
     @State private var typed = ""
     @FocusState private var fieldFocused: Bool
 
@@ -65,6 +66,13 @@ struct CodeEntryView: View {
             .controlSize(.large)
             .disabled(!canContinue)
             .accessibilityIdentifier("codeContinueButton")
+
+            if let subscriptions = env.subscriptions {
+                Text("or")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                SubscribeSection(manager: subscriptions, privacyPolicyURL: env.privacyPolicyURL, termsURL: env.termsURL)
+            }
             Spacer()
             Spacer()
         }

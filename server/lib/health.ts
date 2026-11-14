@@ -1,4 +1,5 @@
 import { apiKeyFor, appVersion, ConfigError, liveSettings, roleConfig, scriptedState, type Env, type Role } from "./config.js";
+import { appStoreConfig } from "./app-store.js";
 import { databaseUrl } from "./db.js";
 import { voiceSummary } from "./voice.js";
 import { RequestCtx } from "./http.js";
@@ -30,6 +31,10 @@ export function handleHealth(request: Request, env: Env = process.env): Response
     }
   }
 
+  // The in-app subscription: configured yes/no, which Apple environments are accepted, or which setting is missing. No ids, no values.
+  const appStore = appStoreConfig(env);
+  const subscription = appStore.ok ? { configured: true, environments: appStore.config.environments, monthly_minutes: appStore.config.monthlySeconds / 60 } : { configured: false, reason: appStore.reason };
+
   const openai = Boolean(apiKeyFor("openai", env));
   const google = Boolean(apiKeyFor("google", env));
   ctx.note({ openai_key: openai, google_key: google, scripted: scripted.on });
@@ -42,6 +47,7 @@ export function handleHealth(request: Request, env: Env = process.env): Response
       openai_key_present: openai,
       gemini_key_present: google,
       database_configured: Boolean(databaseUrl(env)),
+      subscription,
       voice_provider: voiceSummary(env).provider,
       voice: voiceSummary(env),
       scripted: scripted.on,

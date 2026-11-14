@@ -6,6 +6,17 @@ struct AppConfig {
     let serverURL: URL?
     /// Plain reason when the app cannot talk to the server. Nil when it can.
     let missingReason: String?
+    /// The App Store subscription's product id (Info.plist IAP_PRODUCT_ID, from Config/Secrets.xcconfig or its example). Nil when unset.
+    var iapProductID: String? = nil
+    /// Where the student can read the privacy policy and the terms of use. Shown next to the subscription only when set.
+    var privacyPolicyURL: URL? = nil
+    var termsURL: URL? = nil
+
+    /// A value from Info.plist that was really filled in: not empty, and not an unexpanded `$(NAME)`.
+    private static func plistText(_ key: String, in bundle: Bundle) -> String? {
+        let raw = (bundle.object(forInfoDictionaryKey: key) as? String)?.trimmingCharacters(in: .whitespaces) ?? ""
+        return raw.isEmpty || raw.hasPrefix("$(") ? nil : raw
+    }
 
     static func load(bundle: Bundle = .main) -> AppConfig {
         let rawURL = (bundle.object(forInfoDictionaryKey: "SERVER_URL") as? String)?.trimmingCharacters(in: .whitespaces) ?? ""
@@ -16,7 +27,13 @@ struct AppConfig {
         if host.hasSuffix(".invalid") {
             return AppConfig(serverURL: nil, missingReason: "SERVER_URL is still the example placeholder (\(host))")
         }
-        return AppConfig(serverURL: url, missingReason: nil)
+        return AppConfig(
+            serverURL: url,
+            missingReason: nil,
+            iapProductID: plistText("IAP_PRODUCT_ID", in: bundle),
+            privacyPolicyURL: plistText("PRIVACY_POLICY_URL", in: bundle).flatMap(URL.init(string:)),
+            termsURL: plistText("TERMS_URL", in: bundle).flatMap(URL.init(string:))
+        )
     }
 }
 

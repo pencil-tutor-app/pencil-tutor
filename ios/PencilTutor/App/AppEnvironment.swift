@@ -17,6 +17,11 @@ final class AppEnvironment: ObservableObject {
     let makeLiveTransport: (@MainActor () -> LiveTransport)?
     /// Why live voice is off for this build, as a log label (nil when the build can do it).
     let liveOffReason: String?
+    /// The App Store subscription, offered on the code screen. Nil when this build has no server or no product id.
+    let subscriptions: SubscriptionManager?
+    /// Where the privacy policy and terms of use are, when this build has them (shown beside the subscription).
+    let privacyPolicyURL: URL?
+    let termsURL: URL?
     let problems: [Problem]
     /// Plain-words notice for the problem list when something is wrong (nil when all is well).
     let notice: String?
@@ -30,6 +35,9 @@ final class AppEnvironment: ObservableObject {
         let account: StudentAccount
         let speech: SpeechOutput
         var launchesWithCode = false
+        var subscriptions: SubscriptionManager?
+        var privacyPolicyURL: URL?
+        var termsURL: URL?
 
         if LaunchOptions.scriptedClient {
             // UI tests: no network and no code screen; speech uses the device voice only.
@@ -55,6 +63,20 @@ final class AppEnvironment: ObservableObject {
                 self.liveOffReason = nil
                 speech = SpeechOutput(log: log, remote: SpeechOutput.Remote(baseURL: url, codeHolder: holder))
                 launchesWithCode = account.phase == .ready
+                // The in-app subscription is offered next to the code box. Without a product id in this build there is nothing to sell.
+                if let productID = config.iapProductID {
+                    subscriptions = SubscriptionManager(
+                        productID: productID,
+                        store: StoreKitGateway(log: log),
+                        redeemer: HTTPPurchaseClient(baseURL: url, log: log),
+                        account: account,
+                        log: log
+                    )
+                } else {
+                    log.record("iap_off", ["reason": "IAP_PRODUCT_ID is not set"])
+                }
+                privacyPolicyURL = config.privacyPolicyURL
+                termsURL = config.termsURL
                 log.record("app_launch", [
                     "mode": "live", "server_host": url.host ?? "?",
                     "code_hash": holder.current.map(StudentCode.shortHash) ?? "none"
@@ -83,6 +105,9 @@ final class AppEnvironment: ObservableObject {
             codeHash: { holder.current.map(StudentCode.shortHash) ?? (scripted ? "scripted" : nil) },
             defaults: scripted ? Self.freshScriptedDefaults() : .standard
         )
+        self.subscriptions = subscriptions
+        self.privacyPolicyURL = privacyPolicyURL
+        self.termsURL = termsURL
 
         // The allowance lines ("you have about 40 minutes left") are said by the tutor's voice; a refusal that comes back
         // from the speech request goes to the account like any other.
@@ -110,6 +135,8 @@ final class AppEnvironment: ObservableObject {
         if launchesWithCode {
             Task { @MainActor in await account.refresh(reason: "launch") }
         }
+        // Renewals and purchases left unfinished by an earlier launch arrive here; they must be heard from the start.
+        subscriptions?.start()
     }
 
     /// Scripted runs only: a UserDefaults domain emptied at launch, so nothing a scripted run remembers outlives it.

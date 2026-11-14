@@ -1,6 +1,6 @@
 # Pencil Tutor server
 
-Vercel Functions in TypeScript, no framework. Eight endpoints. **The base plan (plan amendment 13):** tap-to-talk, every utterance in ElevenLabs Eleven v4 Turbo streamed from `/api/speak` (falling back to OpenAI text-to-speech, then the device voice), one code per student, an 8-hour monthly cap. The only storage is a Neon Postgres database (Vercel Marketplace, Free plan) holding student codes and monthly usage. GPT-Live-1 (`/api/live-session`, `/api/consult`) is a premium option reachable only when the student's plan has `live: true` (`docs/live-voice-plan.md`).
+Vercel Functions in TypeScript, no framework. Ten endpoints. **The base plan (plan amendment 13):** tap-to-talk, every utterance in ElevenLabs Eleven v4 Turbo streamed from `/api/speak` (falling back to OpenAI text-to-speech, then the device voice), one code per student, an 8-hour monthly cap. The only storage is a Neon Postgres database (Vercel Marketplace, Free plan) holding student codes and monthly usage. GPT-Live-1 (`/api/live-session`, `/api/consult`) is a premium option reachable only when the student's plan has `live: true` (`docs/live-voice-plan.md`).
 
 | endpoint | auth | purpose |
 |---|---|---|
@@ -14,6 +14,8 @@ Vercel Functions in TypeScript, no framework. Eight endpoints. **The base plan (
 | `GET`/`POST /api/memory` | code | the opt-in tutor memory: what is offered, whether a parent or adult student agreed, turn on, turn off, erase (see Student memory below); free, never counted as activity |
 | `GET /api/privacy` | none | the privacy policy as a web page (a copy of `docs/privacy-policy.md`) |
 | `POST /api/consult` | code | the page reader GPT-Live delegates to: the student's words and a page picture in, report text out; counted as activity |
+| `POST /api/purchase` | Apple's signature | the in-app subscription: a signed App Store transaction in, the student code and allowance out (see In-app subscription below) |
+| `POST /api/app-store-notifications` | Apple's signature | App Store Server Notifications V2: renewals, expiry, refunds |
 
 Every endpoint except health needs `Authorization: Bearer <CODE>`, where CODE is the student's 8-character code (see Student codes and the monthly cap below). **The code replaces the old shared `APP_ACCESS_TOKEN`, which the server no longer reads.** Anything that is not a well-formed code is `401 {error:"unauthorized", reason:"missing_header" | "bad_scheme" | "malformed_code"}`; a well-formed code nobody has is `401 … "unknown_code"`; a turned-off code is `403 code_disabled`. The order of checks: code present and well formed (401), method (405), the code exists and is on (401/403, one database query), the plan allows it (403 `live_not_in_plan`), the month's hours are not used up (403 `hours_used_up`), configuration (503), key or scripted mode (503), then the body.
 
@@ -37,6 +39,44 @@ Every endpoint except health needs `Authorization: Bearer <CODE>`, where CODE is
 **`GET /api/me`** returns `{plan:{live:boolean, cap_minutes:number}, allowance, request_id}`. The app calls it when a code is typed (that is how a code is checked), at launch and when a problem opens (which also wakes the sleeping database).
 
 **`POST /api/heartbeat`** takes `{session_id?, problem_id, seconds_since_activity?}` (`problem_id` must be in the bank; `seconds_since_activity` is how long ago the student's last real activity was, by the device's own clock, so a wrong device clock cannot shift it) and returns `{ok:true, allowance, request_id}`.
+
+## In-app subscription (plan amendment 20, `docs/app-store.md`)
+
+One auto-renewable App Store subscription (CA$19 a month, 480 minutes a month) is the in-app alternative to a student code. These two
+endpoints take no `Authorization` header; Apple's signature on the body is the credential, verified with `@apple/app-store-server-library`
+(`lib/app-store.ts`, Apple Root CA - G3 embedded in `lib/apple-root.ts`). The rules live in `lib/subscriptions.ts`, the handlers in
+`lib/purchase.ts`, the schema in `db/migrations/003_app_store_subscriptions.sql` (additive).
+
+**`POST /api/purchase`** takes `{signed_transaction}` (the JWS StoreKit gives the app). `200 {code, created, plan:{live, cap_minutes}, allowance, subscription:{active, expires_at}, request_id}`.
+The same Apple subscription (`originalTransactionId`) always returns the same code; a renewal or restore returns it again; a resubscribe
+after a lapse returns it and turns it back on. Errors: `422 invalid_transaction | wrong_app | wrong_product | environment_not_accepted`
+(with a `reason` label), `403 subscription_not_active` (expired or refunded; makes no student), `503 apple_check_unavailable |
+database_unavailable | iap_not_configured` (the reason names the missing setting, never its value), `405`, `422 invalid_request`.
+
+**`POST /api/app-store-notifications`** takes `{signedPayload}`. SUBSCRIBED, DID_RENEW, OFFER_REDEEMED, EXPIRED, GRACE_PERIOD_EXPIRED,
+REFUND, REVOKE, REFUND_REVERSED and RENEWAL_EXTENDED are applied; other types are answered `200 {ok:true, decision:"ignored_type"}`. A
+notice for a subscription we never saw that is already over makes no student (`ignored_unknown_subscription`). `503` on a database
+failure so Apple retries; `422` for anything Apple's check refuses.
+
+**What a transaction does** (`applyTransaction`): finds or makes the student (one unique index on `students.app_store_original_transaction_id`
+makes two simultaneous calls get one student), records the transaction in `app_store_transactions` (a newer `signed_at` replaces an
+older copy, never the reverse), sets `students.app_store_access_until` to the latest expiry among transactions that were not refunded,
+and, the first time a new current renewal is seen, raises this month's `bonus_seconds` to `max(bonus, used)` so the student has the full
+480 minutes again (idempotent, never lowers). The gate then treats a subscriber whose `app_store_access_until` has passed as turned off
+(`403 code_disabled`, reason `the subscription behind this code has ended`), so expiry works even if no webhook arrives. Students
+without an Apple subscription are untouched.
+
+**Settings** (Vercel, never committed): `APPLE_IAP_PRODUCT_ID`, `APPLE_BUNDLE_ID`, `APPLE_APP_APPLE_ID` (numeric; required only when
+`production` is listed), `APPLE_IAP_ENVIRONMENTS` (comma list of `sandbox` and/or `production`, default `sandbox`), optional
+`IAP_MONTHLY_MINUTES` (default 480) and `APPLE_ONLINE_CHECKS=0` (turns off the revocation check; default on). `GET /api/health` shows
+`subscription: {configured, environments, monthly_minutes}` or the name of the missing setting. **Run `scripts/codes migrate` before
+deploying this version**: the code check reads the new columns.
+
+**Logs** carry, per request: `student` (code hash), `original` and `transaction` (8-character salted hashes of Apple's ids),
+`iap_environment`, `iap_environments`, `verify_result`, `subscription` (`created | existing | refunded | expired | unknown`), `top_up`
+(`new_subscriber | topped_up | already_topped_up | not_current | no_usage_to_refill`), `access_until`, and for notices
+`notification_type`, `notification_subtype`, `notification` (hashed uuid) and `decision`. Never the signed string, the code in clear, or an
+Apple id in clear.
 
 ## Contract
 
@@ -229,9 +269,10 @@ One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint
 
 ## Files
 
-- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (code check, plan, hours, key, scripted; `meterActivity` counts a request), `students.ts` (code alphabet, the counting rule `chargeFor`, `allowanceOf`, the server's SQL in `PgStudentStore`), `students-memory.ts` (the same rules in memory, for tests), `students-admin.ts` (the admin script's SQL and the migration runner), `db.ts` (the one door to Postgres), `voice.ts` (the ElevenLabs stream; tests pass a fake `VoiceGateway`), `speak.ts`, `me.ts`, `heartbeat.ts`, `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
-- `db/migrations/*.sql` additive migrations (`001_students.sql`, `002_last_activity_at.sql`, `004_student_memory.sql`); `scripts/codes migrate` applies them (idempotent). `scripts/` Edward's local tools: `codes` (admin), `clone-voice`, `set-elevenlabs-key`, `live-check`; none run on the server.
+- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (code check, plan, hours, key, scripted; `meterActivity` counts a request), `students.ts` (code alphabet, the counting rule `chargeFor`, `allowanceOf`, the server's SQL in `PgStudentStore`), `students-memory.ts` (the same rules in memory, for tests), `students-admin.ts` (the admin script's SQL and the migration runner), `db.ts` (the one door to Postgres), `voice.ts` (the ElevenLabs stream; tests pass a fake `VoiceGateway`), `speak.ts`, `me.ts`, `purchase.ts` (the two in-app subscription endpoints), `subscriptions.ts` (the subscription rules and their SQL), `app-store.ts` + `apple-root.ts` (Apple's signed-data checks; tests pass a fake `AppStoreGateway`), `heartbeat.ts`, `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
+- `db/migrations/*.sql` additive migrations (`001_students.sql`, `002_last_activity_at.sql`, `003_app_store_subscriptions.sql`, `004_student_memory.sql`); `scripts/codes migrate` applies them (idempotent). `scripts/` Edward's local tools: `codes` (admin), `clone-voice`, `set-elevenlabs-key`, `live-check`; none run on the server.
 - `test/db.integration.test.ts` runs the real SQL against the real database and is OFF unless `PT_DB_INTEGRATION=1` and `DATABASE_URL` are set (it makes and deletes its own test codes); CI skips it. Run it with `PT_DB_INTEGRATION=1 vercel env run -e production -- npx tsx --test test/db.integration.test.ts`.
+- `test/subscriptions.sql.test.ts` runs the in-app subscription's SQL (migration 003 included) on PGlite, Postgres compiled to WebAssembly inside the test process. It runs in CI (`CI=true`) and is skipped on a laptop unless `PT_PGLITE=1`.
 - `data/problems.json` is GENERATED from `../shared/` (the original 12 plus every `shared/courses/<slug>/problems.json`) because `vercel deploy` uploads only `server/`. It holds `courses` (slug, title, group, grade, level) and `problems` (id, course, prompt_plain, worked_solution, final_answer, level), 1,024 problems and about 430 KB at 15 courses. Refresh with `npm run build-courses` (also writes `shared/courses/index.json`, the manifest the iPad reads); `scripts/build-courses.ts` validates every file and fails on a duplicate id across all courses. A test fails when either generated file is stale. A new course folder needs no code change, only that command and a deploy.
 - `lib/pricing.ts` the price table (USD per million tokens, sources and fetch date in the file; dated Google increases switch on their day) and `lib/usage.ts` (counts to a log report). An unknown model logs `cost_basis: "no_price"` and no dollar figure; a model that reports no usage logs `no_usage`.
 - `eval/` the model eval, run by hand (not CI): `make_fixtures.py` (30 synthetic pages into `eval/fixtures/`, committed), `run-eval.ts` (drives the real `handleWatch` and `handleConsult`), `score.ts` (table), `results/` (committed runs). How to run it: `docs/how-to-run.md`.
@@ -239,7 +280,7 @@ One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint
 
 ## Deploy
 
-Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `DATABASE_URL` (set by the Neon integration; do not edit), `ELEVENLABS_API_KEY` (`scripts/set-elevenlabs-key`), `ELEVENLABS_VOICE_ID`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `ELEVENLABS_MODEL`, `ELEVENLABS_STABILITY`, `ELEVENLABS_SIMILARITY`, `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). Do not set `TUTOR_SCRIPTED` on the production environment.
+Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `DATABASE_URL` (set by the Neon integration; do not edit), `ELEVENLABS_API_KEY` (`scripts/set-elevenlabs-key`), `ELEVENLABS_VOICE_ID`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `ELEVENLABS_MODEL`, `ELEVENLABS_STABILITY`, `ELEVENLABS_SIMILARITY`, `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). For the in-app subscription also set `APPLE_IAP_PRODUCT_ID`, `APPLE_BUNDLE_ID`, `APPLE_APP_APPLE_ID` and `APPLE_IAP_ENVIRONMENTS` (see In-app subscription above and `docs/app-store.md`). Do not set `TUTOR_SCRIPTED` on the production environment.
 
 ## Problem banks: `shared/problems.json` and `shared/courses/<slug>/`
 
