@@ -23,3 +23,6 @@ ios/artifacts/
 DerivedData/
 *.xcresult
 xcuserdata/
+
+__pycache__/
+*.pyc

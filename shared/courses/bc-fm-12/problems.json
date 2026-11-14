@@ -1,0 +1,903 @@
+[
+  {
+    "id": "fm12-01",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
+    "prompt_latex": "Find the equation of the perpendicular bisector of the segment from A(1, 2) to B(7, 6).",
+    "prompt_plain": "Find the equation of the perpendicular bisector of the segment from A(1, 2) to B(7, 6).",
+    "prompt_parts": [
+      {
+        "text": "Find the equation of the perpendicular bisector of the segment from A(1, 2) to B(7, 6)."
+      }
+    ],
+    "worked_solution": [
+      "Midpoint: ((1 + 7)/2, (2 + 6)/2) = (4, 4)",
+      "Slope of AB: (6 − 2)/(7 − 1) = 4/6 = 2/3",
+      "Perpendicular slope is the negative reciprocal: −3/2",
+      "y − 4 = −(3/2)(x − 4)",
+      "y = −(3/2)x + 6 + 4 = −(3/2)x + 10"
+    ],
+    "final_answer": "y = −(3/2)x + 10",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-02",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
+    "prompt_latex": "Find the equation of the tangent to the circle x^{2} + y^{2} = 25 at the point (3, 4).",
+    "prompt_plain": "Find the equation of the tangent to the circle x² + y² = 25 at the point (3, 4).",
+    "prompt_parts": [
+      {
+        "text": "Find the equation of the tangent to the circle x² + y² = 25 at the point (3, 4)."
+      }
+    ],
+    "worked_solution": [
+      "A tangent is perpendicular to the radius at the point of tangency",
+      "Radius from (0, 0) to (3, 4) has slope 4/3, so the tangent slope is −3/4",
+      "y − 4 = −(3/4)(x − 3)",
+      "Multiply by 4: 4y − 16 = −3x + 9",
+      "3x + 4y = 25"
+    ],
+    "final_answer": "3x + 4y = 25",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-03",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
+    "prompt_latex": "Find the interior and exterior angle of a regular octagon.",
+    "prompt_plain": "Find the interior and exterior angle of a regular octagon.",
+    "prompt_parts": [
+      {
+        "text": "Find the interior and exterior angle of a regular octagon."
+      }
+    ],
+    "worked_solution": [
+      "Interior angle sum of an n sided polygon: (n − 2)(180°) = 6(180°) = 1080°",
+      "Each interior angle: 1080° / 8 = 135°",
+      "Exterior angle: 180° − 135° = 45° (or 360°/8)"
+    ],
+    "final_answer": "interior 135°, exterior 45°",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-04",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
+    "prompt_latex": "Explain why regular pentagons cannot tessellate the plane by themselves.",
+    "prompt_plain": "Explain why regular pentagons cannot tessellate the plane by themselves.",
+    "prompt_parts": [
+      {
+        "text": "Explain why regular pentagons cannot tessellate the plane by themselves."
+      }
+    ],
+    "worked_solution": [
+      "Interior angle of a regular pentagon: 3(180°)/5 = 108°",
+      "Angles at a vertex must add to exactly 360°",
+      "3 pentagons: 324° leaves a 36° gap. 4 pentagons: 432° overlaps",
+      "360/108 is not a whole number, so the pentagons never fit"
+    ],
+    "final_answer": "108° does not divide 360° (3 pentagons leave a 36° gap, 4 overlap)",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-05",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
+    "prompt_latex": "Triangle ABC has A(0, 0), B(6, 0) and C(0, 8). Find its circumcentre and the circumradius using perpendicular bisectors.",
+    "prompt_plain": "Triangle ABC has A(0, 0), B(6, 0) and C(0, 8). Find its circumcentre and the circumradius using perpendicular bisectors.",
+    "prompt_parts": [
+      {
+        "text": "Triangle ABC has A(0, 0), B(6, 0) and C(0, 8). Find its circumcentre and the circumradius using perpendicular bisectors."
+      }
+    ],
+    "worked_solution": [
+      "Perpendicular bisector of AB (horizontal side from (0, 0) to (6, 0)): x = 3",
+      "Perpendicular bisector of AC (vertical side from (0, 0) to (0, 8)): y = 4",
+      "They meet at (3, 4)",
+      "Radius = distance to A = √(9 + 16) = 5",
+      "Check distance to B: √(9 + 16) = 5 and to C: √(9 + 16) = 5 ✓"
+    ],
+    "final_answer": "circumcentre (3, 4), radius 5",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-06",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "A parabola is the set of points equally far from the focus (0, 2) and the directrix y = -2. Find its equation.",
+    "prompt_plain": "A parabola is the set of points equally far from the focus (0, 2) and the directrix y = −2. Find its equation.",
+    "prompt_parts": [
+      {
+        "text": "A parabola is the set of points equally far from the focus (0, 2) and the directrix y = −2. Find its equation."
+      }
+    ],
+    "worked_solution": [
+      "Let P(x, y). Distance to the focus: √(x² + (y − 2)²). Distance to the directrix: y + 2",
+      "Set equal and square: x² + (y − 2)² = (y + 2)²",
+      "x² + y² − 4y + 4 = y² + 4y + 4",
+      "x² = 8y"
+    ],
+    "final_answer": "x² = 8y",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-07",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "Find the centre and radius of x^{2} + y^{2} - 6x + 4y - 12 = 0.",
+    "prompt_plain": "Find the centre and radius of x² + y² − 6x + 4y − 12 = 0.",
+    "prompt_parts": [
+      {
+        "text": "Find the centre and radius of x² + y² − 6x + 4y − 12 = 0."
+      }
+    ],
+    "worked_solution": [
+      "Group: (x² − 6x) + (y² + 4y) = 12",
+      "Complete the squares: add 9 and 4 to both sides",
+      "(x − 3)² + (y + 2)² = 12 + 9 + 4 = 25",
+      "Centre (3, −2), radius 5"
+    ],
+    "final_answer": "centre (3, −2), radius 5",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-08",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "For the ellipse \\dfrac{x^{2}}{25} + \\dfrac{y^{2}}{9} = 1, find the vertices on the x axis and the foci.",
+    "prompt_plain": "For the ellipse x²/25 + y²/9 = 1, find the vertices on the x axis and the foci.",
+    "prompt_parts": [
+      {
+        "text": "For the ellipse "
+      },
+      {
+        "frac": {
+          "num": "x²",
+          "den": "25"
+        }
+      },
+      {
+        "text": " + "
+      },
+      {
+        "frac": {
+          "num": "y²",
+          "den": "9"
+        }
+      },
+      {
+        "text": " = 1, find the vertices on the x axis and the foci."
+      }
+    ],
+    "worked_solution": [
+      "a² = 25 (larger, under x²), b² = 9, so a = 5 and b = 3",
+      "Vertices on the major axis: (±5, 0)",
+      "c² = a² − b² = 25 − 9 = 16, so c = 4",
+      "Foci (±4, 0)"
+    ],
+    "final_answer": "vertices (±5, 0), foci (±4, 0)",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-09",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "For the hyperbola \\dfrac{x^{2}}{16} - \\dfrac{y^{2}}{9} = 1, find the vertices, foci and asymptotes.",
+    "prompt_plain": "For the hyperbola x²/16 − y²/9 = 1, find the vertices, foci and asymptotes.",
+    "prompt_parts": [
+      {
+        "text": "For the hyperbola "
+      },
+      {
+        "frac": {
+          "num": "x²",
+          "den": "16"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "y²",
+          "den": "9"
+        }
+      },
+      {
+        "text": " = 1, find the vertices, foci and asymptotes."
+      }
+    ],
+    "worked_solution": [
+      "a² = 16, b² = 9: a = 4, b = 3",
+      "Vertices (±4, 0)",
+      "For a hyperbola c² = a² + b² = 25, so c = 5 and the foci are (±5, 0)",
+      "Asymptotes y = ±(b/a)x = ±(3/4)x"
+    ],
+    "final_answer": "vertices (±4, 0), foci (±5, 0), asymptotes y = ±(3/4)x",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-10",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "The sum of the distances from a point to (-3, 0) and (3, 0) is always 10. Find the equation of the locus.",
+    "prompt_plain": "The sum of the distances from a point to (−3, 0) and (3, 0) is always 10. Find the equation of the locus.",
+    "prompt_parts": [
+      {
+        "text": "The sum of the distances from a point to (−3, 0) and (3, 0) is always 10. Find the equation of the locus."
+      }
+    ],
+    "worked_solution": [
+      "This is an ellipse with foci (±3, 0), so c = 3",
+      "Sum of distances = 2a = 10, so a = 5",
+      "b² = a² − c² = 25 − 9 = 16",
+      "x²/25 + y²/16 = 1",
+      "Check (0, 4): distances √(9 + 16) = 5 each, sum 10 ✓"
+    ],
+    "final_answer": "x²/25 + y²/16 = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-11",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
+    "prompt_latex": "A satellite dish cross section is the parabola y = x^{2}/16 (metres). Where should the receiver (the focus) go?",
+    "prompt_plain": "A satellite dish cross section is the parabola y = x²/16 (metres). Where should the receiver (the focus) go?",
+    "prompt_parts": [
+      {
+        "text": "A satellite dish cross section is the parabola y = x²/16 (metres). Where should the receiver (the focus) go?"
+      }
+    ],
+    "worked_solution": [
+      "Write x² = 16y and compare with x² = 4py",
+      "4p = 16, so p = 4",
+      "The focus is p units above the vertex (0, 0): (0, 4)",
+      "Check: (8, 4) is on the parabola (64/16 = 4). Its distance to (0, 4) is 8 and its distance to the line y = −4 is 4 + 4 = 8 ✓"
+    ],
+    "final_answer": "focus (0, 4), 4 m above the vertex",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-12",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, fractals (iteration of a simple instruction; Cantor dust, Sierpinski triangle, Koch snowflake); original",
+    "prompt_latex": "A Koch snowflake starts as an equilateral triangle with side 9 cm. Each iteration replaces every segment by 4 segments one third as long. Find the perimeter after 3 iterations.",
+    "prompt_plain": "A Koch snowflake starts as an equilateral triangle with side 9 cm. Each iteration replaces every segment by 4 segments one third as long. Find the perimeter after 3 iterations.",
+    "prompt_parts": [
+      {
+        "text": "A Koch snowflake starts as an equilateral triangle with side 9 cm. Each iteration replaces every segment by 4 segments one third as long. Find the perimeter after 3 iterations."
+      }
+    ],
+    "worked_solution": [
+      "Start perimeter: 3 · 9 = 27 cm",
+      "Each iteration multiplies the number of segments by 4 and the length by 1/3, so the perimeter by 4/3",
+      "After 3 iterations: 27(4/3)³ = 27 · 64/27",
+      "= 64 cm"
+    ],
+    "final_answer": "64 cm",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-13",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, fractals (iteration of a simple instruction; Cantor dust, Sierpinski triangle, Koch snowflake); original",
+    "prompt_latex": "In the Sierpinski triangle, each step removes the middle triangle from every remaining triangle. After 5 steps, how many triangles remain, and what fraction of the original area is left?",
+    "prompt_plain": "In the Sierpinski triangle, each step removes the middle triangle from every remaining triangle. After 5 steps, how many triangles remain, and what fraction of the original area is left?",
+    "prompt_parts": [
+      {
+        "text": "In the Sierpinski triangle, each step removes the middle triangle from every remaining triangle. After 5 steps, how many triangles remain, and what fraction of the original area is left?"
+      }
+    ],
+    "worked_solution": [
+      "Each remaining triangle becomes 3 smaller ones, so the count is 3ⁿ: 3⁵ = 243",
+      "Each step keeps 3/4 of the area (one of four equal parts removed)",
+      "(3/4)⁵ = 243/1024"
+    ],
+    "final_answer": "243 triangles remain; area fraction 243/1024",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-14",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, fractals (iteration of a simple instruction; Cantor dust, Sierpinski triangle, Koch snowflake); original",
+    "prompt_latex": "Cantor dust starts with a segment of length 1. Each step removes the open middle third of every segment. After 4 steps, how many segments are there and what is their total length?",
+    "prompt_plain": "Cantor dust starts with a segment of length 1. Each step removes the open middle third of every segment. After 4 steps, how many segments are there and what is their total length?",
+    "prompt_parts": [
+      {
+        "text": "Cantor dust starts with a segment of length 1. Each step removes the open middle third of every segment. After 4 steps, how many segments are there and what is their total length?"
+      }
+    ],
+    "worked_solution": [
+      "Each step doubles the number of segments: 2⁴ = 16",
+      "Each segment is (1/3)⁴ = 1/81 long",
+      "Total length 16 · (1/81) = 16/81 (which is (2/3)⁴)"
+    ],
+    "final_answer": "16 segments, total length 16/81",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-15",
+    "source": "BC Foundations of Mathematics 12 content: geometric explorations, fractals (iteration of a simple instruction; Cantor dust, Sierpinski triangle, Koch snowflake); original",
+    "prompt_latex": "Halving the side of a Sierpinski triangle gives 3 copies of itself. Find its fractal dimension D, where 3 = 2^{D}, to 2 decimal places.",
+    "prompt_plain": "Halving the side of a Sierpinski triangle gives 3 copies of itself. Find its fractal dimension D, where 3 = 2^D, to 2 decimal places.",
+    "prompt_parts": [
+      {
+        "text": "Halving the side of a Sierpinski triangle gives 3 copies of itself. Find its fractal dimension D, where 3 = 2^D, to 2 decimal places."
+      }
+    ],
+    "worked_solution": [
+      "Scale factor 2 (each piece is half the size) gives 3 pieces: 2^D = 3",
+      "Take logs: D ln 2 = ln 3",
+      "D = 1.0986 / 0.6931 ≈ 1.58",
+      "Between a line (1) and a filled region (2), as expected for a fractal"
+    ],
+    "final_answer": "D = ln 3 / ln 2 ≈ 1.58",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-16",
+    "source": "BC Foundations of Mathematics 12 content: graphical representations of polynomial, logarithmic, exponential and sinusoidal functions (using characteristics of a graph to identify them; the curriculum says technology only, so these are short characteristic-reading versions); original",
+    "prompt_latex": "A graph has y intercept 2, passes through (1, 4) and (2, 8), and flattens toward y = 0 as x gets very negative. Identify the function type and write its equation.",
+    "prompt_plain": "A graph has y intercept 2, passes through (1, 4) and (2, 8), and flattens toward y = 0 as x gets very negative. Identify the function type and write its equation.",
+    "prompt_parts": [
+      {
+        "text": "A graph has y intercept 2, passes through (1, 4) and (2, 8), and flattens toward y = 0 as x gets very negative. Identify the function type and write its equation."
+      }
+    ],
+    "worked_solution": [
+      "y values double each time x goes up by 1: ratio 4/2 = 2 and 8/4 = 2",
+      "A constant ratio means exponential: y = a(b)^x with b = 2",
+      "y intercept 2 gives a = 2",
+      "y = 2(2)^x with horizontal asymptote y = 0"
+    ],
+    "final_answer": "exponential, y = 2(2)^x",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-17",
+    "source": "BC Foundations of Mathematics 12 content: graphical representations of polynomial, logarithmic, exponential and sinusoidal functions (using characteristics of a graph to identify them; the curriculum says technology only, so these are short characteristic-reading versions); original",
+    "prompt_latex": "A graph repeats smoothly, with a maximum of 5 at x = 2 and the next minimum of -1 at x = 6. Identify the function type and give its amplitude, midline and period.",
+    "prompt_plain": "A graph repeats smoothly, with a maximum of 5 at x = 2 and the next minimum of −1 at x = 6. Identify the function type and give its amplitude, midline and period.",
+    "prompt_parts": [
+      {
+        "text": "A graph repeats smoothly, with a maximum of 5 at x = 2 and the next minimum of −1 at x = 6. Identify the function type and give its amplitude, midline and period."
+      }
+    ],
+    "worked_solution": [
+      "A smooth repeating wave is sinusoidal",
+      "Amplitude = (5 − (−1))/2 = 3",
+      "Midline = (5 + (−1))/2 = 2",
+      "Maximum to the next minimum is half a period: 6 − 2 = 4, so the period is 8"
+    ],
+    "final_answer": "sinusoidal: amplitude 3, midline y = 2, period 8",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-18",
+    "source": "BC Foundations of Mathematics 12 content: graphical representations of polynomial, logarithmic, exponential and sinusoidal functions (using characteristics of a graph to identify them; the curriculum says technology only, so these are short characteristic-reading versions); original",
+    "prompt_latex": "A graph has a vertical asymptote at x = 0, passes through (1, 0), (2, 1) and (4, 2), and rises ever more slowly. Identify the function and write its equation.",
+    "prompt_plain": "A graph has a vertical asymptote at x = 0, passes through (1, 0), (2, 1) and (4, 2), and rises ever more slowly. Identify the function and write its equation.",
+    "prompt_parts": [
+      {
+        "text": "A graph has a vertical asymptote at x = 0, passes through (1, 0), (2, 1) and (4, 2), and rises ever more slowly. Identify the function and write its equation."
+      }
+    ],
+    "worked_solution": [
+      "A vertical asymptote at x = 0 and a point (1, 0) suggest a logarithm",
+      "Each doubling of x adds 1 to y: (2, 1), (4, 2), so the base is 2",
+      "y = log₂ x"
+    ],
+    "final_answer": "logarithmic, y = log₂ x",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-19",
+    "source": "BC Foundations of Mathematics 12 content: graphical representations of polynomial, logarithmic, exponential and sinusoidal functions (using characteristics of a graph to identify them; the curriculum says technology only, so these are short characteristic-reading versions); original",
+    "prompt_latex": "A graph crosses the x axis at -1, 2 and 3, rises toward the top on the far left and falls toward the bottom on the far right. Name the function type, its least degree and the sign of its leading coefficient.",
+    "prompt_plain": "A graph crosses the x axis at −1, 2 and 3, rises toward the top on the far left and falls toward the bottom on the far right. Name the function type, its least degree and the sign of its leading coefficient.",
+    "prompt_parts": [
+      {
+        "text": "A graph crosses the x axis at −1, 2 and 3, rises toward the top on the far left and falls toward the bottom on the far right. Name the function type, its least degree and the sign of its leading coefficient."
+      }
+    ],
+    "worked_solution": [
+      "Smooth curve with several x intercepts and no asymptotes: polynomial",
+      "Three zeros means degree at least 3",
+      "Ends in opposite directions means odd degree",
+      "Up on the left, down on the right means negative leading coefficient"
+    ],
+    "final_answer": "polynomial, least degree 3, negative leading coefficient",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-20",
+    "source": "BC Foundations of Mathematics 12 content: regression analysis (polynomial, exponential, sinusoidal, logarithmic; applying the appropriate model; by hand versions of the model step); original",
+    "prompt_latex": "An exponential model y = a·b^{x} passes through (0, 50) and (3, 400). Find the model and predict y at x = 5.",
+    "prompt_plain": "An exponential model y = a·b^x passes through (0, 50) and (3, 400). Find the model and predict y at x = 5.",
+    "prompt_parts": [
+      {
+        "text": "An exponential model y = a·b^x passes through (0, 50) and (3, 400). Find the model and predict y at x = 5."
+      }
+    ],
+    "worked_solution": [
+      "x = 0 gives a = 50",
+      "x = 3: 50b³ = 400, so b³ = 8 and b = 2",
+      "y = 50(2)^x",
+      "y(5) = 50(32) = 1600"
+    ],
+    "final_answer": "y = 50(2)^x; y(5) = 1600",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-21",
+    "source": "BC Foundations of Mathematics 12 content: regression analysis (polynomial, exponential, sinusoidal, logarithmic; applying the appropriate model; by hand versions of the model step); original",
+    "prompt_latex": "A calculator fits a line to (x, \\ln y) and gets \\ln y = 1.2 + 0.5x. Write the exponential model y = a·e^{bx} and give a to 2 decimal places.",
+    "prompt_plain": "A calculator fits a line to (x, ln y) and gets ln y = 1.2 + 0.5x. Write the exponential model y = a·e^(bx) and give a to 2 decimal places.",
+    "prompt_parts": [
+      {
+        "text": "A calculator fits a line to (x, ln y) and gets ln y = 1.2 + 0.5x. Write the exponential model y = a·e^(bx) and give a to 2 decimal places."
+      }
+    ],
+    "worked_solution": [
+      "Raise e to both sides: y = e^(1.2 + 0.5x)",
+      "= e^1.2 · e^(0.5x)",
+      "e^1.2 ≈ 3.32",
+      "y ≈ 3.32e^(0.5x)"
+    ],
+    "final_answer": "y ≈ 3.32e^(0.5x)",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-22",
+    "source": "BC Foundations of Mathematics 12 content: regression analysis (polynomial, exponential, sinusoidal, logarithmic; applying the appropriate model; by hand versions of the model step); original",
+    "prompt_latex": "A day's temperature peaks at 18 ^\\circ C at t = 14 h and bottoms out at 6 ^\\circ C at t = 2 h. Write a model T(t) = a \\cos(b(t - c)) + d.",
+    "prompt_plain": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d.",
+    "prompt_parts": [
+      {
+        "text": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d."
+      }
+    ],
+    "worked_solution": [
+      "a = (18 − 6)/2 = 6 and d = (18 + 6)/2 = 12",
+      "Maximum to minimum is 12 hours, so the period is 24 and b = 2π/24 = π/12",
+      "A cosine starts at its maximum, which is at t = 14, so c = 14",
+      "T(t) = 6 cos(π(t − 14)/12) + 12",
+      "Check: T(2) = 6 cos(−π) + 12 = 6 ✓"
+    ],
+    "final_answer": "T(t) = 6 cos(π(t − 14)/12) + 12",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-23",
+    "source": "BC Foundations of Mathematics 12 content: regression analysis (polynomial, exponential, sinusoidal, logarithmic; applying the appropriate model; by hand versions of the model step); original",
+    "prompt_latex": "Data: (1, 2), (2, 5), (3, 10), (4, 17). Compare the sum of squared residuals for y = 3x - 2 and y = x^{2} + 1 and pick the better model.",
+    "prompt_plain": "Data: (1, 2), (2, 5), (3, 10), (4, 17). Compare the sum of squared residuals for y = 3x − 2 and y = x² + 1 and pick the better model.",
+    "prompt_parts": [
+      {
+        "text": "Data: (1, 2), (2, 5), (3, 10), (4, 17). Compare the sum of squared residuals for y = 3x − 2 and y = x² + 1 and pick the better model."
+      }
+    ],
+    "worked_solution": [
+      "Line y = 3x − 2 predicts 1, 4, 7, 10. Residuals 2 − 1, 5 − 4, 10 − 7, 17 − 10 = 1, 1, 3, 7",
+      "SSE = 1 + 1 + 9 + 49 = 60",
+      "Quadratic y = x² + 1 predicts 2, 5, 10, 17: all residuals 0, SSE = 0",
+      "The smaller SSE wins: y = x² + 1"
+    ],
+    "final_answer": "SSE 60 for the line, 0 for the quadratic; y = x² + 1 fits better",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-24",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "A menu has 4 appetizers, 6 mains and 3 desserts. How many meals have one of each?",
+    "prompt_plain": "A menu has 4 appetizers, 6 mains and 3 desserts. How many meals have one of each?",
+    "prompt_parts": [
+      {
+        "text": "A menu has 4 appetizers, 6 mains and 3 desserts. How many meals have one of each?"
+      }
+    ],
+    "worked_solution": [
+      "Fundamental counting principle: multiply the choices",
+      "4 × 6 × 3 = 72"
+    ],
+    "final_answer": "72",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-25",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "Eight runners race. In how many ways can the first five places be filled?",
+    "prompt_plain": "Eight runners race. In how many ways can the first five places be filled?",
+    "prompt_parts": [
+      {
+        "text": "Eight runners race. In how many ways can the first five places be filled?"
+      }
+    ],
+    "worked_solution": [
+      "Order matters, so use permutations: P(8, 5) = 8!/(8 − 5)!",
+      "= 8 × 7 × 6 × 5 × 4",
+      "= 6720"
+    ],
+    "final_answer": "6720",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-26",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "How many different arrangements are there of the letters in STATISTICS?",
+    "prompt_plain": "How many different arrangements are there of the letters in STATISTICS?",
+    "prompt_parts": [
+      {
+        "text": "How many different arrangements are there of the letters in STATISTICS?"
+      }
+    ],
+    "worked_solution": [
+      "10 letters: S appears 3 times, T 3 times, I 2 times, A once, C once",
+      "Divide out the repeats: 10!/(3! 3! 2!)",
+      "= 3 628 800 / (6 × 6 × 2) = 3 628 800 / 72",
+      "= 50 400"
+    ],
+    "final_answer": "50400",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-27",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "A team of 3 boys and 2 girls is chosen from 7 boys and 5 girls. How many different teams are possible?",
+    "prompt_plain": "A team of 3 boys and 2 girls is chosen from 7 boys and 5 girls. How many different teams are possible?",
+    "prompt_parts": [
+      {
+        "text": "A team of 3 boys and 2 girls is chosen from 7 boys and 5 girls. How many different teams are possible?"
+      }
+    ],
+    "worked_solution": [
+      "Order does not matter, so use combinations",
+      "Boys: C(7, 3) = 35",
+      "Girls: C(5, 2) = 10",
+      "Multiply: 35 × 10 = 350"
+    ],
+    "final_answer": "350",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-28",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "How many shortest paths are there on a grid from (0, 0) to (5, 3) moving only right or up?",
+    "prompt_plain": "How many shortest paths are there on a grid from (0, 0) to (5, 3) moving only right or up?",
+    "prompt_parts": [
+      {
+        "text": "How many shortest paths are there on a grid from (0, 0) to (5, 3) moving only right or up?"
+      }
+    ],
+    "worked_solution": [
+      "Every path has 5 rights (R) and 3 ups (U): 8 moves in total",
+      "Choose which 3 of the 8 moves are U: C(8, 3)",
+      "= 56"
+    ],
+    "final_answer": "56",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-29",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "How many shortest paths go from (0, 0) to (5, 3), moving only right or up, and pass through (2, 1)?",
+    "prompt_plain": "How many shortest paths go from (0, 0) to (5, 3), moving only right or up, and pass through (2, 1)?",
+    "prompt_parts": [
+      {
+        "text": "How many shortest paths go from (0, 0) to (5, 3), moving only right or up, and pass through (2, 1)?"
+      }
+    ],
+    "worked_solution": [
+      "Split the trip at (2, 1)",
+      "(0, 0) to (2, 1): 2 rights and 1 up, C(3, 1) = 3 paths",
+      "(2, 1) to (5, 3): 3 rights and 2 ups, C(5, 2) = 10 paths",
+      "Multiply: 3 × 10 = 30"
+    ],
+    "final_answer": "30",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-30",
+    "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
+    "prompt_latex": "Use row 4 of Pascal's triangle to expand (x + 2)^{4}.",
+    "prompt_plain": "Use row 4 of Pascal's triangle to expand (x + 2)⁴.",
+    "prompt_parts": [
+      {
+        "text": "Use row 4 of Pascal's triangle to expand (x + 2)⁴."
+      }
+    ],
+    "worked_solution": [
+      "Row 4 of Pascal's triangle: 1, 4, 6, 4, 1",
+      "Terms: 1·x⁴ + 4·x³(2) + 6·x²(2²) + 4·x(2³) + 1·(2⁴)",
+      "= x⁴ + 8x³ + 24x² + 32x + 16"
+    ],
+    "final_answer": "x⁴ + 8x³ + 24x² + 32x + 16",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-31",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "The probability of rain tomorrow is 0.2. State the odds in favour of rain and the odds against.",
+    "prompt_plain": "The probability of rain tomorrow is 0.2. State the odds in favour of rain and the odds against.",
+    "prompt_parts": [
+      {
+        "text": "The probability of rain tomorrow is 0.2. State the odds in favour of rain and the odds against."
+      }
+    ],
+    "worked_solution": [
+      "P(rain) = 0.2 = 1/5 and P(no rain) = 4/5",
+      "Odds in favour = P(rain) : P(no rain) = 1 : 4",
+      "Odds against = 4 : 1"
+    ],
+    "final_answer": "odds in favour 1 : 4, odds against 4 : 1",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-32",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "A and B are mutually exclusive with P(A) = 0.30 and P(B) = 0.45. Find P(A or B).",
+    "prompt_plain": "A and B are mutually exclusive with P(A) = 0.30 and P(B) = 0.45. Find P(A or B).",
+    "prompt_parts": [
+      {
+        "text": "A and B are mutually exclusive with P(A) = 0.30 and P(B) = 0.45. Find P(A or B)."
+      }
+    ],
+    "worked_solution": [
+      "Mutually exclusive means they cannot both happen, so P(A and B) = 0",
+      "P(A or B) = P(A) + P(B) = 0.30 + 0.45",
+      "= 0.75"
+    ],
+    "final_answer": "0.75",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-33",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "One card is drawn from a standard deck of 52. Find P(heart or face card). Face cards are J, Q, K.",
+    "prompt_plain": "One card is drawn from a standard deck of 52. Find P(heart or face card). Face cards are J, Q, K.",
+    "prompt_parts": [
+      {
+        "text": "One card is drawn from a standard deck of 52. Find P(heart or face card). Face cards are J, Q, K."
+      }
+    ],
+    "worked_solution": [
+      "Not mutually exclusive: the J, Q, K of hearts are in both groups",
+      "P(heart) = 13/52, P(face) = 12/52, P(heart and face) = 3/52",
+      "P(heart or face) = 13/52 + 12/52 − 3/52 = 22/52",
+      "= 11/26"
+    ],
+    "final_answer": "11/26",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-34",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "In a class of 30, 18 take French, 12 take Spanish and 5 take both. How many take neither? Use a Venn diagram.",
+    "prompt_plain": "In a class of 30, 18 take French, 12 take Spanish and 5 take both. How many take neither? Use a Venn diagram.",
+    "prompt_parts": [
+      {
+        "text": "In a class of 30, 18 take French, 12 take Spanish and 5 take both. How many take neither? Use a Venn diagram."
+      }
+    ],
+    "worked_solution": [
+      "Both: 5. Only French: 18 − 5 = 13. Only Spanish: 12 − 5 = 7",
+      "In at least one: 13 + 5 + 7 = 25",
+      "Neither: 30 − 25 = 5"
+    ],
+    "final_answer": "5 students",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-35",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "Two cards are drawn from a standard deck without replacement. Find the probability that both are aces.",
+    "prompt_plain": "Two cards are drawn from a standard deck without replacement. Find the probability that both are aces.",
+    "prompt_parts": [
+      {
+        "text": "Two cards are drawn from a standard deck without replacement. Find the probability that both are aces."
+      }
+    ],
+    "worked_solution": [
+      "P(first is an ace) = 4/52",
+      "Given that, 3 aces remain among 51 cards: P(second is an ace | first) = 3/51",
+      "P(both) = (4/52)(3/51) = 12/2652",
+      "= 1/221"
+    ],
+    "final_answer": "1/221",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-36",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "In a club, P(plays chess) = 0.5 and P(plays chess and guitar) = 0.2. Find P(guitar | chess).",
+    "prompt_plain": "In a club, P(plays chess) = 0.5 and P(plays chess and guitar) = 0.2. Find P(guitar | chess).",
+    "prompt_parts": [
+      {
+        "text": "In a club, P(plays chess) = 0.5 and P(plays chess and guitar) = 0.2. Find P(guitar | chess)."
+      }
+    ],
+    "worked_solution": [
+      "Conditional probability: P(G | C) = P(G and C) / P(C)",
+      "= 0.2 / 0.5",
+      "= 2/5 (0.4)"
+    ],
+    "final_answer": "2/5",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-37",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "A fair coin is flipped 6 times. Find the probability of exactly 4 heads.",
+    "prompt_plain": "A fair coin is flipped 6 times. Find the probability of exactly 4 heads.",
+    "prompt_parts": [
+      {
+        "text": "A fair coin is flipped 6 times. Find the probability of exactly 4 heads."
+      }
+    ],
+    "worked_solution": [
+      "Binomial: P(k) = C(n, k) p^k (1 − p)^(n − k) with n = 6, k = 4, p = 1/2",
+      "C(6, 4) = 15",
+      "(1/2)⁴(1/2)² = 1/64",
+      "15/64"
+    ],
+    "final_answer": "15/64",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-38",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "A player makes 70% of free throws. In 5 shots, find P(at least 4 makes) to 3 decimal places.",
+    "prompt_plain": "A player makes 70% of free throws. In 5 shots, find P(at least 4 makes) to 3 decimal places.",
+    "prompt_parts": [
+      {
+        "text": "A player makes 70% of free throws. In 5 shots, find P(at least 4 makes) to 3 decimal places."
+      }
+    ],
+    "worked_solution": [
+      "At least 4 means exactly 4 or exactly 5",
+      "P(4) = C(5, 4)(0.7)⁴(0.3) = 5(0.2401)(0.3) = 0.36015",
+      "P(5) = (0.7)⁵ = 0.16807",
+      "0.36015 + 0.16807 = 0.52822 ≈ 0.528"
+    ],
+    "final_answer": "0.528",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-39",
+    "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
+    "prompt_latex": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
+    "prompt_plain": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
+    "prompt_parts": [
+      {
+        "text": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair."
+      }
+    ],
+    "worked_solution": [
+      "Expected winnings: (1/6)(6) + (5/6)(0) = 1",
+      "Expected net = 1 − 2 = −1, so you lose $1 per game on average",
+      "A fair game has expected net 0, so the fee would be $1"
+    ],
+    "final_answer": "expected net −$1.00; a fair entry fee is $1",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-40",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "$5000 is invested at 3.6% per year compounded monthly for 5 years. Find the final amount.",
+    "prompt_plain": "$5000 is invested at 3.6% per year compounded monthly for 5 years. Find the final amount.",
+    "prompt_parts": [
+      {
+        "text": "$5000 is invested at 3.6% per year compounded monthly for 5 years. Find the final amount."
+      }
+    ],
+    "worked_solution": [
+      "Monthly rate i = 0.036/12 = 0.003; n = 12 × 5 = 60 periods",
+      "A = 5000(1.003)^60",
+      "(1.003)^60 ≈ 1.19689",
+      "A ≈ $5984.47"
+    ],
+    "final_answer": "$5984.47",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-41",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "A $300 000 mortgage is at 5% per year compounded monthly with monthly payments over 25 years. Find the monthly payment.",
+    "prompt_plain": "A $300 000 mortgage is at 5% per year compounded monthly with monthly payments over 25 years. Find the monthly payment.",
+    "prompt_parts": [
+      {
+        "text": "A $300 000 mortgage is at 5% per year compounded monthly with monthly payments over 25 years. Find the monthly payment."
+      }
+    ],
+    "worked_solution": [
+      "i = 0.05/12 = 0.0041667 and n = 25 × 12 = 300",
+      "PMT = P · i / (1 − (1 + i)^(−n))",
+      "(1 + i)^(−300) ≈ 0.28725",
+      "PMT = 300000(0.0041667)/(1 − 0.28725) = 1250/0.71275",
+      "≈ $1753.77"
+    ],
+    "final_answer": "$1753.77 per month",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-42",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "For the $300 000 mortgage with payments of $1753.77 for 300 months, how much interest is paid in total?",
+    "prompt_plain": "For the $300 000 mortgage with payments of $1753.77 for 300 months, how much interest is paid in total?",
+    "prompt_parts": [
+      {
+        "text": "For the $300 000 mortgage with payments of $1753.77 for 300 months, how much interest is paid in total?"
+      }
+    ],
+    "worked_solution": [
+      "Total paid = 1753.77 × 300 = $526 131",
+      "Interest = total paid − amount borrowed = 526 131 − 300 000",
+      "= $226 131 (about 75% of the amount borrowed)"
+    ],
+    "final_answer": "about $226131 in interest",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-43",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "A credit card charges 19.2% per year compounded monthly. On a $1500 balance, find one month's interest, then the balance after a $45 minimum payment (no new purchases).",
+    "prompt_plain": "A credit card charges 19.2% per year compounded monthly. On a $1500 balance, find one month's interest, then the balance after a $45 minimum payment (no new purchases).",
+    "prompt_parts": [
+      {
+        "text": "A credit card charges 19.2% per year compounded monthly. On a $1500 balance, find one month's interest, then the balance after a $45 minimum payment (no new purchases)."
+      }
+    ],
+    "worked_solution": [
+      "Monthly rate = 19.2%/12 = 1.6% = 0.016",
+      "Interest = 1500(0.016) = $24.00",
+      "New balance = 1500 + 24 − 45 = $1479.00",
+      "Only $21 of the $45 payment reduced the debt"
+    ],
+    "final_answer": "interest $24.00, new balance $1479.00",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-44",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "A $10 000 loan at 6% per year compounded monthly is repaid with $500 monthly payments. How many payments are needed?",
+    "prompt_plain": "A $10 000 loan at 6% per year compounded monthly is repaid with $500 monthly payments. How many payments are needed?",
+    "prompt_parts": [
+      {
+        "text": "A $10 000 loan at 6% per year compounded monthly is repaid with $500 monthly payments. How many payments are needed?"
+      }
+    ],
+    "worked_solution": [
+      "i = 0.06/12 = 0.005. Payment formula: P = PMT(1 − (1 + i)^(−n))/i",
+      "10000 = 500(1 − 1.005^(−n))/0.005, so 1 − 1.005^(−n) = 0.1",
+      "1.005^(−n) = 0.9, so n = −ln 0.9 / ln 1.005 = 0.10536/0.004988",
+      "n ≈ 21.1: 21 full payments leave a small balance, so a 22nd smaller payment finishes it"
+    ],
+    "final_answer": "n ≈ 21.1, so 22 payments (the last one is smaller)",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-45",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "Account A pays 2.4% per year compounded monthly. Account B pays 2.45% per year compounded annually. Compare their effective annual rates.",
+    "prompt_plain": "Account A pays 2.4% per year compounded monthly. Account B pays 2.45% per year compounded annually. Compare their effective annual rates.",
+    "prompt_parts": [
+      {
+        "text": "Account A pays 2.4% per year compounded monthly. Account B pays 2.45% per year compounded annually. Compare their effective annual rates."
+      }
+    ],
+    "worked_solution": [
+      "Account A: (1 + 0.024/12)^12 − 1 = (1.002)^12 − 1",
+      "(1.002)^12 ≈ 1.02427, so about 2.43%",
+      "Account B is already annual: 2.45%",
+      "2.45% > 2.43%, so B is slightly better"
+    ],
+    "final_answer": "A: 2.43%, B: 2.45%; B is better",
+    "level": "high_school"
+  },
+  {
+    "id": "fm12-46",
+    "source": "BC Foundations of Mathematics 12 content: financial planning (mortgages, risk, changing interest rates and payments, credit cards, banking options); original",
+    "prompt_latex": "An investment has a 60% chance of gaining $800 and a 40% chance of losing $500. Find the expected return.",
+    "prompt_plain": "An investment has a 60% chance of gaining $800 and a 40% chance of losing $500. Find the expected return.",
+    "prompt_parts": [
+      {
+        "text": "An investment has a 60% chance of gaining $800 and a 40% chance of losing $500. Find the expected return."
+      }
+    ],
+    "worked_solution": [
+      "Expected value = sum of (probability × outcome)",
+      "0.6(800) + 0.4(−500) = 480 − 200",
+      "= $280",
+      "Positive on average, but a 40% chance of losing $500 is the risk to weigh"
+    ],
+    "final_answer": "$280",
+    "level": "high_school"
+  }
+]
