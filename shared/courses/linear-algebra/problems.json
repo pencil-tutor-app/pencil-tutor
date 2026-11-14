@@ -1,0 +1,1368 @@
+[
+  {
+    "id": "la-01",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{Solve by elimination: }2x+y=7\\text{ and }x-y=-1\\text{.}",
+    "prompt_plain": "Solve by elimination: 2x + y = 7 and x − y = −1.",
+    "prompt_parts": [
+      {
+        "text": "Solve by elimination: 2x + y = 7 and x − y = −1."
+      }
+    ],
+    "worked_solution": [
+      "Add the two equations so y cancels: 3x = 6",
+      "x = 2",
+      "Put x = 2 into x − y = −1: 2 − y = −1, so y = 3",
+      "Check: 2(2) + 3 = 7 and 2 − 3 = −1"
+    ],
+    "final_answer": "x = 2, y = 3",
+    "level": "college"
+  },
+  {
+    "id": "la-02",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{Use Gaussian elimination and back-substitution: }x+y+z=6,\\; 2x-y+z=3,\\; x+2y-z=2\\text{.}",
+    "prompt_plain": "Use Gaussian elimination and back-substitution: x + y + z = 6, 2x − y + z = 3, x + 2y − z = 2.",
+    "prompt_parts": [
+      {
+        "text": "Use Gaussian elimination and back-substitution: x + y + z = 6, 2x − y + z = 3, x + 2y − z = 2."
+      }
+    ],
+    "worked_solution": [
+      "Augmented matrix: [1 1 1 | 6; 2 −1 1 | 3; 1 2 −1 | 2]",
+      "R2 → R2 − 2R1 and R3 → R3 − R1: [1 1 1 | 6; 0 −3 −1 | −9; 0 1 −2 | −4]",
+      "Swap R2 and R3: [1 1 1 | 6; 0 1 −2 | −4; 0 −3 −1 | −9]",
+      "R3 → R3 + 3R2: [1 1 1 | 6; 0 1 −2 | −4; 0 0 −7 | −21]",
+      "Back-substitute: −7z = −21, so z = 3",
+      "y − 2z = −4, so y = −4 + 6 = 2",
+      "x + y + z = 6, so x = 6 − 2 − 3 = 1"
+    ],
+    "final_answer": "(x, y, z) = (1, 2, 3)",
+    "level": "college"
+  },
+  {
+    "id": "la-03",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{Solve by Gauss-Jordan elimination: }x+2y-z=3,\\; 2x+5y-z=8,\\; x+3y+2z=7\\text{.}",
+    "prompt_plain": "Solve by Gauss-Jordan elimination: x + 2y − z = 3, 2x + 5y − z = 8, x + 3y + 2z = 7.",
+    "prompt_parts": [
+      {
+        "text": "Solve by Gauss-Jordan elimination: x + 2y − z = 3, 2x + 5y − z = 8, x + 3y + 2z = 7."
+      }
+    ],
+    "worked_solution": [
+      "Augmented matrix: [1 2 −1 | 3; 2 5 −1 | 8; 1 3 2 | 7]",
+      "R2 → R2 − 2R1 and R3 → R3 − R1: [1 2 −1 | 3; 0 1 1 | 2; 0 1 3 | 4]",
+      "R3 → R3 − R2, then R3 → R3 / 2: [1 2 −1 | 3; 0 1 1 | 2; 0 0 1 | 1]",
+      "R1 → R1 + R3 and R2 → R2 − R3: [1 2 0 | 4; 0 1 0 | 1; 0 0 1 | 1]",
+      "R1 → R1 − 2R2: [1 0 0 | 2; 0 1 0 | 1; 0 0 1 | 1]",
+      "So x = 2, y = 1, z = 1"
+    ],
+    "final_answer": "(x, y, z) = (2, 1, 1)",
+    "level": "college"
+  },
+  {
+    "id": "la-04",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{Does this system have a solution? }x+y+z=2,\\; x+2y+3z=5,\\; 2x+3y+4z=9\\text{. Row-reduce and explain.}",
+    "prompt_plain": "Does this system have a solution? x + y + z = 2, x + 2y + 3z = 5, 2x + 3y + 4z = 9. Row-reduce and explain.",
+    "prompt_parts": [
+      {
+        "text": "Does this system have a solution? x + y + z = 2, x + 2y + 3z = 5, 2x + 3y + 4z = 9. Row-reduce and explain."
+      }
+    ],
+    "worked_solution": [
+      "Augmented matrix: [1 1 1 | 2; 1 2 3 | 5; 2 3 4 | 9]",
+      "R2 → R2 − R1 and R3 → R3 − 2R1: [1 1 1 | 2; 0 1 2 | 3; 0 1 2 | 5]",
+      "R3 → R3 − R2: [1 1 1 | 2; 0 1 2 | 3; 0 0 0 | 2]",
+      "The last row says 0 = 2, which is impossible, so the system is inconsistent"
+    ],
+    "final_answer": "No solution (inconsistent)",
+    "level": "college"
+  },
+  {
+    "id": "la-05",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{Find all solutions of }x+y+2z=4,\\; 2x+3y+5z=11\\text{.}",
+    "prompt_plain": "Find all solutions of x + y + 2z = 4, 2x + 3y + 5z = 11.",
+    "prompt_parts": [
+      {
+        "text": "Find all solutions of x + y + 2z = 4, 2x + 3y + 5z = 11."
+      }
+    ],
+    "worked_solution": [
+      "Augmented matrix: [1 1 2 | 4; 2 3 5 | 11]",
+      "R2 → R2 − 2R1: [1 1 2 | 4; 0 1 1 | 3]",
+      "R1 → R1 − R2: [1 0 1 | 1; 0 1 1 | 3]",
+      "z has no pivot, so it is free: let z = t",
+      "x = 1 − t and y = 3 − t",
+      "Check with t = 0: (1, 3, 0) gives 1 + 3 = 4 and 2 + 9 = 11"
+    ],
+    "final_answer": "(x, y, z) = (1 − t, 3 − t, t), t any real number",
+    "level": "college"
+  },
+  {
+    "id": "la-06",
+    "source": "Solving Systems of Equations, original",
+    "prompt_latex": "\\text{For which values of k does }x+2y=3,\\; 3x+ky=10\\text{ have no solution, and for which does it have exactly one?}",
+    "prompt_plain": "For which values of k does x + 2y = 3, 3x + ky = 10 have no solution, and for which does it have exactly one?",
+    "prompt_parts": [
+      {
+        "text": "For which values of k does x + 2y = 3, 3x + ky = 10 have no solution, and for which does it have exactly one?"
+      }
+    ],
+    "worked_solution": [
+      "Eliminate x: R2 → R2 − 3R1 gives [1 2 | 3; 0 k−6 | 1]",
+      "The second row reads (k − 6)y = 1",
+      "If k = 6 this is 0 = 1, which is impossible: no solution",
+      "If k ≠ 6 then y = 1 / (k − 6), and x = 3 − 2y follows: exactly one solution"
+    ],
+    "final_answer": "No solution when k = 6; exactly one solution when k ≠ 6",
+    "level": "college"
+  },
+  {
+    "id": "la-07",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Let }A = \\begin{bmatrix}2&-1\\\\0&3\\end{bmatrix}\\text{ and }B = \\begin{bmatrix}1&4\\\\-2&5\\end{bmatrix}\\text{. Compute AB and BA. Are they equal?}",
+    "prompt_plain": "Let A = [2 −1; 0 3] and B = [1 4; −2 5]. Compute AB and BA. Are they equal?",
+    "prompt_parts": [
+      {
+        "text": "Let A = [2 −1; 0 3] and B = [1 4; −2 5]. Compute AB and BA. Are they equal?"
+      }
+    ],
+    "worked_solution": [
+      "AB: row 1 · columns: 2(1) + (−1)(−2) = 4 and 2(4) + (−1)(5) = 3",
+      "AB: row 2 · columns: 0(1) + 3(−2) = −6 and 0(4) + 3(5) = 15",
+      "AB = [4 3; −6 15]",
+      "BA: 1(2) + 4(0) = 2, 1(−1) + 4(3) = 11, −2(2) + 5(0) = −4, −2(−1) + 5(3) = 17",
+      "BA = [2 11; −4 17]",
+      "AB ≠ BA, so matrix multiplication is not commutative"
+    ],
+    "final_answer": "AB = [4 3; −6 15], BA = [2 11; −4 17], not equal",
+    "level": "college"
+  },
+  {
+    "id": "la-08",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Let }A = \\begin{bmatrix}1&0&2\\\\-1&3&1\\end{bmatrix}\\text{ and }B = \\begin{bmatrix}2&1\\\\0&-1\\\\3&4\\end{bmatrix}\\text{. Compute (AB)ᵀ and check that it equals BᵀAᵀ.}",
+    "prompt_plain": "Let A = [1 0 2; −1 3 1] and B = [2 1; 0 −1; 3 4]. Compute (AB)ᵀ and check that it equals BᵀAᵀ.",
+    "prompt_parts": [
+      {
+        "text": "Let A = [1 0 2; −1 3 1] and B = [2 1; 0 −1; 3 4]. Compute (AB)ᵀ and check that it equals BᵀAᵀ."
+      }
+    ],
+    "worked_solution": [
+      "AB = [1(2) + 0(0) + 2(3), 1(1) + 0(−1) + 2(4); −1(2) + 3(0) + 1(3), −1(1) + 3(−1) + 1(4)]",
+      "AB = [8 9; 1 0]",
+      "(AB)ᵀ = [8 1; 9 0]",
+      "Bᵀ = [2 0 3; 1 −1 4] and Aᵀ = [1 −1; 0 3; 2 1]",
+      "BᵀAᵀ = [2(1) + 0(0) + 3(2), 2(−1) + 0(3) + 3(1); 1(1) − 1(0) + 4(2), 1(−1) − 1(3) + 4(1)]",
+      "BᵀAᵀ = [8 1; 9 0], which equals (AB)ᵀ"
+    ],
+    "final_answer": "(AB)ᵀ = [8 1; 9 0] = BᵀAᵀ",
+    "level": "college"
+  },
+  {
+    "id": "la-09",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Find the inverse of }A = \\begin{bmatrix}2&1\\\\5&3\\end{bmatrix}\\text{ by Gauss-Jordan elimination on [A | I].}",
+    "prompt_plain": "Find the inverse of A = [2 1; 5 3] by Gauss-Jordan elimination on [A | I].",
+    "prompt_parts": [
+      {
+        "text": "Find the inverse of A = [2 1; 5 3] by Gauss-Jordan elimination on [A | I]."
+      }
+    ],
+    "worked_solution": [
+      "Start: [2 1 | 1 0; 5 3 | 0 1]",
+      "R2 → R2 − 2R1: [2 1 | 1 0; 1 1 | −2 1]",
+      "R1 → R1 − R2: [1 0 | 3 −1; 1 1 | −2 1]",
+      "R2 → R2 − R1: [1 0 | 3 −1; 0 1 | −5 2]",
+      "So A⁻¹ = [3 −1; −5 2]",
+      "Check: A A⁻¹ = [2(3) + 1(−5), 2(−1) + 1(2); 5(3) + 3(−5), 5(−1) + 3(2)] = [1 0; 0 1]"
+    ],
+    "final_answer": "A⁻¹ = [3 −1; −5 2]",
+    "level": "college"
+  },
+  {
+    "id": "la-10",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Find the inverse of }A = \\begin{bmatrix}1&0&2\\\\0&1&1\\\\1&1&4\\end{bmatrix}\\text{ by row-reducing [A | I].}",
+    "prompt_plain": "Find the inverse of A = [1 0 2; 0 1 1; 1 1 4] by row-reducing [A | I].",
+    "prompt_parts": [
+      {
+        "text": "Find the inverse of A = [1 0 2; 0 1 1; 1 1 4] by row-reducing [A | I]."
+      }
+    ],
+    "worked_solution": [
+      "Start: [1 0 2 | 1 0 0; 0 1 1 | 0 1 0; 1 1 4 | 0 0 1]",
+      "R3 → R3 − R1: [1 0 2 | 1 0 0; 0 1 1 | 0 1 0; 0 1 2 | −1 0 1]",
+      "R3 → R3 − R2: [1 0 2 | 1 0 0; 0 1 1 | 0 1 0; 0 0 1 | −1 −1 1]",
+      "R1 → R1 − 2R3 and R2 → R2 − R3: [1 0 0 | 3 2 −2; 0 1 0 | 1 2 −1; 0 0 1 | −1 −1 1]",
+      "A⁻¹ = [3 2 −2; 1 2 −1; −1 −1 1]"
+    ],
+    "final_answer": "A⁻¹ = [3 2 −2; 1 2 −1; −1 −1 1]",
+    "level": "college"
+  },
+  {
+    "id": "la-11",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Write }3x+5y=11,\\; x+2y=4\\text{ as AX = B, find A⁻¹ with the 2×2 formula, and solve for x and y.}",
+    "prompt_plain": "Write 3x + 5y = 11, x + 2y = 4 as AX = B, find A⁻¹ with the 2×2 formula, and solve for x and y.",
+    "prompt_parts": [
+      {
+        "text": "Write 3x + 5y = 11, x + 2y = 4 as AX = B, find A⁻¹ with the 2×2 formula, and solve for x and y."
+      }
+    ],
+    "worked_solution": [
+      "A = [3 5; 1 2], X = (x, y), B = (11, 4)",
+      "det A = 3(2) − 5(1) = 1",
+      "A⁻¹ = (1/1)[2 −5; −1 3] = [2 −5; −1 3]",
+      "X = A⁻¹B = (2(11) − 5(4), −1(11) + 3(4)) = (2, 1)",
+      "Check: 3(2) + 5(1) = 11 and 2 + 2(1) = 4"
+    ],
+    "final_answer": "x = 2, y = 1",
+    "level": "college"
+  },
+  {
+    "id": "la-12",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Solve for the matrix X: }AX+B=C\\text{ where }A = \\begin{bmatrix}1&2\\\\1&3\\end{bmatrix}, B = \\begin{bmatrix}1&0\\\\2&1\\end{bmatrix}, C = \\begin{bmatrix}4&3\\\\7&5\\end{bmatrix}\\text{.}",
+    "prompt_plain": "Solve for the matrix X: AX + B = C where A = [1 2; 1 3], B = [1 0; 2 1], C = [4 3; 7 5].",
+    "prompt_parts": [
+      {
+        "text": "Solve for the matrix X: AX + B = C where A = [1 2; 1 3], B = [1 0; 2 1], C = [4 3; 7 5]."
+      }
+    ],
+    "worked_solution": [
+      "AX = C − B = [3 3; 5 4]",
+      "det A = 1(3) − 2(1) = 1, so A⁻¹ = [3 −2; −1 1]",
+      "X = A⁻¹(C − B), multiplying on the left because AX has A on the left",
+      "X = [3(3) − 2(5), 3(3) − 2(4); −1(3) + 1(5), −1(3) + 1(4)]",
+      "X = [−1 1; 2 1]",
+      "Check: A X = [3 3; 5 4] and AX + B = [4 3; 7 5] = C"
+    ],
+    "final_answer": "X = [−1 1; 2 1]",
+    "level": "college"
+  },
+  {
+    "id": "la-13",
+    "source": "The Algebra of Matrices, original",
+    "prompt_latex": "\\text{Let }A = \\begin{bmatrix}1&1\\\\0&1\\end{bmatrix}\\text{ and }B = \\begin{bmatrix}1&0\\\\1&1\\end{bmatrix}\\text{. Compute (A + B)² and A² + 2AB + B². Are they equal? Why or why not?}",
+    "prompt_plain": "Let A = [1 1; 0 1] and B = [1 0; 1 1]. Compute (A + B)² and A² + 2AB + B². Are they equal? Why or why not?",
+    "prompt_parts": [
+      {
+        "text": "Let A = [1 1; 0 1] and B = [1 0; 1 1]. Compute (A + B)² and A² + 2AB + B². Are they equal? Why or why not?"
+      }
+    ],
+    "worked_solution": [
+      "A + B = [2 1; 1 2], so (A + B)² = [5 4; 4 5]",
+      "A² = [1 2; 0 1], AB = [2 1; 1 1], B² = [1 0; 2 1]",
+      "A² + 2AB + B² = [1 + 4 + 1, 2 + 2 + 0; 0 + 2 + 2, 1 + 2 + 1] = [6 4; 4 4]",
+      "They are not equal. (A + B)² = A² + AB + BA + B², and AB ≠ BA here (BA = [1 1; 1 2])"
+    ],
+    "final_answer": "(A + B)² = [5 4; 4 5] ≠ [6 4; 4 4] = A² + 2AB + B², because AB ≠ BA",
+    "level": "college"
+  },
+  {
+    "id": "la-14",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{For which value of k is }\\begin{bmatrix}k&6\\\\2&4\\end{bmatrix}\\text{ singular?}",
+    "prompt_plain": "For which value of k is [k 6; 2 4] singular?",
+    "prompt_parts": [
+      {
+        "text": "For which value of k is [k 6; 2 4] singular?"
+      }
+    ],
+    "worked_solution": [
+      "A square matrix is singular exactly when its determinant is 0",
+      "det = k(4) − 6(2) = 4k − 12",
+      "4k − 12 = 0 gives k = 3"
+    ],
+    "final_answer": "k = 3",
+    "level": "college"
+  },
+  {
+    "id": "la-15",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{Compute the determinant of }\\begin{bmatrix}2&0&1\\\\3&1&-1\\\\0&4&2\\end{bmatrix}\\text{ by cofactor expansion along row 1.}",
+    "prompt_plain": "Compute the determinant of [2 0 1; 3 1 −1; 0 4 2] by cofactor expansion along row 1.",
+    "prompt_parts": [
+      {
+        "text": "Compute the determinant of [2 0 1; 3 1 −1; 0 4 2] by cofactor expansion along row 1."
+      }
+    ],
+    "worked_solution": [
+      "det = 2 · det[1 −1; 4 2] − 0 · det[3 −1; 0 2] + 1 · det[3 1; 0 4]",
+      "det[1 −1; 4 2] = 1(2) − (−1)(4) = 6",
+      "det[3 1; 0 4] = 3(4) − 1(0) = 12",
+      "det = 2(6) − 0 + 1(12) = 24"
+    ],
+    "final_answer": "det = 24",
+    "level": "college"
+  },
+  {
+    "id": "la-16",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{Find the determinant of }\\begin{bmatrix}1&2&3\\\\2&5&7\\\\3&7&11\\end{bmatrix}\\text{ by row-reducing to triangular form.}",
+    "prompt_plain": "Find the determinant of [1 2 3; 2 5 7; 3 7 11] by row-reducing to triangular form.",
+    "prompt_parts": [
+      {
+        "text": "Find the determinant of [1 2 3; 2 5 7; 3 7 11] by row-reducing to triangular form."
+      }
+    ],
+    "worked_solution": [
+      "Adding a multiple of one row to another does not change the determinant",
+      "R2 → R2 − 2R1 and R3 → R3 − 3R1: [1 2 3; 0 1 1; 0 1 2]",
+      "R3 → R3 − R2: [1 2 3; 0 1 1; 0 0 1]",
+      "det = product of the diagonal = 1 · 1 · 1 = 1"
+    ],
+    "final_answer": "det = 1",
+    "level": "college"
+  },
+  {
+    "id": "la-17",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{A is a 3×3 matrix with det A = 4. Find det(2A), det(A⁻¹), det(A³) and det(adj A).}",
+    "prompt_plain": "A is a 3×3 matrix with det A = 4. Find det(2A), det(A⁻¹), det(A³) and det(adj A).",
+    "prompt_parts": [
+      {
+        "text": "A is a 3×3 matrix with det A = 4. Find det(2A), det(A⁻¹), det(A³) and det(adj A)."
+      }
+    ],
+    "worked_solution": [
+      "det(2A) = 2³ det A = 8 · 4 = 32 (each of the 3 rows gets a factor 2)",
+      "det(A⁻¹) = 1 / det A = 1/4",
+      "det(A³) = (det A)³ = 4³ = 64",
+      "adj A = (det A) A⁻¹, so det(adj A) = (det A)³ · (1/det A) = 4³ / 4 = 16"
+    ],
+    "final_answer": "det(2A) = 32, det(A⁻¹) = 1/4, det(A³) = 64, det(adj A) = 16",
+    "level": "college"
+  },
+  {
+    "id": "la-18",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{Use the adjoint to find }A⁻¹\\text{ for }A = \\begin{bmatrix}2&1&0\\\\0&1&1\\\\1&0&1\\end{bmatrix}\\text{.}",
+    "prompt_plain": "Use the adjoint to find A⁻¹ for A = [2 1 0; 0 1 1; 1 0 1].",
+    "prompt_parts": [
+      {
+        "text": "Use the adjoint to find A⁻¹ for A = [2 1 0; 0 1 1; 1 0 1]."
+      }
+    ],
+    "worked_solution": [
+      "det A = 2(1·1 − 1·0) − 1(0·1 − 1·1) + 0 = 2 + 1 = 3",
+      "Cofactor matrix C = [1 1 −1; −1 2 1; 1 −2 2]",
+      "Example entries: C11 = +(1·1 − 1·0) = 1, C12 = −(0·1 − 1·1) = 1, C13 = +(0·0 − 1·1) = −1",
+      "adj A = Cᵀ = [1 −1 1; 1 2 −2; −1 1 2]",
+      "A⁻¹ = (1/det A) adj A = (1/3)[1 −1 1; 1 2 −2; −1 1 2]"
+    ],
+    "final_answer": "A⁻¹ = (1/3)[1 −1 1; 1 2 −2; −1 1 2]",
+    "level": "college"
+  },
+  {
+    "id": "la-19",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{Solve by Cramer's Rule: }3x+2y=8,\\; x+4y=6\\text{.}",
+    "prompt_plain": "Solve by Cramer's Rule: 3x + 2y = 8, x + 4y = 6.",
+    "prompt_parts": [
+      {
+        "text": "Solve by Cramer's Rule: 3x + 2y = 8, x + 4y = 6."
+      }
+    ],
+    "worked_solution": [
+      "D = det[3 2; 1 4] = 12 − 2 = 10",
+      "Dx = det[8 2; 6 4] = 32 − 12 = 20 and Dy = det[3 8; 1 6] = 18 − 8 = 10",
+      "x = Dx / D = 20/10 = 2",
+      "y = Dy / D = 10/10 = 1"
+    ],
+    "final_answer": "x = 2, y = 1",
+    "level": "college"
+  },
+  {
+    "id": "la-20",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{Use Cramer's Rule to find only z: }x+y+z=2,\\; x+2y+3z=3,\\; x+4y+9z=7\\text{.}",
+    "prompt_plain": "Use Cramer's Rule to find only z: x + y + z = 2, x + 2y + 3z = 3, x + 4y + 9z = 7.",
+    "prompt_parts": [
+      {
+        "text": "Use Cramer's Rule to find only z: x + y + z = 2, x + 2y + 3z = 3, x + 4y + 9z = 7."
+      }
+    ],
+    "worked_solution": [
+      "D = det[1 1 1; 1 2 3; 1 4 9] = 1(18 − 12) − 1(9 − 3) + 1(4 − 2) = 6 − 6 + 2 = 2",
+      "Replace column 3 by the right-hand side: Dz = det[1 1 2; 1 2 3; 1 4 7]",
+      "Dz = 1(14 − 12) − 1(7 − 3) + 2(4 − 2) = 2 − 4 + 4 = 2",
+      "z = Dz / D = 2/2 = 1"
+    ],
+    "final_answer": "z = 1",
+    "level": "college"
+  },
+  {
+    "id": "la-21",
+    "source": "Determinants, original",
+    "prompt_latex": "\\text{For which value of t is }\\begin{bmatrix}1&2&3\\\\4&5&6\\\\7&8&t\\end{bmatrix}\\text{ not invertible?}",
+    "prompt_plain": "For which value of t is [1 2 3; 4 5 6; 7 8 t] not invertible?",
+    "prompt_parts": [
+      {
+        "text": "For which value of t is [1 2 3; 4 5 6; 7 8 t] not invertible?"
+      }
+    ],
+    "worked_solution": [
+      "Not invertible means det = 0. Row-reduce (adding row multiples keeps det)",
+      "R2 → R2 − 4R1 and R3 → R3 − 7R1: [1 2 3; 0 −3 −6; 0 −6 t−21]",
+      "R3 → R3 − 2R2: [1 2 3; 0 −3 −6; 0 0 t−9]",
+      "det = 1 · (−3) · (t − 9) = −3(t − 9)",
+      "det = 0 exactly when t = 9"
+    ],
+    "final_answer": "t = 9",
+    "level": "college"
+  },
+  {
+    "id": "la-22",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Show that }W=\\{(x,y,z): x+2y-z=0\\}\\text{ is a subspace of }\\mathbb{R}^3\\text{.}",
+    "prompt_plain": "Show that W = {(x, y, z) : x + 2y − z = 0} is a subspace of ℝ³.",
+    "prompt_parts": [
+      {
+        "text": "Show that W = {(x, y, z) : x + 2y − z = 0} is a subspace of ℝ³."
+      }
+    ],
+    "worked_solution": [
+      "Zero vector: 0 + 2(0) − 0 = 0, so (0, 0, 0) is in W",
+      "Let u = (a, b, c) and v = (d, e, f) be in W, so a + 2b − c = 0 and d + 2e − f = 0",
+      "u + v = (a + d, b + e, c + f) and (a + d) + 2(b + e) − (c + f) = (a + 2b − c) + (d + 2e − f) = 0 + 0 = 0",
+      "For a scalar k, ku = (ka, kb, kc) and ka + 2(kb) − kc = k(a + 2b − c) = k · 0 = 0",
+      "W contains 0 and is closed under addition and scalar multiplication, so it is a subspace (a plane through the origin)"
+    ],
+    "final_answer": "W is a subspace of ℝ³",
+    "level": "college"
+  },
+  {
+    "id": "la-23",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Is }W=\\{(x,y,z): z=x+1\\}\\text{ a subspace of }\\mathbb{R}^3\\text{? Justify.}",
+    "prompt_plain": "Is W = {(x, y, z) : z = x + 1} a subspace of ℝ³? Justify.",
+    "prompt_parts": [
+      {
+        "text": "Is W = {(x, y, z) : z = x + 1} a subspace of ℝ³? Justify."
+      }
+    ],
+    "worked_solution": [
+      "A subspace must contain the zero vector",
+      "(0, 0, 0): is z = x + 1? That would need 0 = 0 + 1, which is false",
+      "So (0, 0, 0) is not in W, and W is not a subspace (it is a plane that misses the origin)"
+    ],
+    "final_answer": "Not a subspace: it does not contain (0, 0, 0)",
+    "level": "college"
+  },
+  {
+    "id": "la-24",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Write }w = (5, 5, 0)\\text{ as a linear combination of }v_1 = (1, 2, 1)\\text{ and }v_2 = (3, 1, -2)\\text{.}",
+    "prompt_plain": "Write w = (5, 5, 0) as a linear combination of v₁ = (1, 2, 1) and v₂ = (3, 1, −2).",
+    "prompt_parts": [
+      {
+        "text": "Write w = (5, 5, 0) as a linear combination of v₁ = (1, 2, 1) and v₂ = (3, 1, −2)."
+      }
+    ],
+    "worked_solution": [
+      "Want a, b with a(1, 2, 1) + b(3, 1, −2) = (5, 5, 0)",
+      "Component equations: a + 3b = 5, 2a + b = 5, a − 2b = 0",
+      "From the third, a = 2b. Then a + 3b = 5b = 5, so b = 1 and a = 2",
+      "Check the second equation: 2(2) + 1 = 5, and the first: 2 + 3(1) = 5",
+      "So w = 2v₁ + 1v₂"
+    ],
+    "final_answer": "w = 2v₁ + v₂",
+    "level": "college"
+  },
+  {
+    "id": "la-25",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Is }b = (1, 1, 3)\\text{ in span{(1, 0, 1), (0, 1, 1)}? Explain.}",
+    "prompt_plain": "Is b = (1, 1, 3) in span{(1, 0, 1), (0, 1, 1)}? Explain.",
+    "prompt_parts": [
+      {
+        "text": "Is b = (1, 1, 3) in span{(1, 0, 1), (0, 1, 1)}? Explain."
+      }
+    ],
+    "worked_solution": [
+      "Need a(1, 0, 1) + c(0, 1, 1) = (1, 1, 3), that is (a, c, a + c) = (1, 1, 3)",
+      "First two components force a = 1 and c = 1",
+      "Third component: a + c = 2, but it must be 3",
+      "Contradiction, so b is not in the span"
+    ],
+    "final_answer": "No, b is not in the span",
+    "level": "college"
+  },
+  {
+    "id": "la-26",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Decide whether }{(1, 2, 3), (2, 1, 0), (0, 3, 6)}\\text{ is linearly independent. If not, give a dependence relation.}",
+    "prompt_plain": "Decide whether {(1, 2, 3), (2, 1, 0), (0, 3, 6)} is linearly independent. If not, give a dependence relation.",
+    "prompt_parts": [
+      {
+        "text": "Decide whether {(1, 2, 3), (2, 1, 0), (0, 3, 6)} is linearly independent. If not, give a dependence relation."
+      }
+    ],
+    "worked_solution": [
+      "Solve c₁(1, 2, 3) + c₂(2, 1, 0) + c₃(0, 3, 6) = 0, with the vectors as columns: [1 2 0; 2 1 3; 3 0 6]",
+      "R2 → R2 − 2R1 and R3 → R3 − 3R1: [1 2 0; 0 −3 3; 0 −6 6]",
+      "R3 → R3 − 2R2: [1 2 0; 0 −3 3; 0 0 0]",
+      "Only 2 pivots for 3 unknowns, so c₃ is free and there are nonzero solutions: dependent",
+      "Take c₃ = 1: −3c₂ + 3 = 0 gives c₂ = 1, and c₁ + 2 = 0 gives c₁ = −2",
+      "−2(1, 2, 3) + (2, 1, 0) + (0, 3, 6) = (0, 0, 0)"
+    ],
+    "final_answer": "Linearly dependent: −2v₁ + v₂ + v₃ = 0",
+    "level": "college"
+  },
+  {
+    "id": "la-27",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Is }{(1, 1, 0), (1, 0, 1), (0, 1, 1)}\\text{ a basis of }\\mathbb{R}^3\\text{?}",
+    "prompt_plain": "Is {(1, 1, 0), (1, 0, 1), (0, 1, 1)} a basis of ℝ³?",
+    "prompt_parts": [
+      {
+        "text": "Is {(1, 1, 0), (1, 0, 1), (0, 1, 1)} a basis of ℝ³?"
+      }
+    ],
+    "worked_solution": [
+      "Three vectors in ℝ³ form a basis exactly when the matrix with these columns has det ≠ 0",
+      "det[1 1 0; 1 0 1; 0 1 1] = 1(0·1 − 1·1) − 1(1·1 − 1·0) + 0 = −1 − 1 = −2",
+      "det = −2 ≠ 0, so the vectors are independent and span ℝ³: a basis"
+    ],
+    "final_answer": "Yes, a basis (det = −2 ≠ 0)",
+    "level": "college"
+  },
+  {
+    "id": "la-28",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{For }A = \\begin{bmatrix}1&2&0&1\\\\2&4&1&5\\\\3&6&1&6\\end{bmatrix}\\text{ find the rank, a basis for the column space and a basis for the row space.}",
+    "prompt_plain": "For A = [1 2 0 1; 2 4 1 5; 3 6 1 6] find the rank, a basis for the column space and a basis for the row space.",
+    "prompt_parts": [
+      {
+        "text": "For A = [1 2 0 1; 2 4 1 5; 3 6 1 6] find the rank, a basis for the column space and a basis for the row space."
+      }
+    ],
+    "worked_solution": [
+      "R2 → R2 − 2R1 and R3 → R3 − 3R1: [1 2 0 1; 0 0 1 3; 0 0 1 3]",
+      "R3 → R3 − R2: [1 2 0 1; 0 0 1 3; 0 0 0 0]",
+      "Two nonzero rows, so rank A = 2",
+      "Pivots are in columns 1 and 3, so a basis for the column space is columns 1 and 3 of the original A: (1, 2, 3) and (0, 1, 1)",
+      "A basis for the row space is the nonzero rows of the echelon form: (1, 2, 0, 1) and (0, 0, 1, 3)"
+    ],
+    "final_answer": "rank 2; column space basis {(1, 2, 3), (0, 1, 1)}; row space basis {(1, 2, 0, 1), (0, 0, 1, 3)}",
+    "level": "college"
+  },
+  {
+    "id": "la-29",
+    "source": "The Vector Space Rn, original",
+    "prompt_latex": "\\text{Find a basis for the null space of }A = \\begin{bmatrix}1&2&1&3\\\\2&4&3&7\\end{bmatrix}\\text{ and state the rank and nullity.}",
+    "prompt_plain": "Find a basis for the null space of A = [1 2 1 3; 2 4 3 7] and state the rank and nullity.",
+    "prompt_parts": [
+      {
+        "text": "Find a basis for the null space of A = [1 2 1 3; 2 4 3 7] and state the rank and nullity."
+      }
+    ],
+    "worked_solution": [
+      "R2 → R2 − 2R1: [1 2 1 3; 0 0 1 1]",
+      "R1 → R1 − R2: [1 2 0 2; 0 0 1 1]",
+      "Pivots in columns 1 and 3; free variables y = s and w = t",
+      "x = −2s − 2t and z = −t",
+      "(x, y, z, w) = s(−2, 1, 0, 0) + t(−2, 0, −1, 1)",
+      "rank = 2, nullity = 2, and 2 + 2 = 4 columns"
+    ],
+    "final_answer": "Basis {(−2, 1, 0, 0), (−2, 0, −1, 1)}; rank 2, nullity 2",
+    "level": "college"
+  },
+  {
+    "id": "la-30",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find the angle between }u = (1, 1, 0)\\text{ and }v = (0, 1, 1)\\text{.}",
+    "prompt_plain": "Find the angle between u = (1, 1, 0) and v = (0, 1, 1).",
+    "prompt_parts": [
+      {
+        "text": "Find the angle between u = (1, 1, 0) and v = (0, 1, 1)."
+      }
+    ],
+    "worked_solution": [
+      "u · v = 1(0) + 1(1) + 0(1) = 1",
+      "‖u‖ = √(1 + 1 + 0) = √2 and ‖v‖ = √(0 + 1 + 1) = √2",
+      "cos θ = (u · v) / (‖u‖‖v‖) = 1 / 2",
+      "θ = 60°"
+    ],
+    "final_answer": "θ = 60°",
+    "level": "college"
+  },
+  {
+    "id": "la-31",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find all k so that }(k, 2, 1)\\text{ is orthogonal to }(k, -3, 5)\\text{.}",
+    "prompt_plain": "Find all k so that (k, 2, 1) is orthogonal to (k, −3, 5).",
+    "prompt_parts": [
+      {
+        "text": "Find all k so that (k, 2, 1) is orthogonal to (k, −3, 5)."
+      }
+    ],
+    "worked_solution": [
+      "Orthogonal means the dot product is 0",
+      "k(k) + 2(−3) + 1(5) = k² − 6 + 5 = k² − 1",
+      "k² − 1 = 0 gives k = 1 or k = −1"
+    ],
+    "final_answer": "k = 1 or k = −1",
+    "level": "college"
+  },
+  {
+    "id": "la-32",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find the projection of }u = (3, 0, 3)\\text{ onto }v = (1, 2, 2)\\text{, and the component of u orthogonal to v.}",
+    "prompt_plain": "Find the projection of u = (3, 0, 3) onto v = (1, 2, 2), and the component of u orthogonal to v.",
+    "prompt_parts": [
+      {
+        "text": "Find the projection of u = (3, 0, 3) onto v = (1, 2, 2), and the component of u orthogonal to v."
+      }
+    ],
+    "worked_solution": [
+      "u · v = 3(1) + 0(2) + 3(2) = 9",
+      "v · v = 1 + 4 + 4 = 9",
+      "proj_v u = (u · v / v · v) v = (9/9)(1, 2, 2) = (1, 2, 2)",
+      "Orthogonal part = u − proj = (3, 0, 3) − (1, 2, 2) = (2, −2, 1)",
+      "Check: (2, −2, 1) · (1, 2, 2) = 2 − 4 + 2 = 0"
+    ],
+    "final_answer": "proj = (1, 2, 2); orthogonal component = (2, −2, 1)",
+    "level": "college"
+  },
+  {
+    "id": "la-33",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find a basis for the set of all vectors in }\\mathbb{R}^3\\text{ orthogonal to }n = (1, 2, -1)\\text{.}",
+    "prompt_plain": "Find a basis for the set of all vectors in ℝ³ orthogonal to n = (1, 2, −1).",
+    "prompt_parts": [
+      {
+        "text": "Find a basis for the set of all vectors in ℝ³ orthogonal to n = (1, 2, −1)."
+      }
+    ],
+    "worked_solution": [
+      "(x, y, z) is orthogonal to n when x + 2y − z = 0",
+      "Solve for x: x = −2y + z, with y and z free",
+      "(x, y, z) = y(−2, 1, 0) + z(1, 0, 1)",
+      "(−2, 1, 0) and (1, 0, 1) are independent (neither is a multiple of the other), so they form a basis; dimension 2",
+      "Check: (−2, 1, 0) · n = −2 + 2 = 0 and (1, 0, 1) · n = 1 − 1 = 0"
+    ],
+    "final_answer": "Basis {(−2, 1, 0), (1, 0, 1)}",
+    "level": "college"
+  },
+  {
+    "id": "la-34",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find the area of the triangle with vertices }P(1, 0, 2), Q(2, 1, 2), R(1, 1, 4)\\text{ using the cross product.}",
+    "prompt_plain": "Find the area of the triangle with vertices P(1, 0, 2), Q(2, 1, 2), R(1, 1, 4) using the cross product.",
+    "prompt_parts": [
+      {
+        "text": "Find the area of the triangle with vertices P(1, 0, 2), Q(2, 1, 2), R(1, 1, 4) using the cross product."
+      }
+    ],
+    "worked_solution": [
+      "PQ = Q − P = (1, 1, 0) and PR = R − P = (0, 1, 2)",
+      "PQ × PR = (1·2 − 0·1, 0·0 − 1·2, 1·1 − 1·0) = (2, −2, 1)",
+      "‖PQ × PR‖ = √(4 + 4 + 1) = 3",
+      "Area = (1/2) ‖PQ × PR‖ = 3/2"
+    ],
+    "final_answer": "Area = 3/2",
+    "level": "college"
+  },
+  {
+    "id": "la-35",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find an equation of the plane through }P(1, 2, 0), Q(2, 1, 1), R(0, 1, 3)\\text{.}",
+    "prompt_plain": "Find an equation of the plane through P(1, 2, 0), Q(2, 1, 1), R(0, 1, 3).",
+    "prompt_parts": [
+      {
+        "text": "Find an equation of the plane through P(1, 2, 0), Q(2, 1, 1), R(0, 1, 3)."
+      }
+    ],
+    "worked_solution": [
+      "PQ = (1, −1, 1) and PR = (−1, −1, 3)",
+      "Normal n = PQ × PR = ((−1)(3) − (1)(−1), (1)(−1) − (1)(3), (1)(−1) − (−1)(−1)) = (−2, −4, −2)",
+      "Divide by −2 to get a simpler normal n = (1, 2, 1)",
+      "Plane: x + 2y + z = d, and P gives d = 1 + 4 + 0 = 5",
+      "Check Q: 2 + 2 + 1 = 5 and R: 0 + 2 + 3 = 5"
+    ],
+    "final_answer": "x + 2y + z = 5",
+    "level": "college"
+  },
+  {
+    "id": "la-36",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find the distance from the point }(4, 0, 1)\\text{ to the plane }2x - 2y + z = 3\\text{.}",
+    "prompt_plain": "Find the distance from the point (4, 0, 1) to the plane 2x − 2y + z = 3.",
+    "prompt_parts": [
+      {
+        "text": "Find the distance from the point (4, 0, 1) to the plane 2x − 2y + z = 3."
+      }
+    ],
+    "worked_solution": [
+      "Distance = |a x₀ + b y₀ + c z₀ − d| / √(a² + b² + c²)",
+      "Numerator: |2(4) − 2(0) + 1(1) − 3| = |8 + 1 − 3| = 6",
+      "Denominator: √(4 + 4 + 1) = 3",
+      "Distance = 6/3 = 2"
+    ],
+    "final_answer": "Distance = 2",
+    "level": "college"
+  },
+  {
+    "id": "la-37",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Find the distance from }P(4, 3, 1)\\text{ to the line through }A(1, 0, 1)\\text{ with direction }d = (1, 2, 2)\\text{.}",
+    "prompt_plain": "Find the distance from P(4, 3, 1) to the line through A(1, 0, 1) with direction d = (1, 2, 2).",
+    "prompt_parts": [
+      {
+        "text": "Find the distance from P(4, 3, 1) to the line through A(1, 0, 1) with direction d = (1, 2, 2)."
+      }
+    ],
+    "worked_solution": [
+      "AP = P − A = (3, 3, 0)",
+      "AP · d = 3 + 6 + 0 = 9 and d · d = 9",
+      "Projection of AP onto d = (9/9)(1, 2, 2) = (1, 2, 2)",
+      "Perpendicular part = (3, 3, 0) − (1, 2, 2) = (2, 1, −2)",
+      "Distance = ‖(2, 1, −2)‖ = √(4 + 1 + 4) = 3"
+    ],
+    "final_answer": "Distance = 3",
+    "level": "college"
+  },
+  {
+    "id": "la-38",
+    "source": "Vector Geometry, original",
+    "prompt_latex": "\\text{Give parametric and symmetric equations of the line through }A(1, 2, 3)\\text{ and }B(3, 1, 5)\\text{, then find where it meets the plane }x + y + z = 12\\text{.}",
+    "prompt_plain": "Give parametric and symmetric equations of the line through A(1, 2, 3) and B(3, 1, 5), then find where it meets the plane x + y + z = 12.",
+    "prompt_parts": [
+      {
+        "text": "Give parametric and symmetric equations of the line through A(1, 2, 3) and B(3, 1, 5), then find where it meets the plane x + y + z = 12."
+      }
+    ],
+    "worked_solution": [
+      "Direction d = B − A = (2, −1, 2)",
+      "Parametric: x = 1 + 2t, y = 2 − t, z = 3 + 2t",
+      "Symmetric: (x − 1)/2 = (y − 2)/(−1) = (z − 3)/2",
+      "Put the parametric form into the plane: (1 + 2t) + (2 − t) + (3 + 2t) = 12, so 6 + 3t = 12",
+      "t = 2, giving the point (5, 0, 7)",
+      "Check: 5 + 0 + 7 = 12"
+    ],
+    "final_answer": "Intersection point (5, 0, 7)",
+    "level": "college"
+  },
+  {
+    "id": "la-39",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Show that }W=\\{p\\in P_2: p(1)=0\\}\\text{ is a subspace of P₂ and find a basis and its dimension.}",
+    "prompt_plain": "Show that W = {p in P₂ : p(1) = 0} is a subspace of P₂ and find a basis and its dimension.",
+    "prompt_parts": [
+      {
+        "text": "Show that W = {p in P₂ : p(1) = 0} is a subspace of P₂ and find a basis and its dimension."
+      }
+    ],
+    "worked_solution": [
+      "Write p = a + bx + cx². Then p(1) = a + b + c = 0",
+      "The zero polynomial has p(1) = 0. If p(1) = 0 and q(1) = 0 then (p + q)(1) = 0 + 0 = 0 and (kp)(1) = k · 0 = 0",
+      "So W is closed under addition and scalar multiplication: a subspace",
+      "Solve a = −b − c: p = (−b − c) + bx + cx² = b(x − 1) + c(x² − 1)",
+      "x − 1 and x² − 1 span W and are independent (different degrees), so they form a basis; dim W = 2"
+    ],
+    "final_answer": "Subspace; basis {x − 1, x² − 1}; dim 2",
+    "level": "college"
+  },
+  {
+    "id": "la-40",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Is }S=\\{p\\in P_2: p(0)=1\\}\\text{ a subspace of P₂? Justify.}",
+    "prompt_plain": "Is S = {p in P₂ : p(0) = 1} a subspace of P₂? Justify.",
+    "prompt_parts": [
+      {
+        "text": "Is S = {p in P₂ : p(0) = 1} a subspace of P₂? Justify."
+      }
+    ],
+    "worked_solution": [
+      "The zero polynomial has p(0) = 0, not 1, so 0 is not in S",
+      "(Also 1 + x is in S but 2(1 + x) has value 2 at 0, so S is not closed under scalar multiplication)",
+      "Not a subspace"
+    ],
+    "final_answer": "Not a subspace: the zero polynomial is not in S",
+    "level": "college"
+  },
+  {
+    "id": "la-41",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Show that the symmetric 2×2 matrices form a subspace of M₂₂ and find a basis.}",
+    "prompt_plain": "Show that the symmetric 2×2 matrices form a subspace of M₂₂ and find a basis.",
+    "prompt_parts": [
+      {
+        "text": "Show that the symmetric 2×2 matrices form a subspace of M₂₂ and find a basis."
+      }
+    ],
+    "worked_solution": [
+      "A 2×2 matrix is symmetric when A = Aᵀ, so A = [a b; b d]",
+      "The zero matrix is symmetric. (A + B)ᵀ = Aᵀ + Bᵀ = A + B and (kA)ᵀ = kAᵀ = kA, so sums and multiples stay symmetric",
+      "[a b; b d] = a[1 0; 0 0] + b[0 1; 1 0] + d[0 0; 0 1]",
+      "These three matrices span and are independent (each has a 1 in a spot where the others have 0), so they form a basis; dimension 3"
+    ],
+    "final_answer": "Subspace; basis {[1 0; 0 0], [0 1; 1 0], [0 0; 0 1]}; dim 3",
+    "level": "college"
+  },
+  {
+    "id": "la-42",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Is }\\{A\\in M_{22}: \\det A=0\\}\\text{ a subspace of M₂₂? Justify.}",
+    "prompt_plain": "Is {A in M₂₂ : det A = 0} a subspace of M₂₂? Justify.",
+    "prompt_parts": [
+      {
+        "text": "Is {A in M₂₂ : det A = 0} a subspace of M₂₂? Justify."
+      }
+    ],
+    "worked_solution": [
+      "Try A = [1 0; 0 0] and B = [0 0; 0 1]; each has det = 0",
+      "A + B = [1 0; 0 1] has det = 1 ≠ 0",
+      "So the set is not closed under addition: not a subspace"
+    ],
+    "final_answer": "Not a subspace (counterexample A + B = I)",
+    "level": "college"
+  },
+  {
+    "id": "la-43",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Are }1 + x, x + x^2, 1 + x^2\\text{ linearly independent in P₂? Do they form a basis of P₂?}",
+    "prompt_plain": "Are 1 + x, x + x², 1 + x² linearly independent in P₂? Do they form a basis of P₂?",
+    "prompt_parts": [
+      {
+        "text": "Are 1 + x, x + x², 1 + x² linearly independent in P₂? Do they form a basis of P₂?"
+      }
+    ],
+    "worked_solution": [
+      "Set c₁(1 + x) + c₂(x + x²) + c₃(1 + x²) = 0 and compare coefficients",
+      "Constant: c₁ + c₃ = 0. x: c₁ + c₂ = 0. x²: c₂ + c₃ = 0",
+      "From the first two, c₃ = −c₁ and c₂ = −c₁. The third gives −c₁ − c₁ = 0, so c₁ = 0",
+      "Then c₂ = 0 and c₃ = 0: only the trivial solution, so the set is independent",
+      "dim P₂ = 3 and there are 3 independent vectors, so they form a basis"
+    ],
+    "final_answer": "Independent; yes, a basis of P₂",
+    "level": "college"
+  },
+  {
+    "id": "la-44",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Is }{[1 0; 0 1], [1 1; 0 0], [0 1; 1 0], [0 0; 1 1]}\\text{ a basis of M₂₂? Check independence.}",
+    "prompt_plain": "Is {[1 0; 0 1], [1 1; 0 0], [0 1; 1 0], [0 0; 1 1]} a basis of M₂₂? Check independence.",
+    "prompt_parts": [
+      {
+        "text": "Is {[1 0; 0 1], [1 1; 0 0], [0 1; 1 0], [0 0; 1 1]} a basis of M₂₂? Check independence."
+      }
+    ],
+    "worked_solution": [
+      "Set a[1 0; 0 1] + b[1 1; 0 0] + c[0 1; 1 0] + d[0 0; 1 1] = 0, which gives [a + b, b + c; c + d, a + d] = [0 0; 0 0]",
+      "a + b = 0, b + c = 0, c + d = 0, a + d = 0",
+      "So b = −a, c = a, d = −a, and a + d = 0 holds automatically",
+      "Take a = 1: (a, b, c, d) = (1, −1, 1, −1) is a nonzero solution",
+      "The set is dependent, so it is not a basis"
+    ],
+    "final_answer": "Not a basis: dependent (1, −1, 1, −1 gives the zero matrix)",
+    "level": "college"
+  },
+  {
+    "id": "la-45",
+    "source": "General Vector Spaces, original",
+    "prompt_latex": "\\text{Find the coordinate vector of }p = 1 + 3x\\text{ relative to the basis }B = {1 + x, x + x^2, 1 + x^2}\\text{ of P₂.}",
+    "prompt_plain": "Find the coordinate vector of p = 1 + 3x relative to the basis B = {1 + x, x + x², 1 + x²} of P₂.",
+    "prompt_parts": [
+      {
+        "text": "Find the coordinate vector of p = 1 + 3x relative to the basis B = {1 + x, x + x², 1 + x²} of P₂."
+      }
+    ],
+    "worked_solution": [
+      "Solve c₁(1 + x) + c₂(x + x²) + c₃(1 + x²) = 1 + 3x",
+      "Constant: c₁ + c₃ = 1. x: c₁ + c₂ = 3. x²: c₂ + c₃ = 0",
+      "From the last, c₂ = −c₃. The second gives c₁ = 3 + c₃. The first gives 3 + 2c₃ = 1, so c₃ = −1",
+      "Then c₂ = 1 and c₁ = 2",
+      "Check: 2(1 + x) + (x + x²) − (1 + x²) = 1 + 3x"
+    ],
+    "final_answer": "[p]_B = (2, 1, −1)",
+    "level": "college"
+  },
+  {
+    "id": "la-46",
+    "source": "Inner Product Spaces, original",
+    "prompt_latex": "\\text{On P₂ define }\\langle p,q\\rangle=p(0)q(0)+p(1)q(1)+p(-1)q(-1)\\text{. For p = 1 − x and q = 2 + x², find ⟨p, q⟩ and ‖p‖.}",
+    "prompt_plain": "On P₂ define ⟨p, q⟩ = p(0)q(0) + p(1)q(1) + p(−1)q(−1). For p = 1 − x and q = 2 + x², find ⟨p, q⟩ and ‖p‖.",
+    "prompt_parts": [
+      {
+        "text": "On P₂ define ⟨p, q⟩ = p(0)q(0) + p(1)q(1) + p(−1)q(−1). For p = 1 − x and q = 2 + x², find ⟨p, q⟩ and ‖p‖."
+      }
+    ],
+    "worked_solution": [
+      "p(0) = 1, p(1) = 0, p(−1) = 2",
+      "q(0) = 2, q(1) = 3, q(−1) = 3",
+      "⟨p, q⟩ = 1(2) + 0(3) + 2(3) = 8",
+      "‖p‖² = ⟨p, p⟩ = 1 + 0 + 4 = 5",
+      "‖p‖ = √5"
+    ],
+    "final_answer": "⟨p, q⟩ = 8, ‖p‖ = √5",
+    "level": "college"
+  },
+  {
+    "id": "la-47",
+    "source": "Inner Product Spaces, original",
+    "prompt_latex": "\\text{On M₂₂ use }\\langle A,B\\rangle=\\sum a_{ij}b_{ij}\\text{. Find x so that }A = \\begin{bmatrix}1&x\\\\2&1\\end{bmatrix}\\text{ is orthogonal to }B = \\begin{bmatrix}2&1\\\\1&-2\\end{bmatrix}\\text{.}",
+    "prompt_plain": "On M₂₂ use ⟨A, B⟩ = a₁₁b₁₁ + a₁₂b₁₂ + a₂₁b₂₁ + a₂₂b₂₂. Find x so that A = [1 x; 2 1] is orthogonal to B = [2 1; 1 −2].",
+    "prompt_parts": [
+      {
+        "text": "On M₂₂ use ⟨A, B⟩ = a₁₁b₁₁ + a₁₂b₁₂ + a₂₁b₂₁ + a₂₂b₂₂. Find x so that A = [1 x; 2 1] is orthogonal to B = [2 1; 1 −2]."
+      }
+    ],
+    "worked_solution": [
+      "Orthogonal means ⟨A, B⟩ = 0",
+      "⟨A, B⟩ = 1(2) + x(1) + 2(1) + 1(−2)",
+      "= 2 + x + 2 − 2 = x + 2",
+      "x + 2 = 0 gives x = −2"
+    ],
+    "final_answer": "x = −2",
+    "level": "college"
+  },
+  {
+    "id": "la-48",
+    "source": "Inner Product Spaces, original",
+    "prompt_latex": "\\text{Apply Gram-Schmidt to }v_1 = (1, 1, 1)\\text{ and }v_2 = (1, 2, 0)\\text{ in }\\mathbb{R}^3\\text{ and give an orthonormal pair.}",
+    "prompt_plain": "Apply Gram-Schmidt to v₁ = (1, 1, 1) and v₂ = (1, 2, 0) in ℝ³ and give an orthonormal pair.",
+    "prompt_parts": [
+      {
+        "text": "Apply Gram-Schmidt to v₁ = (1, 1, 1) and v₂ = (1, 2, 0) in ℝ³ and give an orthonormal pair."
+      }
+    ],
+    "worked_solution": [
+      "u₁ = v₁ = (1, 1, 1)",
+      "v₂ · u₁ = 1 + 2 + 0 = 3 and u₁ · u₁ = 3",
+      "u₂ = v₂ − (3/3) u₁ = (1, 2, 0) − (1, 1, 1) = (0, 1, −1)",
+      "Check: u₁ · u₂ = 0 + 1 − 1 = 0",
+      "‖u₁‖ = √3 and ‖u₂‖ = √2",
+      "Orthonormal pair: (1/√3)(1, 1, 1) and (1/√2)(0, 1, −1)"
+    ],
+    "final_answer": "u₁ = (1, 1, 1), u₂ = (0, 1, −1); normalised: (1/√3)(1, 1, 1), (1/√2)(0, 1, −1)",
+    "level": "college"
+  },
+  {
+    "id": "la-49",
+    "source": "Inner Product Spaces, original",
+    "prompt_latex": "\\text{Apply Gram-Schmidt to }v_1 = (1, 1, 0), v_2 = (1, 0, 1), v_3 = (0, 1, 1)\\text{.}",
+    "prompt_plain": "Apply Gram-Schmidt to v₁ = (1, 1, 0), v₂ = (1, 0, 1), v₃ = (0, 1, 1).",
+    "prompt_parts": [
+      {
+        "text": "Apply Gram-Schmidt to v₁ = (1, 1, 0), v₂ = (1, 0, 1), v₃ = (0, 1, 1)."
+      }
+    ],
+    "worked_solution": [
+      "u₁ = v₁ = (1, 1, 0), and u₁ · u₁ = 2",
+      "v₂ · u₁ = 1, so u₂ = v₂ − (1/2)u₁ = (1/2, −1/2, 1), and u₂ · u₂ = 3/2",
+      "v₃ · u₁ = 1 and v₃ · u₂ = −1/2 + 1 = 1/2",
+      "u₃ = v₃ − (1/2)u₁ − ((1/2)/(3/2))u₂ = (0, 1, 1) − (1/2, 1/2, 0) − (1/3)(1/2, −1/2, 1)",
+      "u₃ = (−2/3, 2/3, 2/3)",
+      "Check: u₃ · u₁ = −2/3 + 2/3 = 0 and u₃ · u₂ = −1/3 − 1/3 + 2/3 = 0"
+    ],
+    "final_answer": "u₁ = (1, 1, 0), u₂ = (1/2, −1/2, 1), u₃ = (−2/3, 2/3, 2/3)",
+    "level": "college"
+  },
+  {
+    "id": "la-50",
+    "source": "Inner Product Spaces, original",
+    "prompt_latex": "\\text{Let W = span{w₁ = (1, 1, 0), w₂ = (1, −1, 1)} in }\\mathbb{R}^3\\text{. Find the vector in W closest to }b = (3, 1, 4)\\text{ and the distance from b to W.}",
+    "prompt_plain": "Let W = span{w₁ = (1, 1, 0), w₂ = (1, −1, 1)} in ℝ³. Find the vector in W closest to b = (3, 1, 4) and the distance from b to W.",
+    "prompt_parts": [
+      {
+        "text": "Let W = span{w₁ = (1, 1, 0), w₂ = (1, −1, 1)} in ℝ³. Find the vector in W closest to b = (3, 1, 4) and the distance from b to W."
+      }
+    ],
+    "worked_solution": [
+      "w₁ · w₂ = 1 − 1 + 0 = 0, so w₁, w₂ is an orthogonal basis of W",
+      "b · w₁ = 4 and w₁ · w₁ = 2; b · w₂ = 3 − 1 + 4 = 6 and w₂ · w₂ = 3",
+      "proj_W b = (4/2)w₁ + (6/3)w₂ = 2(1, 1, 0) + 2(1, −1, 1) = (4, 0, 2)",
+      "b − proj = (3, 1, 4) − (4, 0, 2) = (−1, 1, 2)",
+      "Check: (−1, 1, 2) · w₁ = 0 and (−1, 1, 2) · w₂ = −1 − 1 + 2 = 0",
+      "Distance = ‖(−1, 1, 2)‖ = √6"
+    ],
+    "final_answer": "Closest vector (4, 0, 2); distance √6",
+    "level": "college"
+  },
+  {
+    "id": "la-51",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Prove that }T(x, y) = (2x - y, x + 3y)\\text{ is a linear transformation.}",
+    "prompt_plain": "Prove that T(x, y) = (2x − y, x + 3y) is a linear transformation.",
+    "prompt_parts": [
+      {
+        "text": "Prove that T(x, y) = (2x − y, x + 3y) is a linear transformation."
+      }
+    ],
+    "worked_solution": [
+      "Let u = (x₁, y₁), v = (x₂, y₂) and k be a scalar",
+      "T(u + v) = (2(x₁ + x₂) − (y₁ + y₂), (x₁ + x₂) + 3(y₁ + y₂)) = (2x₁ − y₁, x₁ + 3y₁) + (2x₂ − y₂, x₂ + 3y₂) = T(u) + T(v)",
+      "T(ku) = (2kx₁ − ky₁, kx₁ + 3ky₁) = k(2x₁ − y₁, x₁ + 3y₁) = kT(u)",
+      "Both properties hold, so T is linear"
+    ],
+    "final_answer": "T is linear",
+    "level": "college"
+  },
+  {
+    "id": "la-52",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Show that }T(x, y) = (x + 1, y)\\text{ is not a linear transformation.}",
+    "prompt_plain": "Show that T(x, y) = (x + 1, y) is not a linear transformation.",
+    "prompt_parts": [
+      {
+        "text": "Show that T(x, y) = (x + 1, y) is not a linear transformation."
+      }
+    ],
+    "worked_solution": [
+      "A linear map must send 0 to 0",
+      "T(0, 0) = (0 + 1, 0) = (1, 0) ≠ (0, 0)",
+      "So T is not linear"
+    ],
+    "final_answer": "Not linear: T(0, 0) = (1, 0) ≠ (0, 0)",
+    "level": "college"
+  },
+  {
+    "id": "la-53",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Find the standard matrix of }T(x, y, z) = (x + 2y, y - z, 3x + z)\\text{ and use it to compute T(1, −1, 2).}",
+    "prompt_plain": "Find the standard matrix of T(x, y, z) = (x + 2y, y − z, 3x + z) and use it to compute T(1, −1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Find the standard matrix of T(x, y, z) = (x + 2y, y − z, 3x + z) and use it to compute T(1, −1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Columns are T(e₁), T(e₂), T(e₃)",
+      "T(1, 0, 0) = (1, 0, 3), T(0, 1, 0) = (2, 1, 0), T(0, 0, 1) = (0, −1, 1)",
+      "A = [1 2 0; 0 1 −1; 3 0 1]",
+      "T(1, −1, 2) = A(1, −1, 2) = (1 − 2 + 0, 0 − 1 − 2, 3 + 0 + 2) = (−1, −3, 5)"
+    ],
+    "final_answer": "A = [1 2 0; 0 1 −1; 3 0 1]; T(1, −1, 2) = (−1, −3, 5)",
+    "level": "college"
+  },
+  {
+    "id": "la-54",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{T(x, y) = (x + 2y, y) and S(x, y) = (−y, x). Find the standard matrix of S∘T (apply T first) and of T∘S.}",
+    "prompt_plain": "T(x, y) = (x + 2y, y) and S(x, y) = (−y, x). Find the standard matrix of S∘T (apply T first) and of T∘S.",
+    "prompt_parts": [
+      {
+        "text": "T(x, y) = (x + 2y, y) and S(x, y) = (−y, x). Find the standard matrix of S∘T (apply T first) and of T∘S."
+      }
+    ],
+    "worked_solution": [
+      "[T] = [1 2; 0 1] and [S] = [0 −1; 1 0]",
+      "[S∘T] = [S][T] = [0(1) − 1(0), 0(2) − 1(1); 1(1) + 0(0), 1(2) + 0(1)] = [0 −1; 1 2]",
+      "[T∘S] = [T][S] = [1(0) + 2(1), 1(−1) + 2(0); 0(0) + 1(1), 0(−1) + 1(0)] = [2 −1; 1 0]",
+      "Check S∘T directly: S(T(x, y)) = S(x + 2y, y) = (−y, x + 2y), matching [0 −1; 1 2]"
+    ],
+    "final_answer": "[S∘T] = [0 −1; 1 2], [T∘S] = [2 −1; 1 0]",
+    "level": "college"
+  },
+  {
+    "id": "la-55",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Find the matrix of the transformation of }\\mathbb{R}^2\\text{ that rotates 90° counterclockwise and then reflects in the x-axis. Describe the single transformation it equals.}",
+    "prompt_plain": "Find the matrix of the transformation of ℝ² that rotates 90° counterclockwise and then reflects in the x-axis. Describe the single transformation it equals.",
+    "prompt_parts": [
+      {
+        "text": "Find the matrix of the transformation of ℝ² that rotates 90° counterclockwise and then reflects in the x-axis. Describe the single transformation it equals."
+      }
+    ],
+    "worked_solution": [
+      "Rotation by 90° counterclockwise: R = [0 −1; 1 0]",
+      "Reflection in the x-axis: F = [1 0; 0 −1]",
+      "First R, then F, so the matrix is FR = [1(0) + 0(1), 1(−1) + 0(0); 0(0) − 1(1), 0(−1) − 1(0)] = [0 −1; −1 0]",
+      "Check with e₁ = (1, 0): rotation gives (0, 1), reflection gives (0, −1), which is column 1 of FR",
+      "[0 −1; −1 0] sends (x, y) to (−y, −x): reflection in the line y = −x"
+    ],
+    "final_answer": "[0 −1; −1 0], a reflection in the line y = −x",
+    "level": "college"
+  },
+  {
+    "id": "la-56",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{T has standard matrix }A = \\begin{bmatrix}1&-1&2\\\\2&-2&5\\\\1&-1&3\\end{bmatrix}\\text{. Find a basis for ker T and for the range of T, and the rank and nullity.}",
+    "prompt_plain": "T has standard matrix A = [1 −1 2; 2 −2 5; 1 −1 3]. Find a basis for ker T and for the range of T, and the rank and nullity.",
+    "prompt_parts": [
+      {
+        "text": "T has standard matrix A = [1 −1 2; 2 −2 5; 1 −1 3]. Find a basis for ker T and for the range of T, and the rank and nullity."
+      }
+    ],
+    "worked_solution": [
+      "R2 → R2 − 2R1 and R3 → R3 − R1: [1 −1 2; 0 0 1; 0 0 1]",
+      "R3 → R3 − R2 and R1 → R1 − 2R2: [1 −1 0; 0 0 1; 0 0 0]",
+      "Pivots in columns 1 and 3. Free variable y = s, so x = s, z = 0",
+      "ker T = span{(1, 1, 0)}, nullity 1",
+      "Range = column space: columns 1 and 3 of A, basis {(1, 2, 1), (2, 5, 3)}, rank 2",
+      "rank + nullity = 2 + 1 = 3, the number of columns"
+    ],
+    "final_answer": "ker T basis {(1, 1, 0)}; range basis {(1, 2, 1), (2, 5, 3)}; rank 2, nullity 1",
+    "level": "college"
+  },
+  {
+    "id": "la-57",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Is }T(x, y) = (x + y, x - y, 2x)\\text{ one-to-one? Find the rank and nullity.}",
+    "prompt_plain": "Is T(x, y) = (x + y, x − y, 2x) one-to-one? Find the rank and nullity.",
+    "prompt_parts": [
+      {
+        "text": "Is T(x, y) = (x + y, x − y, 2x) one-to-one? Find the rank and nullity."
+      }
+    ],
+    "worked_solution": [
+      "Standard matrix A = [1 1; 1 −1; 2 0]",
+      "T(x, y) = 0 needs x + y = 0, x − y = 0, 2x = 0, which gives x = 0 and y = 0",
+      "ker T = {0}, so nullity = 0 and T is one-to-one",
+      "rank = 2 − 0 = 2"
+    ],
+    "final_answer": "One-to-one; rank 2, nullity 0",
+    "level": "college"
+  },
+  {
+    "id": "la-58",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Bases of }\\mathbb{R}^2\\text{: }B = {(1, 1), (1, 2)}\\text{ and }B' = {(1, 0), (1, 1)}\\text{. Find the transition matrix from B to B′, and use it to convert v with [v]_B = (1, 2).}",
+    "prompt_plain": "Bases of ℝ²: B = {(1, 1), (1, 2)} and B′ = {(1, 0), (1, 1)}. Find the transition matrix from B to B′, and use it to convert v with [v]_B = (1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Bases of ℝ²: B = {(1, 1), (1, 2)} and B′ = {(1, 0), (1, 1)}. Find the transition matrix from B to B′, and use it to convert v with [v]_B = (1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Write each B vector in B′ coordinates: (1, 1) = 0(1, 0) + 1(1, 1), so [b₁]_B′ = (0, 1)",
+      "(1, 2) = −1(1, 0) + 2(1, 1), so [b₂]_B′ = (−1, 2)",
+      "Transition matrix P = [0 −1; 1 2]",
+      "[v]_B′ = P[v]_B = (0(1) − 1(2), 1(1) + 2(2)) = (−2, 5)",
+      "Check: v = 1(1, 1) + 2(1, 2) = (3, 5) and −2(1, 0) + 5(1, 1) = (3, 5)"
+    ],
+    "final_answer": "P = [0 −1; 1 2]; [v]_B′ = (−2, 5)",
+    "level": "college"
+  },
+  {
+    "id": "la-59",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{T(x, y) = (x + y, 2x). Find the matrix of T relative to the basis }B = {(1, 1), (1, -1)}\\text{ (for both domain and codomain), then use it to find T(3, 1).}",
+    "prompt_plain": "T(x, y) = (x + y, 2x). Find the matrix of T relative to the basis B = {(1, 1), (1, −1)} (for both domain and codomain), then use it to find T(3, 1).",
+    "prompt_parts": [
+      {
+        "text": "T(x, y) = (x + y, 2x). Find the matrix of T relative to the basis B = {(1, 1), (1, −1)} (for both domain and codomain), then use it to find T(3, 1)."
+      }
+    ],
+    "worked_solution": [
+      "T(1, 1) = (2, 2) = 2(1, 1) + 0(1, −1), so column 1 is (2, 0)",
+      "T(1, −1) = (0, 2) = 1(1, 1) − 1(1, −1), so column 2 is (1, −1)",
+      "[T]_B = [2 1; 0 −1]",
+      "(3, 1) = 2(1, 1) + 1(1, −1), so [v]_B = (2, 1)",
+      "[T(v)]_B = [2 1; 0 −1](2, 1) = (5, −1), so T(3, 1) = 5(1, 1) − 1(1, −1) = (4, 6)",
+      "Check directly: T(3, 1) = (3 + 1, 6) = (4, 6)"
+    ],
+    "final_answer": "[T]_B = [2 1; 0 −1]; T(3, 1) = (4, 6)",
+    "level": "college"
+  },
+  {
+    "id": "la-60",
+    "source": "Linear Transformations and Linear Operators, original",
+    "prompt_latex": "\\text{Let T: P₂ → P₁ be }T(p) = p'\\text{ (the derivative). Find the matrix of T relative to the standard bases {1, x, x²} and {1, x}, then ker T and the range.}",
+    "prompt_plain": "Let T: P₂ → P₁ be T(p) = p′ (the derivative). Find the matrix of T relative to the standard bases {1, x, x²} and {1, x}, then ker T and the range.",
+    "prompt_parts": [
+      {
+        "text": "Let T: P₂ → P₁ be T(p) = p′ (the derivative). Find the matrix of T relative to the standard bases {1, x, x²} and {1, x}, then ker T and the range."
+      }
+    ],
+    "worked_solution": [
+      "T(1) = 0, T(x) = 1, T(x²) = 2x",
+      "In coordinates: T(1) = (0, 0), T(x) = (1, 0), T(x²) = (0, 2)",
+      "Matrix = [0 1 0; 0 0 2]",
+      "Kernel: p = a + bx + cx² with b = 0 and 2c = 0, so ker T = constants = span{1}, nullity 1",
+      "Rank 2, so the range is all of P₁ (rank + nullity = 2 + 1 = 3 = dim P₂)"
+    ],
+    "final_answer": "[0 1 0; 0 0 2]; ker T = span{1}; range = P₁",
+    "level": "college"
+  },
+  {
+    "id": "la-61",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Find the characteristic polynomial and eigenvalues of }A = \\begin{bmatrix}4&1\\\\2&3\\end{bmatrix}\\text{.}",
+    "prompt_plain": "Find the characteristic polynomial and eigenvalues of A = [4 1; 2 3].",
+    "prompt_parts": [
+      {
+        "text": "Find the characteristic polynomial and eigenvalues of A = [4 1; 2 3]."
+      }
+    ],
+    "worked_solution": [
+      "det(A − λI) = (4 − λ)(3 − λ) − 1(2)",
+      "= λ² − 7λ + 12 − 2 = λ² − 7λ + 10",
+      "= (λ − 2)(λ − 5)",
+      "Eigenvalues: λ = 2 and λ = 5",
+      "Check: trace = 4 + 3 = 7 = 2 + 5 and det = 12 − 2 = 10 = 2 · 5"
+    ],
+    "final_answer": "λ² − 7λ + 10; eigenvalues 2 and 5",
+    "level": "college"
+  },
+  {
+    "id": "la-62",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Find the eigenvalues and a basis for each eigenspace of }A = \\begin{bmatrix}1&2\\\\3&2\\end{bmatrix}\\text{.}",
+    "prompt_plain": "Find the eigenvalues and a basis for each eigenspace of A = [1 2; 3 2].",
+    "prompt_parts": [
+      {
+        "text": "Find the eigenvalues and a basis for each eigenspace of A = [1 2; 3 2]."
+      }
+    ],
+    "worked_solution": [
+      "det(A − λI) = (1 − λ)(2 − λ) − 6 = λ² − 3λ − 4 = (λ − 4)(λ + 1)",
+      "Eigenvalues: λ = 4 and λ = −1",
+      "λ = 4: A − 4I = [−3 2; 3 −2], so −3x + 2y = 0 and the eigenvector is (2, 3)",
+      "λ = −1: A + I = [2 2; 3 3], so x + y = 0 and the eigenvector is (1, −1)",
+      "Check: A(2, 3) = (8, 12) = 4(2, 3) and A(1, −1) = (−1, 1) = −1(1, −1)"
+    ],
+    "final_answer": "λ = 4 with (2, 3); λ = −1 with (1, −1)",
+    "level": "college"
+  },
+  {
+    "id": "la-63",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Is }A = \\begin{bmatrix}2&1&0\\\\0&2&0\\\\0&0&3\\end{bmatrix}\\text{ diagonalisable?}",
+    "prompt_plain": "Is A = [2 1 0; 0 2 0; 0 0 3] diagonalisable?",
+    "prompt_parts": [
+      {
+        "text": "Is A = [2 1 0; 0 2 0; 0 0 3] diagonalisable?"
+      }
+    ],
+    "worked_solution": [
+      "A is triangular, so the eigenvalues are the diagonal entries: λ = 2 (twice) and λ = 3",
+      "For λ = 2: A − 2I = [0 1 0; 0 0 0; 0 0 1]",
+      "This has rank 2, so the eigenspace has dimension 3 − 2 = 1",
+      "λ = 2 has algebraic multiplicity 2 but only 1 independent eigenvector",
+      "That is 2 independent eigenvectors in total for a 3×3 matrix, so A is not diagonalisable"
+    ],
+    "final_answer": "Not diagonalisable (eigenvalue 2 has only a 1-dimensional eigenspace)",
+    "level": "college"
+  },
+  {
+    "id": "la-64",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Find the eigenvalues of }A = \\begin{bmatrix}4&0&1\\\\2&3&2\\\\1&0&4\\end{bmatrix}\\text{ and decide if A is diagonalisable.}",
+    "prompt_plain": "Find the eigenvalues of A = [4 0 1; 2 3 2; 1 0 4] and decide if A is diagonalisable.",
+    "prompt_parts": [
+      {
+        "text": "Find the eigenvalues of A = [4 0 1; 2 3 2; 1 0 4] and decide if A is diagonalisable."
+      }
+    ],
+    "worked_solution": [
+      "Expand det(A − λI) along column 2: (3 − λ) · det[4−λ 1; 1 4−λ]",
+      "= (3 − λ)((4 − λ)² − 1) = (3 − λ)(λ − 3)(λ − 5)",
+      "Eigenvalues: λ = 3 (twice) and λ = 5",
+      "λ = 3: A − 3I = [1 0 1; 2 0 2; 1 0 1] has rank 1, so the eigenspace has dimension 3 − 1 = 2, spanned by (0, 1, 0) and (−1, 0, 1)",
+      "λ = 5: eigenvector (1, 2, 1)",
+      "Eigenspace dimensions 2 + 1 = 3, so there are 3 independent eigenvectors: A is diagonalisable"
+    ],
+    "final_answer": "Eigenvalues 3 (twice) and 5; diagonalisable",
+    "level": "college"
+  },
+  {
+    "id": "la-65",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Diagonalise }A = \\begin{bmatrix}1&1\\\\-2&4\\end{bmatrix}\\text{: find P and D with A = PDP⁻¹.}",
+    "prompt_plain": "Diagonalise A = [1 1; −2 4]: find P and D with A = PDP⁻¹.",
+    "prompt_parts": [
+      {
+        "text": "Diagonalise A = [1 1; −2 4]: find P and D with A = PDP⁻¹."
+      }
+    ],
+    "worked_solution": [
+      "det(A − λI) = (1 − λ)(4 − λ) + 2 = λ² − 5λ + 6 = (λ − 2)(λ − 3)",
+      "λ = 2: A − 2I = [−1 1; −2 2], so x = y and the eigenvector is (1, 1)",
+      "λ = 3: A − 3I = [−2 1; −2 1], so y = 2x and the eigenvector is (1, 2)",
+      "P = [1 1; 1 2] and D = [2 0; 0 3]",
+      "P⁻¹ = [2 −1; −1 1] (det P = 1)",
+      "Check: AP = [2 3; 2 6] and PD = [2 3; 2 6]"
+    ],
+    "final_answer": "P = [1 1; 1 2], D = [2 0; 0 3]",
+    "level": "college"
+  },
+  {
+    "id": "la-66",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{For }A = \\begin{bmatrix}1&1\\\\-2&4\\end{bmatrix}\\text{ use A = PDP⁻¹ to compute A⁵.}",
+    "prompt_plain": "For A = [1 1; −2 4] use A = PDP⁻¹ to compute A⁵.",
+    "prompt_parts": [
+      {
+        "text": "For A = [1 1; −2 4] use A = PDP⁻¹ to compute A⁵."
+      }
+    ],
+    "worked_solution": [
+      "From diagonalising A: P = [1 1; 1 2], D = [2 0; 0 3], P⁻¹ = [2 −1; −1 1]",
+      "A⁵ = P D⁵ P⁻¹ and D⁵ = [32 0; 0 243]",
+      "P D⁵ = [32 243; 32 486]",
+      "A⁵ = [32 243; 32 486][2 −1; −1 1] = [64 − 243, −32 + 243; 64 − 486, −32 + 486]",
+      "A⁵ = [−179 211; −422 454]"
+    ],
+    "final_answer": "A⁵ = [−179 211; −422 454]",
+    "level": "college"
+  },
+  {
+    "id": "la-67",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Let }A = \\begin{bmatrix}1&2\\\\0&3\\end{bmatrix} and P = \\begin{bmatrix}1&1\\\\1&2\\end{bmatrix}\\text{. Compute B = P⁻¹AP and confirm that A and B have the same characteristic polynomial.}",
+    "prompt_plain": "Let A = [1 2; 0 3] and P = [1 1; 1 2]. Compute B = P⁻¹AP and confirm that A and B have the same characteristic polynomial.",
+    "prompt_parts": [
+      {
+        "text": "Let A = [1 2; 0 3] and P = [1 1; 1 2]. Compute B = P⁻¹AP and confirm that A and B have the same characteristic polynomial."
+      }
+    ],
+    "worked_solution": [
+      "det P = 2 − 1 = 1, so P⁻¹ = [2 −1; −1 1]",
+      "AP = [1 + 2, 1 + 4; 3, 6] = [3 5; 3 6]",
+      "B = P⁻¹(AP) = [2(3) − 3, 2(5) − 6; −3 + 3, −5 + 6] = [3 4; 0 1]",
+      "A is triangular: det(A − λI) = (1 − λ)(3 − λ) = λ² − 4λ + 3",
+      "B is triangular: det(B − λI) = (3 − λ)(1 − λ) = λ² − 4λ + 3",
+      "Same polynomial, so the same eigenvalues 1 and 3"
+    ],
+    "final_answer": "B = [3 4; 0 1]; both have λ² − 4λ + 3",
+    "level": "college"
+  },
+  {
+    "id": "la-68",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{A 3×3 matrix A has eigenvalues 2, −1 and 3. Find the eigenvalues of A², A⁻¹ and A + 4I, and find det A and trace A.}",
+    "prompt_plain": "A 3×3 matrix A has eigenvalues 2, −1 and 3. Find the eigenvalues of A², A⁻¹ and A + 4I, and find det A and trace A.",
+    "prompt_parts": [
+      {
+        "text": "A 3×3 matrix A has eigenvalues 2, −1 and 3. Find the eigenvalues of A², A⁻¹ and A + 4I, and find det A and trace A."
+      }
+    ],
+    "worked_solution": [
+      "If Ax = λx then A²x = λ²x, A⁻¹x = (1/λ)x and (A + 4I)x = (λ + 4)x",
+      "A²: 4, 1, 9",
+      "A⁻¹: 1/2, −1, 1/3",
+      "A + 4I: 6, 3, 7",
+      "det A = product of eigenvalues = 2(−1)(3) = −6",
+      "trace A = sum of eigenvalues = 2 − 1 + 3 = 4"
+    ],
+    "final_answer": "A²: 4, 1, 9; A⁻¹: 1/2, −1, 1/3; A + 4I: 6, 3, 7; det A = −6; trace A = 4",
+    "level": "college"
+  },
+  {
+    "id": "la-69",
+    "source": "Eigenvalues and Diagonalisation, original",
+    "prompt_latex": "\\text{Each year, 20% of city residents move to the suburbs and 30% of suburban residents move to the city. The yearly transition matrix is }P = \\begin{bmatrix}0.8&0.3\\\\0.2&0.7\\end{bmatrix}\\text{ (columns: from city, from suburb). Find the steady-state distribution (city share, suburb share).}",
+    "prompt_plain": "Each year, 20% of city residents move to the suburbs and 30% of suburban residents move to the city. The yearly transition matrix is P = [0.8 0.3; 0.2 0.7] (columns: from city, from suburb). Find the steady-state distribution (city share, suburb share).",
+    "prompt_parts": [
+      {
+        "text": "Each year, 20% of city residents move to the suburbs and 30% of suburban residents move to the city. The yearly transition matrix is P = [0.8 0.3; 0.2 0.7] (columns: from city, from suburb). Find the steady-state distribution (city share, suburb share)."
+      }
+    ],
+    "worked_solution": [
+      "A steady state s satisfies Ps = s, so (P − I)s = 0 (an eigenvector for λ = 1)",
+      "P − I = [−0.2 0.3; 0.2 −0.3], so −0.2x + 0.3y = 0 and x = 1.5y",
+      "The shares add to 1: 1.5y + y = 1, so y = 0.4 and x = 0.6",
+      "Check: P(0.6, 0.4) = (0.48 + 0.12, 0.12 + 0.28) = (0.6, 0.4)"
+    ],
+    "final_answer": "City 0.6, suburb 0.4",
+    "level": "college"
+  }
+]
