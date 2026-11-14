@@ -1,7 +1,7 @@
 import Foundation
 
 /// The tutor server, behind a protocol so UI tests can swap in a scripted tutor.
-protocol TutorClient {
+protocol TutorClient: MemoryAPI {
     func watch(_ request: WatchRequest) async throws -> WatchResponse
     func ask(_ request: AskRequest) async throws -> AskResponse
     /// The page reader the live voice delegates to (text question + page picture in, report out).
@@ -39,6 +39,14 @@ struct MeteredTutorClient: TutorClient {
 
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
         try await report { try await inner.heartbeat(request) } allowance: { $0.allowance }
+    }
+
+    func memoryStatus() async throws -> MemoryStatusResponse {
+        try await report { try await inner.memoryStatus() } allowance: { $0.allowance }
+    }
+
+    func memoryAct(_ request: MemoryActionRequest) async throws -> MemoryActionResponse {
+        try await report { try await inner.memoryAct(request) } allowance: { $0.allowance }
     }
 
     func me() async throws -> MeResponse {
@@ -110,6 +118,71 @@ struct ScriptedTutorClient: TutorClient {
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
         HeartbeatResponse(ok: true, allowance: Self.allowance, requestId: "scripted-heartbeat")
     }
+
+    // MARK: Tutor memory (UI tests): offered only with --memory-on, like a server whose STUDENT_RECORD switch is on.
+
+    /// The scripted state, shared by every copy of this struct. Mirrors the server's rules in the small.
+    final class ScriptedMemory: @unchecked Sendable {
+        var givenBy: String?
+        var withdrawn = false
+        var erased = false
+        var consentAt = ""
+    }
+    let memory = ScriptedMemory()
+
+    func memoryStatus() async throws -> MemoryStatusResponse {
+        guard LaunchOptions.memoryOn else { throw TutorError.rejected(status: 404, reason: "scripted: memory is not offered") }
+        let now = TimeText.iso(Date())
+        let consent: MemoryConsent? = memory.consentAt.isEmpty
+            ? nil
+            : MemoryConsent(granted: !memory.withdrawn, current: !memory.withdrawn, givenBy: memory.givenBy, recordedVia: "app",
+                            noticeVersion: Self.scriptedNotice.version, at: memory.consentAt)
+        let recent = memory.erased ? [] : [
+            MemoryRecentAttempt(problemId: "u3-04", looks: 6, asks: 1, interrupts: 2, lastAt: now),
+            MemoryRecentAttempt(problemId: "u3-01", looks: 4, asks: 0, interrupts: 0, lastAt: now),
+        ]
+        return MemoryStatusResponse(
+            feature: "on", notice: Self.scriptedNotice, consent: consent,
+            record: MemoryRecord(notes: memory.erased || memory.consentAt.isEmpty ? 0 : 2, recent: memory.consentAt.isEmpty ? [] : recent),
+            requestId: "scripted-memory"
+        )
+    }
+
+    func memoryAct(_ request: MemoryActionRequest) async throws -> MemoryActionResponse {
+        try await Task.sleep(nanoseconds: 150_000_000)
+        switch request.action {
+        case "consent":
+            guard request.attested == true, request.noticeVersion == Self.scriptedNotice.version else {
+                throw TutorError.rejected(status: 409, reason: "notice_outdated")
+            }
+            memory.givenBy = request.givenBy
+            memory.withdrawn = false
+            memory.erased = false
+            memory.consentAt = TimeText.iso(Date())
+        case "withdraw":
+            memory.withdrawn = true
+            if request.erase == true { memory.erased = true }
+        default:
+            memory.erased = true
+        }
+        return MemoryActionResponse(ok: true, withdrawn: nil, deleted: MemoryDeleted(hints: 0, attempts: 0, notes: 0), requestId: "scripted-memory-act")
+    }
+
+    /// The same words as server/lib/record/notice.ts, so screenshots show the real screen.
+    static let scriptedNotice = MemoryNotice(
+        version: "2026-11-14.1",
+        title: "Let the tutor remember?",
+        intro: "Memory is optional. If you leave it off, the tutor works exactly the same. A parent or guardian decides for a student, or an adult student decides for themselves.",
+        sections: [
+            MemoryNoticeSection(heading: "What is remembered", body: "Which problems were worked on and when, how many times the tutor looked and stepped in (and on which line), how many questions were asked, and short notes Edward writes after a lesson. Not remembered: names, pictures of the page, recordings, or anything the student says or writes."),
+            MemoryNoticeSection(heading: "Why", body: "So the tutor's hints can be worded in a way that suits the student. It never changes when the tutor speaks up. It is not used for ads, never sold, and not shared except with the services that run the tutor."),
+            MemoryNoticeSection(heading: "Who sees it", body: "Edward. To word a hint, an AI service (OpenAI, in the United States) may also see Edward's notes for that one hint. The records are kept in a database service (Neon)."),
+            MemoryNoticeSection(heading: "How long", body: "Until you erase it. Edward also deletes the memory of any code that has not been used for 12 months, by hand."),
+            MemoryNoticeSection(heading: "See it, take it, erase it", body: "In Settings, \"What the tutor remembers\" shows what is stored and lets you turn memory off or erase it, at any time. Ask Edward for a copy of everything, including his notes."),
+            MemoryNoticeSection(heading: "The voice is an AI", body: "The tutor you hear is a computer-generated voice, not a person talking to you live."),
+        ],
+        policyUrl: "https://pencil-tutor.vercel.app/api/privacy"
+    )
 
     func watch(_ request: WatchRequest) async throws -> WatchResponse {
         try await Task.sleep(nanoseconds: Self.latencyNanoseconds)

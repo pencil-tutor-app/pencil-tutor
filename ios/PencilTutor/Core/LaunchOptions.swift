@@ -5,6 +5,12 @@ enum LaunchOptions {
     /// `--scripted-client`: use the in-process scripted tutor and the two fixed test problems.
     static var scriptedClient: Bool { ProcessInfo.processInfo.arguments.contains("--scripted-client") }
 
+    /// `--memory-on`: the scripted tutor offers the opt-in memory (otherwise it says nothing about it, like an older server).
+    static var memoryOn: Bool { ProcessInfo.processInfo.arguments.contains("--memory-on") }
+
+    /// `--offer-memory`: in a scripted run, let the consent screen appear by itself once (it never does otherwise).
+    static var offerMemory: Bool { ProcessInfo.processInfo.arguments.contains("--offer-memory") }
+
     /// `--any-input`: let a finger draw (UI tests cannot use a Pencil). Normal use is Pencil only.
     static var anyInput: Bool { ProcessInfo.processInfo.arguments.contains("--any-input") }
 

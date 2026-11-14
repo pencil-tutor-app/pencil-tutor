@@ -3,6 +3,8 @@ import SwiftUI
 /// The code screen until the app has a working code, then the problem list.
 struct RootView: View {
     @EnvironmentObject private var account: StudentAccount
+    @EnvironmentObject private var memory: MemoryStore
+    @State private var offerMemory = false
 
     var body: some View {
         switch account.phase {
@@ -10,6 +12,14 @@ struct RootView: View {
             CodeEntryView()
         case .ready:
             ProblemListView()
+                // Tutor memory is offered once, here, and only when the server offers it. Skipping it is fine and final for this text.
+                .task {
+                    await memory.refresh(reason: "ready")
+                    if memory.shouldOffer { offerMemory = true }
+                }
+                .sheet(isPresented: $offerMemory, onDismiss: { memory.markOffered() }) {
+                    MemoryConsentView(memory: memory)
+                }
         }
     }
 }

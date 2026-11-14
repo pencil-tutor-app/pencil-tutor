@@ -10,6 +10,8 @@ final class AppEnvironment: ObservableObject {
     let client: TutorClient
     /// The student's code, plan and allowance.
     let account: StudentAccount
+    /// The opt-in tutor memory: what the server offers, whether a parent or adult student agreed, and the controls.
+    let memory: MemoryStore
     /// Makes the live voice connection. Nil when there is no server to relay it (scripted UI tests, unconfigured builds).
     /// Even with a server, live voice only opens when the student's plan says `live: true`.
     let makeLiveTransport: (@MainActor () -> LiveTransport)?
@@ -72,6 +74,7 @@ final class AppEnvironment: ObservableObject {
         }
         self.account = account
         self.speech = speech
+        self.memory = MemoryStore(api: self.client, log: log, codeHash: { holder.current.map(StudentCode.shortHash) })
 
         // The allowance lines ("you have about 40 minutes left") are said by the tutor's voice; a refusal that comes back
         // from the speech request goes to the account like any other.

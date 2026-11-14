@@ -61,6 +61,14 @@ final class HTTPTutorClient: TutorClient {
         try await post(path: "api/heartbeat", body: request, timeout: 15)
     }
 
+    func memoryStatus() async throws -> MemoryStatusResponse {
+        try await send(path: "api/memory", method: "GET", payload: nil, timeout: 15)
+    }
+
+    func memoryAct(_ request: MemoryActionRequest) async throws -> MemoryActionResponse {
+        try await post(path: "api/memory", body: request, timeout: 20)
+    }
+
     private func post<Body: Encodable, Reply: Decodable>(path: String, body: Body, timeout: TimeInterval) async throws -> Reply {
         try await send(path: path, method: "POST", payload: try JSONEncoder().encode(body), timeout: timeout)
     }

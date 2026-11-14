@@ -9,6 +9,7 @@ struct PencilTutorApp: App {
             RootView()
                 .environmentObject(env)
                 .environmentObject(env.account)
+                .environmentObject(env.memory)
                 .preferredColorScheme(.light)
         }
     }
