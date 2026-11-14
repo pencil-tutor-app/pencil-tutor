@@ -1,0 +1,1484 @@
+[
+  {
+    "id": "c1-01",
+    "source": "limits: algebraic and one-sided, original",
+    "prompt_latex": "\\lim_{x \\to -3} \\frac{x^2 + 5x + 6}{x^2 - 9}",
+    "prompt_plain": "lim(x→−3) (x² + 5x + 6)/(x² − 9)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→−3) "
+      },
+      {
+        "frac": {
+          "num": "x² + 5x + 6",
+          "den": "x² − 9"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Direct substitution gives 0/0, so factor",
+      "(x² + 5x + 6)/(x² − 9) = (x + 2)(x + 3) / ((x − 3)(x + 3))",
+      "Cancel (x + 3) for x ≠ −3: (x + 2)/(x − 3)",
+      "lim(x→−3) (x + 2)/(x − 3) = (−3 + 2)/(−3 − 3) = −1/−6 = 1/6"
+    ],
+    "final_answer": "1/6",
+    "level": "college"
+  },
+  {
+    "id": "c1-02",
+    "source": "limits: algebraic and one-sided, original",
+    "prompt_latex": "\\lim_{x \\to 0} \\frac{\\sqrt{9 + 2x} - 3}{x}",
+    "prompt_plain": "lim(x→0) (√(9 + 2x) − 3)/x",
+    "prompt_parts": [
+      {
+        "text": "lim(x→0) "
+      },
+      {
+        "frac": {
+          "num": "√(9 + 2x) − 3",
+          "den": "x"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Direct substitution gives 0/0; multiply top and bottom by the conjugate √(9 + 2x) + 3",
+      "Top: (9 + 2x) − 9 = 2x",
+      "So the quotient is 2x / (x(√(9 + 2x) + 3)) = 2/(√(9 + 2x) + 3) for x ≠ 0",
+      "lim(x→0) 2/(√(9 + 2x) + 3) = 2/(3 + 3) = 1/3"
+    ],
+    "final_answer": "1/3",
+    "level": "college"
+  },
+  {
+    "id": "c1-03",
+    "source": "limits: algebraic and one-sided, original",
+    "prompt_latex": "\\lim_{x \\to 2} \\frac{1/x - 1/2}{x - 2}",
+    "prompt_plain": "lim(x→2) (1/x − 1/2)/(x − 2)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→2) "
+      },
+      {
+        "frac": {
+          "num": "1/x − 1/2",
+          "den": "x − 2"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Direct substitution gives 0/0; combine the top over a common denominator",
+      "1/x − 1/2 = (2 − x)/(2x)",
+      "So the quotient is (2 − x)/(2x(x − 2)) = −(x − 2)/(2x(x − 2)) = −1/(2x) for x ≠ 2",
+      "lim(x→2) −1/(2x) = −1/4"
+    ],
+    "final_answer": "−1/4",
+    "level": "college"
+  },
+  {
+    "id": "c1-04",
+    "source": "limits: algebraic and one-sided, original",
+    "prompt_latex": "Find \\lim_{x \\to 5^-} and \\lim_{x \\to 5^+} of \\frac{|x - 5|}{x^2 - 25} . Does the two-sided limit exist?",
+    "prompt_plain": "Find lim(x→5⁻) and lim(x→5⁺) of (|x − 5|)/(x² − 25) . Does the two-sided limit exist?",
+    "prompt_parts": [
+      {
+        "text": "Find lim(x→5⁻) and lim(x→5⁺) of "
+      },
+      {
+        "frac": {
+          "num": "|x − 5|",
+          "den": "x² − 25"
+        }
+      },
+      {
+        "text": " . Does the two-sided limit exist?"
+      }
+    ],
+    "worked_solution": [
+      "x² − 25 = (x − 5)(x + 5)",
+      "For x < 5: |x − 5| = −(x − 5), so the quotient is −1/(x + 5). Left limit: −1/10",
+      "For x > 5: |x − 5| = x − 5, so the quotient is 1/(x + 5). Right limit: 1/10",
+      "The one-sided limits differ (−1/10 ≠ 1/10), so the two-sided limit does not exist"
+    ],
+    "final_answer": "left −1/10, right 1/10; the two-sided limit does not exist",
+    "level": "college"
+  },
+  {
+    "id": "c1-05",
+    "source": "limits: squeeze theorem, original",
+    "prompt_latex": "Use the Squeeze Theorem to find \\lim_{x \\to 0} x^2 \\cos(5/x)",
+    "prompt_plain": "Use the Squeeze Theorem to find lim(x→0) x² cos(5/x)",
+    "prompt_parts": [
+      {
+        "text": "Use the Squeeze Theorem to find lim(x→0) x² cos(5/x)"
+      }
+    ],
+    "worked_solution": [
+      "−1 ≤ cos(5/x) ≤ 1 for all x ≠ 0",
+      "Multiply by x² ≥ 0: −x² ≤ x² cos(5/x) ≤ x²",
+      "lim(x→0) (−x²) = 0 and lim(x→0) x² = 0",
+      "By the Squeeze Theorem, lim(x→0) x² cos(5/x) = 0"
+    ],
+    "final_answer": "0",
+    "level": "college"
+  },
+  {
+    "id": "c1-06",
+    "source": "limits: squeeze theorem, original",
+    "prompt_latex": "Suppose 4x - 3 \\le  f(x) \\le  x^2 + 1 for all x. Find \\lim_{x \\to 2} f(x), and justify it.",
+    "prompt_plain": "Suppose 4x − 3 ≤ f(x) ≤ x² + 1 for all x. Find lim(x→2) f(x), and justify it.",
+    "prompt_parts": [
+      {
+        "text": "Suppose 4x − 3 ≤ f(x) ≤ x² + 1 for all x. Find lim(x→2) f(x), and justify it."
+      }
+    ],
+    "worked_solution": [
+      "lim(x→2) (4x − 3) = 4(2) − 3 = 5",
+      "lim(x→2) (x² + 1) = 4 + 1 = 5",
+      "Both bounds approach 5, so by the Squeeze Theorem lim(x→2) f(x) = 5",
+      "Check that the bounds are consistent: (x² + 1) − (4x − 3) = (x − 2)² ≥ 0"
+    ],
+    "final_answer": "5",
+    "level": "college"
+  },
+  {
+    "id": "c1-07",
+    "source": "limits at infinity and horizontal asymptotes, original",
+    "prompt_latex": "\\lim_{x \\to \\infty } \\frac{4x^3 - x}{2x^3 + 7x^2 + 1}",
+    "prompt_plain": "lim(x→∞) (4x³ − x)/(2x³ + 7x² + 1)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→∞) "
+      },
+      {
+        "frac": {
+          "num": "4x³ − x",
+          "den": "2x³ + 7x² + 1"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Divide top and bottom by x³, the highest power in the denominator",
+      "(4 − 1/x²) / (2 + 7/x + 1/x³)",
+      "As x → ∞, 1/x², 7/x and 1/x³ all → 0",
+      "The limit is 4/2 = 2"
+    ],
+    "final_answer": "2",
+    "level": "college"
+  },
+  {
+    "id": "c1-08",
+    "source": "limits at infinity and horizontal asymptotes, original",
+    "prompt_latex": "Find \\lim_{x \\to \\infty } and \\lim_{x \\to -\\infty } of \\frac{\\sqrt{9x^2 + 1}}{2x - 5} . State the horizontal asymptotes.",
+    "prompt_plain": "Find lim(x→∞) and lim(x→−∞) of (√(9x² + 1))/(2x − 5) . State the horizontal asymptotes.",
+    "prompt_parts": [
+      {
+        "text": "Find lim(x→∞) and lim(x→−∞) of "
+      },
+      {
+        "frac": {
+          "num": "√(9x² + 1)",
+          "den": "2x − 5"
+        }
+      },
+      {
+        "text": " . State the horizontal asymptotes."
+      }
+    ],
+    "worked_solution": [
+      "√(9x² + 1) = |x| √(9 + 1/x²)",
+      "As x → ∞, |x| = x. Divide top and bottom by x: √(9 + 1/x²)/(2 − 5/x) → 3/2",
+      "As x → −∞, |x| = −x. The top becomes −x√(9 + 1/x²) and the bottom x(2 − 5/x), so the quotient is −√(9 + 1/x²)/(2 − 5/x) → −3/2",
+      "Horizontal asymptotes: y = 3/2 (right) and y = −3/2 (left)"
+    ],
+    "final_answer": "3/2 as x → ∞ and −3/2 as x → −∞; asymptotes y = 3/2 and y = −3/2",
+    "level": "college"
+  },
+  {
+    "id": "c1-09",
+    "source": "limits at infinity and horizontal asymptotes, original",
+    "prompt_latex": "\\lim_{x \\to \\infty } (\\sqrt{x^2 + 6x} - x)",
+    "prompt_plain": "lim(x→∞) (√(x² + 6x) − x)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→∞) (√(x² + 6x) − x)"
+      }
+    ],
+    "worked_solution": [
+      "This is ∞ − ∞, so multiply by the conjugate √(x² + 6x) + x over itself",
+      "Top: (x² + 6x) − x² = 6x",
+      "6x/(√(x² + 6x) + x); divide top and bottom by x: 6/(√(1 + 6/x) + 1)",
+      "As x → ∞, 6/x → 0, so the limit is 6/(1 + 1) = 3"
+    ],
+    "final_answer": "3",
+    "level": "college"
+  },
+  {
+    "id": "c1-10",
+    "source": "infinite limits and vertical asymptotes, original",
+    "prompt_latex": "\\lim_{x \\to 2} \\frac{x - 5}{(x - 2)^2}",
+    "prompt_plain": "lim(x→2) (x − 5)/((x − 2)²)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→2) "
+      },
+      {
+        "frac": {
+          "num": "x − 5",
+          "den": "(x − 2)²"
+        }
+      }
+    ],
+    "worked_solution": [
+      "As x → 2, the numerator x − 5 → −3 (negative)",
+      "The denominator (x − 2)² → 0 and is positive from both sides",
+      "A negative number over a tiny positive number is a huge negative number, from both sides",
+      "So the limit is −∞ (the line x = 2 is a vertical asymptote)"
+    ],
+    "final_answer": "−∞",
+    "level": "college"
+  },
+  {
+    "id": "c1-11",
+    "source": "infinite limits and vertical asymptotes, original",
+    "prompt_latex": "Find the vertical asymptotes and any holes of f(x) = \\frac{x^2 - x - 6}{x^2 - 5x + 6}",
+    "prompt_plain": "Find the vertical asymptotes and any holes of f(x) = (x² − x − 6)/(x² − 5x + 6)",
+    "prompt_parts": [
+      {
+        "text": "Find the vertical asymptotes and any holes of f(x) = "
+      },
+      {
+        "frac": {
+          "num": "x² − x − 6",
+          "den": "x² − 5x + 6"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Factor: f(x) = (x − 3)(x + 2) / ((x − 2)(x − 3))",
+      "At x = 3 the factor cancels, so there is a hole there, with lim(x→3) f(x) = (3 + 2)/(3 − 2) = 5",
+      "At x = 2 the denominator factor (x − 2) remains and the numerator is (2 − 3)(2 + 2) = −4 ≠ 0",
+      "So x = 2 is a vertical asymptote; x = 3 is a hole at (3, 5)"
+    ],
+    "final_answer": "vertical asymptote x = 2; hole at (3, 5)",
+    "level": "college"
+  },
+  {
+    "id": "c1-12",
+    "source": "infinite limits and vertical asymptotes, original",
+    "prompt_latex": "\\lim_{x \\to 0^+} \\frac{5}{x} - \\frac{3}{x^2}",
+    "prompt_plain": "lim(x→0⁺) 5/x − 3/x²",
+    "prompt_parts": [
+      {
+        "text": "lim(x→0⁺) "
+      },
+      {
+        "frac": {
+          "num": "5",
+          "den": "x"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "x²"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Combine over a common denominator: (5x − 3)/x²",
+      "As x → 0⁺, the numerator 5x − 3 → −3",
+      "The denominator x² → 0⁺ (small and positive)",
+      "A negative constant over a small positive number is a huge negative number, so the limit is −∞"
+    ],
+    "final_answer": "−∞",
+    "level": "college"
+  },
+  {
+    "id": "c1-13",
+    "source": "continuity, original",
+    "prompt_latex": "Find a so that f is continuous at x = 2: f(x) = ax + 1 if x < 2, and f(x) = x^2 - a if x \\ge  2.",
+    "prompt_plain": "Find a so that f is continuous at x = 2: f(x) = ax + 1 if x < 2, and f(x) = x² − a if x ≥ 2.",
+    "prompt_parts": [
+      {
+        "text": "Find a so that f is continuous at x = 2: f(x) = ax + 1 if x < 2, and f(x) = x² − a if x ≥ 2."
+      }
+    ],
+    "worked_solution": [
+      "Left limit at 2: lim(x→2⁻) (ax + 1) = 2a + 1",
+      "Right limit and value at 2: 2² − a = 4 − a",
+      "Continuity needs the two to match: 2a + 1 = 4 − a",
+      "3a = 3, so a = 1. Check: left = 3 and right = 3"
+    ],
+    "final_answer": "a = 1",
+    "level": "college"
+  },
+  {
+    "id": "c1-14",
+    "source": "continuity, original",
+    "prompt_latex": "Classify each discontinuity of f(x) = \\frac{x^2 - 1}{x^2 - 3x + 2}",
+    "prompt_plain": "Classify each discontinuity of f(x) = (x² − 1)/(x² − 3x + 2)",
+    "prompt_parts": [
+      {
+        "text": "Classify each discontinuity of f(x) = "
+      },
+      {
+        "frac": {
+          "num": "x² − 1",
+          "den": "x² − 3x + 2"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Factor: f(x) = (x − 1)(x + 1) / ((x − 1)(x − 2)). The function is undefined at x = 1 and x = 2",
+      "At x = 1 the factor cancels: lim(x→1) (x + 1)/(x − 2) = 2/(−1) = −2. The limit exists, so this is a removable discontinuity",
+      "At x = 2 the denominator (x − 2) → 0 while the numerator → 3 ≠ 0, so the limit is infinite: an infinite discontinuity",
+      "x = 1 removable (hole at (1, −2)); x = 2 infinite (vertical asymptote)"
+    ],
+    "final_answer": "x = 1 removable; x = 2 infinite",
+    "level": "college"
+  },
+  {
+    "id": "c1-15",
+    "source": "continuity, original",
+    "prompt_latex": "f(x) = x + 2 if x < 1; 5 - x if 1 \\le  x < 3; 2x - 4 if x \\ge  3. Where is f discontinuous, and of what type?",
+    "prompt_plain": "f(x) = x + 2 if x < 1; 5 − x if 1 ≤ x < 3; 2x − 4 if x ≥ 3. Where is f discontinuous, and of what type?",
+    "prompt_parts": [
+      {
+        "text": "f(x) = x + 2 if x < 1; 5 − x if 1 ≤ x < 3; 2x − 4 if x ≥ 3. Where is f discontinuous, and of what type?"
+      }
+    ],
+    "worked_solution": [
+      "Each piece is a polynomial, so f can only fail to be continuous at x = 1 and x = 3",
+      "At x = 1: left limit 1 + 2 = 3, but f(1) = 5 − 1 = 4 and the right limit is 4. The one-sided limits differ: jump discontinuity (jump of 1)",
+      "At x = 3: left limit 5 − 3 = 2, f(3) = 2(3) − 4 = 2, right limit 2. All agree: continuous",
+      "f is discontinuous only at x = 1 (jump)"
+    ],
+    "final_answer": "only at x = 1, a jump discontinuity",
+    "level": "college"
+  },
+  {
+    "id": "c1-16",
+    "source": "continuity, original",
+    "prompt_latex": "State the intervals on which g is continuous: g(x) = \\frac{\\sqrt{x + 2}}{x - 3}",
+    "prompt_plain": "State the intervals on which g is continuous: g(x) = (√(x + 2))/(x − 3)",
+    "prompt_parts": [
+      {
+        "text": "State the intervals on which g is continuous: g(x) = "
+      },
+      {
+        "frac": {
+          "num": "√(x + 2)",
+          "den": "x − 3"
+        }
+      }
+    ],
+    "worked_solution": [
+      "The square root needs x + 2 ≥ 0, so x ≥ −2",
+      "The denominator needs x − 3 ≠ 0, so x ≠ 3",
+      "g is a quotient of continuous functions, so it is continuous wherever it is defined",
+      "Intervals: [−2, 3) and (3, ∞)"
+    ],
+    "final_answer": "[−2, 3) ∪ (3, ∞)",
+    "level": "college"
+  },
+  {
+    "id": "c1-17",
+    "source": "intermediate value theorem, original",
+    "prompt_latex": "Show that e^x + x^2 = 4 has a solution in the interval (1, 2).",
+    "prompt_plain": "Show that eˣ + x² = 4 has a solution in the interval (1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Show that eˣ + x² = 4 has a solution in the interval (1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Let f(x) = eˣ + x² − 4. It is continuous everywhere (sum of continuous functions)",
+      "f(1) = e + 1 − 4 = e − 3 ≈ −0.28 < 0",
+      "f(2) = e² + 4 − 4 = e² ≈ 7.39 > 0",
+      "f(1) < 0 < f(2), so by the Intermediate Value Theorem f(c) = 0 for some c in (1, 2)"
+    ],
+    "final_answer": "f(1) < 0 < f(2) with f continuous, so a root exists in (1, 2)",
+    "level": "college"
+  },
+  {
+    "id": "c1-18",
+    "source": "intermediate value theorem, original",
+    "prompt_latex": "Show that 2 \\sin x = x^2 has a solution in (1, 2).",
+    "prompt_plain": "Show that 2 sin x = x² has a solution in (1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Show that 2 sin x = x² has a solution in (1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Let g(x) = 2 sin x − x². It is continuous everywhere",
+      "g(1) = 2 sin 1 − 1 ≈ 0.68 > 0",
+      "g(2) = 2 sin 2 − 4 ≈ −2.18 < 0",
+      "g changes sign on [1, 2], so by the Intermediate Value Theorem g(c) = 0 for some c in (1, 2)"
+    ],
+    "final_answer": "g(1) > 0 > g(2) with g continuous, so a root exists in (1, 2)",
+    "level": "college"
+  },
+  {
+    "id": "c1-19",
+    "source": "derivative from the definition, original",
+    "prompt_latex": "Use the limit definition to find f'(x) for f(x) = 3x^2 - 5x.",
+    "prompt_plain": "Use the limit definition to find f′(x) for f(x) = 3x² − 5x.",
+    "prompt_parts": [
+      {
+        "text": "Use the limit definition to find f′(x) for f(x) = 3x² − 5x."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = lim(h→0) (f(x + h) − f(x))/h",
+      "f(x + h) = 3(x + h)² − 5(x + h) = 3x² + 6xh + 3h² − 5x − 5h",
+      "f(x + h) − f(x) = 6xh + 3h² − 5h",
+      "Divide by h: 6x + 3h − 5. Let h → 0",
+      "f′(x) = 6x − 5"
+    ],
+    "final_answer": "f′(x) = 6x − 5",
+    "level": "college"
+  },
+  {
+    "id": "c1-20",
+    "source": "derivative from the definition, original",
+    "prompt_latex": "Use the limit definition to find f'(x) for f(x) = \\frac{1}{x + 2}",
+    "prompt_plain": "Use the limit definition to find f′(x) for f(x) = 1/(x + 2)",
+    "prompt_parts": [
+      {
+        "text": "Use the limit definition to find f′(x) for f(x) = "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "x + 2"
+        }
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = lim(h→0) (1/(x + h + 2) − 1/(x + 2))/h",
+      "Combine the top: ((x + 2) − (x + h + 2)) / ((x + h + 2)(x + 2)) = −h / ((x + h + 2)(x + 2))",
+      "Divide by h: −1 / ((x + h + 2)(x + 2))",
+      "Let h → 0: f′(x) = −1/(x + 2)²"
+    ],
+    "final_answer": "f′(x) = −1/(x + 2)²",
+    "level": "college"
+  },
+  {
+    "id": "c1-21",
+    "source": "derivative from the definition, original",
+    "prompt_latex": "Let f(x) = \\sqrt{3x + 1}. Use the definition f'(5) = \\lim_{x \\to 5} (f(x) - f(5))/(x - 5) to find f'(5), then write the tangent line at x = 5.",
+    "prompt_plain": "Let f(x) = √(3x + 1). Use the definition f′(5) = lim(x→5) (f(x) − f(5))/(x − 5) to find f′(5), then write the tangent line at x = 5.",
+    "prompt_parts": [
+      {
+        "text": "Let f(x) = √(3x + 1). Use the definition f′(5) = lim(x→5) (f(x) − f(5))/(x − 5) to find f′(5), then write the tangent line at x = 5."
+      }
+    ],
+    "worked_solution": [
+      "f(5) = √16 = 4, so f′(5) = lim(x→5) (√(3x + 1) − 4)/(x − 5)",
+      "Multiply by the conjugate √(3x + 1) + 4: top becomes (3x + 1) − 16 = 3x − 15 = 3(x − 5)",
+      "The quotient is 3/(√(3x + 1) + 4) for x ≠ 5, so f′(5) = 3/(4 + 4) = 3/8",
+      "Tangent line: y − 4 = (3/8)(x − 5)"
+    ],
+    "final_answer": "f′(5) = 3/8; tangent line y − 4 = (3/8)(x − 5)",
+    "level": "college"
+  },
+  {
+    "id": "c1-22",
+    "source": "derivative from the definition, original",
+    "prompt_latex": "A particle has position s(t) = 2t^2 - 6t metres. Find its average velocity on [1, 3], then its instantaneous velocity at t = 3 using the limit definition.",
+    "prompt_plain": "A particle has position s(t) = 2t² − 6t metres. Find its average velocity on [1, 3], then its instantaneous velocity at t = 3 using the limit definition.",
+    "prompt_parts": [
+      {
+        "text": "A particle has position s(t) = 2t² − 6t metres. Find its average velocity on [1, 3], then its instantaneous velocity at t = 3 using the limit definition."
+      }
+    ],
+    "worked_solution": [
+      "s(1) = 2 − 6 = −4 and s(3) = 18 − 18 = 0",
+      "Average velocity = (s(3) − s(1))/(3 − 1) = (0 − (−4))/2 = 2 m/s",
+      "s(3 + h) − s(3) = 2(3 + h)² − 6(3 + h) − 0 = 18 + 12h + 2h² − 18 − 6h = 6h + 2h²",
+      "Divide by h: 6 + 2h. Let h → 0: s′(3) = 6 m/s"
+    ],
+    "final_answer": "average velocity 2 m/s; instantaneous velocity at t = 3 is 6 m/s",
+    "level": "college"
+  },
+  {
+    "id": "c1-23",
+    "source": "product and quotient rules, original",
+    "prompt_latex": "Differentiate y = (2x^2 - x)(x^3 + 4)",
+    "prompt_plain": "Differentiate y = (2x² − x)(x³ + 4)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = (2x² − x)(x³ + 4)"
+      }
+    ],
+    "worked_solution": [
+      "Product rule: y′ = (2x² − x)′(x³ + 4) + (2x² − x)(x³ + 4)′",
+      "y′ = (4x − 1)(x³ + 4) + (2x² − x)(3x²)",
+      "Expand: (4x⁴ − x³ + 16x − 4) + (6x⁴ − 3x³)",
+      "y′ = 10x⁴ − 4x³ + 16x − 4"
+    ],
+    "final_answer": "y′ = 10x⁴ − 4x³ + 16x − 4",
+    "level": "college"
+  },
+  {
+    "id": "c1-24",
+    "source": "product and quotient rules, original",
+    "prompt_latex": "Differentiate y = \\frac{3x - 2}{x^2 + 1}",
+    "prompt_plain": "Differentiate y = (3x − 2)/(x² + 1)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = "
+      },
+      {
+        "frac": {
+          "num": "3x − 2",
+          "den": "x² + 1"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Quotient rule: y′ = (top′·bottom − top·bottom′)/bottom²",
+      "y′ = (3(x² + 1) − (3x − 2)(2x)) / (x² + 1)²",
+      "Numerator: 3x² + 3 − 6x² + 4x = −3x² + 4x + 3",
+      "y′ = (−3x² + 4x + 3)/(x² + 1)²"
+    ],
+    "final_answer": "y′ = (−3x² + 4x + 3)/(x² + 1)²",
+    "level": "college"
+  },
+  {
+    "id": "c1-25",
+    "source": "derivatives of elementary functions, original",
+    "prompt_latex": "Differentiate y = 4\\sqrt{x} - \\frac{6}{x^3} + 9x^{2/3}",
+    "prompt_plain": "Differentiate y = 4√x − 6/x³ + 9x^(2/3)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = 4√x − "
+      },
+      {
+        "frac": {
+          "num": "6",
+          "den": "x³"
+        }
+      },
+      {
+        "text": " + 9x^(2/3)"
+      }
+    ],
+    "worked_solution": [
+      "Rewrite with powers: y = 4x^(1/2) − 6x^(−3) + 9x^(2/3)",
+      "Power rule on each term: 4·(1/2)x^(−1/2) − 6·(−3)x^(−4) + 9·(2/3)x^(−1/3)",
+      "y′ = 2x^(−1/2) + 18x^(−4) + 6x^(−1/3)",
+      "In radical form: y′ = 2/√x + 18/x⁴ + 6/x^(1/3)"
+    ],
+    "final_answer": "y′ = 2/√x + 18/x⁴ + 6/x^(1/3)",
+    "level": "college"
+  },
+  {
+    "id": "c1-26",
+    "source": "derivatives of elementary functions, original",
+    "prompt_latex": "Differentiate y = e^x(\\cos x + 2x)",
+    "prompt_plain": "Differentiate y = eˣ(cos x + 2x)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = eˣ(cos x + 2x)"
+      }
+    ],
+    "worked_solution": [
+      "Product rule: y′ = (eˣ)′(cos x + 2x) + eˣ(cos x + 2x)′",
+      "y′ = eˣ(cos x + 2x) + eˣ(−sin x + 2)",
+      "Factor eˣ: y′ = eˣ(cos x + 2x − sin x + 2)",
+      "y′ = eˣ(cos x − sin x + 2x + 2)"
+    ],
+    "final_answer": "y′ = eˣ(cos x − sin x + 2x + 2)",
+    "level": "college"
+  },
+  {
+    "id": "c1-27",
+    "source": "derivatives of elementary functions, original",
+    "prompt_latex": "Differentiate y = x \\arcsin x + \\sqrt{1 - x^2}",
+    "prompt_plain": "Differentiate y = x arcsin x + √(1 − x²)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = x arcsin x + √(1 − x²)"
+      }
+    ],
+    "worked_solution": [
+      "Product rule on the first term: arcsin x + x/√(1 − x²)",
+      "Chain rule on the second term: (1/2)(1 − x²)^(−1/2)(−2x) = −x/√(1 − x²)",
+      "Add: arcsin x + x/√(1 − x²) − x/√(1 − x²)",
+      "The fractions cancel: y′ = arcsin x"
+    ],
+    "final_answer": "y′ = arcsin x",
+    "level": "college"
+  },
+  {
+    "id": "c1-28",
+    "source": "derivatives of elementary functions, original",
+    "prompt_latex": "Differentiate y = x^2 \\ln x - \\frac{x^2}{2}",
+    "prompt_plain": "Differentiate y = x² ln x − x²/2",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = x² ln x − "
+      },
+      {
+        "frac": {
+          "num": "x²",
+          "den": "2"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Product rule on the first term: 2x ln x + x²·(1/x) = 2x ln x + x",
+      "Second term: d/dx (x²/2) = x",
+      "y′ = 2x ln x + x − x",
+      "y′ = 2x ln x"
+    ],
+    "final_answer": "y′ = 2x ln x",
+    "level": "college"
+  },
+  {
+    "id": "c1-29",
+    "source": "chain rule, original",
+    "prompt_latex": "Differentiate y = (x^3 - 2x + 1)^5",
+    "prompt_plain": "Differentiate y = (x³ − 2x + 1)⁵",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = (x³ − 2x + 1)⁵"
+      }
+    ],
+    "worked_solution": [
+      "Outer function u⁵, inner function u = x³ − 2x + 1",
+      "dy/dx = 5u⁴ · du/dx",
+      "du/dx = 3x² − 2",
+      "y′ = 5(x³ − 2x + 1)⁴(3x² − 2)"
+    ],
+    "final_answer": "y′ = 5(x³ − 2x + 1)⁴(3x² − 2)",
+    "level": "college"
+  },
+  {
+    "id": "c1-30",
+    "source": "chain rule, original",
+    "prompt_latex": "Differentiate y = \\sin^3(4x)",
+    "prompt_plain": "Differentiate y = sin³(4x)",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = sin³(4x)"
+      }
+    ],
+    "worked_solution": [
+      "Write y = (sin 4x)³, a cube of an inner sine",
+      "Outer: 3(sin 4x)²",
+      "Next layer: d/dx sin 4x = cos 4x · 4",
+      "y′ = 12 sin²(4x) cos(4x)"
+    ],
+    "final_answer": "y′ = 12 sin²(4x) cos(4x)",
+    "level": "college"
+  },
+  {
+    "id": "c1-31",
+    "source": "chain rule, original",
+    "prompt_latex": "Differentiate y = \\ln(x + \\sqrt{x^2 + 4}) and simplify.",
+    "prompt_plain": "Differentiate y = ln(x + √(x² + 4)) and simplify.",
+    "prompt_parts": [
+      {
+        "text": "Differentiate y = ln(x + √(x² + 4)) and simplify."
+      }
+    ],
+    "worked_solution": [
+      "Chain rule: y′ = 1/(x + √(x² + 4)) · (1 + x/√(x² + 4))",
+      "Put the bracket over one denominator: 1 + x/√(x² + 4) = (√(x² + 4) + x)/√(x² + 4)",
+      "The factor (x + √(x² + 4)) cancels with the first fraction",
+      "y′ = 1/√(x² + 4)"
+    ],
+    "final_answer": "y′ = 1/√(x² + 4)",
+    "level": "college"
+  },
+  {
+    "id": "c1-32",
+    "source": "logarithmic differentiation, original",
+    "prompt_latex": "Use logarithmic differentiation to find y' for y = x^{\\cos x}, x > 0.",
+    "prompt_plain": "Use logarithmic differentiation to find y′ for y = x^(cos x), x > 0.",
+    "prompt_parts": [
+      {
+        "text": "Use logarithmic differentiation to find y′ for y = x^(cos x), x > 0."
+      }
+    ],
+    "worked_solution": [
+      "Take logs: ln y = cos x · ln x",
+      "Differentiate both sides: y′/y = −sin x · ln x + cos x · (1/x)",
+      "Multiply by y = x^(cos x)",
+      "y′ = x^(cos x) (cos x / x − sin x ln x)"
+    ],
+    "final_answer": "y′ = x^(cos x) (cos x / x − sin x ln x)",
+    "level": "college"
+  },
+  {
+    "id": "c1-33",
+    "source": "logarithmic differentiation, original",
+    "prompt_latex": "Let y = \\frac{x^2(x + 3)^5}{(x - 1)^3} . Use logarithmic differentiation to find y'(2).",
+    "prompt_plain": "Let y = (x²(x + 3)⁵)/((x − 1)³) . Use logarithmic differentiation to find y′(2).",
+    "prompt_parts": [
+      {
+        "text": "Let y = "
+      },
+      {
+        "frac": {
+          "num": "x²(x + 3)⁵",
+          "den": "(x − 1)³"
+        }
+      },
+      {
+        "text": " . Use logarithmic differentiation to find y′(2)."
+      }
+    ],
+    "worked_solution": [
+      "ln y = 2 ln x + 5 ln(x + 3) − 3 ln(x − 1)",
+      "y′/y = 2/x + 5/(x + 3) − 3/(x − 1)",
+      "At x = 2: y(2) = 4·5⁵/1 = 4·3125 = 12500, and y′/y = 1 + 1 − 3 = −1",
+      "y′(2) = 12500 · (−1) = −12500"
+    ],
+    "final_answer": "y′(2) = −12500",
+    "level": "college"
+  },
+  {
+    "id": "c1-34",
+    "source": "higher derivatives, original",
+    "prompt_latex": "Find f''(x) for f(x) = x e^{-3x}.",
+    "prompt_plain": "Find f″(x) for f(x) = x e^(−3x).",
+    "prompt_parts": [
+      {
+        "text": "Find f″(x) for f(x) = x e^(−3x)."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = e^(−3x) + x(−3e^(−3x)) = e^(−3x)(1 − 3x)",
+      "Differentiate again with the product rule: f″(x) = −3e^(−3x)(1 − 3x) + e^(−3x)(−3)",
+      "Factor e^(−3x): e^(−3x)(−3 + 9x − 3)",
+      "f″(x) = (9x − 6)e^(−3x)"
+    ],
+    "final_answer": "f″(x) = (9x − 6)e^(−3x)",
+    "level": "college"
+  },
+  {
+    "id": "c1-35",
+    "source": "implicit differentiation, original",
+    "prompt_latex": "Find the tangent line to x^2y + y^3 = 10 at the point (1, 2).",
+    "prompt_plain": "Find the tangent line to x²y + y³ = 10 at the point (1, 2).",
+    "prompt_parts": [
+      {
+        "text": "Find the tangent line to x²y + y³ = 10 at the point (1, 2)."
+      }
+    ],
+    "worked_solution": [
+      "Check the point: 1²·2 + 2³ = 2 + 8 = 10",
+      "Differentiate in x: 2xy + x²y′ + 3y²y′ = 0",
+      "Solve: y′ = −2xy/(x² + 3y²)",
+      "At (1, 2): y′ = −4/(1 + 12) = −4/13",
+      "Tangent line: y − 2 = (−4/13)(x − 1)"
+    ],
+    "final_answer": "y − 2 = (−4/13)(x − 1)",
+    "level": "college"
+  },
+  {
+    "id": "c1-36",
+    "source": "implicit differentiation, original",
+    "prompt_latex": "Find dy/dx at the point (0, 1) on the curve x e^y + y = 1.",
+    "prompt_plain": "Find dy/dx at the point (0, 1) on the curve x e^y + y = 1.",
+    "prompt_parts": [
+      {
+        "text": "Find dy/dx at the point (0, 1) on the curve x e^y + y = 1."
+      }
+    ],
+    "worked_solution": [
+      "Check the point: 0·e + 1 = 1",
+      "Differentiate in x (product rule on x e^y): e^y + x e^y y′ + y′ = 0",
+      "At (0, 1): e + 0 + y′ = 0",
+      "y′ = −e"
+    ],
+    "final_answer": "dy/dx = −e",
+    "level": "college"
+  },
+  {
+    "id": "c1-37",
+    "source": "implicit differentiation, original",
+    "prompt_latex": "Find d^2y/dx^2 at the point (3, 4) on the circle x^2 + y^2 = 25.",
+    "prompt_plain": "Find d²y/dx² at the point (3, 4) on the circle x² + y² = 25.",
+    "prompt_parts": [
+      {
+        "text": "Find d²y/dx² at the point (3, 4) on the circle x² + y² = 25."
+      }
+    ],
+    "worked_solution": [
+      "Differentiate: 2x + 2y y′ = 0, so y′ = −x/y",
+      "Differentiate y′ = −x/y: y″ = −(y − x y′)/y²",
+      "Substitute y′ = −x/y: y″ = −(y + x²/y)/y² = −(y² + x²)/y³ = −25/y³",
+      "At y = 4: y″ = −25/64"
+    ],
+    "final_answer": "d²y/dx² = −25/64",
+    "level": "college"
+  },
+  {
+    "id": "c1-38",
+    "source": "mean value theorem, original",
+    "prompt_latex": "Find the value c guaranteed by the Mean Value Theorem for f(x) = x^3 - 3x on [0, 2].",
+    "prompt_plain": "Find the value c guaranteed by the Mean Value Theorem for f(x) = x³ − 3x on [0, 2].",
+    "prompt_parts": [
+      {
+        "text": "Find the value c guaranteed by the Mean Value Theorem for f(x) = x³ − 3x on [0, 2]."
+      }
+    ],
+    "worked_solution": [
+      "f is a polynomial, so it is continuous on [0, 2] and differentiable on (0, 2)",
+      "Average slope: (f(2) − f(0))/(2 − 0) = (2 − 0)/2 = 1",
+      "f′(c) = 3c² − 3 = 1, so c² = 4/3",
+      "c = 2/√3 ≈ 1.155, which lies in (0, 2) (the negative root does not)"
+    ],
+    "final_answer": "c = 2/√3 ≈ 1.155",
+    "level": "college"
+  },
+  {
+    "id": "c1-39",
+    "source": "mean value theorem, original",
+    "prompt_latex": "f is differentiable with f(1) = 3 and f'(x) \\le  2 for all x. Use the Mean Value Theorem to find the largest possible value of f(5).",
+    "prompt_plain": "f is differentiable with f(1) = 3 and f′(x) ≤ 2 for all x. Use the Mean Value Theorem to find the largest possible value of f(5).",
+    "prompt_parts": [
+      {
+        "text": "f is differentiable with f(1) = 3 and f′(x) ≤ 2 for all x. Use the Mean Value Theorem to find the largest possible value of f(5)."
+      }
+    ],
+    "worked_solution": [
+      "MVT on [1, 5]: f(5) − f(1) = f′(c)(5 − 1) for some c in (1, 5)",
+      "Since f′(c) ≤ 2, f(5) − 3 ≤ 2·4 = 8",
+      "So f(5) ≤ 11",
+      "The bound is reached by f(x) = 2x + 1, which has f(1) = 3 and f(5) = 11"
+    ],
+    "final_answer": "f(5) ≤ 11, so the largest possible value is 11",
+    "level": "college"
+  },
+  {
+    "id": "c1-40",
+    "source": "behaviour of functions and curve sketching, original",
+    "prompt_latex": "Find the intervals of increase and decrease and the local extrema of f(x) = x^3 - 6x^2 + 9x + 1.",
+    "prompt_plain": "Find the intervals of increase and decrease and the local extrema of f(x) = x³ − 6x² + 9x + 1.",
+    "prompt_parts": [
+      {
+        "text": "Find the intervals of increase and decrease and the local extrema of f(x) = x³ − 6x² + 9x + 1."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 3x² − 12x + 9 = 3(x − 1)(x − 3)",
+      "Critical numbers: x = 1 and x = 3",
+      "Sign of f′: positive on (−∞, 1), negative on (1, 3), positive on (3, ∞)",
+      "Local max at x = 1: f(1) = 1 − 6 + 9 + 1 = 5. Local min at x = 3: f(3) = 27 − 54 + 27 + 1 = 1"
+    ],
+    "final_answer": "increasing on (−∞, 1) and (3, ∞); decreasing on (1, 3); local max (1, 5); local min (3, 1)",
+    "level": "college"
+  },
+  {
+    "id": "c1-41",
+    "source": "behaviour of functions and curve sketching, original",
+    "prompt_latex": "Find the intervals of concavity and the inflection points of f(x) = x^4 - 8x^3 + 18x^2.",
+    "prompt_plain": "Find the intervals of concavity and the inflection points of f(x) = x⁴ − 8x³ + 18x².",
+    "prompt_parts": [
+      {
+        "text": "Find the intervals of concavity and the inflection points of f(x) = x⁴ − 8x³ + 18x²."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 4x³ − 24x² + 36x",
+      "f″(x) = 12x² − 48x + 36 = 12(x − 1)(x − 3)",
+      "f″ > 0 on (−∞, 1) and (3, ∞): concave up. f″ < 0 on (1, 3): concave down",
+      "Concavity changes at x = 1 and x = 3: f(1) = 1 − 8 + 18 = 11 and f(3) = 81 − 216 + 162 = 27"
+    ],
+    "final_answer": "concave up on (−∞, 1) and (3, ∞); concave down on (1, 3); inflection points (1, 11) and (3, 27)",
+    "level": "college"
+  },
+  {
+    "id": "c1-42",
+    "source": "behaviour of functions and curve sketching, original",
+    "prompt_latex": "Find the absolute maximum and minimum of f(x) = 2x^3 - 9x^2 + 12x on [0, 3].",
+    "prompt_plain": "Find the absolute maximum and minimum of f(x) = 2x³ − 9x² + 12x on [0, 3].",
+    "prompt_parts": [
+      {
+        "text": "Find the absolute maximum and minimum of f(x) = 2x³ − 9x² + 12x on [0, 3]."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 6x² − 18x + 12 = 6(x − 1)(x − 2); critical numbers x = 1 and x = 2, both in [0, 3]",
+      "Evaluate at the critical numbers and the endpoints: f(0) = 0, f(1) = 5, f(2) = 4, f(3) = 54 − 81 + 36 = 9",
+      "Largest value is 9, smallest is 0",
+      "Absolute max 9 at x = 3; absolute min 0 at x = 0"
+    ],
+    "final_answer": "absolute max 9 at x = 3; absolute min 0 at x = 0",
+    "level": "college"
+  },
+  {
+    "id": "c1-43",
+    "source": "behaviour of functions and curve sketching, original",
+    "prompt_latex": "For f(x) = \\frac{2x^2}{x^2 - 4} find all asymptotes and the intervals where f increases or decreases.",
+    "prompt_plain": "For f(x) = 2x²/(x² − 4) find all asymptotes and the intervals where f increases or decreases.",
+    "prompt_parts": [
+      {
+        "text": "For f(x) = "
+      },
+      {
+        "frac": {
+          "num": "2x²",
+          "den": "x² − 4"
+        }
+      },
+      {
+        "text": " find all asymptotes and the intervals where f increases or decreases."
+      }
+    ],
+    "worked_solution": [
+      "Denominator x² − 4 = (x − 2)(x + 2) is zero at x = ±2 while the numerator is 8 ≠ 0: vertical asymptotes x = 2 and x = −2",
+      "lim(x→±∞) 2x²/(x² − 4) = 2, so the horizontal asymptote is y = 2",
+      "f′(x) = (4x(x² − 4) − 2x²·2x)/(x² − 4)² = −16x/(x² − 4)²",
+      "The denominator is positive, so f′ > 0 for x < 0 and f′ < 0 for x > 0 (excluding x = ±2); f has a local max at (0, 0)"
+    ],
+    "final_answer": "vertical asymptotes x = ±2; horizontal asymptote y = 2; increasing for x < 0 (x ≠ −2), decreasing for x > 0 (x ≠ 2); local max (0, 0)",
+    "level": "college"
+  },
+  {
+    "id": "c1-44",
+    "source": "behaviour of functions and curve sketching, original",
+    "prompt_latex": "Analyse f(x) = x e^{-x}: increase/decrease, extrema, concavity, inflection point, and the behaviour as x \\to  \\infty .",
+    "prompt_plain": "Analyse f(x) = x e^(−x): increase/decrease, extrema, concavity, inflection point, and the behaviour as x → ∞.",
+    "prompt_parts": [
+      {
+        "text": "Analyse f(x) = x e^(−x): increase/decrease, extrema, concavity, inflection point, and the behaviour as x → ∞."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = e^(−x) − x e^(−x) = e^(−x)(1 − x): positive for x < 1, negative for x > 1, so f has a maximum at x = 1 with f(1) = 1/e",
+      "f″(x) = −e^(−x)(1 − x) − e^(−x) = e^(−x)(x − 2): negative for x < 2 (concave down), positive for x > 2 (concave up)",
+      "Inflection point at x = 2: f(2) = 2/e²",
+      "As x → ∞, x e^(−x) = x/eˣ → 0 (the exponential wins), so y = 0 is a horizontal asymptote"
+    ],
+    "final_answer": "increasing on (−∞, 1), decreasing on (1, ∞); max (1, 1/e); concave down on (−∞, 2), up on (2, ∞); inflection (2, 2/e²); y → 0 as x → ∞",
+    "level": "college"
+  },
+  {
+    "id": "c1-45",
+    "source": "L'Hôpital's rule, original",
+    "prompt_latex": "\\lim_{x \\to 0} \\frac{e^{3x} - 1 - 3x}{x^2}",
+    "prompt_plain": "lim(x→0) (e^(3x) − 1 − 3x)/x²",
+    "prompt_parts": [
+      {
+        "text": "lim(x→0) "
+      },
+      {
+        "frac": {
+          "num": "e^(3x) − 1 − 3x",
+          "den": "x²"
+        }
+      }
+    ],
+    "worked_solution": [
+      "At x = 0 the form is 0/0, so apply L'Hôpital's Rule",
+      "Differentiate top and bottom: (3e^(3x) − 3)/(2x), still 0/0",
+      "Apply the rule again: 9e^(3x)/2",
+      "At x = 0: 9/2"
+    ],
+    "final_answer": "9/2",
+    "level": "college"
+  },
+  {
+    "id": "c1-46",
+    "source": "L'Hôpital's rule, original",
+    "prompt_latex": "\\lim_{x \\to 0^+} \\sqrt{x} \\ln x",
+    "prompt_plain": "lim(x→0⁺) √x ln x",
+    "prompt_parts": [
+      {
+        "text": "lim(x→0⁺) √x ln x"
+      }
+    ],
+    "worked_solution": [
+      "The form is 0·(−∞). Rewrite as a quotient: ln x / x^(−1/2), which is −∞/∞",
+      "L'Hôpital: (1/x) / (−(1/2)x^(−3/2))",
+      "Simplify: −2x^(3/2)/x = −2√x",
+      "As x → 0⁺, −2√x → 0"
+    ],
+    "final_answer": "0",
+    "level": "college"
+  },
+  {
+    "id": "c1-47",
+    "source": "L'Hôpital's rule, original",
+    "prompt_latex": "\\lim_{x \\to 0} (\\cos x)^{1/x^2}",
+    "prompt_plain": "lim(x→0) (cos x)^(1/x²)",
+    "prompt_parts": [
+      {
+        "text": "lim(x→0) (cos x)^(1/x²)"
+      }
+    ],
+    "worked_solution": [
+      "The form is 1^∞. Let L = the limit and take logs: ln L = lim(x→0) ln(cos x)/x²",
+      "This is 0/0. L'Hôpital: (−sin x / cos x)/(2x) = −tan x/(2x)",
+      "Still 0/0. L'Hôpital again: −sec²x/2, which → −1/2 at x = 0",
+      "So ln L = −1/2 and L = e^(−1/2)"
+    ],
+    "final_answer": "e^(−1/2) = 1/√e",
+    "level": "college"
+  },
+  {
+    "id": "c1-48",
+    "source": "Newton's method, original",
+    "prompt_latex": "Use Newton's method with x_1 = 1 on f(x) = x^3 + x - 3 to find x_2 and x_3. Give exact fractions.",
+    "prompt_plain": "Use Newton's method with x₁ = 1 on f(x) = x³ + x − 3 to find x₂ and x₃. Give exact fractions.",
+    "prompt_parts": [
+      {
+        "text": "Use Newton's method with x₁ = 1 on f(x) = x³ + x − 3 to find x₂ and x₃. Give exact fractions."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 3x² + 1; the update is x_{n+1} = x_n − f(x_n)/f′(x_n)",
+      "f(1) = −1 and f′(1) = 4, so x₂ = 1 − (−1)/4 = 5/4",
+      "f(5/4) = 125/64 + 5/4 − 3 = 13/64 and f′(5/4) = 75/16 + 1 = 91/16",
+      "x₃ = 5/4 − (13/64)(16/91) = 5/4 − 1/28 = 34/28 = 17/14 ≈ 1.2143"
+    ],
+    "final_answer": "x₂ = 5/4; x₃ = 17/14 ≈ 1.2143",
+    "level": "college"
+  },
+  {
+    "id": "c1-49",
+    "source": "Newton's method, original",
+    "prompt_latex": "Use Newton's method with x_1 = 3 on f(x) = x^2 - 7 to find x_2 and x_3 as fractions, and compare x_3 with \\sqrt{7}.",
+    "prompt_plain": "Use Newton's method with x₁ = 3 on f(x) = x² − 7 to find x₂ and x₃ as fractions, and compare x₃ with √7.",
+    "prompt_parts": [
+      {
+        "text": "Use Newton's method with x₁ = 3 on f(x) = x² − 7 to find x₂ and x₃ as fractions, and compare x₃ with √7."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 2x, so x_{n+1} = x_n − (x_n² − 7)/(2x_n)",
+      "x₂ = 3 − (9 − 7)/6 = 3 − 1/3 = 8/3",
+      "x₃ = 8/3 − (64/9 − 7)/(16/3) = 8/3 − (1/9)(3/16) = 8/3 − 1/48 = 127/48",
+      "127/48 ≈ 2.645833 and √7 ≈ 2.645751, which agree to 4 decimal places"
+    ],
+    "final_answer": "x₂ = 8/3; x₃ = 127/48 ≈ 2.645833 (√7 ≈ 2.645751)",
+    "level": "college"
+  },
+  {
+    "id": "c1-50",
+    "source": "optimization, original",
+    "prompt_latex": "A farmer has 240 m of fencing for a rectangular pen against a barn wall (no fence on the wall side), divided into two equal pens by one fence perpendicular to the wall. Find the dimensions that give the largest total area.",
+    "prompt_plain": "A farmer has 240 m of fencing for a rectangular pen against a barn wall (no fence on the wall side), divided into two equal pens by one fence perpendicular to the wall. Find the dimensions that give the largest total area.",
+    "prompt_parts": [
+      {
+        "text": "A farmer has 240 m of fencing for a rectangular pen against a barn wall (no fence on the wall side), divided into two equal pens by one fence perpendicular to the wall. Find the dimensions that give the largest total area."
+      }
+    ],
+    "worked_solution": [
+      "Let x be the length of each fence perpendicular to the wall (3 of them) and y the length parallel to the wall. Then 3x + y = 240, so y = 240 − 3x",
+      "Area A(x) = x(240 − 3x) = 240x − 3x², with 0 < x < 80",
+      "A′(x) = 240 − 6x = 0, so x = 40 and y = 240 − 120 = 120",
+      "A″ = −6 < 0, so this is a maximum: A = 40·120 = 4800 m²"
+    ],
+    "final_answer": "40 m by 120 m (40 m perpendicular to the wall); area 4800 m²",
+    "level": "college"
+  },
+  {
+    "id": "c1-51",
+    "source": "optimization, original",
+    "prompt_latex": "Squares of side x are cut from the corners of a 30 cm by 30 cm sheet and the sides are folded up to make an open box. Find x that maximizes the volume, and the maximum volume.",
+    "prompt_plain": "Squares of side x are cut from the corners of a 30 cm by 30 cm sheet and the sides are folded up to make an open box. Find x that maximizes the volume, and the maximum volume.",
+    "prompt_parts": [
+      {
+        "text": "Squares of side x are cut from the corners of a 30 cm by 30 cm sheet and the sides are folded up to make an open box. Find x that maximizes the volume, and the maximum volume."
+      }
+    ],
+    "worked_solution": [
+      "Base side is 30 − 2x and height is x, so V(x) = x(30 − 2x)², with 0 < x < 15",
+      "V′(x) = (30 − 2x)² + x·2(30 − 2x)(−2) = (30 − 2x)(30 − 2x − 4x) = (30 − 2x)(30 − 6x)",
+      "Critical number in the domain: 30 − 6x = 0, so x = 5",
+      "V is increasing before 5 and decreasing after, so x = 5 gives the maximum: V(5) = 5·20² = 2000 cm³"
+    ],
+    "final_answer": "x = 5 cm; maximum volume 2000 cm³",
+    "level": "college"
+  },
+  {
+    "id": "c1-52",
+    "source": "optimization, original",
+    "prompt_latex": "A closed cylindrical can must hold 128\\pi  cm^3. Find the radius and height that minimize the surface area.",
+    "prompt_plain": "A closed cylindrical can must hold 128π cm³. Find the radius and height that minimize the surface area.",
+    "prompt_parts": [
+      {
+        "text": "A closed cylindrical can must hold 128π cm³. Find the radius and height that minimize the surface area."
+      }
+    ],
+    "worked_solution": [
+      "Volume: πr²h = 128π, so h = 128/r²",
+      "Surface area S(r) = 2πr² + 2πrh = 2πr² + 256π/r",
+      "S′(r) = 4πr − 256π/r² = 0, so r³ = 64 and r = 4",
+      "Then h = 128/16 = 8. S″(r) = 4π + 512π/r³ > 0, so this is a minimum, with S = 32π + 64π = 96π cm²"
+    ],
+    "final_answer": "r = 4 cm, h = 8 cm (minimum surface area 96π cm²)",
+    "level": "college"
+  },
+  {
+    "id": "c1-53",
+    "source": "optimization, original",
+    "prompt_latex": "Find the points on the parabola y = x^2 that are closest to the point (0, 3).",
+    "prompt_plain": "Find the points on the parabola y = x² that are closest to the point (0, 3).",
+    "prompt_parts": [
+      {
+        "text": "Find the points on the parabola y = x² that are closest to the point (0, 3)."
+      }
+    ],
+    "worked_solution": [
+      "Squared distance (easier to differentiate): D(x) = x² + (x² − 3)² = x⁴ − 5x² + 9",
+      "D′(x) = 4x³ − 10x = 2x(2x² − 5), so x = 0 or x² = 5/2",
+      "D(0) = 9 but D at x² = 5/2 is 25/4 − 25/2 + 9 = 11/4, which is smaller",
+      "Points (±√(5/2), 5/2), at distance √(11/4) = √11/2 ≈ 1.66"
+    ],
+    "final_answer": "(±√(5/2), 5/2), distance √11/2",
+    "level": "college"
+  },
+  {
+    "id": "c1-54",
+    "source": "linear approximation and differentials, original",
+    "prompt_latex": "Use a linear approximation of f(x) = x^{1/3} at a = 64 to estimate the cube root of 67.",
+    "prompt_plain": "Use a linear approximation of f(x) = x^(1/3) at a = 64 to estimate the cube root of 67.",
+    "prompt_parts": [
+      {
+        "text": "Use a linear approximation of f(x) = x^(1/3) at a = 64 to estimate the cube root of 67."
+      }
+    ],
+    "worked_solution": [
+      "f(64) = 4 and f′(x) = (1/3)x^(−2/3), so f′(64) = 1/(3·16) = 1/48",
+      "L(x) = 4 + (1/48)(x − 64)",
+      "L(67) = 4 + 3/48 = 4 + 1/16",
+      "The cube root of 67 ≈ 4.0625 (the true value is about 4.0615)"
+    ],
+    "final_answer": "about 4.0625",
+    "level": "college"
+  },
+  {
+    "id": "c1-55",
+    "source": "linear approximation and differentials, original",
+    "prompt_latex": "A sphere's radius is measured as 10 cm with a possible error of 0.1 cm. Use differentials to estimate the maximum error in the volume and the relative error.",
+    "prompt_plain": "A sphere's radius is measured as 10 cm with a possible error of 0.1 cm. Use differentials to estimate the maximum error in the volume and the relative error.",
+    "prompt_parts": [
+      {
+        "text": "A sphere's radius is measured as 10 cm with a possible error of 0.1 cm. Use differentials to estimate the maximum error in the volume and the relative error."
+      }
+    ],
+    "worked_solution": [
+      "V = (4/3)πr³, so dV = 4πr² dr",
+      "With r = 10 and dr = 0.1: dV = 4π(100)(0.1) = 40π ≈ 125.7 cm³",
+      "V = (4/3)π(1000) = 4000π/3 ≈ 4188.8 cm³",
+      "Relative error dV/V = 40π/(4000π/3) = 3/100 = 3%"
+    ],
+    "final_answer": "dV = 40π ≈ 125.7 cm³; relative error 3%",
+    "level": "college"
+  },
+  {
+    "id": "c1-56",
+    "source": "linear approximation and differentials, original",
+    "prompt_latex": "Find the linearization of f(x) = \\tan x at a = \\pi /4 and use it to estimate \\tan(0.8).",
+    "prompt_plain": "Find the linearization of f(x) = tan x at a = π/4 and use it to estimate tan(0.8).",
+    "prompt_parts": [
+      {
+        "text": "Find the linearization of f(x) = tan x at a = π/4 and use it to estimate tan(0.8)."
+      }
+    ],
+    "worked_solution": [
+      "f(π/4) = 1 and f′(x) = sec²x, so f′(π/4) = 1/cos²(π/4) = 2",
+      "L(x) = 1 + 2(x − π/4)",
+      "π/4 ≈ 0.7854, so L(0.8) = 1 + 2(0.8 − 0.7854) ≈ 1.0292",
+      "The true value of tan(0.8) is about 1.0296"
+    ],
+    "final_answer": "L(x) = 1 + 2(x − π/4); tan(0.8) ≈ 1.029",
+    "level": "college"
+  },
+  {
+    "id": "c1-57",
+    "source": "related rates, original",
+    "prompt_latex": "A 13 m ladder leans against a wall. The bottom slides away from the wall at 0.5 m/s. How fast is the top sliding down the wall when the bottom is 5 m from the wall?",
+    "prompt_plain": "A 13 m ladder leans against a wall. The bottom slides away from the wall at 0.5 m/s. How fast is the top sliding down the wall when the bottom is 5 m from the wall?",
+    "prompt_parts": [
+      {
+        "text": "A 13 m ladder leans against a wall. The bottom slides away from the wall at 0.5 m/s. How fast is the top sliding down the wall when the bottom is 5 m from the wall?"
+      }
+    ],
+    "worked_solution": [
+      "Let x = distance from the wall to the bottom and y = height of the top: x² + y² = 169",
+      "Differentiate in t: 2x dx/dt + 2y dy/dt = 0",
+      "When x = 5: y = √(169 − 25) = 12",
+      "5(0.5) + 12 dy/dt = 0, so dy/dt = −2.5/12 = −5/24 m/s"
+    ],
+    "final_answer": "the top slides down at 5/24 m/s ≈ 0.208 m/s",
+    "level": "college"
+  },
+  {
+    "id": "c1-58",
+    "source": "related rates, original",
+    "prompt_latex": "Water is poured at 2 m^3/min into a tank shaped like an inverted cone, 6 m tall with top radius 3 m. How fast is the water level rising when the depth is 4 m?",
+    "prompt_plain": "Water is poured at 2 m³/min into a tank shaped like an inverted cone, 6 m tall with top radius 3 m. How fast is the water level rising when the depth is 4 m?",
+    "prompt_parts": [
+      {
+        "text": "Water is poured at 2 m³/min into a tank shaped like an inverted cone, 6 m tall with top radius 3 m. How fast is the water level rising when the depth is 4 m?"
+      }
+    ],
+    "worked_solution": [
+      "By similar triangles r/h = 3/6, so r = h/2",
+      "V = (1/3)πr²h = (1/3)π(h/2)²h = πh³/12",
+      "dV/dt = (π h²/4) dh/dt",
+      "At h = 4: 2 = (π·16/4) dh/dt = 4π dh/dt, so dh/dt = 1/(2π) m/min"
+    ],
+    "final_answer": "1/(2π) m/min ≈ 0.159 m/min",
+    "level": "college"
+  },
+  {
+    "id": "c1-59",
+    "source": "related rates, original",
+    "prompt_latex": "A plane flies horizontally at altitude 3 km toward a radar station. When its ground distance from the station is 4 km, that distance is shrinking at 400 km/h. How fast is the distance from the plane to the station changing?",
+    "prompt_plain": "A plane flies horizontally at altitude 3 km toward a radar station. When its ground distance from the station is 4 km, that distance is shrinking at 400 km/h. How fast is the distance from the plane to the station changing?",
+    "prompt_parts": [
+      {
+        "text": "A plane flies horizontally at altitude 3 km toward a radar station. When its ground distance from the station is 4 km, that distance is shrinking at 400 km/h. How fast is the distance from the plane to the station changing?"
+      }
+    ],
+    "worked_solution": [
+      "Let x = ground distance and s = distance to the station: s² = x² + 3²",
+      "Differentiate: 2s ds/dt = 2x dx/dt",
+      "When x = 4: s = √(16 + 9) = 5, and dx/dt = −400",
+      "5 ds/dt = 4(−400), so ds/dt = −320 km/h"
+    ],
+    "final_answer": "the distance is decreasing at 320 km/h",
+    "level": "college"
+  },
+  {
+    "id": "c1-60",
+    "source": "related rates, original",
+    "prompt_latex": "A 1.8 m person walks away from a 5 m lamp post at 1.2 m/s. How fast is the length of their shadow growing?",
+    "prompt_plain": "A 1.8 m person walks away from a 5 m lamp post at 1.2 m/s. How fast is the length of their shadow growing?",
+    "prompt_parts": [
+      {
+        "text": "A 1.8 m person walks away from a 5 m lamp post at 1.2 m/s. How fast is the length of their shadow growing?"
+      }
+    ],
+    "worked_solution": [
+      "Let x = distance from the post and s = shadow length. Similar triangles: s/1.8 = (x + s)/5",
+      "5s = 1.8x + 1.8s, so 3.2s = 1.8x and s = (9/16)x",
+      "Differentiate: ds/dt = (9/16) dx/dt",
+      "ds/dt = (9/16)(1.2) = 0.675 m/s"
+    ],
+    "final_answer": "0.675 m/s (27/40 m/s)",
+    "level": "college"
+  },
+  {
+    "id": "c1-61",
+    "source": "applications: velocity, acceleration and antiderivatives, original",
+    "prompt_latex": "A particle has position s(t) = t^3 - 9t^2 + 15t (metres, t \\ge  0). When is it at rest, and what is its acceleration then?",
+    "prompt_plain": "A particle has position s(t) = t³ − 9t² + 15t (metres, t ≥ 0). When is it at rest, and what is its acceleration then?",
+    "prompt_parts": [
+      {
+        "text": "A particle has position s(t) = t³ − 9t² + 15t (metres, t ≥ 0). When is it at rest, and what is its acceleration then?"
+      }
+    ],
+    "worked_solution": [
+      "v(t) = s′(t) = 3t² − 18t + 15 = 3(t − 1)(t − 5)",
+      "At rest when v = 0: t = 1 s and t = 5 s",
+      "a(t) = v′(t) = 6t − 18",
+      "a(1) = −12 m/s² and a(5) = 12 m/s²"
+    ],
+    "final_answer": "at rest at t = 1 s and t = 5 s; a(1) = −12 m/s², a(5) = 12 m/s²",
+    "level": "college"
+  },
+  {
+    "id": "c1-62",
+    "source": "applications: velocity, acceleration and antiderivatives, original",
+    "prompt_latex": "A particle has acceleration a(t) = 6t - 4, with v(0) = 5 and s(0) = 2. Find s(t).",
+    "prompt_plain": "A particle has acceleration a(t) = 6t − 4, with v(0) = 5 and s(0) = 2. Find s(t).",
+    "prompt_parts": [
+      {
+        "text": "A particle has acceleration a(t) = 6t − 4, with v(0) = 5 and s(0) = 2. Find s(t)."
+      }
+    ],
+    "worked_solution": [
+      "v(t) = ∫ a(t) dt = 3t² − 4t + C, and v(0) = 5 gives C = 5, so v(t) = 3t² − 4t + 5",
+      "s(t) = ∫ v(t) dt = t³ − 2t² + 5t + D",
+      "s(0) = 2 gives D = 2",
+      "s(t) = t³ − 2t² + 5t + 2"
+    ],
+    "final_answer": "s(t) = t³ − 2t² + 5t + 2",
+    "level": "college"
+  },
+  {
+    "id": "c1-63",
+    "source": "parametric curves, original",
+    "prompt_latex": "For x = t^2 + 1, y = t^3 - 3t, find dy/dx at t = 2 and the tangent line there.",
+    "prompt_plain": "For x = t² + 1, y = t³ − 3t, find dy/dx at t = 2 and the tangent line there.",
+    "prompt_parts": [
+      {
+        "text": "For x = t² + 1, y = t³ − 3t, find dy/dx at t = 2 and the tangent line there."
+      }
+    ],
+    "worked_solution": [
+      "dx/dt = 2t and dy/dt = 3t² − 3",
+      "dy/dx = (dy/dt)/(dx/dt) = (3t² − 3)/(2t)",
+      "At t = 2: the point is (5, 2) and dy/dx = 9/4",
+      "Tangent line: y − 2 = (9/4)(x − 5)"
+    ],
+    "final_answer": "dy/dx = 9/4; tangent line y − 2 = (9/4)(x − 5)",
+    "level": "college"
+  },
+  {
+    "id": "c1-64",
+    "source": "parametric curves, original",
+    "prompt_latex": "Find the points with a horizontal tangent and with a vertical tangent on x = t^3 - 3t, y = t^2 - 4t.",
+    "prompt_plain": "Find the points with a horizontal tangent and with a vertical tangent on x = t³ − 3t, y = t² − 4t.",
+    "prompt_parts": [
+      {
+        "text": "Find the points with a horizontal tangent and with a vertical tangent on x = t³ − 3t, y = t² − 4t."
+      }
+    ],
+    "worked_solution": [
+      "dx/dt = 3t² − 3 = 3(t − 1)(t + 1) and dy/dt = 2t − 4 = 2(t − 2)",
+      "Horizontal tangent: dy/dt = 0 with dx/dt ≠ 0. t = 2 gives dx/dt = 9 ≠ 0; the point is (8 − 6, 4 − 8) = (2, −4)",
+      "Vertical tangent: dx/dt = 0 with dy/dt ≠ 0. t = 1 gives dy/dt = −2 ≠ 0; the point is (1 − 3, 1 − 4) = (−2, −3)",
+      "t = −1 gives dy/dt = −6 ≠ 0; the point is (−1 + 3, 1 + 4) = (2, 5)"
+    ],
+    "final_answer": "horizontal tangent at (2, −4); vertical tangents at (−2, −3) and (2, 5)",
+    "level": "college"
+  },
+  {
+    "id": "c1-65",
+    "source": "parametric curves, original",
+    "prompt_latex": "For x = t^2, y = t^3 - 3t (t > 0), find d^2y/dx^2 at t = 1.",
+    "prompt_plain": "For x = t², y = t³ − 3t (t > 0), find d²y/dx² at t = 1.",
+    "prompt_parts": [
+      {
+        "text": "For x = t², y = t³ − 3t (t > 0), find d²y/dx² at t = 1."
+      }
+    ],
+    "worked_solution": [
+      "dy/dx = (3t² − 3)/(2t) = (3/2)(t − 1/t)",
+      "d/dt (dy/dx) = (3/2)(1 + 1/t²)",
+      "d²y/dx² = [d/dt (dy/dx)] / (dx/dt) = (3/2)(1 + 1/t²)/(2t) = 3(t² + 1)/(4t³)",
+      "At t = 1: 3(2)/4 = 3/2"
+    ],
+    "final_answer": "d²y/dx² = 3/2",
+    "level": "college"
+  },
+  {
+    "id": "c1-66",
+    "source": "polar curves, original",
+    "prompt_latex": "Find the slope of the tangent to the polar curve r = 2 + \\cos \\theta  at \\theta  = \\pi /2, and give the tangent line in Cartesian form.",
+    "prompt_plain": "Find the slope of the tangent to the polar curve r = 2 + cos θ at θ = π/2, and give the tangent line in Cartesian form.",
+    "prompt_parts": [
+      {
+        "text": "Find the slope of the tangent to the polar curve r = 2 + cos θ at θ = π/2, and give the tangent line in Cartesian form."
+      }
+    ],
+    "worked_solution": [
+      "x = r cos θ and y = r sin θ, so dy/dx = (r′ sin θ + r cos θ)/(r′ cos θ − r sin θ)",
+      "At θ = π/2: r = 2 and r′ = −sin θ = −1",
+      "Numerator: (−1)(1) + 2(0) = −1. Denominator: (−1)(0) − 2(1) = −2. Slope = 1/2",
+      "The point is (x, y) = (0, 2), so the tangent line is y = 2 + x/2"
+    ],
+    "final_answer": "slope 1/2; tangent line y = 2 + x/2",
+    "level": "college"
+  },
+  {
+    "id": "c1-67",
+    "source": "polar curves, original",
+    "prompt_latex": "Find the slope of the tangent to r = 4 \\cos \\theta  at \\theta  = \\pi /3, and confirm it by converting the curve to Cartesian form.",
+    "prompt_plain": "Find the slope of the tangent to r = 4 cos θ at θ = π/3, and confirm it by converting the curve to Cartesian form.",
+    "prompt_parts": [
+      {
+        "text": "Find the slope of the tangent to r = 4 cos θ at θ = π/3, and confirm it by converting the curve to Cartesian form."
+      }
+    ],
+    "worked_solution": [
+      "r = 2 and r′ = −4 sin θ = −2√3 at θ = π/3; the point is (r cos θ, r sin θ) = (1, √3)",
+      "Numerator: r′ sin θ + r cos θ = −2√3(√3/2) + 2(1/2) = −3 + 1 = −2",
+      "Denominator: r′ cos θ − r sin θ = −2√3(1/2) − 2(√3/2) = −2√3. Slope = −2/(−2√3) = 1/√3",
+      "Check: r = 4 cos θ is the circle (x − 2)² + y² = 4. Implicitly, dy/dx = −(x − 2)/y = −(1 − 2)/√3 = 1/√3"
+    ],
+    "final_answer": "slope 1/√3 at the point (1, √3)",
+    "level": "college"
+  },
+  {
+    "id": "c1-68",
+    "source": "antiderivatives, original",
+    "prompt_latex": "Find the general antiderivative of f(x) = 6x^2 - \\frac{4}{x^3} + 5\\sqrt{x}",
+    "prompt_plain": "Find the general antiderivative of f(x) = 6x² − 4/x³ + 5√x",
+    "prompt_parts": [
+      {
+        "text": "Find the general antiderivative of f(x) = 6x² − "
+      },
+      {
+        "frac": {
+          "num": "4",
+          "den": "x³"
+        }
+      },
+      {
+        "text": " + 5√x"
+      }
+    ],
+    "worked_solution": [
+      "Rewrite: f(x) = 6x² − 4x^(−3) + 5x^(1/2)",
+      "Raise each power by 1 and divide by the new power",
+      "6x³/3 − 4x^(−2)/(−2) + 5x^(3/2)/(3/2)",
+      "F(x) = 2x³ + 2/x² + (10/3)x^(3/2) + C"
+    ],
+    "final_answer": "F(x) = 2x³ + 2/x² + (10/3)x^(3/2) + C",
+    "level": "college"
+  },
+  {
+    "id": "c1-69",
+    "source": "antiderivatives, original",
+    "prompt_latex": "Find the general antiderivative of f(x) = 3 \\sin x - \\frac{4}{1 + x^2} + 2e^x",
+    "prompt_plain": "Find the general antiderivative of f(x) = 3 sin x − 4/(1 + x²) + 2eˣ",
+    "prompt_parts": [
+      {
+        "text": "Find the general antiderivative of f(x) = 3 sin x − "
+      },
+      {
+        "frac": {
+          "num": "4",
+          "den": "1 + x²"
+        }
+      },
+      {
+        "text": " + 2eˣ"
+      }
+    ],
+    "worked_solution": [
+      "∫ sin x dx = −cos x, so the first term gives −3 cos x",
+      "∫ 1/(1 + x²) dx = arctan x, so the second term gives −4 arctan x",
+      "∫ eˣ dx = eˣ, so the third term gives 2eˣ",
+      "F(x) = −3 cos x − 4 arctan x + 2eˣ + C"
+    ],
+    "final_answer": "F(x) = −3 cos x − 4 arctan x + 2eˣ + C",
+    "level": "college"
+  },
+  {
+    "id": "c1-70",
+    "source": "antiderivatives, original",
+    "prompt_latex": "Find f if f''(x) = 6x + 4, f'(1) = 3 and f(0) = 2.",
+    "prompt_plain": "Find f if f″(x) = 6x + 4, f′(1) = 3 and f(0) = 2.",
+    "prompt_parts": [
+      {
+        "text": "Find f if f″(x) = 6x + 4, f′(1) = 3 and f(0) = 2."
+      }
+    ],
+    "worked_solution": [
+      "f′(x) = 3x² + 4x + C, and f′(1) = 3 + 4 + C = 3 gives C = −4",
+      "So f′(x) = 3x² + 4x − 4",
+      "f(x) = x³ + 2x² − 4x + D, and f(0) = D = 2",
+      "f(x) = x³ + 2x² − 4x + 2"
+    ],
+    "final_answer": "f(x) = x³ + 2x² − 4x + 2",
+    "level": "college"
+  }
+]
