@@ -1,0 +1,1671 @@
+[
+  {
+    "id": "m5-01",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{In the number 482 539, what is the value of the digit 8?}",
+    "prompt_plain": "In the number 482 539, what is the value of the digit 8?",
+    "prompt_parts": [
+      {
+        "text": "In the number 482 539, what is the value of the digit 8?"
+      }
+    ],
+    "worked_solution": [
+      "Read the places from the right: 9 ones, 3 tens, 5 hundreds, 2 thousands, 8 ten-thousands, 4 hundred-thousands.",
+      "The 8 is in the ten-thousands place, so its value is 8 × 10 000.",
+      "8 × 10 000 = 80 000"
+    ],
+    "final_answer": "80 000",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-02",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{Write 400 000 + 7000 + 60 + 2 as a standard numeral.}",
+    "prompt_plain": "Write 400 000 + 7000 + 60 + 2 as a standard numeral.",
+    "prompt_parts": [
+      {
+        "text": "Write 400 000 + 7000 + 60 + 2 as a standard numeral."
+      }
+    ],
+    "worked_solution": [
+      "Line up the places: 4 hundred-thousands, 0 ten-thousands, 7 thousands, 0 hundreds, 6 tens, 2 ones.",
+      "A 0 holds each empty place: 4 0 7 0 6 2.",
+      "407 062"
+    ],
+    "final_answer": "407 062",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-03",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{Put these numbers in order from least to greatest: 245 310, 254 130, 245 130, 254 310.}",
+    "prompt_plain": "Put these numbers in order from least to greatest: 245 310, 254 130, 245 130, 254 310.",
+    "prompt_parts": [
+      {
+        "text": "Put these numbers in order from least to greatest: 245 310, 254 130, 245 130, 254 310."
+      }
+    ],
+    "worked_solution": [
+      "All four have 6 digits. Compare the hundred-thousands: all are 2.",
+      "Compare the ten-thousands: 245 130 and 245 310 have 4; 254 130 and 254 310 have 5. So the 4s come first.",
+      "Between 245 130 and 245 310, the thousands match (5), so look at the hundreds: 1 < 3.",
+      "Between 254 130 and 254 310, the hundreds again: 1 < 3.",
+      "Order: 245 130, 245 310, 254 130, 254 310"
+    ],
+    "final_answer": "245 130, 245 310, 254 130, 254 310",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-04",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{Round 674 829 to the nearest ten thousand.}",
+    "prompt_plain": "Round 674 829 to the nearest ten thousand.",
+    "prompt_parts": [
+      {
+        "text": "Round 674 829 to the nearest ten thousand."
+      }
+    ],
+    "worked_solution": [
+      "The ten-thousands digit is 7. Look at the digit to its right, the thousands: 4.",
+      "4 is less than 5, so round down and keep the 7.",
+      "Everything to the right becomes 0: 670 000"
+    ],
+    "final_answer": "670 000",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-05",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{Skip count by 25 000 starting at 100 000. What is the 5th number you say?}",
+    "prompt_plain": "Skip count by 25 000 starting at 100 000. What is the 5th number you say?",
+    "prompt_parts": [
+      {
+        "text": "Skip count by 25 000 starting at 100 000. What is the 5th number you say?"
+      }
+    ],
+    "worked_solution": [
+      "Say each number by adding 25 000.",
+      "1st: 100 000, 2nd: 125 000, 3rd: 150 000, 4th: 175 000.",
+      "5th: 175 000 + 25 000 = 200 000"
+    ],
+    "final_answer": "200 000",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-06",
+    "source": "BC Math 5 content standard: Number concepts to 1 000 000 (counting, comparing/ordering, estimating, place value); original",
+    "prompt_latex": "\\text{How many ten thousands are in 530 000?}",
+    "prompt_plain": "How many ten thousands are in 530 000?",
+    "prompt_parts": [
+      {
+        "text": "How many ten thousands are in 530 000?"
+      }
+    ],
+    "worked_solution": [
+      "Think: how many groups of 10 000 fit in 530 000?",
+      "530 000 ÷ 10 000 = 53",
+      "Check: 53 × 10 000 = 530 000"
+    ],
+    "final_answer": "53",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-07",
+    "source": "BC Math 5 content standard: Decimals to thousandths; original",
+    "prompt_latex": "\\text{What is the value of the digit 6 in 4.768?}",
+    "prompt_plain": "What is the value of the digit 6 in 4.768?",
+    "prompt_parts": [
+      {
+        "text": "What is the value of the digit 6 in 4.768?"
+      }
+    ],
+    "worked_solution": [
+      "The places after the decimal point are tenths, hundredths, thousandths.",
+      "4.768: the 7 is in tenths, the 6 is in hundredths, the 8 is in thousandths.",
+      "The 6 stands for 6 hundredths, which is 6/100 = 0.06"
+    ],
+    "final_answer": "6 hundredths (0.06)",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-08",
+    "source": "BC Math 5 content standard: Decimals to thousandths; original",
+    "prompt_latex": "\\text{Write as a decimal: 2 ones, 0 tenths, 7 hundredths, 4 thousandths.}",
+    "prompt_plain": "Write as a decimal: 2 ones, 0 tenths, 7 hundredths, 4 thousandths.",
+    "prompt_parts": [
+      {
+        "text": "Write as a decimal: 2 ones, 0 tenths, 7 hundredths, 4 thousandths."
+      }
+    ],
+    "worked_solution": [
+      "Write the ones, then the decimal point: 2.",
+      "Tenths 0, hundredths 7, thousandths 4: 2.074",
+      "Check by adding: 2 + 0.07 + 0.004 = 2.074"
+    ],
+    "final_answer": "2.074",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-09",
+    "source": "BC Math 5 content standard: Decimals to thousandths; original",
+    "prompt_latex": "\\text{Order from least to greatest: 0.38, 0.308, 0.83, 0.083.}",
+    "prompt_plain": "Order from least to greatest: 0.38, 0.308, 0.83, 0.083.",
+    "prompt_parts": [
+      {
+        "text": "Order from least to greatest: 0.38, 0.308, 0.83, 0.083."
+      }
+    ],
+    "worked_solution": [
+      "Give each one three decimal places: 0.380, 0.308, 0.830, 0.083.",
+      "Compare as if they were whole numbers: 83 < 308 < 380 < 830.",
+      "Order: 0.083, 0.308, 0.38, 0.83"
+    ],
+    "final_answer": "0.083, 0.308, 0.38, 0.83",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-10",
+    "source": "BC Math 5 content standard: Decimals to thousandths; original",
+    "prompt_latex": "\\text{Write 0.275 as a fraction in simplest form.}",
+    "prompt_plain": "Write 0.275 as a fraction in simplest form.",
+    "prompt_parts": [
+      {
+        "text": "Write 0.275 as a fraction in simplest form."
+      }
+    ],
+    "worked_solution": [
+      "0.275 means 275 thousandths, so it is 275/1000.",
+      "Both numbers divide by 25: 275 ÷ 25 = 11 and 1000 ÷ 25 = 40.",
+      "Answer: 11/40"
+    ],
+    "final_answer": "11/40",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-11",
+    "source": "BC Math 5 content standard: Equivalent fractions; original",
+    "prompt_latex": "\\dfrac{3}{5} = \\dfrac{?}{20}",
+    "prompt_plain": "3/5 = ?/20",
+    "prompt_parts": [
+      {
+        "frac": {
+          "num": "3",
+          "den": "5"
+        }
+      },
+      {
+        "text": " = "
+      },
+      {
+        "frac": {
+          "num": "?",
+          "den": "20"
+        }
+      }
+    ],
+    "worked_solution": [
+      "The denominator went from 5 to 20. 20 ÷ 5 = 4, so multiply by 4.",
+      "Do the same to the numerator: 3 × 4 = 12",
+      "3/5 = 12/20"
+    ],
+    "final_answer": "12",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-12",
+    "source": "BC Math 5 content standard: Equivalent fractions; original",
+    "prompt_latex": "\\text{Write 18/24 in simplest form.}",
+    "prompt_plain": "Write 18/24 in simplest form.",
+    "prompt_parts": [
+      {
+        "text": "Write 18/24 in simplest form."
+      }
+    ],
+    "worked_solution": [
+      "Find the biggest number that divides both: 6 goes into 18 and into 24.",
+      "18 ÷ 6 = 3 and 24 ÷ 6 = 4",
+      "18/24 = 3/4"
+    ],
+    "final_answer": "3/4",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-13",
+    "source": "BC Math 5 content standard: Equivalent fractions; original",
+    "prompt_latex": "\\text{Are 4/6 and 10/15 equivalent fractions? Show why.}",
+    "prompt_plain": "Are 4/6 and 10/15 equivalent fractions? Show why.",
+    "prompt_parts": [
+      {
+        "text": "Are 4/6 and 10/15 equivalent fractions? Show why."
+      }
+    ],
+    "worked_solution": [
+      "Simplify 4/6: divide top and bottom by 2 to get 2/3.",
+      "Simplify 10/15: divide top and bottom by 5 to get 2/3.",
+      "Both equal 2/3, so they are equivalent."
+    ],
+    "final_answer": "Yes, both equal 2/3",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-14",
+    "source": "BC Math 5 content standard: Equivalent fractions; original",
+    "prompt_latex": "\\text{Find a and b: 2/3 = a/12 = 14/b}",
+    "prompt_plain": "Find a and b: 2/3 = a/12 = 14/b",
+    "prompt_parts": [
+      {
+        "text": "Find a and b: 2/3 = a/12 = 14/b"
+      }
+    ],
+    "worked_solution": [
+      "For a: 3 × 4 = 12, so a = 2 × 4 = 8.",
+      "For b: 2 × 7 = 14, so b = 3 × 7 = 21.",
+      "Check: 8/12 = 2/3 and 14/21 = 2/3"
+    ],
+    "final_answer": "a = 8, b = 21",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-15",
+    "source": "BC Math 5 content standard: Equivalent fractions; original",
+    "prompt_latex": "\\text{Mia ate 6/8 of a small pizza. Jon ate 3/4 of an identical pizza. Who ate more?}",
+    "prompt_plain": "Mia ate 6/8 of a small pizza. Jon ate 3/4 of an identical pizza. Who ate more?",
+    "prompt_parts": [
+      {
+        "text": "Mia ate 6/8 of a small pizza. Jon ate 3/4 of an identical pizza. Who ate more?"
+      }
+    ],
+    "worked_solution": [
+      "Write 3/4 with a denominator of 8: 3/4 = 6/8 (multiply top and bottom by 2).",
+      "Mia ate 6/8 and Jon ate 6/8.",
+      "They ate the same amount."
+    ],
+    "final_answer": "They ate the same amount",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-16",
+    "source": "BC Math 5 content standard: Whole-number, fraction and decimal benchmarks; comparing and ordering fractions and decimals; original",
+    "prompt_latex": "\\text{Which is greater, 3/8 or 1/2? Use a benchmark.}",
+    "prompt_plain": "Which is greater, 3/8 or 1/2? Use a benchmark.",
+    "prompt_parts": [
+      {
+        "text": "Which is greater, 3/8 or 1/2? Use a benchmark."
+      }
+    ],
+    "worked_solution": [
+      "Use 1/2 as the benchmark. Write 1/2 as 4/8.",
+      "3/8 has fewer eighths than 4/8.",
+      "So 3/8 < 1/2, and 1/2 is greater."
+    ],
+    "final_answer": "1/2 is greater",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-17",
+    "source": "BC Math 5 content standard: Whole-number, fraction and decimal benchmarks; comparing and ordering fractions and decimals; original",
+    "prompt_latex": "\\text{Order from least to greatest: 3/4, 2/5, 7/8.}",
+    "prompt_plain": "Order from least to greatest: 3/4, 2/5, 7/8.",
+    "prompt_parts": [
+      {
+        "text": "Order from least to greatest: 3/4, 2/5, 7/8."
+      }
+    ],
+    "worked_solution": [
+      "Use 1/2 as a benchmark: 2/5 is less than 1/2 (half of 5 is 2.5), so it is smallest.",
+      "Write 3/4 as 6/8. Now compare 6/8 and 7/8: 6/8 < 7/8.",
+      "Order: 2/5, 3/4, 7/8"
+    ],
+    "final_answer": "2/5, 3/4, 7/8",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-18",
+    "source": "BC Math 5 content standard: Whole-number, fraction and decimal benchmarks; comparing and ordering fractions and decimals; original",
+    "prompt_latex": "\\text{Which is greater, 0.7 or 3/5?}",
+    "prompt_plain": "Which is greater, 0.7 or 3/5?",
+    "prompt_parts": [
+      {
+        "text": "Which is greater, 0.7 or 3/5?"
+      }
+    ],
+    "worked_solution": [
+      "Turn 3/5 into tenths: multiply top and bottom by 2 to get 6/10.",
+      "6/10 = 0.6",
+      "0.7 > 0.6, so 0.7 is greater."
+    ],
+    "final_answer": "0.7 is greater",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-19",
+    "source": "BC Math 5 content standard: Whole-number, fraction and decimal benchmarks; comparing and ordering fractions and decimals; original",
+    "prompt_latex": "\\text{Is 7/12 closest to 0, to 1/2, or to 1?}",
+    "prompt_plain": "Is 7/12 closest to 0, to 1/2, or to 1?",
+    "prompt_parts": [
+      {
+        "text": "Is 7/12 closest to 0, to 1/2, or to 1?"
+      }
+    ],
+    "worked_solution": [
+      "Write 1/2 with a denominator of 12: 1/2 = 6/12.",
+      "7/12 is only 1/12 more than 6/12.",
+      "It is far from 0 (0/12) and from 1 (12/12), so it is closest to 1/2."
+    ],
+    "final_answer": "1/2",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-20",
+    "source": "BC Math 5 content standard: Whole-number, fraction and decimal benchmarks; comparing and ordering fractions and decimals; original",
+    "prompt_latex": "\\text{Which number is closer to 1 whole, 0.9 or 7/8?}",
+    "prompt_plain": "Which number is closer to 1 whole, 0.9 or 7/8?",
+    "prompt_parts": [
+      {
+        "text": "Which number is closer to 1 whole, 0.9 or 7/8?"
+      }
+    ],
+    "worked_solution": [
+      "Find how far each is from 1.",
+      "1 − 0.9 = 0.1",
+      "1 − 7/8 = 1/8 = 0.125",
+      "0.1 < 0.125, so 0.9 is closer to 1."
+    ],
+    "final_answer": "0.9",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-21",
+    "source": "BC Math 5 content standard: Addition and subtraction of whole numbers to 1 000 000 (incl. estimating); original",
+    "prompt_latex": "\\text{Find 348 765 + 219 487.}",
+    "prompt_plain": "Find 348 765 + 219 487.",
+    "prompt_parts": [
+      {
+        "text": "Find 348 765 + 219 487."
+      }
+    ],
+    "worked_solution": [
+      "Add the ones: 5 + 7 = 12. Write 2, carry 1 ten.",
+      "Tens: 6 + 8 + 1 = 15. Write 5, carry 1 hundred.",
+      "Hundreds: 7 + 4 + 1 = 12. Write 2, carry 1 thousand.",
+      "Thousands: 8 + 9 + 1 = 18. Write 8, carry 1 ten-thousand.",
+      "Ten-thousands: 4 + 1 + 1 = 6. Hundred-thousands: 3 + 2 = 5.",
+      "348 765 + 219 487 = 568 252"
+    ],
+    "final_answer": "568 252",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-22",
+    "source": "BC Math 5 content standard: Addition and subtraction of whole numbers to 1 000 000 (incl. estimating); original",
+    "prompt_latex": "\\text{Find 700 000 − 256 389.}",
+    "prompt_plain": "Find 700 000 − 256 389.",
+    "prompt_parts": [
+      {
+        "text": "Find 700 000 − 256 389."
+      }
+    ],
+    "worked_solution": [
+      "Subtract in parts. First take away 256 389 from 700 000 by counting up from 256 389.",
+      "256 389 + 11 = 256 400",
+      "256 400 + 43 600 = 300 000",
+      "300 000 + 400 000 = 700 000",
+      "Add the jumps: 11 + 43 600 + 400 000 = 443 611"
+    ],
+    "final_answer": "443 611",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-23",
+    "source": "BC Math 5 content standard: Addition and subtraction of whole numbers to 1 000 000 (incl. estimating); original",
+    "prompt_latex": "\\text{A city had 482 350 people. This year 37 905 more people moved in. How many people live there now?}",
+    "prompt_plain": "A city had 482 350 people. This year 37 905 more people moved in. How many people live there now?",
+    "prompt_parts": [
+      {
+        "text": "A city had 482 350 people. This year 37 905 more people moved in. How many people live there now?"
+      }
+    ],
+    "worked_solution": [
+      "Add: 482 350 + 37 905.",
+      "482 350 + 30 000 = 512 350",
+      "512 350 + 7 905 = 520 255",
+      "Check by estimating: 480 000 + 40 000 = 520 000, which is close."
+    ],
+    "final_answer": "520 255 people",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-24",
+    "source": "BC Math 5 content standard: Addition and subtraction of whole numbers to 1 000 000 (incl. estimating); original",
+    "prompt_latex": "\\text{Estimate 8764 + 3198 by rounding to the nearest thousand. Then find the exact sum.}",
+    "prompt_plain": "Estimate 8764 + 3198 by rounding to the nearest thousand. Then find the exact sum.",
+    "prompt_parts": [
+      {
+        "text": "Estimate 8764 + 3198 by rounding to the nearest thousand. Then find the exact sum."
+      }
+    ],
+    "worked_solution": [
+      "Round: 8764 → 9000 and 3198 → 3000.",
+      "Estimate: 9000 + 3000 = 12 000",
+      "Exact: 8764 + 3198 = 8764 + 3000 + 198 = 11 764 + 198 = 11 962",
+      "11 962 is close to the estimate of 12 000."
+    ],
+    "final_answer": "Estimate 12 000; exact 11 962",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-25",
+    "source": "BC Math 5 content standard: Addition and subtraction of whole numbers to 1 000 000 (incl. estimating); original",
+    "prompt_latex": "\\text{500 000 − □ = 174 250. Find the missing number.}",
+    "prompt_plain": "500 000 − □ = 174 250. Find the missing number.",
+    "prompt_parts": [
+      {
+        "text": "500 000 − □ = 174 250. Find the missing number."
+      }
+    ],
+    "worked_solution": [
+      "Subtraction and addition undo each other: □ = 500 000 − 174 250.",
+      "174 250 + 25 750 = 200 000",
+      "200 000 + 300 000 = 500 000",
+      "□ = 25 750 + 300 000 = 325 750",
+      "Check: 500 000 − 325 750 = 174 250"
+    ],
+    "final_answer": "325 750",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-26",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{Find 36 × 24.}",
+    "prompt_plain": "Find 36 × 24.",
+    "prompt_parts": [
+      {
+        "text": "Find 36 × 24."
+      }
+    ],
+    "worked_solution": [
+      "Break 24 into 20 + 4.",
+      "36 × 20 = 720",
+      "36 × 4 = 144",
+      "720 + 144 = 864"
+    ],
+    "final_answer": "864",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-27",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{Find 237 × 4.}",
+    "prompt_plain": "Find 237 × 4.",
+    "prompt_parts": [
+      {
+        "text": "Find 237 × 4."
+      }
+    ],
+    "worked_solution": [
+      "Break 237 into 200 + 30 + 7.",
+      "200 × 4 = 800",
+      "30 × 4 = 120",
+      "7 × 4 = 28",
+      "800 + 120 + 28 = 948"
+    ],
+    "final_answer": "948",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-28",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{Find 156 ÷ 6.}",
+    "prompt_plain": "Find 156 ÷ 6.",
+    "prompt_parts": [
+      {
+        "text": "Find 156 ÷ 6."
+      }
+    ],
+    "worked_solution": [
+      "Think of multiplication: how many 6s make 156?",
+      "6 × 20 = 120, and 156 − 120 = 36",
+      "6 × 6 = 36",
+      "20 + 6 = 26",
+      "Check: 6 × 26 = 156"
+    ],
+    "final_answer": "26",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-29",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{Find 487 ÷ 5. Write the answer with a remainder.}",
+    "prompt_plain": "Find 487 ÷ 5. Write the answer with a remainder.",
+    "prompt_parts": [
+      {
+        "text": "Find 487 ÷ 5. Write the answer with a remainder."
+      }
+    ],
+    "worked_solution": [
+      "5 × 90 = 450, and 487 − 450 = 37",
+      "5 × 7 = 35, and 37 − 35 = 2",
+      "90 + 7 = 97 with 2 left over.",
+      "Check: 5 × 97 + 2 = 485 + 2 = 487"
+    ],
+    "final_answer": "97 R 2",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-30",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{250 students go on a trip. Each bus holds 48 students. How many buses are needed?}",
+    "prompt_plain": "250 students go on a trip. Each bus holds 48 students. How many buses are needed?",
+    "prompt_parts": [
+      {
+        "text": "250 students go on a trip. Each bus holds 48 students. How many buses are needed?"
+      }
+    ],
+    "worked_solution": [
+      "Divide: 250 ÷ 48.",
+      "48 × 5 = 240, and 250 − 240 = 10",
+      "So 5 full buses with 10 students left over.",
+      "Those 10 students still need a ride, so one more bus.",
+      "5 + 1 = 6 buses"
+    ],
+    "final_answer": "6 buses",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-31",
+    "source": "BC Math 5 content standard: Addition and subtraction of decimals to thousandths (incl. estimating); original",
+    "prompt_latex": "\\text{Find 3.482 + 2.75.}",
+    "prompt_plain": "Find 3.482 + 2.75.",
+    "prompt_parts": [
+      {
+        "text": "Find 3.482 + 2.75."
+      }
+    ],
+    "worked_solution": [
+      "Line up the decimal points and add a zero: 3.482 + 2.750.",
+      "Thousandths: 2 + 0 = 2. Hundredths: 8 + 5 = 13, write 3 and carry 1.",
+      "Tenths: 4 + 7 + 1 = 12, write 2 and carry 1. Ones: 3 + 2 + 1 = 6.",
+      "3.482 + 2.750 = 6.232"
+    ],
+    "final_answer": "6.232",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-32",
+    "source": "BC Math 5 content standard: Addition and subtraction of decimals to thousandths (incl. estimating); original",
+    "prompt_latex": "\\text{Find 8 − 3.275.}",
+    "prompt_plain": "Find 8 − 3.275.",
+    "prompt_parts": [
+      {
+        "text": "Find 8 − 3.275."
+      }
+    ],
+    "worked_solution": [
+      "Write 8 as 8.000 so the places line up.",
+      "3.275 + 0.725 = 4",
+      "4 + 4 = 8, so the jumps are 0.725 and 4.",
+      "0.725 + 4 = 4.725",
+      "Check: 4.725 + 3.275 = 8.000"
+    ],
+    "final_answer": "4.725",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-33",
+    "source": "BC Math 5 content standard: Addition and subtraction of decimals to thousandths (incl. estimating); original",
+    "prompt_latex": "\\text{A jug holds 1.25 L of juice. Another holds 0.875 L. How much juice is there in all?}",
+    "prompt_plain": "A jug holds 1.25 L of juice. Another holds 0.875 L. How much juice is there in all?",
+    "prompt_parts": [
+      {
+        "text": "A jug holds 1.25 L of juice. Another holds 0.875 L. How much juice is there in all?"
+      }
+    ],
+    "worked_solution": [
+      "Add: 1.25 + 0.875. Write 1.25 as 1.250.",
+      "1.250 + 0.875",
+      "Thousandths: 0 + 5 = 5. Hundredths: 5 + 7 = 12, write 2 and carry 1.",
+      "Tenths: 2 + 8 + 1 = 11, write 1 and carry 1. Ones: 1 + 0 + 1 = 2.",
+      "Total: 2.125 L"
+    ],
+    "final_answer": "2.125 L",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-34",
+    "source": "BC Math 5 content standard: Addition and subtraction of decimals to thousandths (incl. estimating); original",
+    "prompt_latex": "\\text{Estimate 6.89 + 4.12 by rounding each to the nearest whole number. Then find the exact sum.}",
+    "prompt_plain": "Estimate 6.89 + 4.12 by rounding each to the nearest whole number. Then find the exact sum.",
+    "prompt_parts": [
+      {
+        "text": "Estimate 6.89 + 4.12 by rounding each to the nearest whole number. Then find the exact sum."
+      }
+    ],
+    "worked_solution": [
+      "6.89 is close to 7 and 4.12 is close to 4.",
+      "Estimate: 7 + 4 = 11",
+      "Exact: 6.89 + 4.12 = 11.01",
+      "11.01 is close to the estimate of 11."
+    ],
+    "final_answer": "Estimate 11; exact 11.01",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-35",
+    "source": "BC Math 5 content standard: Addition and subtraction of decimals to thousandths (incl. estimating); original",
+    "prompt_latex": "\\text{12.5 − □ = 7.842. Find the missing number.}",
+    "prompt_plain": "12.5 − □ = 7.842. Find the missing number.",
+    "prompt_parts": [
+      {
+        "text": "12.5 − □ = 7.842. Find the missing number."
+      }
+    ],
+    "worked_solution": [
+      "□ = 12.5 − 7.842. Write 12.5 as 12.500.",
+      "7.842 + 0.158 = 8",
+      "8 + 4.5 = 12.5",
+      "□ = 0.158 + 4.5 = 4.658",
+      "Check: 12.5 − 4.658 = 7.842"
+    ],
+    "final_answer": "4.658",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-36",
+    "source": "BC Math 5 content standard: Addition and subtraction facts to 20 (extending computational fluency); original",
+    "prompt_latex": "\\text{Use 8 + 7 to find 800 + 700.}",
+    "prompt_plain": "Use 8 + 7 to find 800 + 700.",
+    "prompt_parts": [
+      {
+        "text": "Use 8 + 7 to find 800 + 700."
+      }
+    ],
+    "worked_solution": [
+      "8 + 7 = 15",
+      "800 + 700 is 8 hundreds + 7 hundreds = 15 hundreds.",
+      "15 hundreds = 1500"
+    ],
+    "final_answer": "1500",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-37",
+    "source": "BC Math 5 content standard: Addition and subtraction facts to 20 (extending computational fluency); original",
+    "prompt_latex": "\\text{Use 15 − 8 to find 150 000 − 80 000.}",
+    "prompt_plain": "Use 15 − 8 to find 150 000 − 80 000.",
+    "prompt_parts": [
+      {
+        "text": "Use 15 − 8 to find 150 000 − 80 000."
+      }
+    ],
+    "worked_solution": [
+      "15 − 8 = 7",
+      "150 000 is 15 ten-thousands and 80 000 is 8 ten-thousands.",
+      "15 ten-thousands − 8 ten-thousands = 7 ten-thousands = 70 000"
+    ],
+    "final_answer": "70 000",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-38",
+    "source": "BC Math 5 content standard: Addition and subtraction facts to 20 (extending computational fluency); original",
+    "prompt_latex": "\\text{Add 9 + 6 + 4 + 1 by making tens.}",
+    "prompt_plain": "Add 9 + 6 + 4 + 1 by making tens.",
+    "prompt_parts": [
+      {
+        "text": "Add 9 + 6 + 4 + 1 by making tens."
+      }
+    ],
+    "worked_solution": [
+      "Look for pairs that make 10: 9 + 1 = 10 and 6 + 4 = 10.",
+      "10 + 10 = 20"
+    ],
+    "final_answer": "20",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-39",
+    "source": "BC Math 5 content standard: Addition and subtraction facts to 20 (extending computational fluency); original",
+    "prompt_latex": "\\text{Tom had 16 hockey cards and gave 7 away. How many cards does he have left?}",
+    "prompt_plain": "Tom had 16 hockey cards and gave 7 away. How many cards does he have left?",
+    "prompt_parts": [
+      {
+        "text": "Tom had 16 hockey cards and gave 7 away. How many cards does he have left?"
+      }
+    ],
+    "worked_solution": [
+      "16 − 7: take 6 to reach 10, then take 1 more.",
+      "16 − 6 = 10, and 10 − 1 = 9",
+      "Check: 9 + 7 = 16"
+    ],
+    "final_answer": "9 cards",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-40",
+    "source": "BC Math 5 content standard: Multiplication and division facts to 100 (emerging computational fluency); original",
+    "prompt_latex": "\\text{Find 7 × 8.}",
+    "prompt_plain": "Find 7 × 8.",
+    "prompt_parts": [
+      {
+        "text": "Find 7 × 8."
+      }
+    ],
+    "worked_solution": [
+      "Split 8 into 5 + 3.",
+      "7 × 5 = 35 and 7 × 3 = 21",
+      "35 + 21 = 56"
+    ],
+    "final_answer": "56",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-41",
+    "source": "BC Math 5 content standard: Multiplication and division facts to 100 (emerging computational fluency); original",
+    "prompt_latex": "\\text{Find 63 ÷ 9.}",
+    "prompt_plain": "Find 63 ÷ 9.",
+    "prompt_parts": [
+      {
+        "text": "Find 63 ÷ 9."
+      }
+    ],
+    "worked_solution": [
+      "Think: 9 times what number is 63?",
+      "9 × 7 = 63",
+      "So 63 ÷ 9 = 7"
+    ],
+    "final_answer": "7",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-42",
+    "source": "BC Math 5 content standard: Multiplication and division facts to 100 (emerging computational fluency); original",
+    "prompt_latex": "\\text{6 × □ = 54. Find the missing number.}",
+    "prompt_plain": "6 × □ = 54. Find the missing number.",
+    "prompt_parts": [
+      {
+        "text": "6 × □ = 54. Find the missing number."
+      }
+    ],
+    "worked_solution": [
+      "Use the related division fact: □ = 54 ÷ 6.",
+      "6 × 9 = 54, so 54 ÷ 6 = 9",
+      "Check: 6 × 9 = 54"
+    ],
+    "final_answer": "9",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-43",
+    "source": "BC Math 5 content standard: Multiplication and division facts to 100 (emerging computational fluency); original",
+    "prompt_latex": "\\text{Use doubling and halving to find 4 × 15.}",
+    "prompt_plain": "Use doubling and halving to find 4 × 15.",
+    "prompt_parts": [
+      {
+        "text": "Use doubling and halving to find 4 × 15."
+      }
+    ],
+    "worked_solution": [
+      "Halve the 4 to get 2, and double the 15 to get 30.",
+      "2 × 30 = 60",
+      "Check: 4 × 15 = 10 × 4 + 5 × 4 = 40 + 20 = 60"
+    ],
+    "final_answer": "60",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-44",
+    "source": "BC Math 5 content standard: Multiplication and division facts to 100 (emerging computational fluency); original",
+    "prompt_latex": "\\text{72 eggs are packed in cartons of 9. How many cartons are filled?}",
+    "prompt_plain": "72 eggs are packed in cartons of 9. How many cartons are filled?",
+    "prompt_parts": [
+      {
+        "text": "72 eggs are packed in cartons of 9. How many cartons are filled?"
+      }
+    ],
+    "worked_solution": [
+      "Divide: 72 ÷ 9.",
+      "9 × 8 = 72",
+      "72 ÷ 9 = 8 cartons"
+    ],
+    "final_answer": "8 cartons",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-45",
+    "source": "BC Math 5 content standard: Rules for increasing and decreasing patterns (words, numbers, symbols, variables); original",
+    "prompt_latex": "\\text{Look at the pattern 5, 9, 13, 17. State the rule, then write the next three numbers.}",
+    "prompt_plain": "Look at the pattern 5, 9, 13, 17. State the rule, then write the next three numbers.",
+    "prompt_parts": [
+      {
+        "text": "Look at the pattern 5, 9, 13, 17. State the rule, then write the next three numbers."
+      }
+    ],
+    "worked_solution": [
+      "Find the change: 9 − 5 = 4, 13 − 9 = 4, 17 − 13 = 4.",
+      "Rule: start at 5 and add 4 each time (increasing pattern).",
+      "17 + 4 = 21, 21 + 4 = 25, 25 + 4 = 29"
+    ],
+    "final_answer": "Add 4; next numbers 21, 25, 29",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-46",
+    "source": "BC Math 5 content standard: Rules for increasing and decreasing patterns (words, numbers, symbols, variables); original",
+    "prompt_latex": "\\text{A pattern table: term number 1, 2, 3, 4 gives values 7, 12, 17, 22. The rule is value = 5 × term number + 2. What is the value for term number 10?}",
+    "prompt_plain": "A pattern table: term number 1, 2, 3, 4 gives values 7, 12, 17, 22. The rule is value = 5 × term number + 2. What is the value for term number 10?",
+    "prompt_parts": [
+      {
+        "text": "A pattern table: term number 1, 2, 3, 4 gives values 7, 12, 17, 22. The rule is value = 5 × term number + 2. What is the value for term number 10?"
+      }
+    ],
+    "worked_solution": [
+      "Check the rule on term 1: 5 × 1 + 2 = 7. It matches.",
+      "Term 10: 5 × 10 + 2",
+      "= 50 + 2 = 52"
+    ],
+    "final_answer": "52",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-47",
+    "source": "BC Math 5 content standard: Rules for increasing and decreasing patterns (words, numbers, symbols, variables); original",
+    "prompt_latex": "\\text{A decreasing pattern starts 100, 88, 76, 64. What is the 7th number?}",
+    "prompt_plain": "A decreasing pattern starts 100, 88, 76, 64. What is the 7th number?",
+    "prompt_parts": [
+      {
+        "text": "A decreasing pattern starts 100, 88, 76, 64. What is the 7th number?"
+      }
+    ],
+    "worked_solution": [
+      "The change is 88 − 100 = −12, so subtract 12 each time.",
+      "5th: 64 − 12 = 52, 6th: 52 − 12 = 40",
+      "7th: 40 − 12 = 28"
+    ],
+    "final_answer": "28",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-48",
+    "source": "BC Math 5 content standard: Rules for increasing and decreasing patterns (words, numbers, symbols, variables); original",
+    "prompt_latex": "\\text{A rule says: multiply the term number n by 3, then subtract 1. Write the rule with a letter, then find the value when n = 8.}",
+    "prompt_plain": "A rule says: multiply the term number n by 3, then subtract 1. Write the rule with a letter, then find the value when n = 8.",
+    "prompt_parts": [
+      {
+        "text": "A rule says: multiply the term number n by 3, then subtract 1. Write the rule with a letter, then find the value when n = 8."
+      }
+    ],
+    "worked_solution": [
+      "Rule: value = 3 × n − 1",
+      "Put in n = 8: 3 × 8 − 1",
+      "= 24 − 1 = 23"
+    ],
+    "final_answer": "value = 3 × n − 1; for n = 8 the value is 23",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-49",
+    "source": "BC Math 5 content standard: Rules for increasing and decreasing patterns (words, numbers, symbols, variables); original",
+    "prompt_latex": "\\text{Using value = 5 × n + 2, which term number n gives a value of 62?}",
+    "prompt_plain": "Using value = 5 × n + 2, which term number n gives a value of 62?",
+    "prompt_parts": [
+      {
+        "text": "Using value = 5 × n + 2, which term number n gives a value of 62?"
+      }
+    ],
+    "worked_solution": [
+      "We need 5 × n + 2 = 62.",
+      "Undo the + 2: 62 − 2 = 60, so 5 × n = 60.",
+      "n = 60 ÷ 5 = 12",
+      "Check: 5 × 12 + 2 = 62"
+    ],
+    "final_answer": "12",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-50",
+    "source": "BC Math 5 content standard: One-step equations with variables; original",
+    "prompt_latex": "\\text{Solve x + 17 = 40.}",
+    "prompt_plain": "Solve x + 17 = 40.",
+    "prompt_parts": [
+      {
+        "text": "Solve x + 17 = 40."
+      }
+    ],
+    "worked_solution": [
+      "Undo adding 17 by subtracting 17 from both sides.",
+      "x = 40 − 17 = 23",
+      "Check: 23 + 17 = 40"
+    ],
+    "final_answer": "x = 23",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-51",
+    "source": "BC Math 5 content standard: One-step equations with variables; original",
+    "prompt_latex": "\\text{Solve 9 × n = 72.}",
+    "prompt_plain": "Solve 9 × n = 72.",
+    "prompt_parts": [
+      {
+        "text": "Solve 9 × n = 72."
+      }
+    ],
+    "worked_solution": [
+      "Undo multiplying by 9 by dividing both sides by 9.",
+      "n = 72 ÷ 9 = 8",
+      "Check: 9 × 8 = 72"
+    ],
+    "final_answer": "n = 8",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-52",
+    "source": "BC Math 5 content standard: One-step equations with variables; original",
+    "prompt_latex": "\\text{Solve y ÷ 6 = 12.}",
+    "prompt_plain": "Solve y ÷ 6 = 12.",
+    "prompt_parts": [
+      {
+        "text": "Solve y ÷ 6 = 12."
+      }
+    ],
+    "worked_solution": [
+      "Undo dividing by 6 by multiplying both sides by 6.",
+      "y = 12 × 6 = 72",
+      "Check: 72 ÷ 6 = 12"
+    ],
+    "final_answer": "y = 72",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-53",
+    "source": "BC Math 5 content standard: One-step equations with variables; original",
+    "prompt_latex": "\\text{Sam had some stickers. His friend gave him 24 more, and now he has 65. Write an equation using s, then solve it.}",
+    "prompt_plain": "Sam had some stickers. His friend gave him 24 more, and now he has 65. Write an equation using s, then solve it.",
+    "prompt_parts": [
+      {
+        "text": "Sam had some stickers. His friend gave him 24 more, and now he has 65. Write an equation using s, then solve it."
+      }
+    ],
+    "worked_solution": [
+      "Equation: s + 24 = 65",
+      "Subtract 24 from both sides: s = 65 − 24",
+      "s = 41",
+      "Check: 41 + 24 = 65"
+    ],
+    "final_answer": "s + 24 = 65, so s = 41",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-54",
+    "source": "BC Math 5 content standard: One-step equations with variables; original",
+    "prompt_latex": "\\text{Solve 150 − k = 87.}",
+    "prompt_plain": "Solve 150 − k = 87.",
+    "prompt_parts": [
+      {
+        "text": "Solve 150 − k = 87."
+      }
+    ],
+    "worked_solution": [
+      "k is the amount taken away. To find it, subtract the answer from 150.",
+      "k = 150 − 87 = 63",
+      "Check: 150 − 63 = 87"
+    ],
+    "final_answer": "k = 63",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-55",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{A rectangle is 9 cm long and 6 cm wide. Find its area and its perimeter.}",
+    "prompt_plain": "A rectangle is 9 cm long and 6 cm wide. Find its area and its perimeter.",
+    "prompt_parts": [
+      {
+        "text": "A rectangle is 9 cm long and 6 cm wide. Find its area and its perimeter."
+      }
+    ],
+    "worked_solution": [
+      "Area = length × width = 9 × 6 = 54 cm²",
+      "Perimeter = 9 + 6 + 9 + 6 = 30 cm"
+    ],
+    "final_answer": "Area 54 cm², perimeter 30 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-56",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{A square has sides of 8 m. Find its area and its perimeter.}",
+    "prompt_plain": "A square has sides of 8 m. Find its area and its perimeter.",
+    "prompt_parts": [
+      {
+        "text": "A square has sides of 8 m. Find its area and its perimeter."
+      }
+    ],
+    "worked_solution": [
+      "Area = 8 × 8 = 64 m²",
+      "Perimeter = 4 × 8 = 32 m"
+    ],
+    "final_answer": "Area 64 m², perimeter 32 m",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-57",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{A rectangle has an area of 72 cm² and a length of 12 cm. What is its width?}",
+    "prompt_plain": "A rectangle has an area of 72 cm² and a length of 12 cm. What is its width?",
+    "prompt_parts": [
+      {
+        "text": "A rectangle has an area of 72 cm² and a length of 12 cm. What is its width?"
+      }
+    ],
+    "worked_solution": [
+      "Area = length × width, so 12 × □ = 72.",
+      "□ = 72 ÷ 12 = 6",
+      "Check: 12 × 6 = 72"
+    ],
+    "final_answer": "6 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-58",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{A rectangle has a perimeter of 36 cm and a width of 7 cm. What is its length?}",
+    "prompt_plain": "A rectangle has a perimeter of 36 cm and a width of 7 cm. What is its length?",
+    "prompt_parts": [
+      {
+        "text": "A rectangle has a perimeter of 36 cm and a width of 7 cm. What is its length?"
+      }
+    ],
+    "worked_solution": [
+      "The two widths use 7 + 7 = 14 cm.",
+      "The two lengths use 36 − 14 = 22 cm.",
+      "One length = 22 ÷ 2 = 11 cm",
+      "Check: 11 + 7 + 11 + 7 = 36"
+    ],
+    "final_answer": "11 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-59",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{Garden A is 8 m by 3 m. Garden B is 6 m by 5 m. Which has the greater perimeter? Which has the greater area?}",
+    "prompt_plain": "Garden A is 8 m by 3 m. Garden B is 6 m by 5 m. Which has the greater perimeter? Which has the greater area?",
+    "prompt_parts": [
+      {
+        "text": "Garden A is 8 m by 3 m. Garden B is 6 m by 5 m. Which has the greater perimeter? Which has the greater area?"
+      }
+    ],
+    "worked_solution": [
+      "Garden A perimeter: 8 + 3 + 8 + 3 = 22 m. Garden B perimeter: 6 + 5 + 6 + 5 = 22 m.",
+      "The perimeters are the same.",
+      "Garden A area: 8 × 3 = 24 m². Garden B area: 6 × 5 = 30 m².",
+      "Garden B has the greater area, by 30 − 24 = 6 m²."
+    ],
+    "final_answer": "Same perimeter (22 m); Garden B has the greater area (30 m² vs 24 m²)",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-60",
+    "source": "BC Math 5 content standard: Area of squares and rectangles; relationships between area and perimeter; original",
+    "prompt_latex": "\\text{An L-shaped floor is made from a 10 m by 6 m rectangle with a 4 m by 3 m corner cut out. Find the area of the floor.}",
+    "prompt_plain": "An L-shaped floor is made from a 10 m by 6 m rectangle with a 4 m by 3 m corner cut out. Find the area of the floor.",
+    "prompt_parts": [
+      {
+        "text": "An L-shaped floor is made from a 10 m by 6 m rectangle with a 4 m by 3 m corner cut out. Find the area of the floor."
+      }
+    ],
+    "worked_solution": [
+      "Area of the big rectangle: 10 × 6 = 60 m²",
+      "Area of the cut-out corner: 4 × 3 = 12 m²",
+      "Floor area = 60 − 12 = 48 m²"
+    ],
+    "final_answer": "48 m²",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-61",
+    "source": "BC Math 5 content standard: Duration, using measurement of time; original",
+    "prompt_latex": "\\text{A class starts reading at 2:35 p.m. and stops at 4:10 p.m. How long did they read?}",
+    "prompt_plain": "A class starts reading at 2:35 p.m. and stops at 4:10 p.m. How long did they read?",
+    "prompt_parts": [
+      {
+        "text": "A class starts reading at 2:35 p.m. and stops at 4:10 p.m. How long did they read?"
+      }
+    ],
+    "worked_solution": [
+      "Count up to the next hour: 2:35 to 3:00 is 25 minutes.",
+      "3:00 to 4:00 is 1 hour.",
+      "4:00 to 4:10 is 10 minutes.",
+      "25 + 10 = 35 minutes, plus 1 hour: 1 h 35 min."
+    ],
+    "final_answer": "1 h 35 min",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-62",
+    "source": "BC Math 5 content standard: Duration, using measurement of time; original",
+    "prompt_latex": "\\text{A movie starts at 6:45 p.m. and lasts 2 hours 20 minutes. When does it end?}",
+    "prompt_plain": "A movie starts at 6:45 p.m. and lasts 2 hours 20 minutes. When does it end?",
+    "prompt_parts": [
+      {
+        "text": "A movie starts at 6:45 p.m. and lasts 2 hours 20 minutes. When does it end?"
+      }
+    ],
+    "worked_solution": [
+      "Add the hours first: 6:45 p.m. + 2 h = 8:45 p.m.",
+      "Add 20 minutes: 8:45 + 15 min = 9:00, then 5 more minutes = 9:05.",
+      "The movie ends at 9:05 p.m."
+    ],
+    "final_answer": "9:05 p.m.",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-63",
+    "source": "BC Math 5 content standard: Duration, using measurement of time; original",
+    "prompt_latex": "\\text{A bus leaves at 11:50 a.m. and arrives at 2:25 p.m. How long is the trip?}",
+    "prompt_plain": "A bus leaves at 11:50 a.m. and arrives at 2:25 p.m. How long is the trip?",
+    "prompt_parts": [
+      {
+        "text": "A bus leaves at 11:50 a.m. and arrives at 2:25 p.m. How long is the trip?"
+      }
+    ],
+    "worked_solution": [
+      "11:50 a.m. to 12:00 noon is 10 minutes.",
+      "12:00 noon to 2:00 p.m. is 2 hours.",
+      "2:00 p.m. to 2:25 p.m. is 25 minutes.",
+      "10 + 25 = 35 minutes, so the trip is 2 h 35 min."
+    ],
+    "final_answer": "2 h 35 min",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-64",
+    "source": "BC Math 5 content standard: Duration, using measurement of time; original",
+    "prompt_latex": "\\text{Dad finished baking at 5:15 p.m. The bread took 3 hours 40 minutes from start to finish. When did he start?}",
+    "prompt_plain": "Dad finished baking at 5:15 p.m. The bread took 3 hours 40 minutes from start to finish. When did he start?",
+    "prompt_parts": [
+      {
+        "text": "Dad finished baking at 5:15 p.m. The bread took 3 hours 40 minutes from start to finish. When did he start?"
+      }
+    ],
+    "worked_solution": [
+      "Work backwards. Subtract the hours first: 5:15 p.m. − 3 h = 2:15 p.m.",
+      "Subtract 40 minutes: 2:15 − 15 min = 2:00, then 25 more minutes = 1:35.",
+      "He started at 1:35 p.m."
+    ],
+    "final_answer": "1:35 p.m.",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-65",
+    "source": "BC Math 5 content standard: Duration, using measurement of time; original",
+    "prompt_latex": "\\text{A science project is handed out on October 28 and is due on November 9. October has 31 days. How many days is that?}",
+    "prompt_plain": "A science project is handed out on October 28 and is due on November 9. October has 31 days. How many days is that?",
+    "prompt_parts": [
+      {
+        "text": "A science project is handed out on October 28 and is due on November 9. October has 31 days. How many days is that?"
+      }
+    ],
+    "worked_solution": [
+      "Days left in October after the 28th: 31 − 28 = 3 days.",
+      "Then 9 days in November, up to the 9th.",
+      "3 + 9 = 12 days"
+    ],
+    "final_answer": "12 days",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-66",
+    "source": "BC Math 5 content standard: Classification of prisms and pyramids (3D objects, 2D shapes, quadrilaterals); original",
+    "prompt_latex": "\\text{A rectangular prism is a box shape. How many faces, edges and vertices does it have?}",
+    "prompt_plain": "A rectangular prism is a box shape. How many faces, edges and vertices does it have?",
+    "prompt_parts": [
+      {
+        "text": "A rectangular prism is a box shape. How many faces, edges and vertices does it have?"
+      }
+    ],
+    "worked_solution": [
+      "Faces: top, bottom, front, back, left, right = 6.",
+      "Edges: 4 on the top, 4 on the bottom, 4 going up = 12.",
+      "Vertices (corners): 4 on the top + 4 on the bottom = 8."
+    ],
+    "final_answer": "6 faces, 12 edges, 8 vertices",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-67",
+    "source": "BC Math 5 content standard: Classification of prisms and pyramids (3D objects, 2D shapes, quadrilaterals); original",
+    "prompt_latex": "\\text{How many faces, edges and vertices does a triangular prism have?}",
+    "prompt_plain": "How many faces, edges and vertices does a triangular prism have?",
+    "prompt_parts": [
+      {
+        "text": "How many faces, edges and vertices does a triangular prism have?"
+      }
+    ],
+    "worked_solution": [
+      "Faces: 2 triangle bases + 3 rectangle sides = 5.",
+      "Edges: 3 on each base + 3 joining them = 9.",
+      "Vertices: 3 on each base = 6."
+    ],
+    "final_answer": "5 faces, 9 edges, 6 vertices",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-68",
+    "source": "BC Math 5 content standard: Classification of prisms and pyramids (3D objects, 2D shapes, quadrilaterals); original",
+    "prompt_latex": "\\text{How many faces, edges and vertices does a square pyramid have?}",
+    "prompt_plain": "How many faces, edges and vertices does a square pyramid have?",
+    "prompt_parts": [
+      {
+        "text": "How many faces, edges and vertices does a square pyramid have?"
+      }
+    ],
+    "worked_solution": [
+      "Faces: 1 square base + 4 triangle sides = 5.",
+      "Edges: 4 around the base + 4 going up to the tip = 8.",
+      "Vertices: 4 corners of the base + 1 tip = 5."
+    ],
+    "final_answer": "5 faces, 8 edges, 5 vertices",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-69",
+    "source": "BC Math 5 content standard: Classification of prisms and pyramids (3D objects, 2D shapes, quadrilaterals); original",
+    "prompt_latex": "\\text{A prism has two bases that are hexagons (6 sides each). How many faces, edges and vertices does it have?}",
+    "prompt_plain": "A prism has two bases that are hexagons (6 sides each). How many faces, edges and vertices does it have?",
+    "prompt_parts": [
+      {
+        "text": "A prism has two bases that are hexagons (6 sides each). How many faces, edges and vertices does it have?"
+      }
+    ],
+    "worked_solution": [
+      "Faces: 2 hexagon bases + 6 rectangle sides = 8.",
+      "Edges: 6 on each base + 6 joining them = 18.",
+      "Vertices: 6 on each base = 12."
+    ],
+    "final_answer": "8 faces, 18 edges, 12 vertices",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-70",
+    "source": "BC Math 5 content standard: Classification of prisms and pyramids (3D objects, 2D shapes, quadrilaterals); original",
+    "prompt_latex": "\\text{A quadrilateral has exactly one pair of parallel sides. What is its name?}",
+    "prompt_plain": "A quadrilateral has exactly one pair of parallel sides. What is its name?",
+    "prompt_parts": [
+      {
+        "text": "A quadrilateral has exactly one pair of parallel sides. What is its name?"
+      }
+    ],
+    "worked_solution": [
+      "A quadrilateral has 4 sides.",
+      "A parallelogram, rectangle, rhombus and square all have 2 pairs of parallel sides.",
+      "A shape with exactly 1 pair of parallel sides is a trapezoid."
+    ],
+    "final_answer": "A trapezoid",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-71",
+    "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
+    "prompt_latex": "\\text{Point A is at (1, 1) on a grid, where the first number is across and the second is up. Slide A 4 units right and 2 units up. Where does it land?}",
+    "prompt_plain": "Point A is at (1, 1) on a grid, where the first number is across and the second is up. Slide A 4 units right and 2 units up. Where does it land?",
+    "prompt_parts": [
+      {
+        "text": "Point A is at (1, 1) on a grid, where the first number is across and the second is up. Slide A 4 units right and 2 units up. Where does it land?"
+      }
+    ],
+    "worked_solution": [
+      "Right 4 changes the across number: 1 + 4 = 5.",
+      "Up 2 changes the up number: 1 + 2 = 3.",
+      "A lands at (5, 3)."
+    ],
+    "final_answer": "(5, 3)",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-72",
+    "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
+    "prompt_latex": "\\text{Point B is at (2, 5). It is flipped (reflected) over the vertical line that goes through 4 on the across axis. Where does B land?}",
+    "prompt_plain": "Point B is at (2, 5). It is flipped (reflected) over the vertical line that goes through 4 on the across axis. Where does B land?",
+    "prompt_parts": [
+      {
+        "text": "Point B is at (2, 5). It is flipped (reflected) over the vertical line that goes through 4 on the across axis. Where does B land?"
+      }
+    ],
+    "worked_solution": [
+      "B is 4 − 2 = 2 units to the left of the line.",
+      "Its image is the same distance on the other side: 2 units to the right of the line.",
+      "4 + 2 = 6. The up number stays 5.",
+      "B lands at (6, 5)."
+    ],
+    "final_answer": "(6, 5)",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-73",
+    "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
+    "prompt_latex": "\\text{A flag points up. It is turned a quarter turn clockwise, three times in a row. Which way does it point at the end?}",
+    "prompt_plain": "A flag points up. It is turned a quarter turn clockwise, three times in a row. Which way does it point at the end?",
+    "prompt_parts": [
+      {
+        "text": "A flag points up. It is turned a quarter turn clockwise, three times in a row. Which way does it point at the end?"
+      }
+    ],
+    "worked_solution": [
+      "One quarter turn clockwise: up → right.",
+      "Second quarter turn: right → down.",
+      "Third quarter turn: down → left.",
+      "It points left. (Three quarter turns is 270° clockwise.)"
+    ],
+    "final_answer": "left",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-74",
+    "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
+    "prompt_latex": "\\text{A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?}",
+    "prompt_plain": "A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?",
+    "prompt_parts": [
+      {
+        "text": "A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?"
+      }
+    ],
+    "worked_solution": [
+      "The up number stays 2, so the point only moved across.",
+      "Across went from 6 to 2: 6 − 2 = 4 units to the left.",
+      "A movement in a straight line with no turning or flipping is a slide (translation)."
+    ],
+    "final_answer": "A slide (translation) 4 units left",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-75",
+    "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
+    "prompt_latex": "\\text{Point C is at (1, 4). It is flipped over the horizontal line that goes through 2 on the up axis. Where does C land?}",
+    "prompt_plain": "Point C is at (1, 4). It is flipped over the horizontal line that goes through 2 on the up axis. Where does C land?",
+    "prompt_parts": [
+      {
+        "text": "Point C is at (1, 4). It is flipped over the horizontal line that goes through 2 on the up axis. Where does C land?"
+      }
+    ],
+    "worked_solution": [
+      "C is 4 − 2 = 2 units above the line.",
+      "Its image is 2 units below the line: 2 − 2 = 0.",
+      "The across number stays 1.",
+      "C lands at (1, 0)."
+    ],
+    "final_answer": "(1, 0)",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-76",
+    "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
+    "prompt_latex": "\\text{In a bar graph, each square on the bar stands for 5 students. The bar for \"Soccer\" is 7 squares tall. How many students chose soccer?}",
+    "prompt_plain": "In a bar graph, each square on the bar stands for 5 students. The bar for \"Soccer\" is 7 squares tall. How many students chose soccer?",
+    "prompt_parts": [
+      {
+        "text": "In a bar graph, each square on the bar stands for 5 students. The bar for \"Soccer\" is 7 squares tall. How many students chose soccer?"
+      }
+    ],
+    "worked_solution": [
+      "Each square is worth 5 students.",
+      "7 squares × 5 = 35",
+      "35 students chose soccer."
+    ],
+    "final_answer": "35 students",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-77",
+    "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
+    "prompt_latex": "\\text{A double bar graph shows favourite fruit. Apples: Grade 4 bar is 30, Grade 5 bar is 45. How many more Grade 5 students chose apples than Grade 4 students?}",
+    "prompt_plain": "A double bar graph shows favourite fruit. Apples: Grade 4 bar is 30, Grade 5 bar is 45. How many more Grade 5 students chose apples than Grade 4 students?",
+    "prompt_parts": [
+      {
+        "text": "A double bar graph shows favourite fruit. Apples: Grade 4 bar is 30, Grade 5 bar is 45. How many more Grade 5 students chose apples than Grade 4 students?"
+      }
+    ],
+    "worked_solution": [
+      "Read both bars: Grade 5 is 45 and Grade 4 is 30.",
+      "Subtract: 45 − 30 = 15"
+    ],
+    "final_answer": "15 more students",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-78",
+    "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
+    "prompt_latex": "\\text{In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?}",
+    "prompt_plain": "In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?",
+    "prompt_parts": [
+      {
+        "text": "In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?"
+      }
+    ],
+    "worked_solution": [
+      "Saturday: 4 × 10 = 40 people.",
+      "Sunday: 6 × 10 = 60 people.",
+      "Total: 40 + 60 = 100 people."
+    ],
+    "final_answer": "100 people",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-79",
+    "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
+    "prompt_latex": "\\text{A double bar graph compares Grade 4 and Grade 5 favourite sports. Soccer: 25 and 40. Hockey: 35 and 30. Swimming: 20 and 45. Which sport has the biggest difference between the two grades, and what is it?}",
+    "prompt_plain": "A double bar graph compares Grade 4 and Grade 5 favourite sports. Soccer: 25 and 40. Hockey: 35 and 30. Swimming: 20 and 45. Which sport has the biggest difference between the two grades, and what is it?",
+    "prompt_parts": [
+      {
+        "text": "A double bar graph compares Grade 4 and Grade 5 favourite sports. Soccer: 25 and 40. Hockey: 35 and 30. Swimming: 20 and 45. Which sport has the biggest difference between the two grades, and what is it?"
+      }
+    ],
+    "worked_solution": [
+      "Soccer: 40 − 25 = 15",
+      "Hockey: 35 − 30 = 5",
+      "Swimming: 45 − 20 = 25",
+      "The biggest difference is swimming, 25."
+    ],
+    "final_answer": "Swimming, 25",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-80",
+    "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
+    "prompt_latex": "\\text{In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?}",
+    "prompt_plain": "In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?",
+    "prompt_parts": [
+      {
+        "text": "In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?"
+      }
+    ],
+    "worked_solution": [
+      "Ella's books: 9 × 4 = 36 (a check on how the scale works).",
+      "Zoe's stars: 52 ÷ 4 = 13",
+      "Check: 13 × 4 = 52"
+    ],
+    "final_answer": "13 stars",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-81",
+    "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
+    "prompt_latex": "\\text{A spinner has 8 equal sections. 3 are red, 2 are blue and 3 are green. What is the probability of landing on red?}",
+    "prompt_plain": "A spinner has 8 equal sections. 3 are red, 2 are blue and 3 are green. What is the probability of landing on red?",
+    "prompt_parts": [
+      {
+        "text": "A spinner has 8 equal sections. 3 are red, 2 are blue and 3 are green. What is the probability of landing on red?"
+      }
+    ],
+    "worked_solution": [
+      "Probability = favourable outcomes ÷ total outcomes.",
+      "3 sections are red out of 8 sections.",
+      "P(red) = 3/8"
+    ],
+    "final_answer": "3/8",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-82",
+    "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
+    "prompt_latex": "\\text{You roll one fair six-sided die. What is the probability of rolling an even number?}",
+    "prompt_plain": "You roll one fair six-sided die. What is the probability of rolling an even number?",
+    "prompt_parts": [
+      {
+        "text": "You roll one fair six-sided die. What is the probability of rolling an even number?"
+      }
+    ],
+    "worked_solution": [
+      "Even numbers on the die: 2, 4, 6. That is 3 outcomes.",
+      "There are 6 outcomes in all.",
+      "P(even) = 3/6 = 1/2"
+    ],
+    "final_answer": "1/2",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-83",
+    "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
+    "prompt_latex": "\\text{A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability it is blue?}",
+    "prompt_plain": "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability it is blue?",
+    "prompt_parts": [
+      {
+        "text": "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability it is blue?"
+      }
+    ],
+    "worked_solution": [
+      "Total marbles: 4 + 5 + 3 = 12.",
+      "Blue marbles: 5.",
+      "P(blue) = 5/12"
+    ],
+    "final_answer": "5/12",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-84",
+    "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
+    "prompt_latex": "\\text{Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?}",
+    "prompt_plain": "Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?",
+    "prompt_parts": [
+      {
+        "text": "Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?"
+      }
+    ],
+    "worked_solution": [
+      "Marbles that are not green: 4 + 5 = 9, out of 12 in all.",
+      "P(not green) = 9/12",
+      "Simplify: divide top and bottom by 3 to get 3/4.",
+      "Check: P(green) = 3/12 = 1/4, and 1/4 + 3/4 = 1."
+    ],
+    "final_answer": "3/4",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-85",
+    "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
+    "prompt_latex": "\\text{A spinner has 10 equal sections. You want the probability of landing on yellow to be 1/5. How many sections should be yellow?}",
+    "prompt_plain": "A spinner has 10 equal sections. You want the probability of landing on yellow to be 1/5. How many sections should be yellow?",
+    "prompt_parts": [
+      {
+        "text": "A spinner has 10 equal sections. You want the probability of landing on yellow to be 1/5. How many sections should be yellow?"
+      }
+    ],
+    "worked_solution": [
+      "1/5 as tenths: multiply top and bottom by 2 to get 2/10.",
+      "So 2 out of the 10 sections should be yellow.",
+      "Check: 2/10 = 1/5"
+    ],
+    "final_answer": "2 sections",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-86",
+    "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
+    "prompt_latex": "\\text{A book costs \\$37.85. You pay with a \\$50 bill. How much change do you get?}",
+    "prompt_plain": "A book costs $37.85. You pay with a $50 bill. How much change do you get?",
+    "prompt_parts": [
+      {
+        "text": "A book costs $37.85. You pay with a $50 bill. How much change do you get?"
+      }
+    ],
+    "worked_solution": [
+      "Count up from $37.85 to $38: 15 cents.",
+      "$38 to $50: $12.",
+      "$12 + $0.15 = $12.15"
+    ],
+    "final_answer": "$12.15",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-87",
+    "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
+    "prompt_latex": "\\text{One notebook costs \\$12.49. What do 3 notebooks cost?}",
+    "prompt_plain": "One notebook costs $12.49. What do 3 notebooks cost?",
+    "prompt_parts": [
+      {
+        "text": "One notebook costs $12.49. What do 3 notebooks cost?"
+      }
+    ],
+    "worked_solution": [
+      "Think of $12.49 as $12 + $0.49.",
+      "3 × $12 = $36",
+      "3 × $0.49 = $1.47",
+      "$36 + $1.47 = $37.47"
+    ],
+    "final_answer": "$37.47",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-88",
+    "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
+    "prompt_latex": "\\text{Ava wants a \\$240 bike. She has saved \\$75 and will save \\$15 each week. How many weeks until she can buy it?}",
+    "prompt_plain": "Ava wants a $240 bike. She has saved $75 and will save $15 each week. How many weeks until she can buy it?",
+    "prompt_parts": [
+      {
+        "text": "Ava wants a $240 bike. She has saved $75 and will save $15 each week. How many weeks until she can buy it?"
+      }
+    ],
+    "worked_solution": [
+      "Amount still needed: $240 − $75 = $165.",
+      "Weeks: $165 ÷ $15 = 11.",
+      "Check: 11 × $15 = $165, and $75 + $165 = $240."
+    ],
+    "final_answer": "11 weeks",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-89",
+    "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
+    "prompt_latex": "\\text{Ben gets \\$120 this month. His expenses are \\$45.50, \\$28.75 and \\$19.00. Make a budget: how much are his total expenses, and how much money is left?}",
+    "prompt_plain": "Ben gets $120 this month. His expenses are $45.50, $28.75 and $19.00. Make a budget: how much are his total expenses, and how much money is left?",
+    "prompt_parts": [
+      {
+        "text": "Ben gets $120 this month. His expenses are $45.50, $28.75 and $19.00. Make a budget: how much are his total expenses, and how much money is left?"
+      }
+    ],
+    "worked_solution": [
+      "Total expenses: $45.50 + $28.75 + $19.00.",
+      "$45.50 + $28.75 = $74.25",
+      "$74.25 + $19.00 = $93.25",
+      "Money left: $120.00 − $93.25 = $26.75"
+    ],
+    "final_answer": "Expenses $93.25, left $26.75",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-90",
+    "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
+    "prompt_latex": "\\text{A jacket costs \\$64.30. You pay with a \\$100 bill. Count up to make change.}",
+    "prompt_plain": "A jacket costs $64.30. You pay with a $100 bill. Count up to make change.",
+    "prompt_parts": [
+      {
+        "text": "A jacket costs $64.30. You pay with a $100 bill. Count up to make change."
+      }
+    ],
+    "worked_solution": [
+      "From $64.30 to $65 is 70 cents.",
+      "From $65 to $100 is $35.",
+      "$35 + $0.70 = $35.70"
+    ],
+    "final_answer": "$35.70",
+    "level": "elementary"
+  }
+]
