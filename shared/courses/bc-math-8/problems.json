@@ -1,0 +1,1425 @@
+[
+  {
+    "id": "m8-01",
+    "source": "BC Math 8 content standard S1 + original",
+    "prompt_latex": "Is 144 a perfect square? Is it a perfect cube? Explain.",
+    "prompt_plain": "Is 144 a perfect square? Is it a perfect cube? Explain.",
+    "prompt_parts": [
+      {
+        "text": "Is 144 a perfect square? Is it a perfect cube? Explain."
+      }
+    ],
+    "worked_solution": [
+      "12 × 12 = 144, so 144 is a perfect square",
+      "5³ = 125 and 6³ = 216, and 144 is between them",
+      "So 144 is not a perfect cube"
+    ],
+    "final_answer": "Perfect square (12²), not a perfect cube",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-02",
+    "source": "BC Math 8 content standard S1 + original",
+    "prompt_latex": "Find 15² and 4³, then add them.",
+    "prompt_plain": "Find 15² and 4³, then add them.",
+    "prompt_parts": [
+      {
+        "text": "Find 15² and 4³, then add them."
+      }
+    ],
+    "worked_solution": [
+      "15² = 15 × 15 = 225",
+      "4³ = 4 × 4 × 4 = 64",
+      "225 + 64 = 289"
+    ],
+    "final_answer": "289",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-03",
+    "source": "BC Math 8 content standard S1 + original",
+    "prompt_latex": "Use prime factorization to show that 216 is a perfect cube.",
+    "prompt_plain": "Use prime factorization to show that 216 is a perfect cube.",
+    "prompt_parts": [
+      {
+        "text": "Use prime factorization to show that 216 is a perfect cube."
+      }
+    ],
+    "worked_solution": [
+      "216 = 2 × 108 = 2 × 2 × 54 = 2 × 2 × 2 × 27",
+      "27 = 3 × 3 × 3, so 216 = 2³ × 3³",
+      "2³ × 3³ = (2 × 3)³ = 6³",
+      "So 216 is the perfect cube 6³"
+    ],
+    "final_answer": "216 = 2³ × 3³ = 6³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-04",
+    "source": "BC Math 8 content standard S1 + original",
+    "prompt_latex": "What is the smallest whole number you can multiply 72 by to get a perfect square?",
+    "prompt_plain": "What is the smallest whole number you can multiply 72 by to get a perfect square?",
+    "prompt_parts": [
+      {
+        "text": "What is the smallest whole number you can multiply 72 by to get a perfect square?"
+      }
+    ],
+    "worked_solution": [
+      "72 = 2 × 36 = 2 × 2 × 18 = 2 × 2 × 2 × 9 = 2³ × 3²",
+      "3² is already a pair, but 2³ has one 2 left over",
+      "Multiply by one more 2: 72 × 2 = 144 = 2⁴ × 3² = 12²",
+      "Multiplying by 1 leaves 72, which is not a square, so 2 is the smallest"
+    ],
+    "final_answer": "2",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-05",
+    "source": "BC Math 8 content standard S1 + original",
+    "prompt_latex": "How many perfect squares are there between 50 and 200?",
+    "prompt_plain": "How many perfect squares are there between 50 and 200?",
+    "prompt_parts": [
+      {
+        "text": "How many perfect squares are there between 50 and 200?"
+      }
+    ],
+    "worked_solution": [
+      "7² = 49 is too small, so start at 8²",
+      "8² = 64, 9² = 81, 10² = 100, 11² = 121, 12² = 144, 13² = 169, 14² = 196",
+      "15² = 225 is too big",
+      "Count: 64, 81, 100, 121, 144, 169, 196 is 7 numbers"
+    ],
+    "final_answer": "7",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-06",
+    "source": "BC Math 8 content standard S2 + original",
+    "prompt_latex": "Find √(\\dfrac{16}{169}).",
+    "prompt_plain": "Find √(16/169).",
+    "prompt_parts": [
+      {
+        "text": "Find √("
+      },
+      {
+        "frac": {
+          "num": "16",
+          "den": "169"
+        }
+      },
+      {
+        "text": ")."
+      }
+    ],
+    "worked_solution": [
+      "Take the root of the top and bottom separately",
+      "√16 = 4 and √169 = 13",
+      "So √(16/169) = 4/13"
+    ],
+    "final_answer": "4/13",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-07",
+    "source": "BC Math 8 content standard S2 + original",
+    "prompt_latex": "Find ∛125 and ∛(\\dfrac{8}{27}).",
+    "prompt_plain": "Find ∛125 and ∛(8/27).",
+    "prompt_parts": [
+      {
+        "text": "Find ∛125 and ∛("
+      },
+      {
+        "frac": {
+          "num": "8",
+          "den": "27"
+        }
+      },
+      {
+        "text": ")."
+      }
+    ],
+    "worked_solution": [
+      "5 × 5 × 5 = 125, so ∛125 = 5",
+      "2 × 2 × 2 = 8 and 3 × 3 × 3 = 27",
+      "So ∛(8/27) = 2/3"
+    ],
+    "final_answer": "∛125 = 5 and ∛(8/27) = 2/3",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-08",
+    "source": "BC Math 8 content standard S2 + original",
+    "prompt_latex": "Estimate √30 to the nearest tenth. Show your benchmarks.",
+    "prompt_plain": "Estimate √30 to the nearest tenth. Show your benchmarks.",
+    "prompt_parts": [
+      {
+        "text": "Estimate √30 to the nearest tenth. Show your benchmarks."
+      }
+    ],
+    "worked_solution": [
+      "5² = 25 and 6² = 36, so √30 is between 5 and 6",
+      "Try 5.5² = 30.25, a little more than 30",
+      "Try 5.4² = 29.16, a little less than 30",
+      "30 is closer to 30.25 than to 29.16, so √30 ≈ 5.5"
+    ],
+    "final_answer": "≈ 5.5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-09",
+    "source": "BC Math 8 content standard S2 + original",
+    "prompt_latex": "A square garden has an area of 289 m². How much fencing is needed to go all the way around it?",
+    "prompt_plain": "A square garden has an area of 289 m². How much fencing is needed to go all the way around it?",
+    "prompt_parts": [
+      {
+        "text": "A square garden has an area of 289 m². How much fencing is needed to go all the way around it?"
+      }
+    ],
+    "worked_solution": [
+      "Side = √289 = 17 m, because 17 × 17 = 289",
+      "Perimeter = 4 × 17 = 68 m"
+    ],
+    "final_answer": "68 m",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-10",
+    "source": "BC Math 8 content standard S2 + original",
+    "prompt_latex": "A cube-shaped box has a volume of 1728 cm³. Find its edge length, then its surface area.",
+    "prompt_plain": "A cube-shaped box has a volume of 1728 cm³. Find its edge length, then its surface area.",
+    "prompt_parts": [
+      {
+        "text": "A cube-shaped box has a volume of 1728 cm³. Find its edge length, then its surface area."
+      }
+    ],
+    "worked_solution": [
+      "Edge = ∛1728; try 12: 12 × 12 × 12 = 1728, so edge = 12 cm",
+      "One face: 12 × 12 = 144 cm²",
+      "A cube has 6 faces: 6 × 144 = 864 cm²"
+    ],
+    "final_answer": "Edge 12 cm; surface area 864 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-11",
+    "source": "BC Math 8 content standard S3 + original",
+    "prompt_latex": "What is ½% of 2 000 000?",
+    "prompt_plain": "What is ½% of 2 000 000?",
+    "prompt_parts": [
+      {
+        "text": "What is ½% of 2 000 000?"
+      }
+    ],
+    "worked_solution": [
+      "½% = 0.5% = 0.005",
+      "0.005 × 2 000 000 = 10 000"
+    ],
+    "final_answer": "10 000",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-12",
+    "source": "BC Math 8 content standard S3 + original",
+    "prompt_latex": "Write 0.4% and 250% as decimals.",
+    "prompt_plain": "Write 0.4% and 250% as decimals.",
+    "prompt_parts": [
+      {
+        "text": "Write 0.4% and 250% as decimals."
+      }
+    ],
+    "worked_solution": [
+      "Percent means per 100, so divide by 100",
+      "0.4% = 0.4 ÷ 100 = 0.004",
+      "250% = 250 ÷ 100 = 2.5"
+    ],
+    "final_answer": "0.004 and 2.5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-13",
+    "source": "BC Math 8 content standard S3 + original",
+    "prompt_latex": "A town of 600 000 people grows by 3.25%. What is the new population?",
+    "prompt_plain": "A town of 600 000 people grows by 3.25%. What is the new population?",
+    "prompt_parts": [
+      {
+        "text": "A town of 600 000 people grows by 3.25%. What is the new population?"
+      }
+    ],
+    "worked_solution": [
+      "3.25% = 0.0325",
+      "Growth = 0.0325 × 600 000 = 19 500",
+      "New population = 600 000 + 19 500 = 619 500"
+    ],
+    "final_answer": "619 500",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-14",
+    "source": "BC Math 8 content standard S3 + original",
+    "prompt_latex": "A town had 24 000 people. Now it has 135% of that. By how many people did it grow?",
+    "prompt_plain": "A town had 24 000 people. Now it has 135% of that. By how many people did it grow?",
+    "prompt_parts": [
+      {
+        "text": "A town had 24 000 people. Now it has 135% of that. By how many people did it grow?"
+      }
+    ],
+    "worked_solution": [
+      "135% = 1.35",
+      "Now: 1.35 × 24 000 = 32 400",
+      "Growth = 32 400 − 24 000 = 8 400"
+    ],
+    "final_answer": "8 400 people",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-15",
+    "source": "BC Math 8 content standard S3 + original",
+    "prompt_latex": "A worker's pay went up 120% over three years and is now $77 000. What was it at the start?",
+    "prompt_plain": "A worker's pay went up 120% over three years and is now $77 000. What was it at the start?",
+    "prompt_parts": [
+      {
+        "text": "A worker's pay went up 120% over three years and is now $77 000. What was it at the start?"
+      }
+    ],
+    "worked_solution": [
+      "Going up 120% means the new pay is 100% + 120% = 220% of the old pay",
+      "220% = 2.2, so 2.2 × old = 77 000",
+      "old = 77 000 ÷ 2.2 = 35 000",
+      "Check: 35 000 × 2.2 = 77 000"
+    ],
+    "final_answer": "$35 000",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-16",
+    "source": "BC Math 8 content standard S4 + original",
+    "prompt_latex": "A 105 cm string is cut into three pieces in the ratio 3 : 5 : 7. How long is each piece?",
+    "prompt_plain": "A 105 cm string is cut into three pieces in the ratio 3 : 5 : 7. How long is each piece?",
+    "prompt_parts": [
+      {
+        "text": "A 105 cm string is cut into three pieces in the ratio 3 : 5 : 7. How long is each piece?"
+      }
+    ],
+    "worked_solution": [
+      "Total parts: 3 + 5 + 7 = 15",
+      "One part: 105 ÷ 15 = 7 cm",
+      "Pieces: 3 × 7 = 21, 5 × 7 = 35, 7 × 7 = 49",
+      "Check: 21 + 35 + 49 = 105"
+    ],
+    "final_answer": "21 cm, 35 cm, 49 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-17",
+    "source": "BC Math 8 content standard S4 + original",
+    "prompt_latex": "Paint is mixed 2 parts blue to 5 parts white. How much of each is in 35 L of mixture?",
+    "prompt_plain": "Paint is mixed 2 parts blue to 5 parts white. How much of each is in 35 L of mixture?",
+    "prompt_parts": [
+      {
+        "text": "Paint is mixed 2 parts blue to 5 parts white. How much of each is in 35 L of mixture?"
+      }
+    ],
+    "worked_solution": [
+      "Total parts: 2 + 5 = 7",
+      "One part: 35 ÷ 7 = 5 L",
+      "Blue: 2 × 5 = 10 L; white: 5 × 5 = 25 L",
+      "Check: 10 + 25 = 35"
+    ],
+    "final_answer": "10 L blue, 25 L white",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-18",
+    "source": "BC Math 8 content standard S4 + original",
+    "prompt_latex": "12 muffins need 3 cups of flour. How much flour is needed for 20 muffins?",
+    "prompt_plain": "12 muffins need 3 cups of flour. How much flour is needed for 20 muffins?",
+    "prompt_parts": [
+      {
+        "text": "12 muffins need 3 cups of flour. How much flour is needed for 20 muffins?"
+      }
+    ],
+    "worked_solution": [
+      "Set up a proportion: 3/12 = x/20",
+      "Unit rate: 3 ÷ 12 = 0.25 cup per muffin",
+      "x = 0.25 × 20 = 5"
+    ],
+    "final_answer": "5 cups",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-19",
+    "source": "BC Math 8 content standard S4 + original",
+    "prompt_latex": "18 is what percent of 24?",
+    "prompt_plain": "18 is what percent of 24?",
+    "prompt_parts": [
+      {
+        "text": "18 is what percent of 24?"
+      }
+    ],
+    "worked_solution": [
+      "Percent means out of 100: 18/24 = p/100",
+      "18/24 simplifies to 3/4",
+      "3/4 = 75/100",
+      "So p = 75"
+    ],
+    "final_answer": "75%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-20",
+    "source": "BC Math 8 content standard S4 + original",
+    "prompt_latex": "A car drives 90 km in 1.5 h. At the same speed, how long does a 240 km trip take?",
+    "prompt_plain": "A car drives 90 km in 1.5 h. At the same speed, how long does a 240 km trip take?",
+    "prompt_parts": [
+      {
+        "text": "A car drives 90 km in 1.5 h. At the same speed, how long does a 240 km trip take?"
+      }
+    ],
+    "worked_solution": [
+      "Speed = 90 ÷ 1.5 = 60 km/h",
+      "Time = 240 ÷ 60 = 4 h"
+    ],
+    "final_answer": "4 h",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-21",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "Calculate \\dfrac{2}{3} + \\dfrac{3}{4}.",
+    "prompt_plain": "Calculate 2/3 + 3/4.",
+    "prompt_parts": [
+      {
+        "text": "Calculate "
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "3"
+        }
+      },
+      {
+        "text": " + "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "LCD of 3 and 4 is 12",
+      "2/3 = 8/12 and 3/4 = 9/12",
+      "8/12 + 9/12 = 17/12 = 1 5/12"
+    ],
+    "final_answer": "17/12 (or 1 5/12)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-22",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "Calculate \\dfrac{5}{6} − \\dfrac{3}{8}.",
+    "prompt_plain": "Calculate 5/6 − 3/8.",
+    "prompt_parts": [
+      {
+        "text": "Calculate "
+      },
+      {
+        "frac": {
+          "num": "5",
+          "den": "6"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "8"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "LCD of 6 and 8 is 24",
+      "5/6 = 20/24 and 3/8 = 9/24",
+      "20/24 − 9/24 = 11/24"
+    ],
+    "final_answer": "11/24",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-23",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "Calculate \\dfrac{3}{4} × \\dfrac{2}{9}.",
+    "prompt_plain": "Calculate 3/4 × 2/9.",
+    "prompt_parts": [
+      {
+        "text": "Calculate "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": " × "
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "9"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Multiply tops and bottoms: (3 × 2)/(4 × 9) = 6/36",
+      "Divide by 6: 1/6"
+    ],
+    "final_answer": "1/6",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-24",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "Calculate \\dfrac{5}{6} ÷ \\dfrac{10}{9}.",
+    "prompt_plain": "Calculate 5/6 ÷ 10/9.",
+    "prompt_parts": [
+      {
+        "text": "Calculate "
+      },
+      {
+        "frac": {
+          "num": "5",
+          "den": "6"
+        }
+      },
+      {
+        "text": " ÷ "
+      },
+      {
+        "frac": {
+          "num": "10",
+          "den": "9"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Dividing means multiplying by the flip: 5/6 × 9/10",
+      "(5 × 9)/(6 × 10) = 45/60",
+      "Divide by 15: 3/4"
+    ],
+    "final_answer": "3/4",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-25",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "Calculate \\dfrac{3}{4} ÷ \\dfrac{3}{2} × (2 − \\dfrac{1}{5}).",
+    "prompt_plain": "Calculate 3/4 ÷ 3/2 × (2 − 1/5).",
+    "prompt_parts": [
+      {
+        "text": "Calculate "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": " ÷ "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "2"
+        }
+      },
+      {
+        "text": " × (2 − "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "5"
+        }
+      },
+      {
+        "text": ")."
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 2 − 1/5 = 10/5 − 1/5 = 9/5",
+      "Then left to right: 3/4 ÷ 3/2 = 3/4 × 2/3 = 6/12 = 1/2",
+      "1/2 × 9/5 = 9/10"
+    ],
+    "final_answer": "9/10",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-26",
+    "source": "BC Math 8 content standard S5 + original",
+    "prompt_latex": "A recipe needs \\dfrac{3}{4} cup of sugar per batch. How much sugar is needed for 2 \\dfrac{1}{2} batches?",
+    "prompt_plain": "A recipe needs 3/4 cup of sugar per batch. How much sugar is needed for 2 1/2 batches?",
+    "prompt_parts": [
+      {
+        "text": "A recipe needs "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": " cup of sugar per batch. How much sugar is needed for 2 "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "2"
+        }
+      },
+      {
+        "text": " batches?"
+      }
+    ],
+    "worked_solution": [
+      "2 1/2 = 5/2",
+      "3/4 × 5/2 = 15/8",
+      "15/8 = 1 7/8"
+    ],
+    "final_answer": "1 7/8 cups",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-27",
+    "source": "BC Math 8 content standard S6 + original",
+    "prompt_latex": "A table has x = 0, 1, 2, 3 and y = 5, 8, 11, 14. Write the rule for y in terms of x, then find y when x = 10.",
+    "prompt_plain": "A table has x = 0, 1, 2, 3 and y = 5, 8, 11, 14. Write the rule for y in terms of x, then find y when x = 10.",
+    "prompt_parts": [
+      {
+        "text": "A table has x = 0, 1, 2, 3 and y = 5, 8, 11, 14. Write the rule for y in terms of x, then find y when x = 10."
+      }
+    ],
+    "worked_solution": [
+      "y goes up by 3 each time x goes up by 1, so the rule starts with 3x",
+      "When x = 0, y = 5, so add 5",
+      "Rule: y = 3x + 5",
+      "x = 10: y = 3(10) + 5 = 35"
+    ],
+    "final_answer": "y = 3x + 5; y = 35",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-28",
+    "source": "BC Math 8 content standard S6 + original",
+    "prompt_latex": "For y = 2x − 6, find y when x = −2, 0, 3 and 5.",
+    "prompt_plain": "For y = 2x − 6, find y when x = −2, 0, 3 and 5.",
+    "prompt_parts": [
+      {
+        "text": "For y = 2x − 6, find y when x = −2, 0, 3 and 5."
+      }
+    ],
+    "worked_solution": [
+      "x = −2: y = 2(−2) − 6 = −4 − 6 = −10",
+      "x = 0: y = −6",
+      "x = 3: y = 6 − 6 = 0",
+      "x = 5: y = 10 − 6 = 4"
+    ],
+    "final_answer": "−10, −6, 0, 4",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-29",
+    "source": "BC Math 8 content standard S6 + original",
+    "prompt_latex": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20.",
+    "prompt_plain": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20.",
+    "prompt_parts": [
+      {
+        "text": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20."
+      }
+    ],
+    "worked_solution": [
+      "From (0, 10) to (5, 25): x up 5, y up 15, so y goes up 3 per 1 of x",
+      "y-intercept is 10, so y = 3x + 10",
+      "Check (10, 40): 3(10) + 10 = 40",
+      "x = 20: y = 3(20) + 10 = 70"
+    ],
+    "final_answer": "y = 3x + 10; y = 70",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-30",
+    "source": "BC Math 8 content standard S6 + original",
+    "prompt_latex": "A phone plan costs $15 plus $4 per GB. Write the cost C for g GB, then find the cost for 9 GB and how many GB cost $79.",
+    "prompt_plain": "A phone plan costs $15 plus $4 per GB. Write the cost C for g GB, then find the cost for 9 GB and how many GB cost $79.",
+    "prompt_parts": [
+      {
+        "text": "A phone plan costs $15 plus $4 per GB. Write the cost C for g GB, then find the cost for 9 GB and how many GB cost $79."
+      }
+    ],
+    "worked_solution": [
+      "C = 4g + 15",
+      "g = 9: C = 4(9) + 15 = 51",
+      "C = 79: 4g + 15 = 79",
+      "4g = 64",
+      "g = 16"
+    ],
+    "final_answer": "C = 4g + 15; $51; 16 GB",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-31",
+    "source": "BC Math 8 content standard S6 + original",
+    "prompt_latex": "For y = −x + 4, find y when x = −3, −1, 2 and 6, then name the quadrant of each point.",
+    "prompt_plain": "For y = −x + 4, find y when x = −3, −1, 2 and 6, then name the quadrant of each point.",
+    "prompt_parts": [
+      {
+        "text": "For y = −x + 4, find y when x = −3, −1, 2 and 6, then name the quadrant of each point."
+      }
+    ],
+    "worked_solution": [
+      "x = −3: y = 3 + 4 = 7, point (−3, 7)",
+      "x = −1: y = 1 + 4 = 5, point (−1, 5)",
+      "x = 2: y = −2 + 4 = 2, point (2, 2)",
+      "x = 6: y = −6 + 4 = −2, point (6, −2)",
+      "Quadrants: (−3, 7) II, (−1, 5) II, (2, 2) I, (6, −2) IV"
+    ],
+    "final_answer": "7, 5, 2, −2; quadrants II, II, I, IV",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-32",
+    "source": "BC Math 8 content standard S7 + original",
+    "prompt_latex": "Evaluate 2.5n − 4n + 18 when n = 10.",
+    "prompt_plain": "Evaluate 2.5n − 4n + 18 when n = 10.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate 2.5n − 4n + 18 when n = 10."
+      }
+    ],
+    "worked_solution": [
+      "Substitute: 2.5(10) − 4(10) + 18",
+      "25 − 40 + 18",
+      "−15 + 18 = 3"
+    ],
+    "final_answer": "3",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-33",
+    "source": "BC Math 8 content standard S7 + original",
+    "prompt_latex": "A taxi charges $3.50 plus $1.20 per km. Write an expression for the cost of k km, then find the cost of 15 km.",
+    "prompt_plain": "A taxi charges $3.50 plus $1.20 per km. Write an expression for the cost of k km, then find the cost of 15 km.",
+    "prompt_parts": [
+      {
+        "text": "A taxi charges $3.50 plus $1.20 per km. Write an expression for the cost of k km, then find the cost of 15 km."
+      }
+    ],
+    "worked_solution": [
+      "Cost = 3.50 + 1.20k",
+      "k = 15: 3.50 + 1.20(15)",
+      "1.20 × 15 = 18.00",
+      "3.50 + 18.00 = 21.50"
+    ],
+    "final_answer": "3.50 + 1.20k; $21.50",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-34",
+    "source": "BC Math 8 content standard S7 + original",
+    "prompt_latex": "Evaluate 2(a + 3b) − c when a = 4, b = −2 and c = 5.",
+    "prompt_plain": "Evaluate 2(a + 3b) − c when a = 4, b = −2 and c = 5.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate 2(a + 3b) − c when a = 4, b = −2 and c = 5."
+      }
+    ],
+    "worked_solution": [
+      "Substitute: 2(4 + 3(−2)) − 5",
+      "Inside brackets: 3(−2) = −6, then 4 + (−6) = −2",
+      "2(−2) − 5 = −4 − 5",
+      "= −9"
+    ],
+    "final_answer": "−9",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-35",
+    "source": "BC Math 8 content standard S7 + original",
+    "prompt_latex": "Figure 1 has 5 tiles, figure 2 has 8 and figure 3 has 11. Write an expression for the tiles in figure n, then find the tiles in figure 20.",
+    "prompt_plain": "Figure 1 has 5 tiles, figure 2 has 8 and figure 3 has 11. Write an expression for the tiles in figure n, then find the tiles in figure 20.",
+    "prompt_parts": [
+      {
+        "text": "Figure 1 has 5 tiles, figure 2 has 8 and figure 3 has 11. Write an expression for the tiles in figure n, then find the tiles in figure 20."
+      }
+    ],
+    "worked_solution": [
+      "Tiles go up by 3 each figure, so the expression starts with 3n",
+      "Figure 1: 3(1) = 3, but there are 5 tiles, so add 2",
+      "Expression: 3n + 2",
+      "Figure 20: 3(20) + 2 = 62"
+    ],
+    "final_answer": "3n + 2; 62 tiles",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-36",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "Solve 3x − 4 = −19 and check.",
+    "prompt_plain": "Solve 3x − 4 = −19 and check.",
+    "prompt_parts": [
+      {
+        "text": "Solve 3x − 4 = −19 and check."
+      }
+    ],
+    "worked_solution": [
+      "Add 4 to both sides: 3x = −15",
+      "Divide both sides by 3: x = −5",
+      "Check: 3(−5) − 4 = −15 − 4 = −19"
+    ],
+    "final_answer": "x = −5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-37",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "Solve 5x + 7 = 32.",
+    "prompt_plain": "Solve 5x + 7 = 32.",
+    "prompt_parts": [
+      {
+        "text": "Solve 5x + 7 = 32."
+      }
+    ],
+    "worked_solution": [
+      "Subtract 7 from both sides: 5x = 25",
+      "Divide both sides by 5: x = 5",
+      "Check: 5(5) + 7 = 32"
+    ],
+    "final_answer": "x = 5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-38",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "Solve −2x + 9 = 21.",
+    "prompt_plain": "Solve −2x + 9 = 21.",
+    "prompt_parts": [
+      {
+        "text": "Solve −2x + 9 = 21."
+      }
+    ],
+    "worked_solution": [
+      "Subtract 9 from both sides: −2x = 12",
+      "Divide both sides by −2: x = −6",
+      "Check: −2(−6) + 9 = 12 + 9 = 21"
+    ],
+    "final_answer": "x = −6",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-39",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "Solve {x/4} − 3 = 2.",
+    "prompt_plain": "Solve {x/4} − 3 = 2.",
+    "prompt_parts": [
+      {
+        "text": "Solve {x/4} − 3 = 2."
+      }
+    ],
+    "worked_solution": [
+      "Add 3 to both sides: x/4 = 5",
+      "Multiply both sides by 4: x = 20",
+      "Check: 20/4 − 3 = 5 − 3 = 2"
+    ],
+    "final_answer": "x = 20",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-40",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "A canoe group pays a $45 booking fee plus $18 per person. The total is $225. How many people are in the group? Write an equation and solve it.",
+    "prompt_plain": "A canoe group pays a $45 booking fee plus $18 per person. The total is $225. How many people are in the group? Write an equation and solve it.",
+    "prompt_parts": [
+      {
+        "text": "A canoe group pays a $45 booking fee plus $18 per person. The total is $225. How many people are in the group? Write an equation and solve it."
+      }
+    ],
+    "worked_solution": [
+      "Let n be the number of people: 18n + 45 = 225",
+      "Subtract 45: 18n = 180",
+      "Divide by 18: n = 10",
+      "Check: 18(10) + 45 = 225"
+    ],
+    "final_answer": "10 people",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-41",
+    "source": "BC Math 8 content standard S8 + original",
+    "prompt_latex": "Solve −7 = 3x + 5.",
+    "prompt_plain": "Solve −7 = 3x + 5.",
+    "prompt_parts": [
+      {
+        "text": "Solve −7 = 3x + 5."
+      }
+    ],
+    "worked_solution": [
+      "Subtract 5 from both sides: −12 = 3x",
+      "Divide both sides by 3: −4 = x",
+      "Check: 3(−4) + 5 = −12 + 5 = −7"
+    ],
+    "final_answer": "x = −4",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-42",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A rectangular prism is 5 cm by 4 cm by 3 cm. Find its volume and surface area.",
+    "prompt_plain": "A rectangular prism is 5 cm by 4 cm by 3 cm. Find its volume and surface area.",
+    "prompt_parts": [
+      {
+        "text": "A rectangular prism is 5 cm by 4 cm by 3 cm. Find its volume and surface area."
+      }
+    ],
+    "worked_solution": [
+      "Volume = 5 × 4 × 3 = 60 cm³",
+      "Faces: 5×4 = 20, 5×3 = 15, 4×3 = 12",
+      "Surface area = 2(20 + 15 + 12) = 2(47) = 94 cm²"
+    ],
+    "final_answer": "V = 60 cm³; SA = 94 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-43",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A triangular prism has a right-triangle base with legs 3 cm and 4 cm and hypotenuse 5 cm. The prism is 10 cm long. Find its volume and surface area.",
+    "prompt_plain": "A triangular prism has a right-triangle base with legs 3 cm and 4 cm and hypotenuse 5 cm. The prism is 10 cm long. Find its volume and surface area.",
+    "prompt_parts": [
+      {
+        "text": "A triangular prism has a right-triangle base with legs 3 cm and 4 cm and hypotenuse 5 cm. The prism is 10 cm long. Find its volume and surface area."
+      }
+    ],
+    "worked_solution": [
+      "Base area = ½ × 3 × 4 = 6 cm²",
+      "Volume = base area × length = 6 × 10 = 60 cm³",
+      "Two triangle ends: 2 × 6 = 12 cm²",
+      "Three rectangles: (3 + 4 + 5) × 10 = 120 cm²",
+      "Surface area = 12 + 120 = 132 cm²"
+    ],
+    "final_answer": "V = 60 cm³; SA = 132 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-44",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A cylinder has radius 3 cm and height 10 cm. Find its volume, in terms of π and to 1 decimal place.",
+    "prompt_plain": "A cylinder has radius 3 cm and height 10 cm. Find its volume, in terms of π and to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "A cylinder has radius 3 cm and height 10 cm. Find its volume, in terms of π and to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "Base area = π × 3² = 9π",
+      "Volume = base area × height = 9π × 10 = 90π",
+      "90 × 3.14159... ≈ 282.7"
+    ],
+    "final_answer": "90π ≈ 282.7 cm³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-45",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A cylinder has radius 5 cm and height 8 cm. Find its total surface area, in terms of π and to 1 decimal place.",
+    "prompt_plain": "A cylinder has radius 5 cm and height 8 cm. Find its total surface area, in terms of π and to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "A cylinder has radius 5 cm and height 8 cm. Find its total surface area, in terms of π and to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "Two circles: 2 × π × 5² = 50π",
+      "Side (a rectangle): circumference × height = 2π(5) × 8 = 80π",
+      "Total = 50π + 80π = 130π",
+      "130 × 3.14159... ≈ 408.4"
+    ],
+    "final_answer": "130π ≈ 408.4 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-46",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A tent is a triangular prism. The triangle ends have base 6 m, height 4 m and slanted sides 5 m. The tent is 9 m long. Find its volume and the area of all its faces.",
+    "prompt_plain": "A tent is a triangular prism. The triangle ends have base 6 m, height 4 m and slanted sides 5 m. The tent is 9 m long. Find its volume and the area of all its faces.",
+    "prompt_parts": [
+      {
+        "text": "A tent is a triangular prism. The triangle ends have base 6 m, height 4 m and slanted sides 5 m. The tent is 9 m long. Find its volume and the area of all its faces."
+      }
+    ],
+    "worked_solution": [
+      "End area = ½ × 6 × 4 = 12 m²",
+      "Volume = 12 × 9 = 108 m³",
+      "Two ends: 2 × 12 = 24 m²",
+      "Rectangles: (5 + 5 + 6) × 9 = 144 m²",
+      "Total area = 24 + 144 = 168 m²"
+    ],
+    "final_answer": "V = 108 m³; area = 168 m²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-47",
+    "source": "BC Math 8 content standard S9 + original",
+    "prompt_latex": "A cylinder with radius 5 cm has volume 150π cm³. Find its height.",
+    "prompt_plain": "A cylinder with radius 5 cm has volume 150π cm³. Find its height.",
+    "prompt_parts": [
+      {
+        "text": "A cylinder with radius 5 cm has volume 150π cm³. Find its height."
+      }
+    ],
+    "worked_solution": [
+      "V = π r² h, so 150π = π(5²)h = 25πh",
+      "Divide both sides by 25π: h = 150π ÷ 25π = 6",
+      "Check: π(25)(6) = 150π"
+    ],
+    "final_answer": "6 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-48",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "A right triangle has legs 6 cm and 8 cm. Find the hypotenuse.",
+    "prompt_plain": "A right triangle has legs 6 cm and 8 cm. Find the hypotenuse.",
+    "prompt_parts": [
+      {
+        "text": "A right triangle has legs 6 cm and 8 cm. Find the hypotenuse."
+      }
+    ],
+    "worked_solution": [
+      "c² = 6² + 8² = 36 + 64 = 100",
+      "c = √100 = 10"
+    ],
+    "final_answer": "10 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-49",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "A right triangle has hypotenuse 13 cm and one leg 5 cm. Find the other leg.",
+    "prompt_plain": "A right triangle has hypotenuse 13 cm and one leg 5 cm. Find the other leg.",
+    "prompt_parts": [
+      {
+        "text": "A right triangle has hypotenuse 13 cm and one leg 5 cm. Find the other leg."
+      }
+    ],
+    "worked_solution": [
+      "a² + 5² = 13²",
+      "a² + 25 = 169",
+      "a² = 144",
+      "a = 12"
+    ],
+    "final_answer": "12 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-50",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?",
+    "prompt_plain": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?",
+    "prompt_parts": [
+      {
+        "text": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?"
+      }
+    ],
+    "worked_solution": [
+      "Ladder is the hypotenuse: h² + 9² = 15²",
+      "h² + 81 = 225",
+      "h² = 144",
+      "h = 12"
+    ],
+    "final_answer": "12 ft",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-51",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "Is a triangle with sides 7, 24 and 25 a right triangle?",
+    "prompt_plain": "Is a triangle with sides 7, 24 and 25 a right triangle?",
+    "prompt_parts": [
+      {
+        "text": "Is a triangle with sides 7, 24 and 25 a right triangle?"
+      }
+    ],
+    "worked_solution": [
+      "Test the longest side as the hypotenuse: 7² + 24² =? 25²",
+      "49 + 576 = 625",
+      "25² = 625, so they match",
+      "Yes, it is a right triangle"
+    ],
+    "final_answer": "Yes (49 + 576 = 625)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-52",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "A rectangular field is 40 m by 30 m. How much shorter is walking the diagonal than walking along two sides?",
+    "prompt_plain": "A rectangular field is 40 m by 30 m. How much shorter is walking the diagonal than walking along two sides?",
+    "prompt_parts": [
+      {
+        "text": "A rectangular field is 40 m by 30 m. How much shorter is walking the diagonal than walking along two sides?"
+      }
+    ],
+    "worked_solution": [
+      "Diagonal: d² = 40² + 30² = 1600 + 900 = 2500",
+      "d = 50 m",
+      "Two sides: 40 + 30 = 70 m",
+      "70 − 50 = 20"
+    ],
+    "final_answer": "20 m shorter",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-53",
+    "source": "BC Math 8 content standard S10 + original",
+    "prompt_latex": "A right triangle has legs 4 cm and 6 cm. Find the hypotenuse to 1 decimal place.",
+    "prompt_plain": "A right triangle has legs 4 cm and 6 cm. Find the hypotenuse to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "A right triangle has legs 4 cm and 6 cm. Find the hypotenuse to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "c² = 4² + 6² = 16 + 36 = 52",
+      "7² = 49 and 8² = 64, so c is a bit over 7",
+      "7.2² = 51.84, close to 52",
+      "c ≈ 7.2"
+    ],
+    "final_answer": "≈ 7.2 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-54",
+    "source": "BC Math 8 content standard S11 + original",
+    "prompt_latex": "The net of a box is made of 6 rectangles: two 5 by 3, two 5 by 2 and two 3 by 2 (cm). What are the box's dimensions and its surface area?",
+    "prompt_plain": "The net of a box is made of 6 rectangles: two 5 by 3, two 5 by 2 and two 3 by 2 (cm). What are the box's dimensions and its surface area?",
+    "prompt_parts": [
+      {
+        "text": "The net of a box is made of 6 rectangles: two 5 by 3, two 5 by 2 and two 3 by 2 (cm). What are the box's dimensions and its surface area?"
+      }
+    ],
+    "worked_solution": [
+      "Each size appears twice, so the box has three different face sizes",
+      "Edges that appear: 5, 3 and 2, so the box is 5 × 3 × 2 cm",
+      "Surface area = 2(15 + 10 + 6) = 2(31) = 62 cm²",
+      "Or add the net: 2×15 + 2×10 + 2×6 = 30 + 20 + 12 = 62"
+    ],
+    "final_answer": "5 × 3 × 2 cm; SA = 62 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-55",
+    "source": "BC Math 8 content standard S11 + original",
+    "prompt_latex": "A solid is built from unit cubes: a bottom layer 3 cubes by 2 cubes, with 2 more cubes stacked on top. How many cubes in total? How many squares are in its top view?",
+    "prompt_plain": "A solid is built from unit cubes: a bottom layer 3 cubes by 2 cubes, with 2 more cubes stacked on top. How many cubes in total? How many squares are in its top view?",
+    "prompt_parts": [
+      {
+        "text": "A solid is built from unit cubes: a bottom layer 3 cubes by 2 cubes, with 2 more cubes stacked on top. How many cubes in total? How many squares are in its top view?"
+      }
+    ],
+    "worked_solution": [
+      "Bottom layer: 3 × 2 = 6 cubes",
+      "Add the 2 stacked cubes: 6 + 2 = 8 cubes",
+      "Top view looks down on the 3 by 2 footprint: 3 × 2 = 6 squares"
+    ],
+    "final_answer": "8 cubes; 6 squares in the top view",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-56",
+    "source": "BC Math 8 content standard S11 + original",
+    "prompt_latex": "The net of a cylinder has two circles of radius 4 cm and one rectangle that wraps around the side. The cylinder is 10 cm tall. What are the rectangle's width (the distance around the circle) and its area?",
+    "prompt_plain": "The net of a cylinder has two circles of radius 4 cm and one rectangle that wraps around the side. The cylinder is 10 cm tall. What are the rectangle's width (the distance around the circle) and its area?",
+    "prompt_parts": [
+      {
+        "text": "The net of a cylinder has two circles of radius 4 cm and one rectangle that wraps around the side. The cylinder is 10 cm tall. What are the rectangle's width (the distance around the circle) and its area?"
+      }
+    ],
+    "worked_solution": [
+      "The rectangle's width equals the circumference: 2π(4) = 8π ≈ 25.1 cm",
+      "Its height is the cylinder height, 10 cm",
+      "Area = 8π × 10 = 80π ≈ 251.3 cm²"
+    ],
+    "final_answer": "Width 8π ≈ 25.1 cm; area 80π ≈ 251.3 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-57",
+    "source": "BC Math 8 content standard S12 + original",
+    "prompt_latex": "Find the mean, median and mode of 5, 8, 6, 10, 6, 15, 6.",
+    "prompt_plain": "Find the mean, median and mode of 5, 8, 6, 10, 6, 15, 6.",
+    "prompt_parts": [
+      {
+        "text": "Find the mean, median and mode of 5, 8, 6, 10, 6, 15, 6."
+      }
+    ],
+    "worked_solution": [
+      "Sum: 5 + 8 + 6 + 10 + 6 + 15 + 6 = 56; mean = 56 ÷ 7 = 8",
+      "Order: 5, 6, 6, 6, 8, 10, 15; the middle (4th) value is 6, so median = 6",
+      "6 appears three times, more than any other, so mode = 6"
+    ],
+    "final_answer": "mean 8, median 6, mode 6",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-58",
+    "source": "BC Math 8 content standard S12 + original",
+    "prompt_latex": "Test marks: 72, 85, 90, 85, 82, 90. Find the mean, median and mode.",
+    "prompt_plain": "Test marks: 72, 85, 90, 85, 82, 90. Find the mean, median and mode.",
+    "prompt_parts": [
+      {
+        "text": "Test marks: 72, 85, 90, 85, 82, 90. Find the mean, median and mode."
+      }
+    ],
+    "worked_solution": [
+      "Sum: 72 + 85 + 90 + 85 + 82 + 90 = 504; mean = 504 ÷ 6 = 84",
+      "Order: 72, 82, 85, 85, 90, 90; two middle values 85 and 85, median = 85",
+      "85 and 90 each appear twice, so the modes are 85 and 90"
+    ],
+    "final_answer": "mean 84, median 85, modes 85 and 90",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-59",
+    "source": "BC Math 8 content standard S12 + original",
+    "prompt_latex": "The mean of 5 quiz marks is 14. Four of the marks are 12, 15, 16 and 10. What is the fifth mark?",
+    "prompt_plain": "The mean of 5 quiz marks is 14. Four of the marks are 12, 15, 16 and 10. What is the fifth mark?",
+    "prompt_parts": [
+      {
+        "text": "The mean of 5 quiz marks is 14. Four of the marks are 12, 15, 16 and 10. What is the fifth mark?"
+      }
+    ],
+    "worked_solution": [
+      "Total of all 5 marks = 5 × 14 = 70",
+      "Four known marks: 12 + 15 + 16 + 10 = 53",
+      "Fifth mark = 70 − 53 = 17"
+    ],
+    "final_answer": "17",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-60",
+    "source": "BC Math 8 content standard S12 + original",
+    "prompt_latex": "Five salaries (in thousands of dollars) are 40, 42, 44, 46 and 248. Find the mean and median. Which one better describes a typical salary?",
+    "prompt_plain": "Five salaries (in thousands of dollars) are 40, 42, 44, 46 and 248. Find the mean and median. Which one better describes a typical salary?",
+    "prompt_parts": [
+      {
+        "text": "Five salaries (in thousands of dollars) are 40, 42, 44, 46 and 248. Find the mean and median. Which one better describes a typical salary?"
+      }
+    ],
+    "worked_solution": [
+      "Mean: (40 + 42 + 44 + 46 + 248) ÷ 5 = 420 ÷ 5 = 84",
+      "Median: the middle of 40, 42, 44, 46, 248 is 44",
+      "The 248 pulls the mean far above the other four salaries",
+      "The median, 44, describes a typical salary better"
+    ],
+    "final_answer": "mean 84, median 44; the median is better",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-61",
+    "source": "BC Math 8 content standard S13 + original",
+    "prompt_latex": "A fair die is rolled and a fair coin is flipped. Find P(5 and heads).",
+    "prompt_plain": "A fair die is rolled and a fair coin is flipped. Find P(5 and heads).",
+    "prompt_parts": [
+      {
+        "text": "A fair die is rolled and a fair coin is flipped. Find P(5 and heads)."
+      }
+    ],
+    "worked_solution": [
+      "P(5) = 1/6 and P(heads) = 1/2",
+      "The events do not affect each other, so multiply",
+      "1/6 × 1/2 = 1/12"
+    ],
+    "final_answer": "1/12",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-62",
+    "source": "BC Math 8 content standard S13 + original",
+    "prompt_latex": "A spinner has 4 equal sections: red, blue, green, yellow. It is spun and a coin is flipped. Find the size of the sample space and P(blue and tails).",
+    "prompt_plain": "A spinner has 4 equal sections: red, blue, green, yellow. It is spun and a coin is flipped. Find the size of the sample space and P(blue and tails).",
+    "prompt_parts": [
+      {
+        "text": "A spinner has 4 equal sections: red, blue, green, yellow. It is spun and a coin is flipped. Find the size of the sample space and P(blue and tails)."
+      }
+    ],
+    "worked_solution": [
+      "Sample space: 4 colours × 2 coin results = 8 outcomes",
+      "Only one outcome is (blue, tails)",
+      "P = 1/8"
+    ],
+    "final_answer": "8 outcomes; P = 1/8",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-63",
+    "source": "BC Math 8 content standard S13 + original",
+    "prompt_latex": "Two fair dice are rolled. Find P(both dice show even numbers).",
+    "prompt_plain": "Two fair dice are rolled. Find P(both dice show even numbers).",
+    "prompt_parts": [
+      {
+        "text": "Two fair dice are rolled. Find P(both dice show even numbers)."
+      }
+    ],
+    "worked_solution": [
+      "Even numbers on a die: 2, 4, 6, so P(even) = 3/6 = 1/2",
+      "The dice are independent, so multiply",
+      "1/2 × 1/2 = 1/4"
+    ],
+    "final_answer": "1/4",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-64",
+    "source": "BC Math 8 content standard S13 + original",
+    "prompt_latex": "A bag has 3 red and 2 blue marbles. A marble is drawn, put back, and a second is drawn. Find P(red then blue).",
+    "prompt_plain": "A bag has 3 red and 2 blue marbles. A marble is drawn, put back, and a second is drawn. Find P(red then blue).",
+    "prompt_parts": [
+      {
+        "text": "A bag has 3 red and 2 blue marbles. A marble is drawn, put back, and a second is drawn. Find P(red then blue)."
+      }
+    ],
+    "worked_solution": [
+      "P(red) = 3/5",
+      "The first marble is put back, so P(blue) = 2/5 still",
+      "3/5 × 2/5 = 6/25"
+    ],
+    "final_answer": "6/25",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-65",
+    "source": "BC Math 8 content standard S13 + original",
+    "prompt_latex": "Two fair dice are rolled. Find P(sum is 7) using a table of outcomes.",
+    "prompt_plain": "Two fair dice are rolled. Find P(sum is 7) using a table of outcomes.",
+    "prompt_parts": [
+      {
+        "text": "Two fair dice are rolled. Find P(sum is 7) using a table of outcomes."
+      }
+    ],
+    "worked_solution": [
+      "There are 6 × 6 = 36 equally likely outcomes",
+      "Sum 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) is 6 outcomes",
+      "P = 6/36 = 1/6"
+    ],
+    "final_answer": "1/6",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-66",
+    "source": "BC Math 8 content standard S14 + original",
+    "prompt_latex": "Juice A is 500 mL for $3.00. Juice B is 750 mL for $4.20. Which is the better buy?",
+    "prompt_plain": "Juice A is 500 mL for $3.00. Juice B is 750 mL for $4.20. Which is the better buy?",
+    "prompt_parts": [
+      {
+        "text": "Juice A is 500 mL for $3.00. Juice B is 750 mL for $4.20. Which is the better buy?"
+      }
+    ],
+    "worked_solution": [
+      "A: $3.00 ÷ 500 = $0.0060 per mL",
+      "B: $4.20 ÷ 750 = $0.0056 per mL",
+      "B costs less per mL"
+    ],
+    "final_answer": "Juice B",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-67",
+    "source": "BC Math 8 content standard S14 + original",
+    "prompt_latex": "A shirt costs $40 at store A, where you have a 25% off coupon. Store B sells it for $32. Which is cheaper and by how much?",
+    "prompt_plain": "A shirt costs $40 at store A, where you have a 25% off coupon. Store B sells it for $32. Which is cheaper and by how much?",
+    "prompt_parts": [
+      {
+        "text": "A shirt costs $40 at store A, where you have a 25% off coupon. Store B sells it for $32. Which is cheaper and by how much?"
+      }
+    ],
+    "worked_solution": [
+      "Coupon: 25% off means you pay 75%",
+      "0.75 × 40 = 30, so store A costs $30",
+      "Store B: $32",
+      "A is cheaper by 32 − 30 = $2"
+    ],
+    "final_answer": "Store A, by $2",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-68",
+    "source": "BC Math 8 content standard S14 + original",
+    "prompt_latex": "Apples: 6 for $3.90 or 10 for $6.00. Which is the better buy?",
+    "prompt_plain": "Apples: 6 for $3.90 or 10 for $6.00. Which is the better buy?",
+    "prompt_parts": [
+      {
+        "text": "Apples: 6 for $3.90 or 10 for $6.00. Which is the better buy?"
+      }
+    ],
+    "worked_solution": [
+      "6 apples: 3.90 ÷ 6 = $0.65 each",
+      "10 apples: 6.00 ÷ 10 = $0.60 each",
+      "10 for $6.00 is cheaper per apple"
+    ],
+    "final_answer": "10 for $6.00",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-69",
+    "source": "BC Math 8 content standard S14 + original",
+    "prompt_latex": "Gym A costs $25 to join plus $30 per month. Gym B has no joining fee and costs $38 per month. After how many full months is Gym A cheaper in total?",
+    "prompt_plain": "Gym A costs $25 to join plus $30 per month. Gym B has no joining fee and costs $38 per month. After how many full months is Gym A cheaper in total?",
+    "prompt_parts": [
+      {
+        "text": "Gym A costs $25 to join plus $30 per month. Gym B has no joining fee and costs $38 per month. After how many full months is Gym A cheaper in total?"
+      }
+    ],
+    "worked_solution": [
+      "Gym A after m months: 25 + 30m. Gym B: 38m",
+      "Set equal: 25 + 30m = 38m, so 25 = 8m",
+      "m = 3.125",
+      "At 3 months: A = 115, B = 114 (B cheaper). At 4 months: A = 145, B = 152 (A cheaper)"
+    ],
+    "final_answer": "From 4 months on",
+    "level": "middle_school"
+  },
+  {
+    "id": "m8-70",
+    "source": "BC Math 8 content standard S14 + original",
+    "prompt_latex": "Rice: 2 kg for $7.98 or 5 kg for $18.50. Which is the better buy, and what is the saving per kg?",
+    "prompt_plain": "Rice: 2 kg for $7.98 or 5 kg for $18.50. Which is the better buy, and what is the saving per kg?",
+    "prompt_parts": [
+      {
+        "text": "Rice: 2 kg for $7.98 or 5 kg for $18.50. Which is the better buy, and what is the saving per kg?"
+      }
+    ],
+    "worked_solution": [
+      "2 kg: 7.98 ÷ 2 = $3.99 per kg",
+      "5 kg: 18.50 ÷ 5 = $3.70 per kg",
+      "5 kg is cheaper; saving = 3.99 − 3.70 = $0.29 per kg"
+    ],
+    "final_answer": "5 kg bag, saves $0.29 per kg",
+    "level": "middle_school"
+  }
+]
