@@ -549,6 +549,10 @@ final class TutorSession: ObservableObject {
     private func openLiveVoiceIfThePlanAllows() async {
         await env.account.refresh(reason: "problem_opened")
         guard !stopped else { return }
+        guard !LaunchOptions.silent else {
+            env.log.record("live_skipped", ["reason": "silent_test_launch", "problem_id": problem.id])
+            return
+        }
         guard env.makeLiveTransport != nil else {
             env.log.record("live_skipped", ["reason": env.liveOffReason ?? "unknown", "problem_id": problem.id])
             return

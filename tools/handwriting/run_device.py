@@ -78,7 +78,8 @@ class Target:
 
     # -- the app
     def launch(self, problem_id: str, script_name: str, settle: int) -> tuple[bool, str]:
-        args = ["--open-problem", problem_id, "--replay-ink", script_name, "--replay-settle", str(settle)]
+        # --silent always: the tutor's voice still runs and is logged, but plays at volume 0 (nobody is listening at night).
+        args = ["--open-problem", problem_id, "--replay-ink", script_name, "--replay-settle", str(settle), "--silent"]
         if self.kind == "device":
             result = run(["xcrun", "devicectl", "device", "process", "launch", "--device", self.device, "--terminate-existing",
                           BUNDLE, *args], timeout=90)
@@ -125,7 +126,7 @@ def score(case: dict, script: dict, events: list[dict]) -> dict:
         by_type.setdefault(event["type"], []).append(event)
     expected = script["expected"]
     result: dict = {"case": case["id"], "expected": expected["outcome"], "mistake_line": expected.get("line"),
-                    "app_line": expected.get("app_line")}
+                    "app_line": expected.get("app_line"), "silent": "voice_muted_for_test" in by_type}
     failed = by_type.get("replay_failed")
     if failed:
         return {**result, "verdict": "REPLAY_FAILED", "detail": failed[0].get("reason", "")}
@@ -255,6 +256,11 @@ def main():
         with open(os.path.join(case_dir, "score.json"), "w", encoding="utf-8") as handle:
             json.dump(outcome, handle, indent=1)
         print("  ", json.dumps({k: v for k, v in outcome.items() if k != "case"}), flush=True)
+        if not outcome.get("silent"):
+            # The installed app is an old build without --silent: stop before the next run speaks aloud.
+            print("STOPPING: this run did not log voice_muted_for_test, so the app may have spoken. Install a build with --silent.",
+                  flush=True)
+            break
     try:
         target.terminate()
     except Exception as err:   # noqa: BLE001 - the runs are already scored; say so and carry on

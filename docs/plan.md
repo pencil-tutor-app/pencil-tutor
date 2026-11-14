@@ -537,6 +537,46 @@ Edward asked for the new course banks (`shared/courses/<slug>/problems.json`) to
 - **Needs a deploy.** The server must be deployed for the new courses to be tutored (it looks problems up by id in its own bundled copy).
   Until then a new app build would get 422 `unknown_problem` for every course problem except `u3-..`.
 
+### Amendment 19 (2026-11-15): line grouping follows the written lines; writing starts below the problem card; the card sets real maths
+
+Three faults the self-driving handwriting replay found (`docs/evals/2026-11-15-handwriting-replay.md`). Branch `line-grouping-and-card`.
+
+- **Line grouping (`Core/LineGrouping.swift`).** Everything is measured in `letter`, the median height of the strokes that are not
+  dashes or specks (so it does not move with how big the student writes). Steps: (1) a stacked fraction (a flat bar with a row of
+  writing right above and right below it, about as close on both sides, with no stroke crossing the bar) is one piece; (2) pieces whose
+  heights overlap form a band; (3) a band that touches several lines is cut at its thinnest slice (ink per height) when that slice holds
+  at most `valleyShare` (0.4) of the thinner row around it, never through a fraction; (4) a band holding only small marks (a raised
+  exponent, a subscript, a comma) attaches to the nearest line it stands beside (within 0.8 letter vertically, 1.2 horizontally);
+  (5) a stroke taller than 2.5 letters (a scribble, a big bracket) joins the line its middle falls in without stretching it; (6) work far
+  to the right is a side calculation, as before. The result does not depend on the order strokes arrive in (tested). A matrix is one line
+  of work: its rows stay together. Tested in `LineGrouperTests` (raised and lowered marks, a lone far mark, two fraction lines that nearly
+  touch, a 7's top bar, a descender into the next row, drifting rows, shuffled input).
+  **Measured offline** by running the real `LineGrouper` over the replay's ink (`ink_script.py stress`: every drawable problem in every
+  course at five spacings and wobbles, 2,570 pages, a page agrees when every group holds strokes of exactly one written line and the count
+  matches): 985 agree before, 2,404 after. At the normal spacing 265 of 514 before, 505 after; at spacing 0.6 and 0.4 of normal, and with
+  twice the wobble, 201 to 500, 175 to 478, 185 to 489, 159 to 432. The same harness reproduced exactly the five documented device
+  disagreements on the original 24 cases (before), and agrees on all 24 after.
+- **The card no longer covers the first line.** The page's origin (where a first stroke goes) is placed `clearance` points below the top
+  of the screen, where `clearance` is the bottom edge of the problem card (measured in `ProblemScreen`, converted in
+  `TutorSession.topClearance`) plus 12 pt: `PageGeometry.homeOffset`. The paper above is blank. While the page is blank and unmoved the
+  home follows the card (it folds, unfolds or rewraps); once there is ink or the student has scrolled or zoomed nothing moves behind
+  their back. A tutor mark under or within 12 pt of the card counts as out of view: `PageGeometry.offsetToReveal(topClearance:)` scrolls
+  it clear (the mark lands at least clearance + 12 pt down). The pictures sent to the models are unchanged (the first-screen region is
+  the same page rectangle). Logged: `page_home_placed.card_clearance`, `card_measured`, `scrolled_to_mark.card_clearance`.
+- **Maths in the card (`Core/MathMarkup.swift`, `Views/MathViews.swift`).** A small reader for the notation the banks use in
+  `prompt_plain` and the text of `prompt_parts` (`^(…)`, `^x`, `_{…}`, Unicode superscripts and subscripts, `√x`, `√(…)`, `∛(…)`,
+  `[1 2; 3 4]`, `Σ_{k=1}^{20}`) turns it into nodes; SwiftUI draws them (Text with baseline offsets for exponents and indices, a drawn root
+  with its overbar and index, a grid between brackets, bounds above and below a sigma, stacked fractions on a shared baseline). No web
+  view, no LaTeX engine, no font download, nothing fetched: it works offline. **Why not KaTeX/SwiftMath/`prompt_latex`:** an engine
+  would add a web view or a package to a 3 GB iPad for about thirty distinct constructs, and `prompt_latex` is not clean enough to feed
+  one (it mixes `\text{…}` with raw Unicode and bare `√3/2` in one string, so a second parser would be needed for the exceptions); the
+  plain form is complete for all 1,012 problems and is what the tutor and the logs use. Anything the reader does not recognise stays
+  the text it was. Slash fractions in prose (`4/6 and 10/15`) stay slash fractions. The collapsed pill and the problem list use the
+  one-line form (exponents raised, roots and matrices as characters). A test reads every prompt of every course and fails if markup
+  is left raw or a character is lost; `CardGalleryTests` (opt-in, `CARD_GALLERY_DIR`) draws sample cards from all 15 courses to PNG.
+- **Replay tooling.** `ink_script.py` gains `--gap-scale` (cramped lines) and `--jitter` (rushed hand), `cases --pick COURSE:PROBLEM
+  --matrix --mistake-only`, and `stress`. A matrix written in one equation line counts as one line (`app_lines` 1).
+
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
   floor check only. Mitigation: session log turns real use into the test.

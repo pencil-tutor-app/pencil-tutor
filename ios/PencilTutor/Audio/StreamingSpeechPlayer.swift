@@ -36,6 +36,10 @@ final class StreamingSpeechPlayer {
         self.format = format
         engine.attach(node)
         engine.connect(node, to: engine.mainMixerNode, format: format)
+        if LaunchOptions.silent {
+            engine.mainMixerNode.outputVolume = 0      // `--silent`: everything still plays, at volume 0
+            node.volume = 0
+        }
         // Prepared now, while the network request is still going, so starting later is quick.
         engine.prepare()
         configObserver = NotificationCenter.default.addObserver(
