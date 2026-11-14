@@ -160,7 +160,8 @@
       "5² = 25 and 6² = 36, so √30 is between 5 and 6",
       "Try 5.5² = 30.25, a little more than 30",
       "Try 5.4² = 29.16, a little less than 30",
-      "30 is closer to 30.25 than to 29.16, so √30 ≈ 5.5"
+      "Halfway test: 5.45² = 29.7025, which is less than 30",
+      "So √30 is above 5.45, and √30 ≈ 5.5"
     ],
     "final_answer": "≈ 5.5",
     "level": "middle_school"
@@ -339,9 +340,8 @@
       }
     ],
     "worked_solution": [
-      "Set up a proportion: 3/12 = x/20",
-      "Unit rate: 3 ÷ 12 = 0.25 cup per muffin",
-      "x = 0.25 × 20 = 5"
+      "Find the flour for 1 muffin: 3 ÷ 12 = 0.25 cup",
+      "20 muffins: 0.25 × 20 = 5"
     ],
     "final_answer": "5 cups",
     "level": "middle_school"
@@ -647,11 +647,11 @@
   {
     "id": "m8-29",
     "source": "BC Math 8 content standard S6 + original",
-    "prompt_latex": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20.",
-    "prompt_plain": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20.",
+    "prompt_latex": "The points (0, 10), (5, 25) and (10, 40) lie on a line. Find the rule, then y when x = 20.",
+    "prompt_plain": "The points (0, 10), (5, 25) and (10, 40) lie on a line. Find the rule, then y when x = 20.",
     "prompt_parts": [
       {
-        "text": "The points (0, 10), (5, 25) and (10, 40) lie on a line. The axis tick marks count by 5. Find the rule, then y when x = 20."
+        "text": "The points (0, 10), (5, 25) and (10, 40) lie on a line. Find the rule, then y when x = 20."
       }
     ],
     "worked_solution": [
@@ -694,8 +694,8 @@
       }
     ],
     "worked_solution": [
-      "x = −3: y = 3 + 4 = 7, point (−3, 7)",
-      "x = −1: y = 1 + 4 = 5, point (−1, 5)",
+      "x = −3: y = −(−3) + 4 = 3 + 4 = 7, point (−3, 7)",
+      "x = −1: y = −(−1) + 4 = 1 + 4 = 5, point (−1, 5)",
       "x = 2: y = −2 + 4 = 2, point (2, 2)",
       "x = 6: y = −6 + 4 = −2, point (6, −2)",
       "Quadrants: (−3, 7) II, (−1, 5) II, (2, 2) I, (6, −2) IV"
@@ -753,8 +753,7 @@
     "worked_solution": [
       "Substitute: 2(4 + 3(−2)) − 5",
       "Inside brackets: 3(−2) = −6, then 4 + (−6) = −2",
-      "2(−2) − 5 = −4 − 5",
-      "= −9"
+      "2(−2) − 5 = −4 − 5 = −9"
     ],
     "final_answer": "−9",
     "level": "middle_school"
@@ -835,11 +834,20 @@
   {
     "id": "m8-39",
     "source": "BC Math 8 content standard S8 + original",
-    "prompt_latex": "Solve {x/4} − 3 = 2.",
-    "prompt_plain": "Solve {x/4} − 3 = 2.",
+    "prompt_latex": "Solve \\dfrac{x}{4} − 3 = 2.",
+    "prompt_plain": "Solve x/4 − 3 = 2.",
     "prompt_parts": [
       {
-        "text": "Solve {x/4} − 3 = 2."
+        "text": "Solve "
+      },
+      {
+        "frac": {
+          "num": "x",
+          "den": "4"
+        }
+      },
+      {
+        "text": " − 3 = 2."
       }
     ],
     "worked_solution": [
@@ -1039,20 +1047,20 @@
   {
     "id": "m8-50",
     "source": "BC Math 8 content standard S10 + original",
-    "prompt_latex": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?",
-    "prompt_plain": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?",
+    "prompt_latex": "A 17 m ladder leans on a wall with its foot 8 m from the wall. How high up the wall does it reach?",
+    "prompt_plain": "A 17 m ladder leans on a wall with its foot 8 m from the wall. How high up the wall does it reach?",
     "prompt_parts": [
       {
-        "text": "A 15 ft ladder leans on a wall with its foot 9 ft from the wall. How high up the wall does it reach?"
+        "text": "A 17 m ladder leans on a wall with its foot 8 m from the wall. How high up the wall does it reach?"
       }
     ],
     "worked_solution": [
-      "Ladder is the hypotenuse: h² + 9² = 15²",
-      "h² + 81 = 225",
-      "h² = 144",
-      "h = 12"
+      "Ladder is the hypotenuse: h² + 8² = 17²",
+      "h² + 64 = 289",
+      "h² = 225",
+      "h = 15"
     ],
-    "final_answer": "12 ft",
+    "final_answer": "15 m",
     "level": "middle_school"
   },
   {
@@ -1106,8 +1114,8 @@
     "worked_solution": [
       "c² = 4² + 6² = 16 + 36 = 52",
       "7² = 49 and 8² = 64, so c is a bit over 7",
-      "7.2² = 51.84, close to 52",
-      "c ≈ 7.2"
+      "7.2² = 51.84 and 7.3² = 53.29",
+      "52 is closer to 51.84, so c ≈ 7.2"
     ],
     "final_answer": "≈ 7.2 cm",
     "level": "middle_school"
@@ -1341,9 +1349,10 @@
       }
     ],
     "worked_solution": [
-      "A: $3.00 ÷ 500 = $0.0060 per mL",
-      "B: $4.20 ÷ 750 = $0.0056 per mL",
-      "B costs less per mL"
+      "Compare the price of the same amount: 1500 mL is a multiple of both sizes",
+      "A: 3 bottles of 500 mL, so 3 × 3.00 = $9.00",
+      "B: 2 bottles of 750 mL, so 2 × 4.20 = $8.40",
+      "B costs less for the same 1500 mL"
     ],
     "final_answer": "Juice B",
     "level": "middle_school"

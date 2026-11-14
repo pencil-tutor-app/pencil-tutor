@@ -71,7 +71,7 @@ Every problem was written for this bank from the BC content standards. No proble
 
 Re-runnable: `python3 -I shared/courses/bc-fmpc-10/verify.py` (standard library only, exits non-zero on any failure).
 
-Last run: 2026-11-14, result `54 problems, 54 verified, 0 failed; 246 intermediate pairs checked, 70 prose-only lines skipped`.
+Last run: 2026-11-15, result `54 problems, 54 verified, 0 failed; 247 intermediate pairs checked, 70 prose-only lines skipped`.
 
 For every problem the script checks:
 
@@ -81,3 +81,16 @@ For every problem the script checks:
 4. Mutation test: four deliberate errors injected into a copy (a wrong final answer, a wrong sum in a step, a wrong constant in a line, a wrong expansion) were all caught.
 
 What this does not prove: wording quality, age-appropriateness, and the pedagogy of each step are not machine-checked, and prose lines are unchecked beyond the targeted assertions above.
+
+## Review (teacher-quality pass, 2026-11-15)
+
+Checked all 54 problems for: one clear answer, grade 10 wording, Canadian/metric context, fit to FMPC 10, worked
+solution one step per line, final answer matching the ask, rounding, difficulty ramp, no names or recognisable textbook items.
+
+- Reviewed 54, fixed 3, dropped 0, unchanged 51.
+- f10-23: same table and answer (y = 3x + 5, 35) as m8-27 in Math 8; now y = 12, 9, 6, 3, giving y = −3x + 12 and −18. verify.py updated.
+- f10-42: factored the exact polynomial expanded in f10-35 (x² − 3x − 28); now x² − 2x − 24 = (x + 4)(x − 6). verify.py updated.
+- f10-54: `0.78 × 54000 ÷ 26 = 1620` was two steps in one line; now net for the year (42120), then per pay period.
+- Most common finding: none dominant; the bank was clean (trig rounding, units and pay arithmetic all re-derived by hand).
+- verify.py: passes (54 problems, 54 verified, 0 failed, 247 pairs).
+- Unsure: f10-28 (arithmetic series) is labelled "Extension", matching the curriculum's "extension: arithmetic series".

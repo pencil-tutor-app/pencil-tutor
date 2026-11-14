@@ -117,3 +117,18 @@ checks six expression identities a second way.
 - I tested the verifier by changing four answers and one worked-solution line in a scratch copy; it reported all five.
 - Not checked by machine: the wording of the prose lines, the interpolation versus extrapolation labels (m9-22, m9-24),
   and the classification answers in m9-38 and m9-39. I read those by hand.
+
+## Review (teacher-quality pass, 2026-11-15)
+
+Checked all 49 problems for: one clear answer, grade 9 wording, Canadian/metric context, fit to the BC Math 9 standard,
+worked solution one step per line, final answer matching the ask, difficulty ramp, no names or recognisable textbook items.
+
+- Reviewed 49, fixed 14, dropped 0, unchanged 35.
+- m9-01 to m9-07, m9-14 and m9-25 to m9-29 were bare expressions or equations with no instruction; added
+  "Evaluate:", "Simplify:" or "Solve:" (prompt_plain, prompt_latex and prompt_parts).
+- m9-19: the table was jammed into one line of text; reworded as "x = 3, 6, 9, 12 and y = 8, 7, 6, 5".
+- m9-27: `7n + 4 = 6n` jumped straight to `n = −4`; two lines added. m9-29: two operations in one line, now split.
+- Most common finding: missing instruction verb on a bare expression (13 of 14).
+- verify.py: passes (49 problems, 57 chains, 0 failures). Plain python has no sympy, so the second-method check is skipped, as before.
+- Unsure: thousands separators are written with commas (m9-12, m9-41); Canadian usage allows commas or spaces, so left.
+  m9-21 keeps a one-line note about the graph being joined; it is brief, so left.
