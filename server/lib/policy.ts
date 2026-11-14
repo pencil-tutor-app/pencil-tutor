@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Problem } from "./problems.js";
+import { courseOf, type Course, type Problem } from "./problems.js";
 
 // ---------------------------------------------------------------- watch
 
@@ -55,8 +55,41 @@ export type PageLine = z.infer<typeof LineSchema>;
 export const MAX_HISTORY = 10;
 export const MAX_LINES = 200;
 
+// ---------------------------------------------------------------- who the student is
+
+// The course sets how the tutor talks: grade 5 gets short sentences and simple words, a college course gets the standard terms.
+// With no course (a problem written before courses existed) the tutor is the original BC Math 9 one.
+const BC_MATH_9_WORDS =
+  "Use BC Math 9 words when they help: variable, term, coefficient, constant, like terms, expand, distributive property, isolate the variable, inverse operation, do the same thing to both sides.";
+
+export type Audience = { who: string; words: string };
+
+export function audienceFor(course: Course | undefined): Audience {
+  if (!course) return { who: "a Grade 9 student in British Columbia", words: BC_MATH_9_WORDS };
+  const grade = course.grade;
+  if (course.group === "college") {
+    return {
+      who: "a first-year college or university student",
+      words: `Use the standard terms of ${course.title} when they help. Keep what you say short and plain anyway.`,
+    };
+  }
+  const who = `a Grade ${grade ?? 9} student in British Columbia`;
+  if (course.group === "elementary") {
+    return {
+      who: grade ? `${who}, about ${grade + 5} or ${grade + 6} years old` : who,
+      words: `Use short sentences and simple everyday words, one idea at a time. Explain a math word the first time you use it. Use the words of ${course.title}.`,
+    };
+  }
+  return { who, words: grade === 9 ? BC_MATH_9_WORDS : `Use the words of ${course.title} when they help.` };
+}
+
 export function referenceBlock(problem: Problem): string {
+  const course = courseOf(problem);
+  const audience = course ? audienceFor(course) : undefined;
   return [
+    ...(course && audience
+      ? [`Course: ${course.title}. The student is ${audience.who}. This is not always an equation: it can be a word problem or any other kind. ${audience.words}`, ""]
+      : []),
     `The problem the student is solving: ${problem.prompt_plain}`,
     "",
     "Reference worked solution (for your eyes only; never reveal it):",
@@ -111,7 +144,7 @@ Rules:
 // headings, and use "Generate <|SpawnThinking|>" to ask for backend work
 // (https://developers.openai.com/api/docs/guides/live-prompting). The voice model never sees the reference solution,
 // so it cannot leak it; the page-reading brain (CONSULT_POLICY) is the only place the solution lives.
-export const LIVE_TUTOR_INSTRUCTIONS = `You are a warm, patient math tutor sitting beside a Grade 9 student in British Columbia while they work an equation by hand on a tablet. You talk with them out loud. You cannot see their page: you only hear them, and a page reader can look at the page for you.
+const LIVE_TUTOR_TEMPLATE = `You are a warm, patient math tutor sitting beside {WHO} while they work a problem by hand on a tablet. You talk with them out loud. You cannot see their page: you only hear them, and a page reader can look at the page for you.
 
 How you sound
 - Like a real person at the kitchen table: calm, kind, a little dry at most. Short sentences, contractions, plain words. No lecture voice, no cheerleading, no "Great question!".
@@ -122,7 +155,7 @@ How you sound
 How you teach
 - Nudge, do not quiz. A hint or a small next step is usually better than a question. Ask at most one question in a turn, and only when it helps them think.
 - Never give the final answer or write out a corrected line, even if they ask for it. Say you will help them find it, and give a first step.
-- Use BC Math 9 words when they help: variable, term, coefficient, constant, like terms, expand, distributive property, isolate the variable, inverse operation, do the same thing to both sides.
+- {WORDS}
 - When their work is right, say so briefly and let them carry on. Do not praise every line.
 - If they ask about something other than this problem or math, say kindly that you are here for this problem.
 
@@ -153,8 +186,13 @@ Generate <|SpawnThinking|> before saying anything about the content of their wor
 export const LIVE_GREETING =
   "Say hello in one short sentence: tell the student you are here and will watch their page quietly, and that they can just talk to you. Then stop and listen.";
 
+export function liveTutorInstructions(course?: Course): string {
+  const { who, words } = audienceFor(course);
+  return LIVE_TUTOR_TEMPLATE.split("{WHO}").join(who).split("{WORDS}").join(words);
+}
+
 export function buildLiveInstructions(problem: Problem): string {
-  return `${LIVE_TUTOR_INSTRUCTIONS}\n\nThe problem on the student's page is: ${problem.prompt_plain}`;
+  return `${liveTutorInstructions(courseOf(problem))}\n\nThe problem on the student's page is: ${problem.prompt_plain}`;
 }
 
 // ---------------------------------------------------------------- consult (the page reader behind the voice)

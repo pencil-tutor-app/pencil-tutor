@@ -10,7 +10,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
-    "sync-problems": "cp ../shared/problems.json data/problems.json"
+    "build-courses": "tsx scripts/build-courses.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.118",

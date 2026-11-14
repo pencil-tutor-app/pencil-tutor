@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "courses": [
+    {
+      "slug": "bc-math-5",
+      "title": "BC Math 5",
+      "group": "elementary",
+      "grade": 5,
+      "level": "elementary",
+      "tier": "standard",
+      "count": 90,
+      "file": "courses/bc-math-5/problems.json"
+    },
+    {
+      "slug": "bc-math-6",
+      "title": "BC Math 6",
+      "group": "elementary",
+      "grade": 6,
+      "level": "elementary",
+      "tier": "standard",
+      "count": 91,
+      "file": "courses/bc-math-6/problems.json"
+    },
+    {
+      "slug": "bc-math-7",
+      "title": "BC Math 7",
+      "group": "elementary",
+      "grade": 7,
+      "level": "middle_school",
+      "tier": "standard",
+      "count": 64,
+      "file": "courses/bc-math-7/problems.json"
+    },
+    {
+      "slug": "bc-math-8",
+      "title": "BC Math 8",
+      "group": "high_school",
+      "grade": 8,
+      "level": "middle_school",
+      "tier": "standard",
+      "count": 70,
+      "file": "courses/bc-math-8/problems.json"
+    },
+    {
+      "slug": "bc-math-9",
+      "title": "BC Math 9",
+      "group": "high_school",
+      "grade": 9,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 49,
+      "file": "courses/bc-math-9/problems.json"
+    },
+    {
+      "slug": "bc-math-9-unit-3",
+      "title": "BC Math 9 · Unit 3 equations",
+      "group": "high_school",
+      "grade": 9,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 12,
+      "file": "problems.json"
+    },
+    {
+      "slug": "bc-fmpc-10",
+      "title": "BC Foundations of Math and Pre-calculus 10",
+      "group": "high_school",
+      "grade": 10,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 54,
+      "file": "courses/bc-fmpc-10/problems.json"
+    },
+    {
+      "slug": "bc-fm-11",
+      "title": "BC Foundations of Math 11",
+      "group": "high_school",
+      "grade": 11,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 60,
+      "file": "courses/bc-fm-11/problems.json"
+    },
+    {
+      "slug": "bc-pc-11",
+      "title": "BC Pre-calculus 11",
+      "group": "high_school",
+      "grade": 11,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 118,
+      "file": "courses/bc-pc-11/problems.json"
+    },
+    {
+      "slug": "bc-calc-12",
+      "title": "BC Calculus 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 77,
+      "file": "courses/bc-calc-12/problems.json"
+    },
+    {
+      "slug": "bc-fm-12",
+      "title": "BC Foundations of Math 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 46,
+      "file": "courses/bc-fm-12/problems.json"
+    },
+    {
+      "slug": "bc-pc-12",
+      "title": "BC Pre-calculus 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "tier": "standard",
+      "count": 84,
+      "file": "courses/bc-pc-12/problems.json"
+    },
+    {
+      "slug": "calculus-1",
+      "title": "Calculus I",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "tier": "standard",
+      "count": 70,
+      "file": "courses/calculus-1/problems.json"
+    },
+    {
+      "slug": "discrete-math",
+      "title": "Discrete Mathematics",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "tier": "standard",
+      "count": 70,
+      "file": "courses/discrete-math/problems.json"
+    },
+    {
+      "slug": "linear-algebra",
+      "title": "Linear Algebra",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "tier": "standard",
+      "count": 69,
+      "file": "courses/linear-algebra/problems.json"
+    }
+  ]
+}

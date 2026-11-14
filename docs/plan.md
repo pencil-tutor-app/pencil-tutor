@@ -506,6 +506,37 @@ taps), and against iPadOS's own three-finger gestures; finger-drawing mode (no P
 dot; the voice states "Connecting voice...", "Reconnect voice" and "Listening" (laid out by the same rules, not captured); a window
 shorter than 700 pt (Split View), where the rail scrolls.
 
+### Amendment 18 (2026-11-14): the course banks are wired in; pick a course, then a problem; the tutor knows the course
+
+Edward asked for the new course banks (`shared/courses/<slug>/problems.json`) to be playable. Branch `wire-courses`.
+
+- **Manifest and bank.** `server/scripts/build-courses.ts` (`npm run build-courses`) reads the original 12 (`shared/problems.json`, listed
+  as the course `bc-math-9-unit-3`) and every folder under `shared/courses/`, validates each problem, fails on a duplicate id across all
+  courses, and writes `shared/courses/index.json` (slug, title, group, grade, level, count, file) and the server's `server/data/problems.json`
+  (courses plus trimmed problems: 1,024 problems, about 430 KB at 15 courses). A new folder needs no code change; an optional `course.json`
+  sets the title, group and grade, otherwise they are inferred from the folder name and level. `test/courses.test.ts` fails when a generated
+  file is stale. This replaces `npm run sync-problems`.
+- **iPad.** `ProblemListView` is now the home: a course picker grouped Elementary (grades 5-7), High school (8-12), College, then the
+  course's problem list, then the existing problem screen. The last course is remembered (`lastCourseSlug` in UserDefaults) and opens at
+  launch; Back goes to the picker. The bundle step (`ios/Scripts/bundle_problems.py`) writes `courses.json` and one `course-<slug>.json`
+  per course (prompts only, no solutions; about 270 KB) and fails the build when a folder is missing from the manifest. `--open-problem <id>`
+  finds the course itself. Code: `Core/Courses.swift`, `Core/CourseCatalog.swift`, `Views/ProblemListView.swift`, `Views/AppToolbar.swift`.
+- **Problem card.** The fixed "Solve for the letter" line is replaced by the course name. The prompt font steps down with length
+  (26, 23, 20, 18 pt for 60, 110, 170 and longer characters) so a 260-character word problem fits in about six lines inside the 460 pt card; a
+  bracketed run such as the matrix `[1 2; 3 4]` is kept in one piece.
+- **Tutor level.** Every watch, ask, consult and live prompt now begins with the course and who the student is (`audienceFor`, `lib/policy.ts`):
+  grade 5-7 gets short sentences and simple words, grade 8-12 the words of the course, college the standard terms. A problem with no course
+  keeps the original Grade 9 tutor. Requests log `course` (the slug) next to `level`.
+- **Model tier is a per-course switch, default standard (decided by the coordinator, 2026-11-14).** Every course, the three college
+  ones included, runs on the cheap tier (`gpt-6-luna`). A course opts into the frontier tier (`gpt-6.1-sol`, about ten times the cost per
+  look, which the CA$19 plan cannot carry) only with `"tier": "advanced"` in its `course.json`; `build-courses` validates it, writes it to
+  the manifest and the server bank, and `levelOf` (`lib/problems.ts`) reads it. A problem whose own `level` is `advanced` also escalates;
+  the bank's `college` level alone does not. Each watch, ask and consult request logs `course`, `tier` (`standard` or `advanced`) and
+  `level`. **Escalating a course needs measured handwriting results first**: the only eval (amendment 14) covers high school pages, and the
+  advanced route has not been measured on calculus or linear algebra handwriting. Run that eval before setting any course to advanced.
+- **Needs a deploy.** The server must be deployed for the new courses to be tutored (it looks problems up by id in its own bundled copy).
+  Until then a new app build would get 422 `unknown_problem` for every course problem except `u3-..`.
+
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
   floor check only. Mitigation: session log turns real use into the test.

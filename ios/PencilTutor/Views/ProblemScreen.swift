@@ -18,8 +18,11 @@ struct ProblemScreen: View {
     @StateObject private var rail = ToolRailModel()
     @EnvironmentObject private var account: StudentAccount
     @Environment(\.dismiss) private var dismiss
+    /// Shown small at the top of the problem card ("BC Math 5"). Nil shows no heading.
+    private let courseTitle: String?
 
-    init(problem: Problem, env: AppEnvironment) {
+    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil) {
+        self.courseTitle = courseTitle
         _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env))
     }
 
@@ -139,7 +142,7 @@ struct ProblemScreen: View {
     }
 
     private var problemCard: some View {
-        ProblemCardView(problem: session.problem) { collapsed in
+        ProblemCardView(problem: session.problem, heading: courseTitle) { collapsed in
             session.noteCanvas("problem_card_toggled", ["collapsed": collapsed])
         }
     }
