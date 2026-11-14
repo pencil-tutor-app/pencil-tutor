@@ -1,0 +1,1191 @@
+[
+  {
+    "id": "m7-01",
+    "source": "BC Math 7 content standard: multiplication and division facts to 100 (extending computational fluency); original",
+    "prompt_latex": "Use ×10 then ÷2 to find 346 × 5 in your head.",
+    "prompt_plain": "Use ×10 then ÷2 to find 346 × 5 in your head.",
+    "prompt_parts": [
+      {
+        "text": "Use ×10 then ÷2 to find 346 × 5 in your head."
+      }
+    ],
+    "worked_solution": [
+      "346 × 5 is the same as 346 × 10 ÷ 2",
+      "346 × 10 = 3460",
+      "3460 ÷ 2 = 1730"
+    ],
+    "final_answer": "1730",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-02",
+    "source": "BC Math 7 content standard: multiplication and division facts to 100 (extending computational fluency); original",
+    "prompt_latex": "Find 18 × 15 by splitting 15 into 10 + 5.",
+    "prompt_plain": "Find 18 × 15 by splitting 15 into 10 + 5.",
+    "prompt_parts": [
+      {
+        "text": "Find 18 × 15 by splitting 15 into 10 + 5."
+      }
+    ],
+    "worked_solution": [
+      "18 × 15 = 18 × 10 + 18 × 5",
+      "18 × 10 = 180 and 18 × 5 = 90",
+      "180 + 90 = 270"
+    ],
+    "final_answer": "270",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-03",
+    "source": "BC Math 7 content standard: multiplication and division facts to 100 (extending computational fluency); original",
+    "prompt_latex": "96 cookies are packed 8 to a box. Use 80 ÷ 8 and 16 ÷ 8 to find how many boxes.",
+    "prompt_plain": "96 cookies are packed 8 to a box. Use 80 ÷ 8 and 16 ÷ 8 to find how many boxes.",
+    "prompt_parts": [
+      {
+        "text": "96 cookies are packed 8 to a box. Use 80 ÷ 8 and 16 ÷ 8 to find how many boxes."
+      }
+    ],
+    "worked_solution": [
+      "Split 96 into 80 + 16",
+      "80 ÷ 8 = 10",
+      "16 ÷ 8 = 2",
+      "10 + 2 = 12 boxes"
+    ],
+    "final_answer": "12 boxes",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-04",
+    "source": "BC Math 7 content standard: multiplication and division facts to 100 (extending computational fluency); original",
+    "prompt_latex": "Find 48 × 25 by thinking 25 × 4 = 100.",
+    "prompt_plain": "Find 48 × 25 by thinking 25 × 4 = 100.",
+    "prompt_parts": [
+      {
+        "text": "Find 48 × 25 by thinking 25 × 4 = 100."
+      }
+    ],
+    "worked_solution": [
+      "48 × 25 = 48 × 100 ÷ 4",
+      "48 × 100 = 4800",
+      "4800 ÷ 4 = 1200",
+      "Check: 25 × 48 = 25 × 50 − 25 × 2 = 1250 − 50 = 1200"
+    ],
+    "final_answer": "1200",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-05",
+    "source": "BC Math 7 content standard: operations with integers; original",
+    "prompt_latex": "Calculate: −7 + 12",
+    "prompt_plain": "Calculate: −7 + 12",
+    "prompt_parts": [
+      {
+        "text": "Calculate: −7 + 12"
+      }
+    ],
+    "worked_solution": [
+      "Start at −7 on the number line and move 12 to the right",
+      "7 of the 12 steps reach 0",
+      "The other 12 − 7 = 5 steps go past zero",
+      "−7 + 12 = 5"
+    ],
+    "final_answer": "5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-06",
+    "source": "BC Math 7 content standard: operations with integers; original",
+    "prompt_latex": "Calculate: −6 − (−9)",
+    "prompt_plain": "Calculate: −6 − (−9)",
+    "prompt_parts": [
+      {
+        "text": "Calculate: −6 − (−9)"
+      }
+    ],
+    "worked_solution": [
+      "Subtracting a negative is the same as adding the opposite",
+      "−6 − (−9) = −6 + 9",
+      "−6 + 9 = 3",
+      "Check: 3 + (−9) = −6"
+    ],
+    "final_answer": "3",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-07",
+    "source": "BC Math 7 content standard: operations with integers; original",
+    "prompt_latex": "Calculate: (−6) × 5 ÷ (−3)",
+    "prompt_plain": "Calculate: (−6) × 5 ÷ (−3)",
+    "prompt_parts": [
+      {
+        "text": "Calculate: (−6) × 5 ÷ (−3)"
+      }
+    ],
+    "worked_solution": [
+      "Work left to right",
+      "(−6) × 5 = −30",
+      "−30 ÷ (−3) = 10",
+      "Negative ÷ negative is positive"
+    ],
+    "final_answer": "10",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-08",
+    "source": "BC Math 7 content standard: operations with integers; original",
+    "prompt_latex": "Use the order of operations: 3 + (−4) × (2 − 6)",
+    "prompt_plain": "Use the order of operations: 3 + (−4) × (2 − 6)",
+    "prompt_parts": [
+      {
+        "text": "Use the order of operations: 3 + (−4) × (2 − 6)"
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 2 − 6 = −4",
+      "Now 3 + (−4) × (−4)",
+      "Multiply before adding: (−4) × (−4) = 16",
+      "3 + 16 = 19"
+    ],
+    "final_answer": "19",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-09",
+    "source": "BC Math 7 content standard: operations with integers; original",
+    "prompt_latex": "At 6 a.m. the temperature is −8 °C. It rises 3 °C each hour for 5 hours, then falls 4 °C. What is the temperature now?",
+    "prompt_plain": "At 6 a.m. the temperature is −8 °C. It rises 3 °C each hour for 5 hours, then falls 4 °C. What is the temperature now?",
+    "prompt_parts": [
+      {
+        "text": "At 6 a.m. the temperature is −8 °C. It rises 3 °C each hour for 5 hours, then falls 4 °C. What is the temperature now?"
+      }
+    ],
+    "worked_solution": [
+      "Rise: 3 × 5 = 15",
+      "−8 + 15 = 7",
+      "Fall of 4: 7 − 4 = 3",
+      "The temperature is 3 °C"
+    ],
+    "final_answer": "3 °C",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-10",
+    "source": "BC Math 7 content standard: operations with decimals; original",
+    "prompt_latex": "Calculate: 4.75 + 3.6",
+    "prompt_plain": "Calculate: 4.75 + 3.6",
+    "prompt_parts": [
+      {
+        "text": "Calculate: 4.75 + 3.6"
+      }
+    ],
+    "worked_solution": [
+      "Line up the decimal points: 4.75 + 3.60",
+      "4.75 + 3.60 = 8.35"
+    ],
+    "final_answer": "8.35",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-11",
+    "source": "BC Math 7 content standard: operations with decimals; original",
+    "prompt_latex": "Calculate: 12.5 − 7.84",
+    "prompt_plain": "Calculate: 12.5 − 7.84",
+    "prompt_parts": [
+      {
+        "text": "Calculate: 12.5 − 7.84"
+      }
+    ],
+    "worked_solution": [
+      "Line up the decimal points: 12.50 − 7.84",
+      "12.50 − 7.84 = 4.66",
+      "Check: 4.66 + 7.84 = 12.50"
+    ],
+    "final_answer": "4.66",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-12",
+    "source": "BC Math 7 content standard: operations with decimals; original",
+    "prompt_latex": "Calculate: 3.6 × 0.25",
+    "prompt_plain": "Calculate: 3.6 × 0.25",
+    "prompt_parts": [
+      {
+        "text": "Calculate: 3.6 × 0.25"
+      }
+    ],
+    "worked_solution": [
+      "Ignore the decimals: 36 × 25 = 900",
+      "3.6 has 1 decimal place and 0.25 has 2, so the answer has 3",
+      "900 with 3 decimal places is 0.900",
+      "3.6 × 0.25 = 0.9"
+    ],
+    "final_answer": "0.9",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-13",
+    "source": "BC Math 7 content standard: operations with decimals; original",
+    "prompt_latex": "Calculate: 7.2 ÷ 0.4",
+    "prompt_plain": "Calculate: 7.2 ÷ 0.4",
+    "prompt_parts": [
+      {
+        "text": "Calculate: 7.2 ÷ 0.4"
+      }
+    ],
+    "worked_solution": [
+      "Multiply both numbers by 10 so the divisor is whole: 72 ÷ 4",
+      "72 ÷ 4 = 18",
+      "Check: 18 × 0.4 = 7.2"
+    ],
+    "final_answer": "18",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-14",
+    "source": "BC Math 7 content standard: operations with decimals; original",
+    "prompt_latex": "Use the order of operations: 2.5 + 1.5 × (4.2 − 1.2) ÷ 0.5",
+    "prompt_plain": "Use the order of operations: 2.5 + 1.5 × (4.2 − 1.2) ÷ 0.5",
+    "prompt_parts": [
+      {
+        "text": "Use the order of operations: 2.5 + 1.5 × (4.2 − 1.2) ÷ 0.5"
+      }
+    ],
+    "worked_solution": [
+      "Brackets: 4.2 − 1.2 = 3",
+      "1.5 × 3 = 4.5",
+      "4.5 ÷ 0.5 = 9",
+      "2.5 + 9 = 11.5"
+    ],
+    "final_answer": "11.5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-15",
+    "source": "BC Math 7 content standard: relationships between decimals, fractions, ratios, and percents; original",
+    "prompt_latex": "\\dfrac{3}{8}",
+    "prompt_plain": "Write 3/8 as a decimal and as a percent.",
+    "prompt_parts": [
+      {
+        "frac": {
+          "num": "3",
+          "den": "8"
+        }
+      },
+      {
+        "text": " as a decimal and as a percent."
+      }
+    ],
+    "worked_solution": [
+      "3/8 means 3 ÷ 8",
+      "3 ÷ 8 = 0.375",
+      "0.375 = 37.5 / 100",
+      "3/8 = 0.375 = 37.5%"
+    ],
+    "final_answer": "0.375 and 37.5%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-16",
+    "source": "BC Math 7 content standard: relationships between decimals, fractions, ratios, and percents; original",
+    "prompt_latex": "Write 0.64 as a fraction in lowest terms and as a percent.",
+    "prompt_plain": "Write 0.64 as a fraction in lowest terms and as a percent.",
+    "prompt_parts": [
+      {
+        "text": "Write 0.64 as a fraction in lowest terms and as a percent."
+      }
+    ],
+    "worked_solution": [
+      "0.64 = 64/100",
+      "Divide top and bottom by 4: 16/25",
+      "0.64 × 100 = 64%"
+    ],
+    "final_answer": "16/25 and 64%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-17",
+    "source": "BC Math 7 content standard: relationships between decimals, fractions, ratios, and percents; original",
+    "prompt_latex": "Is 5/11 a terminating or a repeating decimal? Show why.",
+    "prompt_plain": "Is 5/11 a terminating or a repeating decimal? Show why.",
+    "prompt_parts": [
+      {
+        "text": "Is 5/11 a terminating or a repeating decimal? Show why."
+      }
+    ],
+    "worked_solution": [
+      "5 ÷ 11 = 0.454545…",
+      "The digits 45 repeat forever, so it is a repeating decimal",
+      "Reason: 11 has a prime factor other than 2 or 5"
+    ],
+    "final_answer": "Repeating (0.454545…)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-18",
+    "source": "BC Math 7 content standard: relationships between decimals, fractions, ratios, and percents; original",
+    "prompt_latex": "Order from least to greatest: 5/8, 0.6, 59%, 3/5.",
+    "prompt_plain": "Order from least to greatest: 5/8, 0.6, 59%, 3/5.",
+    "prompt_parts": [
+      {
+        "text": "Order from least to greatest: 5/8, 0.6, 59%, 3/5."
+      }
+    ],
+    "worked_solution": [
+      "Write every number as a decimal",
+      "5/8 = 0.625",
+      "0.6 = 0.6",
+      "59% = 0.59",
+      "3/5 = 0.6",
+      "Order: 0.59, 0.6, 0.6, 0.625"
+    ],
+    "final_answer": "59%, 0.6 = 3/5, 5/8",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-19",
+    "source": "BC Math 7 content standard: relationships between decimals, fractions, ratios, and percents; original",
+    "prompt_latex": "In a class, boys to all students is the ratio 9 : 25. What percent of the class is boys?",
+    "prompt_plain": "In a class, boys to all students is the ratio 9 : 25. What percent of the class is boys?",
+    "prompt_parts": [
+      {
+        "text": "In a class, boys to all students is the ratio 9 : 25. What percent of the class is boys?"
+      }
+    ],
+    "worked_solution": [
+      "9 : 25 means 9/25",
+      "Make the denominator 100: 9 × 4 = 36 and 25 × 4 = 100",
+      "9/25 = 36/100",
+      "36/100 = 36%"
+    ],
+    "final_answer": "36%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-20",
+    "source": "BC Math 7 content standard: discrete linear relations, using expressions, tables, and graphs; original",
+    "prompt_latex": "A table has n = 1, 2, 3, 4 and values 5, 8, 11, 14. Find the relation and the value when n = 10.",
+    "prompt_plain": "A table has n = 1, 2, 3, 4 and values 5, 8, 11, 14. Find the relation and the value when n = 10.",
+    "prompt_parts": [
+      {
+        "text": "A table has n = 1, 2, 3, 4 and values 5, 8, 11, 14. Find the relation and the value when n = 10."
+      }
+    ],
+    "worked_solution": [
+      "The values go up by 3, so the relation starts with 3n",
+      "n = 1: 3(1) = 3, but the value is 5, so add 2",
+      "Relation: 3n + 2",
+      "n = 10: 3(10) + 2 = 32"
+    ],
+    "final_answer": "3n + 2; value 32",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-21",
+    "source": "BC Math 7 content standard: discrete linear relations, using expressions, tables, and graphs; original",
+    "prompt_latex": "A relation is 4n − 1. Complete the table for n = 1 to 5, then find n when the value is 39.",
+    "prompt_plain": "A relation is 4n − 1. Complete the table for n = 1 to 5, then find n when the value is 39.",
+    "prompt_parts": [
+      {
+        "text": "A relation is 4n − 1. Complete the table for n = 1 to 5, then find n when the value is 39."
+      }
+    ],
+    "worked_solution": [
+      "n = 1: 3; n = 2: 7; n = 3: 11; n = 4: 15; n = 5: 19",
+      "Solve 4n − 1 = 39",
+      "4n = 40",
+      "n = 10"
+    ],
+    "final_answer": "Values 3, 7, 11, 15, 19; n = 10",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-22",
+    "source": "BC Math 7 content standard: discrete linear relations, using expressions, tables, and graphs; original",
+    "prompt_latex": "The points (1, 3), (2, 5), (3, 7) lie on a graph. Find the relation and the value when n = 8.",
+    "prompt_plain": "The points (1, 3), (2, 5), (3, 7) lie on a graph. Find the relation and the value when n = 8.",
+    "prompt_parts": [
+      {
+        "text": "The points (1, 3), (2, 5), (3, 7) lie on a graph. Find the relation and the value when n = 8."
+      }
+    ],
+    "worked_solution": [
+      "The y-values go up by 2 each time, so start with 2n",
+      "n = 1: 2(1) = 2, but y = 3, so add 1",
+      "Relation: 2n + 1",
+      "n = 8: 2(8) + 1 = 17"
+    ],
+    "final_answer": "2n + 1; value 17",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-23",
+    "source": "BC Math 7 content standard: discrete linear relations, using expressions, tables, and graphs; original",
+    "prompt_latex": "Toothpicks make a row of squares: 1 square uses 4, 2 squares use 7, 3 squares use 10. Find the relation and the number used for 25 squares.",
+    "prompt_plain": "Toothpicks make a row of squares: 1 square uses 4, 2 squares use 7, 3 squares use 10. Find the relation and the number used for 25 squares.",
+    "prompt_parts": [
+      {
+        "text": "Toothpicks make a row of squares: 1 square uses 4, 2 squares use 7, 3 squares use 10. Find the relation and the number used for 25 squares."
+      }
+    ],
+    "worked_solution": [
+      "Each new square adds 3 toothpicks, so start with 3n",
+      "n = 1: 3, but 4 are used, so add 1",
+      "Relation: 3n + 1",
+      "n = 25: 3(25) + 1 = 76"
+    ],
+    "final_answer": "3n + 1; 76 toothpicks",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-24",
+    "source": "BC Math 7 content standard: discrete linear relations, using expressions, tables, and graphs; original",
+    "prompt_latex": "For y = 2x − 3, make a table for x = −2, −1, 0, 1, 2, write the ordered pairs, and decide if (3, 3) is on the line.",
+    "prompt_plain": "For y = 2x − 3, make a table for x = −2, −1, 0, 1, 2, write the ordered pairs, and decide if (3, 3) is on the line.",
+    "prompt_parts": [
+      {
+        "text": "For y = 2x − 3, make a table for x = −2, −1, 0, 1, 2, write the ordered pairs, and decide if (3, 3) is on the line."
+      }
+    ],
+    "worked_solution": [
+      "x = −2: 2(−2) − 3 = −7",
+      "x = −1: −5; x = 0: −3; x = 1: −1; x = 2: 1",
+      "Pairs: (−2, −7), (−1, −5), (0, −3), (1, −1), (2, 1)",
+      "x = 3: 2(3) − 3 = 3, so (3, 3) is on the line"
+    ],
+    "final_answer": "y-values −7, −5, −3, −1, 1; yes, (3, 3) is on the line",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-25",
+    "source": "BC Math 7 content standard: two-step equations with whole-number coefficients, constants, and solutions; original",
+    "prompt_latex": "Solve and check: 5x + 3 = 28",
+    "prompt_plain": "Solve and check: 5x + 3 = 28",
+    "prompt_parts": [
+      {
+        "text": "Solve and check: 5x + 3 = 28"
+      }
+    ],
+    "worked_solution": [
+      "Subtract 3 from both sides: 5x = 25",
+      "Divide both sides by 5: x = 5",
+      "Check: 5(5) + 3 = 28"
+    ],
+    "final_answer": "x = 5",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-26",
+    "source": "BC Math 7 content standard: two-step equations with whole-number coefficients, constants, and solutions; original",
+    "prompt_latex": "Solve and check: 4n − 7 = 21",
+    "prompt_plain": "Solve and check: 4n − 7 = 21",
+    "prompt_parts": [
+      {
+        "text": "Solve and check: 4n − 7 = 21"
+      }
+    ],
+    "worked_solution": [
+      "Add 7 to both sides: 4n = 28",
+      "Divide both sides by 4: n = 7",
+      "Check: 4(7) − 7 = 21"
+    ],
+    "final_answer": "n = 7",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-27",
+    "source": "BC Math 7 content standard: two-step equations with whole-number coefficients, constants, and solutions; original",
+    "prompt_latex": "Solve and check: 2y + 9 = 31",
+    "prompt_plain": "Solve and check: 2y + 9 = 31",
+    "prompt_parts": [
+      {
+        "text": "Solve and check: 2y + 9 = 31"
+      }
+    ],
+    "worked_solution": [
+      "Subtract 9 from both sides: 2y = 22",
+      "Divide both sides by 2: y = 11",
+      "Check: 2(11) + 9 = 31"
+    ],
+    "final_answer": "y = 11",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-28",
+    "source": "BC Math 7 content standard: two-step equations with whole-number coefficients, constants, and solutions; original",
+    "prompt_latex": "A taxi charges $4 to start plus $3 per kilometre. The fare is $25. Write an equation and find the distance.",
+    "prompt_plain": "A taxi charges $4 to start plus $3 per kilometre. The fare is $25. Write an equation and find the distance.",
+    "prompt_parts": [
+      {
+        "text": "A taxi charges $4 to start plus $3 per kilometre. The fare is $25. Write an equation and find the distance."
+      }
+    ],
+    "worked_solution": [
+      "Let k be the kilometres: 3k + 4 = 25",
+      "3k = 21",
+      "k = 7",
+      "Check: 3(7) + 4 = 25"
+    ],
+    "final_answer": "7 km",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-29",
+    "source": "BC Math 7 content standard: two-step equations with whole-number coefficients, constants, and solutions; original",
+    "prompt_latex": "Solve and check: 6m − 15 = 33",
+    "prompt_plain": "Solve and check: 6m − 15 = 33",
+    "prompt_parts": [
+      {
+        "text": "Solve and check: 6m − 15 = 33"
+      }
+    ],
+    "worked_solution": [
+      "Add 15 to both sides: 6m = 48",
+      "Divide both sides by 6: m = 8",
+      "Check: 6(8) − 15 = 33"
+    ],
+    "final_answer": "m = 8",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-30",
+    "source": "BC Math 7 content standard: circumference and area of circles; original",
+    "prompt_latex": "A circle has diameter 10 cm. Find its circumference. Use π = 3.14.",
+    "prompt_plain": "A circle has diameter 10 cm. Find its circumference. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A circle has diameter 10 cm. Find its circumference. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "C = π × d",
+      "C = 3.14 × 10",
+      "C = 31.4 cm"
+    ],
+    "final_answer": "31.4 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-31",
+    "source": "BC Math 7 content standard: circumference and area of circles; original",
+    "prompt_latex": "A circle has radius 6 cm. Find its circumference. Use π = 3.14.",
+    "prompt_plain": "A circle has radius 6 cm. Find its circumference. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A circle has radius 6 cm. Find its circumference. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "Diameter = 2 × 6 = 12 cm",
+      "C = π × d = 3.14 × 12",
+      "C = 37.68 cm"
+    ],
+    "final_answer": "37.68 cm",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-32",
+    "source": "BC Math 7 content standard: circumference and area of circles; original",
+    "prompt_latex": "A circle has radius 5 m. Find its area. Use π = 3.14.",
+    "prompt_plain": "A circle has radius 5 m. Find its area. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A circle has radius 5 m. Find its area. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "A = π × r × r",
+      "A = 3.14 × 5 × 5 = 3.14 × 25",
+      "A = 78.5 m²"
+    ],
+    "final_answer": "78.5 m²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-33",
+    "source": "BC Math 7 content standard: circumference and area of circles; original",
+    "prompt_latex": "A round table has diameter 14 dm. Find its area. Use π = 3.14.",
+    "prompt_plain": "A round table has diameter 14 dm. Find its area. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A round table has diameter 14 dm. Find its area. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "Radius = 14 ÷ 2 = 7 dm",
+      "A = π × r × r = 3.14 × 49",
+      "3.14 × 49 = 153.86",
+      "A = 153.86 dm²"
+    ],
+    "final_answer": "153.86 dm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-34",
+    "source": "BC Math 7 content standard: circumference and area of circles; original",
+    "prompt_latex": "The circumference of a circle is 62.8 cm. Find the diameter, the radius and the area. Use π = 3.14.",
+    "prompt_plain": "The circumference of a circle is 62.8 cm. Find the diameter, the radius and the area. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "The circumference of a circle is 62.8 cm. Find the diameter, the radius and the area. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "C = π × d, so d = 62.8 ÷ 3.14",
+      "d = 20 cm",
+      "r = 20 ÷ 2 = 10 cm",
+      "A = 3.14 × 10 × 10 = 314 cm²"
+    ],
+    "final_answer": "d = 20 cm, r = 10 cm, A = 314 cm²",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-35",
+    "source": "BC Math 7 content standard: volume of rectangular prisms and cylinders; original",
+    "prompt_latex": "Find the volume of a rectangular prism that is 8 cm long, 5 cm wide and 3 cm high.",
+    "prompt_plain": "Find the volume of a rectangular prism that is 8 cm long, 5 cm wide and 3 cm high.",
+    "prompt_parts": [
+      {
+        "text": "Find the volume of a rectangular prism that is 8 cm long, 5 cm wide and 3 cm high."
+      }
+    ],
+    "worked_solution": [
+      "Base area = 8 × 5 = 40 cm²",
+      "Volume = base area × height",
+      "40 × 3 = 120 cm³"
+    ],
+    "final_answer": "120 cm³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-36",
+    "source": "BC Math 7 content standard: volume of rectangular prisms and cylinders; original",
+    "prompt_latex": "A prism has a base area of 24 cm² and a height of 7 cm. Find its volume.",
+    "prompt_plain": "A prism has a base area of 24 cm² and a height of 7 cm. Find its volume.",
+    "prompt_parts": [
+      {
+        "text": "A prism has a base area of 24 cm² and a height of 7 cm. Find its volume."
+      }
+    ],
+    "worked_solution": [
+      "Volume = area of base × height",
+      "24 × 7 = 168 cm³"
+    ],
+    "final_answer": "168 cm³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-37",
+    "source": "BC Math 7 content standard: volume of rectangular prisms and cylinders; original",
+    "prompt_latex": "A cylinder has radius 3 cm and height 10 cm. Find its volume. Use π = 3.14.",
+    "prompt_plain": "A cylinder has radius 3 cm and height 10 cm. Find its volume. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A cylinder has radius 3 cm and height 10 cm. Find its volume. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "Base is a circle: 3.14 × 3 × 3 = 28.26 cm²",
+      "Volume = base area × height",
+      "28.26 × 10 = 282.6 cm³"
+    ],
+    "final_answer": "282.6 cm³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-38",
+    "source": "BC Math 7 content standard: volume of rectangular prisms and cylinders; original",
+    "prompt_latex": "A can has diameter 10 cm and height 4 cm. Find its volume. Use π = 3.14.",
+    "prompt_plain": "A can has diameter 10 cm and height 4 cm. Find its volume. Use π = 3.14.",
+    "prompt_parts": [
+      {
+        "text": "A can has diameter 10 cm and height 4 cm. Find its volume. Use π = 3.14."
+      }
+    ],
+    "worked_solution": [
+      "Radius = 10 ÷ 2 = 5 cm",
+      "Base area = 3.14 × 5 × 5 = 78.5 cm²",
+      "Volume = 78.5 × 4 = 314 cm³"
+    ],
+    "final_answer": "314 cm³",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-39",
+    "source": "BC Math 7 content standard: volume of rectangular prisms and cylinders; original",
+    "prompt_latex": "A fish tank is 40 cm long, 25 cm wide and 20 cm high. How many litres can it hold when full? (1 L = 1000 cm³)",
+    "prompt_plain": "A fish tank is 40 cm long, 25 cm wide and 20 cm high. How many litres can it hold when full? (1 L = 1000 cm³)",
+    "prompt_parts": [
+      {
+        "text": "A fish tank is 40 cm long, 25 cm wide and 20 cm high. How many litres can it hold when full? (1 L = 1000 cm³)"
+      }
+    ],
+    "worked_solution": [
+      "Volume = 40 × 25 × 20",
+      "40 × 25 = 1000",
+      "1000 × 20 = 20 000 cm³",
+      "20 000 ÷ 1000 = 20 L"
+    ],
+    "final_answer": "20 L",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-40",
+    "source": "BC Math 7 content standard: Cartesian coordinates and graphing; original",
+    "prompt_latex": "Point A is 3 units left and 5 units up from the origin. Write its coordinates and name its quadrant.",
+    "prompt_plain": "Point A is 3 units left and 5 units up from the origin. Write its coordinates and name its quadrant.",
+    "prompt_parts": [
+      {
+        "text": "Point A is 3 units left and 5 units up from the origin. Write its coordinates and name its quadrant."
+      }
+    ],
+    "worked_solution": [
+      "Left is negative x: x = −3",
+      "Up is positive y: y = 5",
+      "A = (−3, 5)",
+      "x negative and y positive is Quadrant II"
+    ],
+    "final_answer": "(−3, 5), Quadrant II",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-41",
+    "source": "BC Math 7 content standard: Cartesian coordinates and graphing; original",
+    "prompt_latex": "In which quadrant is each point: (−4, −6) and (7, −2)?",
+    "prompt_plain": "In which quadrant is each point: (−4, −6) and (7, −2)?",
+    "prompt_parts": [
+      {
+        "text": "In which quadrant is each point: (−4, −6) and (7, −2)?"
+      }
+    ],
+    "worked_solution": [
+      "(−4, −6): both negative, Quadrant III",
+      "(7, −2): x positive, y negative, Quadrant IV"
+    ],
+    "final_answer": "(−4, −6) is in Quadrant III; (7, −2) is in Quadrant IV",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-42",
+    "source": "BC Math 7 content standard: Cartesian coordinates and graphing; original",
+    "prompt_latex": "Three corners of a rectangle are (−2, 1), (4, 1) and (4, −3). Find the fourth corner and the area.",
+    "prompt_plain": "Three corners of a rectangle are (−2, 1), (4, 1) and (4, −3). Find the fourth corner and the area.",
+    "prompt_parts": [
+      {
+        "text": "Three corners of a rectangle are (−2, 1), (4, 1) and (4, −3). Find the fourth corner and the area."
+      }
+    ],
+    "worked_solution": [
+      "(−2, 1) and (4, 1) share y = 1; (4, 1) and (4, −3) share x = 4",
+      "The fourth corner has x = −2 and y = −3: (−2, −3)",
+      "Length: 4 − (−2) = 6",
+      "Width: 1 − (−3) = 4",
+      "Area = 6 × 4 = 24 square units"
+    ],
+    "final_answer": "(−2, −3); area 24 square units",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-43",
+    "source": "BC Math 7 content standard: Cartesian coordinates and graphing; original",
+    "prompt_latex": "How far apart are (−5, 2) and (3, 2)?",
+    "prompt_plain": "How far apart are (−5, 2) and (3, 2)?",
+    "prompt_parts": [
+      {
+        "text": "How far apart are (−5, 2) and (3, 2)?"
+      }
+    ],
+    "worked_solution": [
+      "Both points have y = 2, so they are on a horizontal line",
+      "Distance = 3 − (−5)",
+      "3 + 5 = 8"
+    ],
+    "final_answer": "8 units",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-44",
+    "source": "BC Math 7 content standard: Cartesian coordinates and graphing; original",
+    "prompt_latex": "The points (0, −1), (1, 1), (2, 3) are on a line. Find the next point with x = 3 and the rule linking y to x.",
+    "prompt_plain": "The points (0, −1), (1, 1), (2, 3) are on a line. Find the next point with x = 3 and the rule linking y to x.",
+    "prompt_parts": [
+      {
+        "text": "The points (0, −1), (1, 1), (2, 3) are on a line. Find the next point with x = 3 and the rule linking y to x."
+      }
+    ],
+    "worked_solution": [
+      "y goes up by 2 each time x goes up by 1",
+      "Next point: y = 3 + 2 = 5, so (3, 5)",
+      "Rule: y = 2x − 1",
+      "Check x = 3: 2(3) − 1 = 5"
+    ],
+    "final_answer": "(3, 5); y = 2x − 1",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-45",
+    "source": "BC Math 7 content standard: combinations of transformations; original",
+    "prompt_latex": "Translate the point (2, 3) 4 units right and 5 units down.",
+    "prompt_plain": "Translate the point (2, 3) 4 units right and 5 units down.",
+    "prompt_parts": [
+      {
+        "text": "Translate the point (2, 3) 4 units right and 5 units down."
+      }
+    ],
+    "worked_solution": [
+      "Right 4: x = 2 + 4 = 6",
+      "Down 5: y = 3 − 5 = −2",
+      "New point (6, −2)"
+    ],
+    "final_answer": "(6, −2)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-46",
+    "source": "BC Math 7 content standard: combinations of transformations; original",
+    "prompt_latex": "Reflect the point (3, −2) in the y-axis.",
+    "prompt_plain": "Reflect the point (3, −2) in the y-axis.",
+    "prompt_parts": [
+      {
+        "text": "Reflect the point (3, −2) in the y-axis."
+      }
+    ],
+    "worked_solution": [
+      "A reflection in the y-axis flips x to its opposite and keeps y",
+      "x: 3 becomes −3",
+      "New point (−3, −2)"
+    ],
+    "final_answer": "(−3, −2)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-47",
+    "source": "BC Math 7 content standard: combinations of transformations; original",
+    "prompt_latex": "Triangle with corners A(1, 1), B(4, 1), C(1, 3) is reflected in the x-axis. Find the new corners.",
+    "prompt_plain": "Triangle with corners A(1, 1), B(4, 1), C(1, 3) is reflected in the x-axis. Find the new corners.",
+    "prompt_parts": [
+      {
+        "text": "Triangle with corners A(1, 1), B(4, 1), C(1, 3) is reflected in the x-axis. Find the new corners."
+      }
+    ],
+    "worked_solution": [
+      "Reflection in the x-axis keeps x and flips y",
+      "A(1, 1) goes to A′(1, −1)",
+      "B(4, 1) goes to B′(4, −1)",
+      "C(1, 3) goes to C′(1, −3)"
+    ],
+    "final_answer": "A′(1, −1), B′(4, −1), C′(1, −3)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-48",
+    "source": "BC Math 7 content standard: combinations of transformations; original",
+    "prompt_latex": "Point P(2, 1) is rotated 90° counterclockwise about the origin, then translated 3 left and 2 up. Find its final position.",
+    "prompt_plain": "Point P(2, 1) is rotated 90° counterclockwise about the origin, then translated 3 left and 2 up. Find its final position.",
+    "prompt_parts": [
+      {
+        "text": "Point P(2, 1) is rotated 90° counterclockwise about the origin, then translated 3 left and 2 up. Find its final position."
+      }
+    ],
+    "worked_solution": [
+      "Rotation 90° counterclockwise sends (x, y) to (−y, x)",
+      "(2, 1) goes to (−1, 2)",
+      "Left 3: x = −1 − 3 = −4",
+      "Up 2: y = 2 + 2 = 4",
+      "Final point (−4, 4)"
+    ],
+    "final_answer": "(−4, 4)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-49",
+    "source": "BC Math 7 content standard: combinations of transformations; original",
+    "prompt_latex": "Can regular pentagons tessellate (cover a flat surface with no gaps)? Each interior angle is 108°.",
+    "prompt_plain": "Can regular pentagons tessellate (cover a flat surface with no gaps)? Each interior angle is 108°.",
+    "prompt_parts": [
+      {
+        "text": "Can regular pentagons tessellate (cover a flat surface with no gaps)? Each interior angle is 108°."
+      }
+    ],
+    "worked_solution": [
+      "Shapes meeting at a point must add up to exactly 360°",
+      "360 ÷ 108 = 3.33…, not a whole number",
+      "So whole pentagons cannot fit exactly around a point",
+      "No, regular pentagons do not tessellate"
+    ],
+    "final_answer": "No",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-50",
+    "source": "BC Math 7 content standard: circle graphs; original",
+    "prompt_latex": "In a survey of 200 students, 35% walk to school. How many students walk?",
+    "prompt_plain": "In a survey of 200 students, 35% walk to school. How many students walk?",
+    "prompt_parts": [
+      {
+        "text": "In a survey of 200 students, 35% walk to school. How many students walk?"
+      }
+    ],
+    "worked_solution": [
+      "35% of 200 = 0.35 × 200",
+      "0.35 × 200 = 70"
+    ],
+    "final_answer": "70 students",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-51",
+    "source": "BC Math 7 content standard: circle graphs; original",
+    "prompt_latex": "A sector of a circle graph shows 25% of the data. What is its central angle?",
+    "prompt_plain": "A sector of a circle graph shows 25% of the data. What is its central angle?",
+    "prompt_parts": [
+      {
+        "text": "A sector of a circle graph shows 25% of the data. What is its central angle?"
+      }
+    ],
+    "worked_solution": [
+      "The full circle is 360°",
+      "25% of 360° = 0.25 × 360",
+      "= 90°"
+    ],
+    "final_answer": "90°",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-52",
+    "source": "BC Math 7 content standard: circle graphs; original",
+    "prompt_latex": "Favourite lunch of 20 students: pizza 8, tacos 6, sushi 4, pasta 2. Find each percent and each central angle for a circle graph.",
+    "prompt_plain": "Favourite lunch of 20 students: pizza 8, tacos 6, sushi 4, pasta 2. Find each percent and each central angle for a circle graph.",
+    "prompt_parts": [
+      {
+        "text": "Favourite lunch of 20 students: pizza 8, tacos 6, sushi 4, pasta 2. Find each percent and each central angle for a circle graph."
+      }
+    ],
+    "worked_solution": [
+      "Each student is 1/20 = 5% of the class",
+      "Pizza 8 × 5 = 40%, tacos 30%, sushi 20%, pasta 10%",
+      "Angles: 40% of 360 = 144°, 30% = 108°, 20% = 72°, 10% = 36°",
+      "Check: 144 + 108 + 72 + 36 = 360"
+    ],
+    "final_answer": "Pizza 40% (144°), tacos 30% (108°), sushi 20% (72°), pasta 10% (36°)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-53",
+    "source": "BC Math 7 content standard: circle graphs; original",
+    "prompt_latex": "A circle graph shows 480 people. One sector has a central angle of 90°. How many people does it represent?",
+    "prompt_plain": "A circle graph shows 480 people. One sector has a central angle of 90°. How many people does it represent?",
+    "prompt_parts": [
+      {
+        "text": "A circle graph shows 480 people. One sector has a central angle of 90°. How many people does it represent?"
+      }
+    ],
+    "worked_solution": [
+      "90° out of 360° is 90/360 = 1/4",
+      "1/4 of 480 = 480 ÷ 4",
+      "= 120"
+    ],
+    "final_answer": "120 people",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-54",
+    "source": "BC Math 7 content standard: circle graphs; original",
+    "prompt_latex": "A circle graph of a $1200 budget has a sector with central angle 54°. How many dollars is that sector?",
+    "prompt_plain": "A circle graph of a $1200 budget has a sector with central angle 54°. How many dollars is that sector?",
+    "prompt_parts": [
+      {
+        "text": "A circle graph of a $1200 budget has a sector with central angle 54°. How many dollars is that sector?"
+      }
+    ],
+    "worked_solution": [
+      "Fraction of the circle = 54/360 = 0.15",
+      "0.15 = 15%",
+      "15% of 1200 = 0.15 × 1200",
+      "= $180"
+    ],
+    "final_answer": "$180",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-55",
+    "source": "BC Math 7 content standard: experimental probability with two independent events; original",
+    "prompt_latex": "Two coins are tossed 40 times and land heads-heads 11 times. Find the experimental probability of heads-heads.",
+    "prompt_plain": "Two coins are tossed 40 times and land heads-heads 11 times. Find the experimental probability of heads-heads.",
+    "prompt_parts": [
+      {
+        "text": "Two coins are tossed 40 times and land heads-heads 11 times. Find the experimental probability of heads-heads."
+      }
+    ],
+    "worked_solution": [
+      "Experimental probability = times it happened ÷ number of trials",
+      "11/40 = 0.275",
+      "As a percent: 27.5%"
+    ],
+    "final_answer": "11/40 = 0.275 = 27.5%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-56",
+    "source": "BC Math 7 content standard: experimental probability with two independent events; original",
+    "prompt_latex": "Two dice are rolled 50 times and the sum is 7 on 9 of them. Find the experimental probability of a sum of 7. Predict how many sums of 7 in 300 rolls.",
+    "prompt_plain": "Two dice are rolled 50 times and the sum is 7 on 9 of them. Find the experimental probability of a sum of 7. Predict how many sums of 7 in 300 rolls.",
+    "prompt_parts": [
+      {
+        "text": "Two dice are rolled 50 times and the sum is 7 on 9 of them. Find the experimental probability of a sum of 7. Predict how many sums of 7 in 300 rolls."
+      }
+    ],
+    "worked_solution": [
+      "P(sum of 7) = 9/50 = 0.18 = 18%",
+      "In 300 rolls expect 0.18 × 300",
+      "= 54"
+    ],
+    "final_answer": "9/50 = 18%; about 54 times",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-57",
+    "source": "BC Math 7 content standard: experimental probability with two independent events; original",
+    "prompt_latex": "A spinner is spun twice, 25 times in all. Red then blue happens 4 times. Find the experimental probability of red then blue.",
+    "prompt_plain": "A spinner is spun twice, 25 times in all. Red then blue happens 4 times. Find the experimental probability of red then blue.",
+    "prompt_parts": [
+      {
+        "text": "A spinner is spun twice, 25 times in all. Red then blue happens 4 times. Find the experimental probability of red then blue."
+      }
+    ],
+    "worked_solution": [
+      "Experimental probability = 4/25",
+      "Multiply top and bottom by 4: 16/100",
+      "= 16%"
+    ],
+    "final_answer": "4/25 = 16%",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-58",
+    "source": "BC Math 7 content standard: experimental probability with two independent events; original",
+    "prompt_latex": "Two coins are tossed 60 times: HH 15, HT 17, TH 14, TT 14. Find the experimental probability of at least one head.",
+    "prompt_plain": "Two coins are tossed 60 times: HH 15, HT 17, TH 14, TT 14. Find the experimental probability of at least one head.",
+    "prompt_parts": [
+      {
+        "text": "Two coins are tossed 60 times: HH 15, HT 17, TH 14, TT 14. Find the experimental probability of at least one head."
+      }
+    ],
+    "worked_solution": [
+      "At least one head means HH, HT or TH",
+      "15 + 17 + 14 = 46 tosses",
+      "P = 46/60 = 23/30"
+    ],
+    "final_answer": "23/30 (about 77%)",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-59",
+    "source": "BC Math 7 content standard: experimental probability with two independent events; original",
+    "prompt_latex": "Mia spins a spinner and flips a coin 30 times. Blue-and-heads happens 6 times. Find the experimental probability, then predict how many times in 150 more trials.",
+    "prompt_plain": "Mia spins a spinner and flips a coin 30 times. Blue-and-heads happens 6 times. Find the experimental probability, then predict how many times in 150 more trials.",
+    "prompt_parts": [
+      {
+        "text": "Mia spins a spinner and flips a coin 30 times. Blue-and-heads happens 6 times. Find the experimental probability, then predict how many times in 150 more trials."
+      }
+    ],
+    "worked_solution": [
+      "P = 6/30 = 1/5 = 20%",
+      "Expected in 150 trials: 1/5 × 150",
+      "150 ÷ 5 = 30"
+    ],
+    "final_answer": "1/5 = 20%; about 30 times",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-60",
+    "source": "BC Math 7 content standard: financial literacy: financial percentage; original",
+    "prompt_latex": "A jacket costs $40. The tax is 12%. Find the tax and the total.",
+    "prompt_plain": "A jacket costs $40. The tax is 12%. Find the tax and the total.",
+    "prompt_parts": [
+      {
+        "text": "A jacket costs $40. The tax is 12%. Find the tax and the total."
+      }
+    ],
+    "worked_solution": [
+      "Tax = 12% of 40 = 0.12 × 40",
+      "0.12 × 40 = $4.80",
+      "Total = 40 + 4.80 = $44.80"
+    ],
+    "final_answer": "Tax $4.80; total $44.80",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-61",
+    "source": "BC Math 7 content standard: financial literacy: financial percentage; original",
+    "prompt_latex": "A meal costs $32. Find a 15% tip and the total with the tip.",
+    "prompt_plain": "A meal costs $32. Find a 15% tip and the total with the tip.",
+    "prompt_parts": [
+      {
+        "text": "A meal costs $32. Find a 15% tip and the total with the tip."
+      }
+    ],
+    "worked_solution": [
+      "Tip = 0.15 × 32",
+      "10% of 32 = 3.20 and 5% = 1.60",
+      "Tip = 3.20 + 1.60 = $4.80",
+      "Total = 32 + 4.80 = $36.80"
+    ],
+    "final_answer": "Tip $4.80; total $36.80",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-62",
+    "source": "BC Math 7 content standard: financial literacy: financial percentage; original",
+    "prompt_latex": "Shoes cost $60 and are 30% off. Find the discount and the sale price.",
+    "prompt_plain": "Shoes cost $60 and are 30% off. Find the discount and the sale price.",
+    "prompt_parts": [
+      {
+        "text": "Shoes cost $60 and are 30% off. Find the discount and the sale price."
+      }
+    ],
+    "worked_solution": [
+      "Discount = 0.30 × 60 = $18",
+      "Sale price = 60 − 18 = $42"
+    ],
+    "final_answer": "Discount $18; sale price $42",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-63",
+    "source": "BC Math 7 content standard: financial literacy: financial percentage; original",
+    "prompt_latex": "After a 20% discount, a game costs $36. What was the original price?",
+    "prompt_plain": "After a 20% discount, a game costs $36. What was the original price?",
+    "prompt_parts": [
+      {
+        "text": "After a 20% discount, a game costs $36. What was the original price?"
+      }
+    ],
+    "worked_solution": [
+      "Paying 100% − 20% = 80% of the original",
+      "80% of the original = 36, so 0.8 × P = 36",
+      "P = 36 ÷ 0.8",
+      "P = $45",
+      "Check: 20% of 45 = 9 and 45 − 9 = 36"
+    ],
+    "final_answer": "$45",
+    "level": "middle_school"
+  },
+  {
+    "id": "m7-64",
+    "source": "BC Math 7 content standard: financial literacy: financial percentage; original",
+    "prompt_latex": "Headphones cost $85 and are 25% off. Tax is 12% on the sale price. Find the final price.",
+    "prompt_plain": "Headphones cost $85 and are 25% off. Tax is 12% on the sale price. Find the final price.",
+    "prompt_parts": [
+      {
+        "text": "Headphones cost $85 and are 25% off. Tax is 12% on the sale price. Find the final price."
+      }
+    ],
+    "worked_solution": [
+      "Sale price = 0.75 × 85 = $63.75",
+      "Tax = 0.12 × 63.75 = $7.65",
+      "Final price = 63.75 + 7.65 = $71.40"
+    ],
+    "final_answer": "$71.40",
+    "level": "middle_school"
+  }
+]
