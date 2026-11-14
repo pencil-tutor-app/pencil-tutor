@@ -77,6 +77,8 @@ struct FlowLayout: Layout {
 /// The problem at the top of the screen.
 struct ProblemCardView: View {
     let problem: Problem
+    /// Told when the student folds or opens the card (for the session log).
+    var onToggle: (Bool) -> Void = { _ in }
 
     private enum Piece: Identifiable {
         case word(id: Int, text: String)
@@ -105,16 +107,37 @@ struct ProblemCardView: View {
         return result
     }
 
+    /// Remembered between problems and launches: a student who folds the card away keeps the page clear.
+    @AppStorage("problemCard.collapsed") private var collapsed = false
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Solve for the letter")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            FlowLayout {
+        Group {
+            if collapsed {
+                collapsedPill
+            } else {
+                expandedCard
+            }
+        }
+        .animation(.easeOut(duration: 0.18), value: collapsed)
+    }
+
+    /// The whole problem, set the way it is written (stacked fractions), on a see-through card so ink under it still shows.
+    private var expandedCard: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text("Solve for the letter")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: 4)
+                Image(systemName: "chevron.up")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            FlowLayout(spacing: 8, rowSpacing: 6) {
                 ForEach(pieces) { piece in
                     switch piece {
                     case .word(_, let text):
-                        Text(text).font(.system(size: 30, design: .serif))
+                        Text(text).font(.system(size: 26, design: .serif))
                     case .fraction(_, let numerator, let denominator):
                         FractionView(numerator: numerator, denominator: denominator)
                     }
@@ -124,9 +147,43 @@ struct ProblemCardView: View {
             .accessibilityLabel(problem.promptPlain)
             .accessibilityIdentifier("problemPrompt")
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 20)
-        .padding(.vertical, 14)
-        .background(Color(white: 0.96))
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .frame(maxWidth: 460, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: .black.opacity(0.12), radius: 6, y: 2)
+        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .onTapGesture { setCollapsed(true) }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint("Folds the problem away")
+    }
+
+    /// One line, plain text: enough to remember the problem while the page gets all the room. Tap to bring the card back.
+    private var collapsedPill: some View {
+        HStack(spacing: 6) {
+            Text(problem.promptPlain)
+                .font(.system(size: 17, design: .serif))
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .accessibilityIdentifier("problemPrompt")
+            Image(systemName: "chevron.down")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: 320, alignment: .leading)
+        .background(.thinMaterial, in: Capsule())
+        .shadow(color: .black.opacity(0.12), radius: 6, y: 2)
+        .contentShape(Capsule())
+        .onTapGesture { setCollapsed(false) }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint("Shows the whole problem")
+    }
+
+    private func setCollapsed(_ value: Bool) {
+        collapsed = value
+        onToggle(value)
     }
 }

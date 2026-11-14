@@ -154,118 +154,395 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertEqual(wire.box.x, Double(lines[0].box.minX * snapshot.scale), accuracy: 0.001)
     }
 
-    // MARK: - The endless page
+    // MARK: - The endless page (every direction, zoom) and the tool wheel
 
     /// A short horizontal-ish pen stroke whose left end is at (x, y), for building pages in tests.
-    private func penStroke(x: CGFloat, y: CGFloat) -> PKStroke {
+    private func penStroke(x: CGFloat, y: CGFloat, created: Date = Date()) -> PKStroke {
         var points: [PKStrokePoint] = []
         for step in 0..<12 {
             points.append(PKStrokePoint(location: CGPoint(x: x + CGFloat(step) * 20, y: y + CGFloat(step % 3) * 6),
                                         timeOffset: Double(step) * 0.01, size: CGSize(width: 4, height: 4),
                                         opacity: 1, force: 1, azimuth: 0, altitude: .pi / 2))
         }
-        return PKStroke(ink: PKInk(.pen, color: .black), path: PKStrokePath(controlPoints: points, creationDate: Date()))
+        return PKStroke(ink: PKInk(.pen, color: .black), path: PKStrokePath(controlPoints: points, creationDate: created))
     }
 
-    func testPageThatFitsTheFirstScreenGetsTheSamePictureAsBefore() {
-        let screen = CGSize(width: 1180, height: 820)
-        let short = PageSnapshotter.region(canvasSize: screen, inkBottom: 600)
-        XCTAssertEqual(short.rect, CGRect(x: 0, y: 0, width: 1180, height: 820))
-        XCTAssertEqual(short.scale, 1024 / 1180, accuracy: 0.0001, "the old rule: longer side of the screen at 1024 px")
-        let empty = PageSnapshotter.region(canvasSize: screen, inkBottom: nil)
-        XCTAssertEqual(empty.rect, short.rect)
+    private let screen = CGSize(width: 1180, height: 820)
+    private var home: CGRect { PageGeometry.homeRect(viewport: screen) }
+
+    func testInkOnTheFirstScreenGetsTheSamePictureAsBefore() {
+        let box = CGRect(x: home.minX + 100, y: home.minY + 100, width: 600, height: 40)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBox: box)
+        XCTAssertEqual(region.rect, home)
+        XCTAssertEqual(region.scale, 1024 / 1180, accuracy: 0.0001, "the old rule: longer side of the screen at 1024 px")
+        let empty = PageSnapshotter.region(canvasSize: screen, inkBox: nil)
+        XCTAssertEqual(empty.rect, home)
         // Ink 10 pt from the bottom edge still fits: its 40 pt margin is blank paper, not a reason to grow the picture.
-        XCTAssertEqual(PageSnapshotter.region(canvasSize: screen, inkBottom: 780).rect.height, 820)
+        let nearEdge = CGRect(x: home.minX + 100, y: home.maxY - 80, width: 600, height: 40)
+        XCTAssertEqual(PageSnapshotter.region(canvasSize: screen, inkBox: nearEdge).rect.height, 820)
     }
 
-    func testPictureGrowsDownToTheLowestInkAndShrinksToStayWithin1024Pixels() {
-        let screen = CGSize(width: 1180, height: 820)
-        let region = PageSnapshotter.region(canvasSize: screen, inkBottom: 1500)
-        XCTAssertEqual(region.rect.minY, 0)
-        XCTAssertEqual(region.rect.maxY, 1540, accuracy: 0.001, "lowest ink plus the 40 pt margin")
+    func testPictureGrowsDownFromTheFirstScreenAndShrinksToStayWithin1024Pixels() {
+        let box = CGRect(x: home.minX + 100, y: home.minY + 100, width: 600, height: 1400)   // ink down to 1500 below the top
+        let region = PageSnapshotter.region(canvasSize: screen, inkBox: box)
+        XCTAssertEqual(region.rect.minY, home.minY, "the first screen stays in the picture, as before")
+        XCTAssertEqual(region.rect.maxY, home.minY + 1540, accuracy: 0.001, "lowest ink plus the 40 pt margin")
         XCTAssertEqual(region.scale, 1024 / 1540, accuracy: 0.0001)
         XCTAssertLessThanOrEqual(region.rect.height * region.scale, 1024.001)
         XCTAssertLessThanOrEqual(region.rect.width * region.scale, 1024.001)
     }
 
-    func testVeryLongPageSlidesTheWindowInsteadOfShrinkingPastLegible() {
-        let screen = CGSize(width: 1180, height: 820)
-        let region = PageSnapshotter.region(canvasSize: screen, inkBottom: 4000)
-        XCTAssertEqual(region.scale, PageSnapshotter.minLegibleScale, accuracy: 0.0001)
-        XCTAssertEqual(region.rect.maxY, 4040, accuracy: 0.001, "the window ends under the lowest ink")
-        XCTAssertEqual(region.rect.height, 1024 / PageSnapshotter.minLegibleScale, accuracy: 0.01)
-        XCTAssertEqual(region.rect.minY, 4040 - region.rect.height, accuracy: 0.01)
-        XCTAssertLessThanOrEqual(region.rect.height * region.scale, 1024.001)
+    func testInkLeftOfAndAboveTheFirstScreenIsInThePicture() {
+        // Written in the reserve to the upper left of the first screen: nothing of the first screen is in the picture.
+        let box = CGRect(x: home.minX - 900, y: home.minY - 700, width: 500, height: 60)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBox: box)
+        XCTAssertTrue(region.rect.contains(box), "all the ink is in the picture")
+        XCTAssertFalse(region.rect.intersects(home), "and the empty first screen is not wasted on it")
+        XCTAssertGreaterThanOrEqual(region.rect.width, 1180, "at least one screen wide")
+        XCTAssertGreaterThanOrEqual(region.rect.height, 820)
+        XCTAssertEqual(region.scale, 1024 / 1180, accuracy: 0.0001)
     }
 
-    func testLongPageSnapshotCoversTheLowInkAndLineBoxesAreMeasuredFromThePictureTop() throws {
-        var strokes: [PKStroke] = []
-        for row in 0..<3 { strokes.append(penStroke(x: 100, y: 200 + CGFloat(row) * 40)) }   // near the top
-        strokes.append(penStroke(x: 100, y: 1500))                                            // two screens down
-        let drawing = PKDrawing(strokes: strokes)
-        let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
-        XCTAssertEqual(lines.count, 4)
+    func testInkSpreadOverTwoDirectionsKeepsTheLegibleScaleAndFollowsTheNewestLine() {
+        // 3000 pt wide and 2600 tall: far over what 1024 px can hold at the legible scale.
+        let box = CGRect(x: home.minX, y: home.minY, width: 3000, height: 2600)
+        let newest = CGRect(x: home.minX + 2500, y: home.minY + 2200, width: 400, height: 40)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBox: box, newestBox: newest)
+        XCTAssertEqual(region.scale, PageSnapshotter.minLegibleScale, accuracy: 0.0001)
+        XCTAssertEqual(region.rect.width, 1024 / PageSnapshotter.minLegibleScale, accuracy: 0.01)
+        XCTAssertEqual(region.rect.height, 1024 / PageSnapshotter.minLegibleScale, accuracy: 0.01)
+        XCTAssertTrue(region.rect.contains(newest), "the newest work is in the window")
+        XCTAssertEqual(region.rect.maxX, newest.maxX + 40, accuracy: 0.01, "the window ends just past the newest line, as it did downwards")
+        XCTAssertEqual(region.rect.maxY, newest.maxY + 40, accuracy: 0.01)
+        XCTAssertLessThanOrEqual(max(region.rect.width, region.rect.height) * region.scale, 1024.001)
+    }
 
-        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: CGSize(width: 1180, height: 820), lines: lines)
-        XCTAssertGreaterThan(snapshot.region.maxY, 1500, "the low ink is inside the picture")
+    func testWindowOnlySlidesInTheDirectionThatIsTooBig() {
+        // Tall but narrow: the width is the whole ink, only the height slides.
+        let box = CGRect(x: home.minX, y: home.minY, width: 700, height: 4000)
+        let newest = CGRect(x: home.minX + 100, y: home.minY + 3900, width: 400, height: 40)
+        let region = PageSnapshotter.region(canvasSize: screen, inkBox: box, newestBox: newest)
+        XCTAssertEqual(region.rect.maxY, newest.maxY + 40, accuracy: 0.01)
+        XCTAssertEqual(region.rect.height, 1024 / PageSnapshotter.minLegibleScale, accuracy: 0.01)
+        XCTAssertLessThan(region.rect.width, region.rect.height)
+        XCTAssertTrue(region.rect.contains(newest))
+    }
+
+    func testSnapshotOfInkFarFromTheOriginMeasuresLineBoxesFromThePictureCorner() throws {
+        // Two lines side by side far to the right and below the first screen, as a student who panned would write them.
+        let x = home.minX + 2600, y = home.minY + 1800
+        let drawing = PKDrawing(strokes: [penStroke(x: x, y: y), penStroke(x: x, y: y + 60)])
+        let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
+        XCTAssertEqual(lines.count, 2)
+
+        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: screen, lines: lines)
         XCTAssertLessThanOrEqual(max(snapshot.pixelWidth, snapshot.pixelHeight), 1024)
         XCTAssertLessThanOrEqual(snapshot.png.count, PageSnapshotter.maxBytes)
-        XCTAssertTrue(lines.allSatisfy { snapshot.shows($0) }, "nothing slid out of a page this size")
+        XCTAssertTrue(lines.allSatisfy { snapshot.shows($0) })
+        XCTAssertGreaterThan(snapshot.region.minX, home.minX, "the empty first screen is not in this picture")
 
-        let low = try XCTUnwrap(lines.last)
-        let wire = LineWire(low, scale: snapshot.scale, regionTop: snapshot.region.minY)
-        XCTAssertEqual(wire.box.y, Double((low.box.minY - snapshot.region.minY) * snapshot.scale), accuracy: 0.001)
-        XCTAssertLessThan(wire.box.y + wire.box.h, Double(snapshot.pixelHeight), "the box is inside the image the server gets")
+        let wire = LineWire(lines[1], scale: snapshot.scale, regionOrigin: snapshot.region.origin)
+        XCTAssertEqual(wire.box.x, Double((lines[1].box.minX - snapshot.region.minX) * snapshot.scale), accuracy: 0.001)
+        XCTAssertEqual(wire.box.y, Double((lines[1].box.minY - snapshot.region.minY) * snapshot.scale), accuracy: 0.001)
+        XCTAssertGreaterThanOrEqual(wire.box.x, 0)
+        XCTAssertLessThan(wire.box.x + wire.box.w, Double(snapshot.pixelWidth), "the box is inside the image the server gets")
+        XCTAssertLessThan(wire.box.y + wire.box.h, Double(snapshot.pixelHeight))
     }
 
-    func testWindowThatSlidesDropsLinesAboveItAndMeasuresFromItsTop() throws {
-        let top = LineGrouper().group(TutorSession.inkStrokes(from: PKDrawing(strokes: [penStroke(x: 100, y: 100)])))[0]
-        let bottomStroke = penStroke(x: 100, y: 4000)
-        let drawing = PKDrawing(strokes: [penStroke(x: 100, y: 100), bottomStroke])
+    func testWindowThatSlidesDropsLinesOutsideItInBothDirections() throws {
+        let far = penStroke(x: home.minX + 4200, y: home.minY + 3600, created: Date(timeIntervalSince1970: 2_000))
+        let drawing = PKDrawing(strokes: [penStroke(x: home.minX + 100, y: home.minY + 100, created: Date(timeIntervalSince1970: 1_000)), far])
         let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
-        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: CGSize(width: 1180, height: 820), lines: lines)
-        XCTAssertGreaterThan(snapshot.region.minY, 0)
-        XCTAssertFalse(snapshot.shows(top), "work far above the window is not in the picture, so its line is not sent")
+        let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: screen, lines: lines)
+        XCTAssertFalse(snapshot.shows(lines[0]), "work far up and left of the window is not in the picture, so its line is not sent")
         XCTAssertTrue(snapshot.shows(lines[1]))
-        let wire = LineWire(lines[1], scale: snapshot.scale, regionTop: snapshot.region.minY)
+        let wire = LineWire(lines[1], scale: snapshot.scale, regionOrigin: snapshot.region.origin)
+        XCTAssertGreaterThan(wire.box.x, 0)
         XCTAssertGreaterThan(wire.box.y, 0)
         XCTAssertLessThan(wire.box.y, Double(snapshot.pixelHeight))
     }
 
-    func testPageIsInkPlusOneScreenAndNeverShorterThanTheScreen() {
-        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: nil), 820)
-        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: 300), 1120)
-        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: 790.2), 1611, "rounded up to whole points")
-        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: -50), 820, "never shorter than the screen")
-        XCTAssertEqual(PageGeometry.contentHeight(viewportHeight: 820, inkBottom: .infinity), 820, "a bad bound cannot blow the page up")
+    // MARK: Page size, re-anchor, zoom
+
+    func testPageIsFirstScreenAndInkPlusOneScreenInEveryDirection() {
+        let reserve = PageGeometry.homeReserve
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: nil), CGSize(width: reserve + 2 * 1180, height: reserve + 2 * 820))
+        let right = CGRect(x: reserve + 5000, y: reserve + 100, width: 300, height: 40)
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: right).width, reserve + 5300 + 1180, "grows to the right")
+        let down = CGRect(x: reserve + 100, y: reserve + 4000, width: 300, height: 40)
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: down).height, reserve + 4040 + 820, "grows downwards")
+        let left = CGRect(x: 2000, y: 2000, width: 300, height: 40)   // left of and above the first screen
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: left), PageGeometry.contentSize(viewport: screen, ink: nil),
+                       "the reserve already covers it; the page does not grow")
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: CGRect(x: CGFloat.infinity, y: 0, width: 1, height: 1)),
+                       PageGeometry.contentSize(viewport: screen, ink: nil), "a bad bound cannot blow the page up")
+        let rounded = CGRect(x: reserve, y: reserve, width: 790.2, height: 40)
+        XCTAssertEqual(PageGeometry.contentSize(viewport: screen, ink: rounded).width, reserve + 2 * 1180, "inside the first screen")
+        XCTAssertEqual(PageGeometry.contentSize(viewport: CGSize(width: 1180.5, height: 820.2), ink: nil).width, ceil(reserve + 2 * 1180.5))
     }
 
-    func testScrollOffsetIsKeptInsideThePage() {
-        XCTAssertEqual(PageGeometry.maxOffsetY(contentHeight: 1620, viewportHeight: 820), 800)
-        XCTAssertEqual(PageGeometry.maxOffsetY(contentHeight: 820, viewportHeight: 820), 0)
-        XCTAssertEqual(PageGeometry.clampedOffsetY(2000, contentHeight: 1620, viewportHeight: 820), 800, "page shrank under the screen")
-        XCTAssertEqual(PageGeometry.clampedOffsetY(-40, contentHeight: 1620, viewportHeight: 820), 0)
+    func testReanchorOnlyWhenInkComesCloseToTheLeftOrTopEdge() throws {
+        let reserve = PageGeometry.homeReserve
+        XCTAssertNil(PageGeometry.reanchorShift(viewport: screen, ink: nil))
+        XCTAssertNil(PageGeometry.reanchorShift(viewport: screen, ink: CGRect(x: reserve, y: reserve, width: 500, height: 40)))
+        XCTAssertNil(PageGeometry.reanchorShift(viewport: screen, ink: CGRect(x: 1500, y: 1500, width: 500, height: 40)),
+                     "a screen of blank paper is still left of and above it")
+        let shift = try XCTUnwrap(PageGeometry.reanchorShift(viewport: screen, ink: CGRect(x: 500, y: 2500, width: 500, height: 40)))
+        XCTAssertEqual(shift.width, 2500, "ink minX 500 goes back to the reserve (3000), rounded up to 100")
+        XCTAssertEqual(shift.height, 0)
+        let corner = try XCTUnwrap(PageGeometry.reanchorShift(viewport: screen, ink: CGRect(x: 10, y: 33, width: 5, height: 5)))
+        XCTAssertEqual(corner.width, 3000)
+        XCTAssertEqual(corner.height, 3000)
+        // After the shift the ink has a full reserve of blank page again.
+        let after = CGRect(x: 500 + shift.width, y: 2500, width: 500, height: 40)
+        XCTAssertNil(PageGeometry.reanchorShift(viewport: screen, ink: after))
+        XCTAssertNil(PageGeometry.reanchorShift(viewport: screen, ink: CGRect(x: CGFloat.nan, y: 0, width: 1, height: 1)))
     }
 
-    func testMarkBelowTheScreenScrollsIntoViewAndAVisibleOneStaysPut() throws {
-        let onScreen = CGRect(x: 100, y: 300, width: 500, height: 40)
-        XCTAssertNil(PageGeometry.offsetToReveal(box: onScreen, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620))
+    func testMarkMovesWithAReanchorAndKeepsItsInkSignatureInStep() {
+        let strokes = [InkStroke(id: 0, bounds: CGRect(x: 120.4, y: 80.9, width: 300.2, height: 40.7), createdAt: Date())]
+        let box = CGRect(x: 100, y: 60, width: 400, height: 90)
+        let mark = Mark(lineIndex: 2, box: box, hint: "h", inkSignature: Mark.inkSignature(in: box, strokes: strokes))
+        let moved = mark.moved(by: CGSize(width: 200, height: 300))
+        XCTAssertEqual(moved.box, box.offsetBy(dx: 200, dy: 300))
+        let shiftedStrokes = [InkStroke(id: 0, bounds: strokes[0].bounds.offsetBy(dx: 200, dy: 300), createdAt: Date())]
+        XCTAssertEqual(moved.inkSignature, Mark.inkSignature(in: moved.box, strokes: shiftedStrokes),
+                       "untouched ink still looks untouched after the move")
+    }
 
-        let below = CGRect(x: 100, y: 1200, width: 500, height: 40)
-        let target = PageGeometry.offsetToReveal(box: below, currentOffsetY: 0, viewportHeight: 820, contentHeight: 2400)
-        XCTAssertEqual(try XCTUnwrap(target), 1220 - 820 * 0.35, accuracy: 0.001, "the mark lands about a third of the way down")
+    func testVisibleRectAndOffsetClampFollowTheZoom() {
+        XCTAssertEqual(PageGeometry.visibleRect(offset: CGPoint(x: 400, y: 200), viewport: screen, zoom: 2),
+                       CGRect(x: 200, y: 100, width: 590, height: 410))
+        XCTAssertEqual(PageGeometry.visibleRect(offset: .zero, viewport: screen, zoom: 0.5).width, 2360)
+        let content = CGSize(width: 5000, height: 4000)
+        XCTAssertEqual(PageGeometry.clampedOffset(CGPoint(x: 9000, y: -40), contentSize: content, viewport: screen), CGPoint(x: 3820, y: 0))
+        XCTAssertEqual(PageGeometry.clampedOffset(CGPoint(x: 100, y: 100), contentSize: CGSize(width: 900, height: 600), viewport: screen),
+                       .zero, "a page smaller than the screen (zoomed out) does not scroll")
+    }
 
-        let scrolledPast = PageGeometry.offsetToReveal(box: onScreen, currentOffsetY: 700, viewportHeight: 820, contentHeight: 1620)
-        XCTAssertEqual(try XCTUnwrap(scrolledPast), 320 - 820 * 0.35, accuracy: 0.001, "scrolls back up to a mark above the screen")
+    func testMarkScrollsIntoViewInBothDirectionsAndAVisibleOneStaysPut() throws {
+        let content = CGSize(width: 9000, height: 8000)
+        let onScreen = CGRect(x: 600, y: 300, width: 500, height: 40)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: onScreen, offset: .zero, zoom: 1, viewport: screen, contentSize: content))
+
+        let below = CGRect(x: 600, y: 1200, width: 500, height: 40)
+        let down = try XCTUnwrap(PageGeometry.offsetToReveal(box: below, offset: .zero, zoom: 1, viewport: screen, contentSize: content))
+        XCTAssertEqual(down.y, 1220 - 820 * 0.35, accuracy: 0.001, "the mark lands about a third of the way down")
+        XCTAssertEqual(down.x, 0, "already in view sideways: no sideways scroll")
+
+        let rightOfScreen = CGRect(x: 4000, y: 300, width: 500, height: 40)
+        let right = try XCTUnwrap(PageGeometry.offsetToReveal(box: rightOfScreen, offset: .zero, zoom: 1, viewport: screen, contentSize: content))
+        XCTAssertEqual(right.x, 4250 - 590, accuracy: 0.001, "centred sideways")
+
+        let scrolledPast = try XCTUnwrap(PageGeometry.offsetToReveal(box: onScreen, offset: CGPoint(x: 3000, y: 700), zoom: 1,
+                                                                     viewport: screen, contentSize: content))
+        XCTAssertEqual(scrolledPast.y, 320 - 820 * 0.35, accuracy: 0.001, "scrolls back up and left to a mark off the top left")
+        XCTAssertEqual(scrolledPast.x, 850 - 590, accuracy: 0.001)
 
         // Too close to the bottom edge for its callout: scrolls so the callout has room.
-        let edge = CGRect(x: 100, y: 760, width: 500, height: 40)
-        XCTAssertNotNil(PageGeometry.offsetToReveal(box: edge, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620))
+        XCTAssertNotNil(PageGeometry.offsetToReveal(box: CGRect(x: 600, y: 760, width: 500, height: 40), offset: .zero, zoom: 1,
+                                                    viewport: screen, contentSize: content))
 
         // Clamped to the end of the page, and no pointless scroll when it is already as far as it can go.
+        let tight = CGSize(width: 1180, height: 1620)
         let last = CGRect(x: 100, y: 1560, width: 500, height: 40)
-        XCTAssertEqual(try XCTUnwrap(PageGeometry.offsetToReveal(box: last, currentOffsetY: 0, viewportHeight: 820, contentHeight: 1620)), 800)
-        XCTAssertNil(PageGeometry.offsetToReveal(box: last, currentOffsetY: 800, viewportHeight: 820, contentHeight: 1620))
+        XCTAssertEqual(try XCTUnwrap(PageGeometry.offsetToReveal(box: last, offset: .zero, zoom: 1, viewport: screen, contentSize: tight)).y, 800)
+        XCTAssertNil(PageGeometry.offsetToReveal(box: last, offset: CGPoint(x: 0, y: 800), zoom: 1, viewport: screen, contentSize: tight))
+    }
+
+    func testRevealRespectsTheZoom() throws {
+        // At 2x, page point (3100, 3050) is on screen at (6200 - offset.x, 6100 - offset.y).
+        let content = CGSize(width: 12000, height: 10000)   // zoomed size
+        let box = CGRect(x: 3000, y: 3000, width: 200, height: 50)
+        let visibleAt2x = CGPoint(x: 5800, y: 5800)   // shows page x 2900...3490, y 2900...3310
+        XCTAssertNil(PageGeometry.offsetToReveal(box: box, offset: visibleAt2x, zoom: 2, viewport: screen, contentSize: content))
+        let moved = try XCTUnwrap(PageGeometry.offsetToReveal(box: box, offset: .zero, zoom: 2, viewport: screen, contentSize: content))
+        XCTAssertEqual(moved.x, 3100 * 2 - 590, accuracy: 0.001)
+        XCTAssertEqual(moved.y, 3025 * 2 - 820 * 0.35, accuracy: 0.001)
+        // Zoomed out to 0.5x the same mark is a small thing in a big view: it is in view without any scroll.
+        XCTAssertNil(PageGeometry.offsetToReveal(box: box, offset: CGPoint(x: 1000, y: 1000), zoom: 0.5, viewport: screen,
+                                                 contentSize: CGSize(width: 6000, height: 5000)))
+    }
+
+    // MARK: Line grouping on a big plane
+
+    func testLineGroupingDoesNotCareWhereOnThePlaneTheInkIs() {
+        func lines(offsetX: CGFloat, offsetY: CGFloat) -> [InkLine] {
+            var strokes: [PKStroke] = []
+            for row in 0..<3 { strokes.append(penStroke(x: 100 + offsetX, y: 200 + CGFloat(row) * 60 + offsetY)) }
+            return LineGrouper().group(TutorSession.inkStrokes(from: PKDrawing(strokes: strokes)))
+        }
+        let nearOrigin = lines(offsetX: 0, offsetY: 0)
+        let farAway = lines(offsetX: 6000, offsetY: 5000)
+        XCTAssertEqual(nearOrigin.count, 3)
+        XCTAssertEqual(farAway.count, 3)
+        XCTAssertEqual(farAway.map(\.isSideCalculation), nearOrigin.map(\.isSideCalculation))
+        for (near, far) in zip(nearOrigin, farAway) {
+            XCTAssertEqual(far.box.minX - near.box.minX, 6000, accuracy: 0.5)
+            XCTAssertEqual(far.box.minY - near.box.minY, 5000, accuracy: 0.5)
+        }
+    }
+
+    func testTwoBlocksFarApartAtTheSameHeightAreTwoLinesNotOne() {
+        let drawing = PKDrawing(strokes: [penStroke(x: 3100, y: 3100), penStroke(x: 7000, y: 3105)])
+        let lines = LineGrouper().group(TutorSession.inkStrokes(from: drawing))
+        XCTAssertEqual(lines.count, 2, "the 160 pt side gap splits them; each keeps its own box")
+        XCTAssertLessThan(lines[0].box.maxX, lines[1].box.minX)
+    }
+
+    // MARK: Pencil rules and the tool wheel
+
+    func testPencilDoubleTapSwitchesToTheEraserAndBack() {
+        XCTAssertEqual(PencilRules.outcome(for: .switchEraser, current: .pen, previous: .pen), .select(.eraser))
+        XCTAssertEqual(PencilRules.outcome(for: .switchEraser, current: .eraser, previous: .marker), .select(.marker))
+        XCTAssertEqual(PencilRules.outcome(for: .switchEraser, current: .eraser, previous: .eraser), .select(.pen), "never stuck on the eraser")
+        XCTAssertEqual(PencilRules.outcome(for: .switchPrevious, current: .lasso, previous: .pen), .select(.pen))
+        XCTAssertEqual(PencilRules.outcome(for: .switchPrevious, current: .pen, previous: .pen), .nothing)
+        XCTAssertEqual(PencilRules.outcome(for: .openPalette, current: .pen, previous: .pen), .openWheel)
+        XCTAssertEqual(PencilRules.outcome(for: .ignore, current: .pen, previous: .pen), .nothing)
+        XCTAssertEqual(PencilRules.outcome(for: .system, current: .pen, previous: .pen), .nothing)
+    }
+
+    func testChoosingAColourOrWidthWithTheEraserGoesBackToTheLastInkTool() {
+        var style = ToolWheelStyle()
+        style.select(.marker)
+        style.select(.eraser)
+        style.choose(colour: .blue)
+        XCTAssertEqual(style.tool, .marker)
+        XCTAssertEqual(style.colour, .blue)
+        style.select(.lasso)
+        style.choose(width: .thick)
+        XCTAssertEqual(style.tool, .marker)
+        XCTAssertEqual(style.width, .thick)
+        XCTAssertEqual(ToolWheelStyle().summary, "Pen, black, medium")
+        var eraser = ToolWheelStyle()
+        eraser.select(.eraser)
+        XCTAssertEqual(eraser.summary, "Eraser")
+    }
+
+    func testEachWheelToolMakesTheMatchingPencilKitTool() throws {
+        var style = ToolWheelStyle()
+        let pen = try XCTUnwrap(style.pkTool() as? PKInkingTool)
+        XCTAssertEqual(pen.inkType, .pen)
+        XCTAssertEqual(pen.width, InkWidth.medium.penWidth, accuracy: 0.001)
+        style.select(.marker)
+        style.choose(width: .thick)
+        let marker = try XCTUnwrap(style.pkTool() as? PKInkingTool)
+        XCTAssertEqual(marker.inkType, .marker)
+        XCTAssertNotEqual(InkColour.black.highlighterColor, UIColor.black, "a black highlighter is yellow")
+        XCTAssertEqual(InkColour.blue.highlighterColor, InkColour.blue.uiColor, "other colours stay as they are")
+        style.select(.eraser)
+        XCTAssertTrue(style.pkTool() is PKEraserTool)
+        style.select(.lasso)
+        XCTAssertTrue(style.pkTool() is PKLassoTool)
+    }
+
+    func testHandleSnapsToTheNearestEdgeAndStaysInsideTheTravelArea() {
+        let size = CGSize(width: 1080, height: 760)
+        let area = ToolWheelGeometry.travel(in: size)
+        XCTAssertEqual(area.minX, 14 + 28)
+        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 1060, y: 380), in: size).x, 1)
+        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 1060, y: 380), in: size).y, 0.5, accuracy: 0.02)
+        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 540, y: 20), in: size), CGPoint(x: 0.5, y: 0), "top edge")
+        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 30, y: 400), in: size).x, 0, "left edge")
+        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 540, y: 740), in: size).y, 1, "bottom edge")
+        let outside = ToolWheelGeometry.snappedFraction(center: CGPoint(x: 5000, y: -300), in: size)
+        XCTAssertTrue((0...1).contains(outside.x) && (0...1).contains(outside.y), "a drop off the page is pulled back")
+        // The bottom-right default sits in the corner of the travel area.
+        XCTAssertEqual(ToolWheelGeometry.handleCenter(fraction: CGPoint(x: 1, y: 1), in: size), CGPoint(x: area.maxX, y: area.maxY))
+        XCTAssertEqual(ToolWheelGeometry.edgeLabel(fraction: CGPoint(x: 1, y: 1)), "bottom_right")
+        XCTAssertEqual(ToolWheelGeometry.edgeLabel(fraction: CGPoint(x: 0, y: 0.4)), "left")
+    }
+
+    func testOpenWheelIsAlwaysEntirelyOnThePage() {
+        let size = CGSize(width: 1080, height: 760)
+        let r = ToolWheelGeometry.discRadius
+        let inner = ToolWheelGeometry.ringOffsets(count: 6, radius: ToolWheelGeometry.innerRadius)
+        let outer = ToolWheelGeometry.ringOffsets(count: 7, radius: ToolWheelGeometry.outerRadius)
+        for fraction in [CGPoint(x: 1, y: 1), CGPoint(x: 0, y: 0), CGPoint(x: 0, y: 1), CGPoint(x: 1, y: 0.5), CGPoint(x: 0.5, y: 0)] {
+            let handle = ToolWheelGeometry.handleCenter(fraction: fraction, in: size)
+            let hub = ToolWheelGeometry.openCenter(handleCenter: handle, in: size)
+            XCTAssertGreaterThanOrEqual(hub.x - r, 0)
+            XCTAssertLessThanOrEqual(hub.x + r, size.width)
+            XCTAssertGreaterThanOrEqual(hub.y - r, 0)
+            XCTAssertLessThanOrEqual(hub.y + r, size.height)
+            for offset in inner + outer {
+                let item = CGPoint(x: hub.x + offset.x, y: hub.y + offset.y)
+                XCTAssertTrue(CGRect(origin: .zero, size: size).insetBy(dx: 22, dy: 22).contains(item))
+            }
+        }
+        // A handle already in the middle does not move when it opens.
+        let middle = CGPoint(x: 540, y: 380)
+        XCTAssertEqual(ToolWheelGeometry.openCenter(handleCenter: middle, in: size), middle)
+        // A window smaller than the wheel centres it instead of pinning it to one side.
+        XCTAssertEqual(ToolWheelGeometry.openCenter(handleCenter: CGPoint(x: 10, y: 10), in: CGSize(width: 200, height: 200)).x, 100)
+    }
+
+    func testRingItemsAreEvenlySpacedAndStartAtTheTop() {
+        let offsets = ToolWheelGeometry.ringOffsets(count: 6, radius: 70)
+        XCTAssertEqual(offsets.count, 6)
+        XCTAssertEqual(offsets[0].x, 0, accuracy: 0.001)
+        XCTAssertEqual(offsets[0].y, -70, accuracy: 0.001)
+        XCTAssertTrue(offsets.allSatisfy { abs(hypot($0.x, $0.y) - 70) < 0.001 })
+        let gap = hypot(offsets[0].x - offsets[1].x, offsets[0].y - offsets[1].y)
+        XCTAssertGreaterThan(gap, ToolWheelGeometry.innerItemSize, "neighbours do not overlap")
+        let outerGap = hypot(ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[0].x - ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[1].x,
+                             ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[0].y - ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[1].y)
+        XCTAssertGreaterThan(outerGap, ToolWheelGeometry.outerItemSize)
+        XCTAssertTrue(ToolWheelGeometry.ringOffsets(count: 0, radius: 70).isEmpty)
+    }
+
+    @MainActor
+    func testWheelRemembersWhereTheHandleWasDropped() throws {
+        let suite = "wheel-test-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let first = ToolWheelModel(defaults: defaults)
+        XCTAssertEqual(first.handleFraction, CGPoint(x: 1, y: 1), "bottom-right to begin with")
+        var logged: [String] = []
+        first.attach(canvas: PKCanvasView()) { type, _ in logged.append(type) }
+        first.dropHandle(at: CGPoint(x: 30, y: 300), in: CGSize(width: 1080, height: 760))
+        XCTAssertEqual(first.handleFraction.x, 0)
+        XCTAssertEqual(logged, ["wheel_handle_moved"])
+        let second = ToolWheelModel(defaults: defaults)
+        XCTAssertEqual(second.handleFraction, first.handleFraction, "kept between launches")
+    }
+
+    @MainActor
+    func testSelectingAToolSetsTheCanvasToolClosesTheWheelAndLogsLabelsOnly() throws {
+        let suite = "wheel-test-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let canvas = PKCanvasView()
+        var events: [(String, [String: Any])] = []
+        let model = ToolWheelModel(defaults: defaults)
+        model.attach(canvas: canvas) { type, fields in events.append((type, fields)) }
+        XCTAssertTrue(canvas.tool is PKInkingTool, "starts as the black pen")
+
+        model.open(reason: "test")
+        model.choose(colour: .red)
+        XCTAssertTrue(model.isOpen, "a colour keeps the wheel open for a width")
+        model.select(.eraser)
+        XCTAssertTrue(canvas.tool is PKEraserTool)
+        XCTAssertFalse(model.isOpen, "a tool closes it")
+
+        // The Pencil double-tap goes to the eraser and back to the red pen.
+        model.select(.pen)
+        model.pencilGesture(.doubleTap, preferred: .switchEraser)
+        XCTAssertTrue(canvas.tool is PKEraserTool)
+        model.pencilGesture(.doubleTap, preferred: .switchEraser)
+        XCTAssertEqual((canvas.tool as? PKInkingTool)?.inkType, .pen)
+
+        let types = events.map(\.0)
+        XCTAssertTrue(types.contains("wheel_opened") && types.contains("wheel_closed") && types.contains("tool_selected") && types.contains("pencil_double_tap"))
+        let selected = try XCTUnwrap(events.first { $0.0 == "tool_selected" }?.1)
+        XCTAssertEqual(selected["tool"] as? String, "pen")
+        XCTAssertEqual(selected["colour"] as? String, "red")
+        XCTAssertEqual(selected["width"] as? String, "medium")
+        XCTAssertTrue(events.allSatisfy { JSONSerialization.isValidJSONObject($0.1) }, "plain labels and numbers only")
+
+        // A new model (the next problem) starts with the same pen.
+        XCTAssertEqual(ToolWheelModel(defaults: defaults).style.colour, .red)
     }
 
     func testSessionLogWritesOneJSONObjectPerLineAndNoSecrets() throws {

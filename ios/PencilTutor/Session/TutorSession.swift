@@ -21,6 +21,18 @@ struct Mark: Identifiable, Equatable {
             .sorted()
             .joined(separator: ";")
     }
+
+    /// The same mark after the whole drawing was moved by `shift` (a page re-anchor). The ink signature is moved with it, so a
+    /// mark on untouched ink still looks untouched. Shifts are whole points, so the arithmetic on the signature is exact.
+    func moved(by shift: CGSize) -> Mark {
+        let dx = Int(shift.width), dy = Int(shift.height)
+        let movedSignature = inkSignature.split(separator: ";").map { entry -> String in
+            let parts = entry.split(separator: ",").compactMap { Int($0) }
+            guard parts.count == 4 else { return String(entry) }
+            return "\(parts[0] + dx),\(parts[1] + dy),\(parts[2]),\(parts[3])"
+        }.sorted().joined(separator: ";")
+        return Mark(lineIndex: lineIndex, box: box.offsetBy(dx: shift.width, dy: shift.height), hint: hint, inkSignature: movedSignature)
+    }
 }
 
 /// One problem attempt: watches the ink, decides when to look, asks the tutor, and shows what comes back.
@@ -70,6 +82,12 @@ final class TutorSession: ObservableObject {
     @Published private(set) var testStatus = "strokes=0 lines=0 looks=0 last=none"
 
     private weak var canvas: PKCanvasView?
+    /// The page in unzoomed page points as last set (`PageGeometry.contentSize`); the scroll view's own contentSize is this times the zoom.
+    private var pageSize = CGSize.zero
+    /// The first screen has been scrolled into place (once per problem; Erase page does it again).
+    private var placedHome = false
+    /// True while the drawing is being moved by a re-anchor, so the change callback does not count it as writing.
+    private var reanchoring = false
     private let env: AppEnvironment
     private let grouper = LineGrouper()
     private let recorder = AudioRecorder()
@@ -134,9 +152,10 @@ final class TutorSession: ObservableObject {
 
     // MARK: - The endless page
 
-    /// Keeps the page as tall as the ink plus one screen (`PageGeometry.contentHeight`), as wide as the view, and the scroll
-    /// position inside it. Runs after every drawing change (so it grows as the student writes and shrinks when ink is deleted
-    /// or erased), when the view changes size, and when a page is erased. Logs only when the height actually changes.
+    /// Keeps the page where `PageGeometry` says: the first screen and the ink, plus one screen in every direction, and the scroll
+    /// position inside it. Runs after every drawing change (so the page grows as the student writes toward any edge and shrinks
+    /// when ink is deleted or erased), when the view changes size, and when a page is erased. Moves the drawing and the marks
+    /// right/down first if ink has come close to the left or top edge (`reanchorPage`). Logs only when the size actually changes.
     func syncPageSize(reason: String) {
         guard let canvas else { return }
         let visible = canvas.bounds.size
@@ -145,53 +164,141 @@ final class TutorSession: ObservableObject {
             env.log.record("page_resize_deferred", ["reason": reason, "why": "canvas not laid out yet", "problem_id": problem.id])
             return
         }
-        let inkBottom = canvas.drawing.strokes.map { $0.renderBounds.maxY }.filter { $0.isFinite }.max()
-        let height = PageGeometry.contentHeight(viewportHeight: visible.height, inkBottom: inkBottom)
-        let target = CGSize(width: visible.width, height: height)
-        if canvas.contentSize != target {
-            let before = canvas.contentSize
-            canvas.contentSize = target
-            env.log.record("page_resized", [
-                "reason": reason, "from_height": Int(before.height), "to_height": Int(height), "width": Int(visible.width),
-                "ink_bottom": inkBottom.map { Int($0) } ?? -1, "screen_height": Int(visible.height), "problem_id": problem.id
-            ])
+        var ink = Self.inkBounds(of: canvas.drawing)
+        if let shift = PageGeometry.reanchorShift(viewport: visible, ink: ink) {
+            reanchorPage(by: shift, reason: reason)
+            ink = Self.inkBounds(of: canvas.drawing)
+        }
+        let zoom = canvas.zoomScale
+        let target = PageGeometry.contentSize(viewport: visible, ink: ink)
+        if target != pageSize {
+            let before = pageSize
+            pageSize = target
+            // The scroll view's contentSize is in zoomed (screen) points.
+            canvas.contentSize = CGSize(width: target.width * zoom, height: target.height * zoom)
+            var fields: [String: Any] = [
+                "reason": reason, "from": "\(Int(before.width))x\(Int(before.height))", "to": "\(Int(target.width))x\(Int(target.height))",
+                "zoom": String(format: "%.2f", zoom), "screen": "\(Int(visible.width))x\(Int(visible.height))",
+                "ink_box": ink.map { "\(Int($0.minX)),\(Int($0.minY)),\(Int($0.maxX)),\(Int($0.maxY))" } ?? "none",
+                "problem_id": problem.id
+            ]
+            let growsRight = target.width > before.width, growsDown = target.height > before.height
+            if before != .zero, growsRight || growsDown {
+                fields["direction"] = [growsRight ? "right" : nil, growsDown ? "down" : nil].compactMap { $0 }.joined(separator: "_")
+                env.log.record("page_grew", fields)
+            } else {
+                env.log.record("page_resized", fields)
+            }
+        }
+        if !placedHome {
+            // First sizing of this page (or a fresh page after Erase page): show the first screen, not the blank reserve.
+            placedHome = true
+            canvas.setContentOffset(CGPoint(x: PageGeometry.homeReserve * zoom, y: PageGeometry.homeReserve * zoom), animated: false)
+            env.log.record("page_home_placed", ["offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
+                                                "zoom": String(format: "%.2f", zoom), "problem_id": problem.id])
         }
         // A shrink (erase, delete, lasso cut) can leave the screen past the new end of the page: pull it back.
-        // (A rubber-band overscroll above the top is left alone; only a screen past the end is pulled back.)
-        let clamped = PageGeometry.clampedOffsetY(canvas.contentOffset.y, contentHeight: height, viewportHeight: visible.height)
-        if canvas.contentOffset.y > clamped + 0.5 || canvas.contentOffset.x != 0 {
+        // (A rubber-band overscroll past an edge is left alone; only a screen past the end is pulled back.)
+        let clamped = PageGeometry.clampedOffset(canvas.contentOffset, contentSize: canvas.contentSize, viewport: visible)
+        if canvas.contentOffset.x > clamped.x + 0.5 || canvas.contentOffset.y > clamped.y + 0.5 {
             let from = canvas.contentOffset
-            canvas.setContentOffset(CGPoint(x: 0, y: clamped), animated: false)
-            env.log.record("page_scroll_clamped", ["from_y": Int(from.y), "to_y": Int(clamped), "reason": reason, "problem_id": problem.id])
+            canvas.setContentOffset(clamped, animated: false)
+            env.log.record("page_scroll_clamped", ["from": "\(Int(from.x)),\(Int(from.y))", "to": "\(Int(clamped.x)),\(Int(clamped.y))",
+                                                   "reason": reason, "problem_id": problem.id])
         }
-        viewport.update(offset: canvas.contentOffset, contentSize: target)
+        viewport.update(offset: canvas.contentOffset, contentSize: canvas.contentSize, zoomScale: zoom)
+    }
+
+    /// Ink is within a margin of the left or top edge of the page, and a scroll view cannot grow leftwards or upwards. So the
+    /// whole drawing and the tutor's marks move right/down by `shift`, and the scroll position moves the same distance so the
+    /// student sees nothing move. This is the one time drawing coordinates change; it is rare (about 1800 pt left of or above
+    /// the first screen) and it is logged. The undo history is dropped: its steps describe the old coordinates. Look requests
+    /// already in flight name boxes in the old coordinates; their answers fail the same-ink check and are discarded.
+    private func reanchorPage(by shift: CGSize, reason: String) {
+        guard let canvas else { return }
+        let zoom = canvas.zoomScale
+        reanchoring = true
+        canvas.drawing = canvas.drawing.transformed(using: CGAffineTransform(translationX: shift.width, y: shift.height))
+        canvas.undoManager?.removeAllActions()
+        reanchoring = false
+        marks = marks.map { $0.moved(by: shift) }
+        let offset = canvas.contentOffset
+        // The page is about to be resized by the caller; set the offset after, from the same numbers, so UIKit cannot clamp it.
+        let target = CGPoint(x: offset.x + shift.width * zoom, y: offset.y + shift.height * zoom)
+        let grown = PageGeometry.contentSize(viewport: canvas.bounds.size, ink: Self.inkBounds(of: canvas.drawing))
+        pageSize = grown
+        canvas.contentSize = CGSize(width: grown.width * zoom, height: grown.height * zoom)
+        canvas.setContentOffset(target, animated: false)
+        env.log.record("page_reanchored", [
+            "reason": reason, "shift": "\(Int(shift.width)),\(Int(shift.height))", "marks_moved": marks.count,
+            "new_size": "\(Int(grown.width))x\(Int(grown.height))", "zoom": String(format: "%.2f", zoom),
+            "note": "undo history cleared", "problem_id": problem.id
+        ])
+    }
+
+    /// "x1200-2224,y1500-2100": the part of the page in a picture, for the log.
+    nonisolated static func regionLabel(_ region: CGRect) -> String {
+        "x\(Int(region.minX))-\(Int(region.maxX)),y\(Int(region.minY))-\(Int(region.maxY))"
+    }
+
+    /// The box around all the ink, in page points; nil for an empty page or if PencilKit reports a bound that is not a number.
+    nonisolated static func inkBounds(of drawing: PKDrawing) -> CGRect? {
+        let boxes = drawing.strokes.map { $0.renderBounds }.filter { PageGeometry.isUsable($0) }
+        guard let first = boxes.first else { return nil }
+        return boxes.dropFirst().reduce(first) { $0.union($1) }
     }
 
     func viewportDidScroll(to offset: CGPoint) {
-        viewport.update(offset: offset)
+        // Also called while pinching, so the zoom and the page size are read here too.
+        viewport.update(offset: offset, contentSize: canvas?.contentSize, zoomScale: canvas?.zoomScale)
     }
 
     /// One log line per finished scroll (not per frame), so the log shows where the student has been looking.
     func viewportDidSettle(at offset: CGPoint) {
-        viewport.update(offset: offset)
-        env.log.record("page_scrolled", ["offset_y": Int(offset.y), "page_height": Int(viewport.contentSize.height), "problem_id": problem.id])
+        viewport.update(offset: offset, contentSize: canvas?.contentSize, zoomScale: canvas?.zoomScale)
+        let zoom = canvas?.zoomScale ?? 1
+        env.log.record("page_scrolled", [
+            "offset": "\(Int(offset.x)),\(Int(offset.y))", "page": "\(Int(pageSize.width))x\(Int(pageSize.height))",
+            "zoom": String(format: "%.2f", zoom), "problem_id": problem.id
+        ])
     }
 
-    /// When the tutor circles a line that is off screen (or too close to the edge for its callout), the page scrolls to it.
+    /// One log line per finished pinch. The page size is set again for the new zoom (the scroll view's size is zoomed), so
+    /// `contentSize` stays what `PageGeometry` says whatever the scroll view does with it while zooming.
+    func viewportDidZoomSettle(scale: CGFloat) {
+        guard let canvas else { return }
+        let reported = canvas.contentSize
+        let expected = CGSize(width: pageSize.width * scale, height: pageSize.height * scale)
+        env.log.record("zoom_settled", [
+            "scale": String(format: "%.2f", scale), "content_reported": "\(Int(reported.width))x\(Int(reported.height))",
+            "content_expected": "\(Int(expected.width))x\(Int(expected.height))",
+            "offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))", "problem_id": problem.id
+        ])
+        if abs(reported.width - expected.width) > 2 || abs(reported.height - expected.height) > 2 {
+            // The scroll view did not scale the content with the zoom the way a plain UIScrollView does: put it right.
+            canvas.contentSize = expected
+            env.log.record("zoom_content_corrected", ["scale": String(format: "%.2f", scale), "problem_id": problem.id])
+        }
+        viewport.update(offset: canvas.contentOffset, contentSize: canvas.contentSize, zoomScale: scale)
+    }
+
+    /// When the tutor circles a line that is off screen (or too close to the edge for its callout), the page scrolls to it,
+    /// in both directions. The zoom stays as the student set it.
     private func scrollToShow(_ box: CGRect, lineIndex: Int) {
         guard let canvas else { return }
-        let visibleHeight = canvas.bounds.height
-        let pageHeight = max(canvas.contentSize.height, visibleHeight)
-        guard let target = PageGeometry.offsetToReveal(box: box, currentOffsetY: canvas.contentOffset.y,
-                                                       viewportHeight: visibleHeight, contentHeight: pageHeight) else {
-            env.log.record("mark_in_view", ["line": lineIndex, "offset_y": Int(canvas.contentOffset.y), "problem_id": problem.id])
+        let zoom = canvas.zoomScale
+        guard let target = PageGeometry.offsetToReveal(box: box, offset: canvas.contentOffset, zoom: zoom,
+                                                       viewport: canvas.bounds.size, contentSize: canvas.contentSize) else {
+            env.log.record("mark_in_view", ["line": lineIndex, "offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
+                                            "zoom": String(format: "%.2f", zoom), "problem_id": problem.id])
             return
         }
         env.log.record("scrolled_to_mark", [
-            "line": lineIndex, "from_y": Int(canvas.contentOffset.y), "to_y": Int(target),
-            "mark_top": Int(box.minY), "mark_bottom": Int(box.maxY), "problem_id": problem.id
+            "line": lineIndex, "from": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
+            "to": "\(Int(target.x)),\(Int(target.y))", "zoom": String(format: "%.2f", zoom),
+            "mark_box": "\(Int(box.minX)),\(Int(box.minY)),\(Int(box.maxX)),\(Int(box.maxY))", "problem_id": problem.id
         ])
-        canvas.setContentOffset(CGPoint(x: 0, y: target), animated: true)
+        canvas.setContentOffset(target, animated: true)
     }
 
     /// Canvas diagnostics (touch types, swipe-back blocking, canvas size) go to the session log.
@@ -219,7 +326,8 @@ final class TutorSession: ObservableObject {
     }
 
     func drawingDidChange() {
-        guard let canvas else { return }
+        // Moving the drawing for a page re-anchor is not writing: no new revision, no look.
+        guard let canvas, !reanchoring else { return }
         drawingRevision += 1
         lastInkAt = now()
         activity.note(.ink, at: now())
@@ -227,7 +335,7 @@ final class TutorSession: ObservableObject {
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
         // strokes_delta below zero means ink went away (lasso delete or cut, eraser); zero with the lasso is a move; above
-        // zero is writing or a paste. last_tool is the tool of the latest gesture (an undo from the picker keeps the old label).
+        // zero is writing or a paste. last_tool is the tool of the latest gesture (an undo from the wheel keeps the old label).
         env.log.record("ink_changed", [
             "strokes": strokes.count, "lines": lines.count, "revision": drawingRevision,
             "strokes_delta": strokes.count - lastStrokeCount, "last_tool": lastTool
@@ -259,7 +367,7 @@ final class TutorSession: ObservableObject {
 
     func erasePage() {
         if let canvas, !canvas.drawing.strokes.isEmpty {
-            // Undoable from the tool picker's undo button, so a fast wipe is never a lost page.
+            // Undoable from the wheel's undo button, so a fast wipe is never a lost page.
             let previous = canvas.drawing
             canvas.undoManager?.registerUndo(withTarget: canvas) { [weak self] restored in
                 restored.drawing = previous
@@ -271,10 +379,14 @@ final class TutorSession: ObservableObject {
         }
         canvas?.drawing = PKDrawing()
         marks = []
-        env.log.record("page_erased", ["problem_id": problem.id, "was_scrolled_to_y": Int(canvas?.contentOffset.y ?? 0)])
-        // Back to a one-screen page at the top. (`syncPageSize` shrinks the content; the offset is set first so a long page
-        // does not flash an empty stretch on its way back.)
-        canvas?.setContentOffset(.zero, animated: false)
+        env.log.record("page_erased", [
+            "problem_id": problem.id, "was_scrolled_to": "\(Int(canvas?.contentOffset.x ?? 0)),\(Int(canvas?.contentOffset.y ?? 0))",
+            "was_zoom": String(format: "%.2f", canvas?.zoomScale ?? 1)
+        ])
+        // Back to the first screen at normal size. (`syncPageSize` shrinks the content and scrolls to the first screen; the zoom
+        // is reset first so the page size it sets is in unzoomed points.)
+        canvas?.setZoomScale(1, animated: false)
+        placedHome = false
         lastStrokeCount = 0
         syncPageSize(reason: "page_erased")
         // Setting the drawing calls drawingDidChange through the delegate on some OS versions and not others,
@@ -647,7 +759,7 @@ final class TutorSession: ObservableObject {
                 env.log.record("live_consult_started", [
                     "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
                     "image_bytes": snapshot.png.count, "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
-                    "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))",
+                    "region": Self.regionLabel(snapshot.region),
                     "question_chars": delegation.question.count, "recent_turns": delegation.recent.count
                 ])
                 let started = now()
@@ -804,14 +916,14 @@ final class TutorSession: ObservableObject {
                 imagePngBase64: snapshot.png.base64EncodedString(),
                 imageWidth: snapshot.pixelWidth,
                 imageHeight: snapshot.pixelHeight,
-                lines: shownLines.map { LineWire($0, scale: snapshot.scale, regionTop: snapshot.region.minY) },
+                lines: shownLines.map { LineWire($0, scale: snapshot.scale, regionOrigin: snapshot.region.origin) },
                 history: Array(history.suffix(10)),
                 clientTime: TimeText.iso(started)
             )
             env.log.record("look_started", [
                 "trigger": trigger.rawValue, "revision": revision, "lines": lines.count, "lines_sent": shownLines.count,
                 "image_bytes": snapshot.png.count, "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
-                "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))", "scale": String(format: "%.3f", snapshot.scale),
+                "region": Self.regionLabel(snapshot.region), "scale": String(format: "%.3f", snapshot.scale),
                 "history_items": request.history.count
             ])
             let response = try await env.client.watch(request)
@@ -1023,7 +1135,7 @@ final class TutorSession: ObservableObject {
             env.log.record("ask_started", ["audio_bytes": audio.count, "audio_seconds": recording.duration,
                                            "image_bytes": snapshot.png.count, "lines": lines.count,
                                            "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
-                                           "region": "y\(Int(snapshot.region.minY))-\(Int(snapshot.region.maxY))"])
+                                           "region": Self.regionLabel(snapshot.region)])
             let response = try await env.client.ask(request)
             let latency = Int(now().timeIntervalSince(started) * 1000)
             var answered: [String: Any] = ["latency_ms": latency, "answer_chars": response.answerText.count,

@@ -33,7 +33,7 @@ final class PencilTutorUITests: XCTestCase {
     private func drawLine(_ row: Int, on canvas: XCUIElement) {
         for stroke in 0..<4 {
             let x = 0.08 + 0.17 * Double(stroke)
-            let y = 0.10 + 0.22 * Double(row)
+            let y = 0.22 + 0.20 * Double(row)   // below the floating problem card and action pill
             let start = canvas.coordinate(withNormalizedOffset: CGVector(dx: x, dy: y))
             let end = canvas.coordinate(withNormalizedOffset: CGVector(dx: x + 0.12, dy: y + 0.03))
             start.press(forDuration: 0.05, thenDragTo: end)
@@ -98,5 +98,30 @@ final class PencilTutorUITests: XCTestCase {
         XCTAssertFalse(element(app, "interruptEllipse").exists, "nothing should be circled on the clean problem")
         XCTAssertFalse(element(app, "hintText").exists, "no hint should appear on the clean problem")
         screenshot(app, named: "05-clean-looked-and-left-alone")
+    }
+
+    /// The tool wheel replaces the system tool picker: tap the handle, the ring opens, a tool tap selects it and closes the ring,
+    /// and the handle says which tool is on.
+    func testToolWheelOpensAndChoosingTheEraserChangesTheHandle() throws {
+        let app = launchApp()
+        open(problem: cleanProblem, in: app)
+
+        let handle = element(app, "toolWheelHandle")
+        XCTAssertTrue(handle.waitForExistence(timeout: 10), "the wheel handle should be on the page")
+        XCTAssertTrue(handle.label.contains("Pen"), "starts on the pen, was: \(handle.label)")
+        handle.tap()
+
+        let eraser = element(app, "toolWheel_eraser")
+        XCTAssertTrue(eraser.waitForExistence(timeout: 5), "tapping the handle opens the ring")
+        XCTAssertTrue(element(app, "toolWheel_lasso").exists)
+        XCTAssertTrue(element(app, "toolWheel_undo").exists)
+        screenshot(app, named: "06-tool-wheel-open")
+        eraser.tap()
+
+        let closed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: eraser)
+        XCTAssertEqual(XCTWaiter().wait(for: [closed], timeout: 5), .completed, "choosing a tool closes the ring")
+        let isEraser = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS %@", "Eraser"), object: handle)
+        XCTAssertEqual(XCTWaiter().wait(for: [isEraser], timeout: 5), .completed, "the handle shows the eraser, was: \(handle.label)")
+        screenshot(app, named: "07-tool-wheel-eraser-chosen")
     }
 }
