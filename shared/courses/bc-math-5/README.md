@@ -55,3 +55,13 @@ Every problem was written for this bank from the standards text. Nothing was cop
 - Each problem carries expected values computed independently in Python (integers, `fractions.Fraction`, `decimal.Decimal`, `datetime` for time, Euler's V - E + F = 2 for solids). The script checks that the stored final answer and key intermediate values match, and that `problems.json` equals what the source in `verify.py` generates.
 - Limit: matching is by substring of the written solution, so it confirms the numbers are present and correct, not that every sentence of prose is right. Worked lines were also read by hand.
 - `python3 -I verify.py --write` regenerates `problems.json`.
+- Re-run after the teacher review, 2026-11-15: 90 problems, 89 mechanically checked, 1 definition-based, 0 failures.
+
+## Review (teacher-quality pass, 2026-11-15)
+
+Checked all 90 problems for: one clear answer, grade-5 wording, Canadian units and spelling, fit with the standard, one-step-per-line worked solutions, answer form, difficulty ramp, duplicates, names. Edits were made in `verify.py` (the source) and `problems.json` regenerated with `--write`.
+
+- Reviewed 90, fixed 14, dropped 0, unchanged 76.
+- Fixed: m5-74 (the old prompt, one point moving (6, 2) to (2, 2), was ambiguous: a flip over x = 4 or a half turn gives the same image; now a whole triangle with "not flipped or turned"); m5-84 (said "the same bag" from another problem, now stands alone); m5-90 (near-copy of m5-86, now a two-item purchase); m5-80 (odd "9 stars' worth" wording and unused Ella data, now uses both rows); m5-78 ("double bar graph" with one bar per day, now "bar graph"); m5-20, m5-22, m5-32, m5-34 (worked lines that jumped steps or read like prose); m5-26 and m5-27 swapped so the easier multiplication comes first (ids stay with their slot, so the content under those two ids changed places); m5-81 to m5-84 (P(...) notation replaced by "probability of ...", which grade 5 has not met).
+- Most common problem: a worked line that skipped the step a student would need to write, or hid the work in a "do it all" sentence.
+- Unsure: m5-70 (trapezoid with exactly one pair of parallel sides) follows the exclusive definition stated in the prompt; BC Grade 5 does not say which definition to use. Only reflections over vertical and horizontal lines are used in S15, no rotation about a point. S8 and S9 contain a few very easy problems (m5-38, m5-42); kept because they are fact-fluency checks.

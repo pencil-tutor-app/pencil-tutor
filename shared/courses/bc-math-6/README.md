@@ -92,3 +92,15 @@ Verified 2026-11-14 with `verify.py` (`python3 -I verify.py`, exit code 0 means 
 
 Limits: the verifier checks numbers, not wording; the classification answers (angle and triangle names) are checked
 as required words. Whether each problem is well-pitched for age 11-12 is a human judgment, not checked.
+
+Re-run after the teacher review, 2026-11-15: 91/91 final answers match, 144 worked-line equalities correct, ALL OK.
+
+## Review (teacher-quality pass, 2026-11-15)
+
+Checked all 91 problems for: one clear answer, grade-6 wording, Canadian units and spelling, fit with the standard (re-read against the official Content list, fetched 2026-11-15), one-step-per-line worked solutions, answer form, difficulty ramp, duplicates, names.
+
+- Reviewed 91, fixed 9, dropped 0, unchanged 82.
+- Fixed: m6-69 (the stated sides 5, 5, 8 cm cannot go with angles 38, 71, 71: the 8 cm side would face a 106 degree angle; now 5, 5, 6 cm with 74, 53, 53); m6-82 (same 8-section 3 red / 2 blue / 3 green spinner as Grade 5 m5-81; now 4 red, 3 blue, 3 green out of 10, answer simplified to 2/5, TRUTH in `verify.py` updated); m6-77 (reflection step used the formula "12 - old x", now the same-distance-other-side move a student draws; prompt now says "corners"); m6-04 (addition shown in one line, now column by column); m6-01 and m6-03 (large numbers lacked space grouping); m6-05, m6-06, m6-08 ("in your head" removed, the student writes the steps on the iPad).
+- Most common problem: unformatted or compressed worked lines (missing digit grouping, a whole column addition in one line).
+- Checked and kept on purpose: m6-12 has a quotient of 7.5, which the official Content line allows ("quotients can be rational numbers"); m6-14 uses exponents in a prime factor phrase and m6-18 uses divisibility rules, both listed in the official factors-and-multiples elaboration; m6-05, m6-33, m6-34 and m6-87 echo examples printed in the BC curriculum text itself (23 x 4, 0.125 x 3, 7.2 / 9, allowance for a bicycle), which is the official source, not a textbook.
+- Unsure: the standard "combinations of transformations" is covered by one true combination (m6-77) plus single transformations m6-72 to m6-76; adding a second combination would need a new id, so it was left. m6-37 (decimal times whole number in a story) is easier than m6-35 and m6-36 that precede it; ids kept. m6-40 and m6-41 find a term number from a value, which is a two-step equation worked backwards, a step ahead of the one-step equations standard but part of the patterns standard.

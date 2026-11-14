@@ -367,9 +367,10 @@
     ],
     "worked_solution": [
       "Find how far each is from 1.",
-      "1 − 0.9 = 0.1",
-      "1 − 7/8 = 1/8 = 0.125",
-      "0.1 < 0.125, so 0.9 is closer to 1."
+      "1 − 0.9 = 0.1, which is 1/10.",
+      "1 − 7/8 = 1/8",
+      "Eighths are bigger pieces than tenths, so 1/8 > 1/10.",
+      "7/8 is 1/8 away from 1 and 0.9 is only 1/10 away, so 0.9 is closer to 1."
     ],
     "final_answer": "0.9",
     "level": "elementary"
@@ -406,7 +407,7 @@
       }
     ],
     "worked_solution": [
-      "Subtract in parts. First take away 256 389 from 700 000 by counting up from 256 389.",
+      "Count up from 256 389 to 700 000 in easy jumps.",
       "256 389 + 11 = 256 400",
       "256 400 + 43 600 = 300 000",
       "300 000 + 400 000 = 700 000",
@@ -476,25 +477,6 @@
   {
     "id": "m5-26",
     "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
-    "prompt_latex": "\\text{Find 36 × 24.}",
-    "prompt_plain": "Find 36 × 24.",
-    "prompt_parts": [
-      {
-        "text": "Find 36 × 24."
-      }
-    ],
-    "worked_solution": [
-      "Break 24 into 20 + 4.",
-      "36 × 20 = 720",
-      "36 × 4 = 144",
-      "720 + 144 = 864"
-    ],
-    "final_answer": "864",
-    "level": "elementary"
-  },
-  {
-    "id": "m5-27",
-    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
     "prompt_latex": "\\text{Find 237 × 4.}",
     "prompt_plain": "Find 237 × 4.",
     "prompt_parts": [
@@ -510,6 +492,25 @@
       "800 + 120 + 28 = 948"
     ],
     "final_answer": "948",
+    "level": "elementary"
+  },
+  {
+    "id": "m5-27",
+    "source": "BC Math 5 content standard: Multiplication and division to three digits, including division with remainders; original",
+    "prompt_latex": "\\text{Find 36 × 24.}",
+    "prompt_plain": "Find 36 × 24.",
+    "prompt_parts": [
+      {
+        "text": "Find 36 × 24."
+      }
+    ],
+    "worked_solution": [
+      "Break 24 into 20 + 4.",
+      "36 × 20 = 720",
+      "36 × 4 = 144",
+      "720 + 144 = 864"
+    ],
+    "final_answer": "864",
     "level": "elementary"
   },
   {
@@ -601,10 +602,10 @@
       }
     ],
     "worked_solution": [
-      "Write 8 as 8.000 so the places line up.",
-      "3.275 + 0.725 = 4",
-      "4 + 4 = 8, so the jumps are 0.725 and 4.",
-      "0.725 + 4 = 4.725",
+      "Count up from 3.275 to 8 in jumps.",
+      "3.275 + 0.725 = 4 (the jump to the next whole number)",
+      "4 + 4 = 8 (the jump from 4 to 8)",
+      "Add the jumps: 0.725 + 4 = 4.725",
       "Check: 4.725 + 3.275 = 8.000"
     ],
     "final_answer": "4.725",
@@ -643,7 +644,8 @@
     "worked_solution": [
       "6.89 is close to 7 and 4.12 is close to 4.",
       "Estimate: 7 + 4 = 11",
-      "Exact: 6.89 + 4.12 = 11.01",
+      "Exact: 6.89 + 4 = 10.89",
+      "10.89 + 0.12 = 11.01",
       "11.01 is close to the estimate of 11."
     ],
     "final_answer": "Estimate 11; exact 11.01",
@@ -1361,17 +1363,17 @@
   {
     "id": "m5-74",
     "source": "BC Math 5 content standard: Single transformations (slide/translation, flip/reflection, turn/rotation); original",
-    "prompt_latex": "\\text{A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?}",
-    "prompt_plain": "A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?",
+    "prompt_latex": "\\text{A triangle has corners at (6, 2), (8, 2) and (6, 5). After one transformation the corners are at (2, 2), (4, 2) and (2, 5). The triangle was not flipped or turned. Name the transformation and describe the move.}",
+    "prompt_plain": "A triangle has corners at (6, 2), (8, 2) and (6, 5). After one transformation the corners are at (2, 2), (4, 2) and (2, 5). The triangle was not flipped or turned. Name the transformation and describe the move.",
     "prompt_parts": [
       {
-        "text": "A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?"
+        "text": "A triangle has corners at (6, 2), (8, 2) and (6, 5). After one transformation the corners are at (2, 2), (4, 2) and (2, 5). The triangle was not flipped or turned. Name the transformation and describe the move."
       }
     ],
     "worked_solution": [
-      "The up number stays 2, so the point only moved across.",
-      "Across went from 6 to 2: 6 − 2 = 4 units to the left.",
-      "A movement in a straight line with no turning or flipping is a slide (translation)."
+      "Compare each corner before and after: (6, 2) → (2, 2), (8, 2) → (4, 2), (6, 5) → (2, 5).",
+      "The up numbers did not change. Each across number went down by 4: 6 − 2 = 4 and 8 − 4 = 4.",
+      "The whole shape moved the same way with no flip or turn, so it is a slide (translation) 4 units left."
     ],
     "final_answer": "A slide (translation) 4 units left",
     "level": "elementary"
@@ -1433,11 +1435,11 @@
   {
     "id": "m5-78",
     "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
-    "prompt_latex": "\\text{In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?}",
-    "prompt_plain": "In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?",
+    "prompt_latex": "\\text{In a bar graph, each square stands for 10 people. The bar for Saturday at the park is 4 squares tall and the bar for Sunday is 6 squares tall. How many people came in all?}",
+    "prompt_plain": "In a bar graph, each square stands for 10 people. The bar for Saturday at the park is 4 squares tall and the bar for Sunday is 6 squares tall. How many people came in all?",
     "prompt_parts": [
       {
-        "text": "In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?"
+        "text": "In a bar graph, each square stands for 10 people. The bar for Saturday at the park is 4 squares tall and the bar for Sunday is 6 squares tall. How many people came in all?"
       }
     ],
     "worked_solution": [
@@ -1470,19 +1472,20 @@
   {
     "id": "m5-80",
     "source": "BC Math 5 content standard: One-to-one and many-to-one correspondence, using double bar graphs; original",
-    "prompt_latex": "\\text{In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?}",
-    "prompt_plain": "In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?",
+    "prompt_latex": "\\text{In a pictograph one star stands for 4 books. Ella's row has 9 stars. Zoe read 52 books. How many more stars does Zoe's row need than Ella's row?}",
+    "prompt_plain": "In a pictograph one star stands for 4 books. Ella's row has 9 stars. Zoe read 52 books. How many more stars does Zoe's row need than Ella's row?",
     "prompt_parts": [
       {
-        "text": "In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?"
+        "text": "In a pictograph one star stands for 4 books. Ella's row has 9 stars. Zoe read 52 books. How many more stars does Zoe's row need than Ella's row?"
       }
     ],
     "worked_solution": [
-      "Ella's books: 9 × 4 = 36 (a check on how the scale works).",
+      "One star stands for 4 books.",
       "Zoe's stars: 52 ÷ 4 = 13",
+      "Ella has 9 stars, so Zoe needs 13 − 9 = 4 more.",
       "Check: 13 × 4 = 52"
     ],
-    "final_answer": "13 stars",
+    "final_answer": "4 more stars",
     "level": "elementary"
   },
   {
@@ -1498,7 +1501,7 @@
     "worked_solution": [
       "Probability = favourable outcomes ÷ total outcomes.",
       "3 sections are red out of 8 sections.",
-      "P(red) = 3/8"
+      "Probability of red = 3/8"
     ],
     "final_answer": "3/8",
     "level": "elementary"
@@ -1516,7 +1519,7 @@
     "worked_solution": [
       "Even numbers on the die: 2, 4, 6. That is 3 outcomes.",
       "There are 6 outcomes in all.",
-      "P(even) = 3/6 = 1/2"
+      "Probability of an even number = 3/6 = 1/2"
     ],
     "final_answer": "1/2",
     "level": "elementary"
@@ -1534,7 +1537,7 @@
     "worked_solution": [
       "Total marbles: 4 + 5 + 3 = 12.",
       "Blue marbles: 5.",
-      "P(blue) = 5/12"
+      "Probability of blue = 5/12"
     ],
     "final_answer": "5/12",
     "level": "elementary"
@@ -1542,18 +1545,18 @@
   {
     "id": "m5-84",
     "source": "BC Math 5 content standard: Probability experiments: single events or outcomes; original",
-    "prompt_latex": "\\text{Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?}",
-    "prompt_plain": "Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?",
+    "prompt_latex": "\\text{A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability the marble is NOT green?}",
+    "prompt_plain": "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability the marble is NOT green?",
     "prompt_parts": [
       {
-        "text": "Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?"
+        "text": "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability the marble is NOT green?"
       }
     ],
     "worked_solution": [
       "Marbles that are not green: 4 + 5 = 9, out of 12 in all.",
-      "P(not green) = 9/12",
+      "Probability of not green = 9/12",
       "Simplify: divide top and bottom by 3 to get 3/4.",
-      "Check: P(green) = 3/12 = 1/4, and 1/4 + 3/4 = 1."
+      "Check: probability of green = 3/12 = 1/4, and 1/4 + 3/4 = 1."
     ],
     "final_answer": "3/4",
     "level": "elementary"
@@ -1653,19 +1656,20 @@
   {
     "id": "m5-90",
     "source": "BC Math 5 content standard: Financial literacy: monetary calculations, making change, simple financial plans; original",
-    "prompt_latex": "\\text{A jacket costs \\$64.30. You pay with a \\$100 bill. Count up to make change.}",
-    "prompt_plain": "A jacket costs $64.30. You pay with a $100 bill. Count up to make change.",
+    "prompt_latex": "\\text{Lena buys a snack for \\$4.75 and a juice for \\$2.60. She pays with a \\$10 bill. How much change does she get?}",
+    "prompt_plain": "Lena buys a snack for $4.75 and a juice for $2.60. She pays with a $10 bill. How much change does she get?",
     "prompt_parts": [
       {
-        "text": "A jacket costs $64.30. You pay with a $100 bill. Count up to make change."
+        "text": "Lena buys a snack for $4.75 and a juice for $2.60. She pays with a $10 bill. How much change does she get?"
       }
     ],
     "worked_solution": [
-      "From $64.30 to $65 is 70 cents.",
-      "From $65 to $100 is $35.",
-      "$35 + $0.70 = $35.70"
+      "Total cost: $4.75 + $2.60 = $7.35",
+      "Count up from $7.35 to $8: 65 cents.",
+      "$8 to $10: $2.",
+      "$2 + $0.65 = $2.65"
     ],
-    "final_answer": "$35.70",
+    "final_answer": "$2.65",
     "level": "elementary"
   }
 ]
