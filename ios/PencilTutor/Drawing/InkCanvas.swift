@@ -91,6 +91,9 @@ struct InkCanvas: UIViewRepresentable {
         }
 
         session.attach(canvas: canvas)
+        #if DEBUG
+        InkReplay.startIfRequested(canvas: canvas, session: session)   // `--replay-ink <file>`; compiled out of Release
+        #endif
         return canvas
     }
 
