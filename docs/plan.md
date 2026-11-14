@@ -400,7 +400,7 @@ identifier is unchanged; new ones: `backButton`, `toolWheelHandle`, `toolWheel_<
 dividers + navigation bar) is gone, so the canvas is the screen: the `canvas_on_screen` log line gives the new size to compare with
 the 660 pt before.
 
-**Tool wheel.** A 56 pt round handle (default bottom-right, drag it and it snaps to the nearest edge; position kept in UserDefaults)
+**Tool wheel.** (Superseded by Amendment 17: replaced by an always-visible tool rail.) A 56 pt round handle (default bottom-right, drag it and it snaps to the nearest edge; position kept in UserDefaults)
 shows the current tool and colour. Tap: a ring opens, the handle slides inward just enough for the whole ring to fit on the page.
 Inner ring: pen, highlighter, eraser, lasso (`PKLassoTool`), undo, redo. Outer ring: black, blue, red, green and thin, medium, thick.
 A tool tap selects and closes; a colour or width tap changes the pen and keeps the ring open (choosing one while the eraser or lasso
@@ -447,6 +447,64 @@ one screen the line numbers sit beside their lines instead of in the far-left ma
   top right (the caption row and the pill are about 60 pt tall; the card folds away).
 - A two-handed student: a resting palm on the wheel handle opens it; the handle is outside the default writing area but it is not
   hidden while writing.
+
+### Amendment 17 (2026-11-14): an always-visible tool rail replaces the wheel; the floating chrome stops overflowing
+
+Edward tried the wheel on the iPad: it closed after every pick, so each tool or colour change cost a reopen, and its handle took space.
+"Make sure the UI is good to the point that I don't hate it. It's chill. I have to be able to use it to do stuff." This supersedes the
+**Tool wheel** part of Amendment 16 (the radial ring, the handle, its drag and snap, open/close, the saved handle position, the
+`wheel_*` logs). Everything else in 16 stands. Branch `tool-rail`. Code: `Drawing/InkCanvas.swift` (`ToolRailModel`, `ToolRailStyle`,
+`RailGestureRules`, the finger taps), `Views/ProblemScreen.swift` (`ToolRailView`, the action pill), `Views/ProblemCardView.swift`.
+
+**Tool rail.** One slim floating capsule on the left edge, directly under the Back button, always on screen; it never opens, closes or
+moves. 48 pt wide, about 615 pt tall (fits the iPad 9th gen landscape, 810 pt, and the 744 pt iPad mini landscape; a shorter window
+makes it scroll rather than clip). Top to bottom: pen, highlighter, eraser, lasso; hairline; black, blue, red, green; hairline; thin,
+medium, thick; hairline; undo, redo. Every control has a 44 x 44 pt hit target; the chosen tool, colour and width get a filled
+highlight and ring (no size change, so nothing shifts). The swatches show the highlighter's colours while the highlighter is on (black
+shows yellow). Choosing a colour or width while the eraser or lasso is on returns to the last ink tool (unchanged rule), so
+"eraser, then red" is two taps and the rail never has to be reopened. The pen, colour and width are still remembered (same
+`toolWheel.*` UserDefaults keys, so the saved pen survives). Pencil double-tap and squeeze still do switch-eraser / switch-previous;
+"show palette" now does nothing visible (there is nothing to show) and logs `rail_always_visible`. Identifiers: `toolRail`,
+`toolRail_<pen|marker|eraser|lasso|undo|redo>`, `toolRail_colour_<black|blue|red|green>`, `toolRail_width_<thin|medium|thick>`.
+
+**Finger gestures.** Two-finger tap on the page is undo, three-finger tap is redo (Concepts-style). Two `UITapGestureRecognizer`s on the
+canvas, `allowedTouchTypes = [direct]` (fingers only, never the Pencil), `cancelsTouchesInView = false`, running alongside the canvas's
+own pan and pinch (a tap that lifts quickly never moves far enough to start either); the two-finger tap waits for the three-finger one to
+fail so a three-finger tap is never also an undo. The rule (`RailGestureRules`) is a pure function and unit tested.
+
+**Logs (labels only).** `rail_ready` (was `wheel_ready`; no handle field), `tool_selected` (source `rail`, `double_tap`, `squeeze`),
+`rail_undo` / `rail_redo` (were `wheel_undo` / `wheel_redo`; now one line with `result` = `done`, `nothing` or `no_undo_manager`, plus
+`can_undo`, `can_redo`), `gesture_undo` / `gesture_redo` (same fields), `pencil_double_tap` / `pencil_squeeze` (result may be
+`rail_always_visible`). Gone: `wheel_opened`, `wheel_closed`, `wheel_handle_moved`, `*_unavailable`.
+
+**Overflow and consistency pass.** Sources: Apple HIG (buttons: hit target at least 44 x 44 pt with room around it; layout) and Vercel's
+Web Interface Guidelines (match visual and hit targets, 44 on touch; no layout shift; loading buttons keep their label; icons have
+labels; gestures have tap alternatives; respect safe areas; no truncated controls). Rules now in the code:
+- Every label in the action pill is one line (`lineLimit(1)` + `fixedSize`), never cut off, never wider than its capsule. The row tries
+  full labels, then short ones (Check, Ask, Talk, Reconnect, Connecting...), then the pill under the card (full, short), then
+  icon-only buttons; the words stay as the accessibility label. `ViewThatFits` picks the first that fits.
+- No layout shift: a button's width is held at its longest wording (Tap to ask / Tap to send; Mic on / Muted), and the busy spinner
+  replaces the Check icon instead of adding a spinner at the end of the pill. While listening the visible words are "Tap to send"
+  (red capsule, waveform); VoiceOver still says "Listening... tap to send".
+- Hit targets: the action pill's buttons and the Clear / Erase icons are 44 pt tall (the Back button was already 44); the pill is exactly
+  the Back button's height so the top row lines up. The folded problem pill is 44 pt tall and shows "Problem" instead of an ellipsis
+  when the prompt is too long. The caption wraps to its words instead of cutting off at four lines.
+- One material and shadow for all floating chrome (`.thinMaterial`, same soft shadow); one corner language (capsules and 12-24 pt
+  continuous rounded rectangles). Check my work is the one solid colour; Tap to ask is a soft tint, solid red only while listening.
+- The rows lower in the chrome column (blocked banner, test status) leave the rail's 56 pt gutter on the left.
+The expanded problem card still wraps a long problem across lines on purpose; that is the problem text, not a label.
+
+**Verified on the iPad 9th gen (device 00008030-0002101902D0202E), 2026-11-14.** UI tests ran on the device: the rail exists with no tap;
+eraser then red returns to the pen with the rail still there; undo from the rail removes one stroke; the rail's frame is under the Back
+button, left of the card, inside the screen, every rail control at least 44 x 44; the pill buttons are inside the screen, 44 pt hit
+targets, not overlapping the rail, portrait and landscape, card open and folded. Screenshots were read by eye.
+
+**Not verified (needs Edward's hands).** A real Pencil next to the rail (palm on the rail while writing: the rail is 48 pt on the left
+edge, a left-handed or palm-down writer may brush it; the system's palm rejection applies to the Pencil's contact only, a resting palm
+on a finger-touch button still taps it); two- and three-finger taps against the real pan and pinch (the UI tests cannot do multi-finger
+taps), and against iPadOS's own three-finger gestures; finger-drawing mode (no Pencil paired) where a two-finger tap might also leave a
+dot; the voice states "Connecting voice...", "Reconnect voice" and "Listening" (laid out by the same rules, not captured); a window
+shorter than 700 pt (Split View), where the rail scrolls.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a

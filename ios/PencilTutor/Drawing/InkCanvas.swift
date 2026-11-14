@@ -30,18 +30,20 @@ final class CanvasViewport: ObservableObject {
 /// The page is endless in every direction (2026-11-14): fingers pan it and pinch it between 0.5x and 3x, the Pencil writes, and
 /// the session keeps `contentSize` about one screen past the ink on every side (`PageGeometry`). Drawing coordinates are
 /// content coordinates and unzoomed, so the ink, the line boxes sent to the tutor and the tutor's marks all share one coordinate
-/// space; only the overlay has to apply the zoom and subtract the scroll offset (`CanvasViewport`). The wheel's lasso selects,
+/// space; only the overlay has to apply the zoom and subtract the scroll offset (`CanvasViewport`). The rail's lasso selects,
 /// moves, cuts and deletes ink; every such edit reaches the session through `canvasViewDrawingDidChange` like a written stroke.
 ///
-/// The tools come from the in-app radial wheel (`ToolWheelModel`, drawn by `ToolWheelView`), not the system tool picker
-/// (2026-11-14). The canvas only holds the tool the wheel last set; the Pencil double-tap and squeeze come in here through
-/// `UIPencilInteraction` because nothing else handles them once the system picker is gone.
+/// The tools come from the in-app tool rail (`ToolRailModel`, drawn by `ToolRailView`), not the system tool picker
+/// (2026-11-14). The canvas only holds the tool the rail last set; the Pencil double-tap and squeeze come in here through
+/// `UIPencilInteraction` because nothing else handles them once the system picker is gone. A two-finger tap on the page is undo
+/// and a three-finger tap is redo (`RailGestureRules`); both recognisers accept finger touches only and run alongside the
+/// canvas's own pan and pinch.
 struct InkCanvas: UIViewRepresentable {
     let session: TutorSession
-    let wheel: ToolWheelModel
+    let rail: ToolRailModel
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(session: session, wheel: wheel)
+        Coordinator(session: session, rail: rail)
     }
 
     func makeUIView(context: Context) -> PKCanvasView {
@@ -75,16 +77,17 @@ struct InkCanvas: UIViewRepresentable {
             session?.syncPageSize(reason: "view_resized")
         }
 
-        // The wheel shows in UI tests too (`--any-input`): it is one closed 56 pt handle in the bottom-right corner, outside
-        // the area the tests draw in, and showing it means the tests exercise the same tool path as a real run.
-        wheel.attach(canvas: canvas) { [weak session] type, fields in session?.noteCanvas(type, fields) }
+        // The rail shows in UI tests too (`--any-input`): it is a slim strip on the left edge, and showing it means the tests
+        // exercise the same tool path as a real run.
+        rail.attach(canvas: canvas) { [weak session] type, fields in session?.noteCanvas(type, fields) }
         let pencil = UIPencilInteraction()
         pencil.delegate = context.coordinator
         canvas.addInteraction(pencil)
+        context.coordinator.installFingerTaps(on: canvas)
         DispatchQueue.main.async {
             // First responder so the canvas has an undo manager and shake-to-undo works, as it did under the system picker.
             let isFirstResponder = canvas.becomeFirstResponder()
-            wheel.reportReady(firstResponder: isFirstResponder)
+            rail.reportReady(firstResponder: isFirstResponder)
         }
 
         session.attach(canvas: canvas)
@@ -180,18 +183,49 @@ struct InkCanvas: UIViewRepresentable {
         }
     }
 
-    final class Coordinator: NSObject, PKCanvasViewDelegate, UIPencilInteractionDelegate {
+    final class Coordinator: NSObject, PKCanvasViewDelegate, UIPencilInteractionDelegate, UIGestureRecognizerDelegate {
         let session: TutorSession
-        let wheel: ToolWheelModel
+        let rail: ToolRailModel
 
-        init(session: TutorSession, wheel: ToolWheelModel) {
+        init(session: TutorSession, rail: ToolRailModel) {
             self.session = session
-            self.wheel = wheel
+            self.rail = rail
+        }
+
+        /// Two-finger tap = undo, three-finger tap = redo. Fingers only (`allowedTouchTypes`), no touch is cancelled, and the
+        /// recognisers run alongside the canvas's pan and pinch: a tap that lifts quickly never moves far enough to start
+        /// either. The two-finger tap waits for the three-finger one to fail, so a three-finger tap is never also an undo.
+        func installFingerTaps(on canvas: UIView) {
+            let three = makeTap(fingers: 3, action: #selector(threeFingerTap))
+            let two = makeTap(fingers: 2, action: #selector(twoFingerTap))
+            two.require(toFail: three)
+            canvas.addGestureRecognizer(three)
+            canvas.addGestureRecognizer(two)
+        }
+
+        private func makeTap(fingers: Int, action: Selector) -> UITapGestureRecognizer {
+            let tap = UITapGestureRecognizer(target: self, action: action)
+            tap.numberOfTouchesRequired = fingers
+            tap.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.direct.rawValue)]
+            tap.cancelsTouchesInView = false
+            tap.delegate = self
+            return tap
+        }
+
+        @objc private func twoFingerTap() { fingerTap(fingers: 2) }
+        @objc private func threeFingerTap() { fingerTap(fingers: 3) }
+
+        private func fingerTap(fingers: Int) {
+            guard let gesture = RailGestureRules.gesture(forTapWith: fingers, usingFingers: true) else { return }
+            rail.fingerTap(gesture)
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                               shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+            true
         }
 
         func canvasViewDidBeginUsingTool(_ canvasView: PKCanvasView) {
-            // Writing again puts the open wheel away.
-            wheel.close(reason: "pen_down")
             session.penDidTouchDown(tool: Self.toolLabel(canvasView.tool))
         }
 
@@ -201,17 +235,13 @@ struct InkCanvas: UIViewRepresentable {
 
         /// Written strokes, eraser passes and every lasso edit (delete, cut, paste, move) all land here.
         func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-            wheel.refreshUndoState()
+            rail.refreshUndoState()
             session.drawingDidChange()
         }
 
         /// A lasso loop that only selects changes no ink, so it must not start a look; it is logged so a selection is visible.
         @objc func canvasViewSelectionDidChange(_ canvasView: PKCanvasView) {
             session.noteCanvas("lasso_selection_changed", [:])
-        }
-
-        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            wheel.close(reason: "scroll")
         }
 
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -237,13 +267,13 @@ struct InkCanvas: UIViewRepresentable {
 
         /// Double-tap on the Pencil: do what the student chose in Settings > Apple Pencil (eraser and back by default).
         func pencilInteraction(_ interaction: UIPencilInteraction, didReceiveTap tap: UIPencilInteraction.Tap) {
-            wheel.pencilGesture(.doubleTap, preferred: PencilPreference(UIPencilInteraction.preferredTapAction))
+            rail.pencilGesture(.doubleTap,preferred: PencilPreference(UIPencilInteraction.preferredTapAction))
         }
 
         /// Squeeze (Pencil Pro): same idea, its own setting. Acts when the squeeze is released.
         func pencilInteraction(_ interaction: UIPencilInteraction, didReceiveSqueeze squeeze: UIPencilInteraction.Squeeze) {
             guard squeeze.phase == .ended else { return }
-            wheel.pencilGesture(.squeeze, preferred: PencilPreference(UIPencilInteraction.preferredSqueezeAction))
+            rail.pencilGesture(.squeeze,preferred: PencilPreference(UIPencilInteraction.preferredSqueezeAction))
         }
 
         private static func toolLabel(_ tool: PKTool) -> String {
@@ -255,14 +285,16 @@ struct InkCanvas: UIViewRepresentable {
     }
 }
 
-// MARK: - The tool wheel (2026-11-14)
+// MARK: - The tool rail (2026-11-14, replaces the radial wheel the same day)
 //
-// Our own radial wheel in place of the system tool picker. A small round handle floats over the page; tapping it opens a ring
-// of tools around it. The picker needed no code for undo, Pencil double-tap or the lasso; the wheel does it all explicitly, and
-// logs every choice (labels only). The pure parts (`ToolWheelGeometry`, `ToolWheelStyle`, `PencilPreference`) have no UI in
-// them so they are unit tested; `ToolWheelModel` ties them to the canvas; `ToolWheelView` (ProblemScreen.swift) draws them.
+// Our own tool rail in place of the system tool picker: one slim capsule docked top-left, under the Back button, always on screen.
+// It never opens or closes; every tap changes the tool and leaves everything where it was (Edward, after trying the wheel: it
+// closed on every pick, so each tool or colour change cost a reopen). The picker needed no code for undo, Pencil double-tap or the
+// lasso; the rail does it all explicitly, and logs every choice (labels only). The pure parts (`ToolRailStyle`, `PencilRules`,
+// `RailGestureRules`) have no UI in them so they are unit tested; `ToolRailModel` ties them to the canvas; `ToolRailView`
+// (ProblemScreen.swift) draws them.
 
-enum WheelTool: String, CaseIterable {
+enum RailTool: String, CaseIterable {
     case pen, marker, eraser, lasso
 
     var label: String {
@@ -327,15 +359,15 @@ enum InkWidth: String, CaseIterable {
     }
 }
 
-/// What the wheel has chosen. Choosing a colour or width while the eraser or lasso is selected goes back to the last inking
+/// What the rail has chosen. Choosing a colour or width while the eraser or lasso is selected goes back to the last inking
 /// tool, because that is what the tap means.
-struct ToolWheelStyle: Equatable {
-    var tool: WheelTool = .pen
+struct ToolRailStyle: Equatable {
+    var tool: RailTool = .pen
     var colour: InkColour = .black
     var width: InkWidth = .medium
-    var lastInk: WheelTool = .pen
+    var lastInk: RailTool = .pen
 
-    mutating func select(_ tool: WheelTool) {
+    mutating func select(_ tool: RailTool) {
         self.tool = tool
         if tool.isInk { lastInk = tool }
     }
@@ -353,6 +385,11 @@ struct ToolWheelStyle: Equatable {
     /// What the student hears and sees: "Pen, blue, thick" or "Eraser".
     var summary: String {
         tool.isInk ? "\(tool.label), \(colour.rawValue), \(width.rawValue)" : tool.label
+    }
+
+    /// The colour a swatch shows: the highlighter's own colour while the highlighter is on (black shows yellow), else the ink's.
+    func swatchColour(_ colour: InkColour) -> UIColor {
+        tool == .marker ? colour.highlighterColor : colour.uiColor
     }
 
     /// The tool for the canvas.
@@ -377,10 +414,10 @@ struct ToolWheelStyle: Equatable {
     }
 }
 
-/// What the Pencil's double-tap or squeeze is set to do in Settings > Apple Pencil, reduced to what the wheel can honour.
+/// What the Pencil's double-tap or squeeze is set to do in Settings > Apple Pencil, reduced to what the rail can honour.
 enum PencilPreference: String {
     case switchEraser, switchPrevious, openPalette, ignore
-    /// A system shortcut or anything newer than this code: the system handles it, the wheel does nothing.
+    /// A system shortcut or anything newer than this code: the system handles it, the rail does nothing.
     case system
 
     init(_ action: UIPencilPreferredAction) {
@@ -395,8 +432,9 @@ enum PencilPreference: String {
 }
 
 enum PencilOutcome: Equatable {
-    case select(WheelTool)
-    case openWheel
+    case select(RailTool)
+    /// "Show the palette" has nothing to show: the rail is always on screen. Logged as `rail_always_visible`.
+    case railAlwaysVisible
     case nothing
 }
 
@@ -408,7 +446,7 @@ enum PencilGesture: String {
 enum PencilRules {
     /// "Switch to eraser" toggles: the first gesture goes to the eraser, the next returns to the tool before it.
     /// "Switch to previous" swaps the current and the previous tool.
-    static func outcome(for preference: PencilPreference, current: WheelTool, previous: WheelTool) -> PencilOutcome {
+    static func outcome(for preference: PencilPreference, current: RailTool, previous: RailTool) -> PencilOutcome {
         switch preference {
         case .switchEraser:
             if current == .eraser { return .select(previous == .eraser ? .pen : previous) }
@@ -416,104 +454,50 @@ enum PencilRules {
         case .switchPrevious:
             return previous == current ? .nothing : .select(previous)
         case .openPalette:
-            return .openWheel
+            return .railAlwaysVisible
         case .ignore, .system:
             return .nothing
         }
     }
 }
 
-/// The arithmetic of the wheel: where the handle sits, where it snaps to, where the ring opens. No UIKit.
-enum ToolWheelGeometry {
-    static let handleDiameter: CGFloat = 56
-    static let edgeMargin: CGFloat = 14
-    /// Inner ring: the four tools, undo and redo. Outer ring: four colours and three widths.
-    static let innerRadius: CGFloat = 70
-    static let outerRadius: CGFloat = 128
-    static let innerItemSize: CGFloat = 50
-    static let outerItemSize: CGFloat = 44
-    /// The soft disc behind the ring; the ring never reaches past it.
-    static var discRadius: CGFloat { outerRadius + outerItemSize / 2 + 10 }
+/// Finger taps on the page that stand in for the undo and redo buttons (Concepts-style): two fingers undo, three fingers redo.
+/// The Pencil never counts, and one finger is just a touch of the page.
+enum RailTouchGesture: String, Equatable {
+    case undo, redo
+}
 
-    /// The area the handle's centre may be in.
-    static func travel(in size: CGSize) -> CGRect {
-        let inset = edgeMargin + handleDiameter / 2
-        return CGRect(x: inset, y: inset, width: max(0, size.width - 2 * inset), height: max(0, size.height - 2 * inset))
-    }
-
-    /// Handle position as a fraction of the travel area: (0,0) top-left, (1,1) bottom-right.
-    static func handleCenter(fraction: CGPoint, in size: CGSize) -> CGPoint {
-        let area = travel(in: size)
-        return CGPoint(x: area.minX + min(max(fraction.x, 0), 1) * area.width,
-                       y: area.minY + min(max(fraction.y, 0), 1) * area.height)
-    }
-
-    /// Where a dropped handle settles: on the nearest edge of the travel area, at the dropped position along that edge.
-    static func snappedFraction(center: CGPoint, in size: CGSize) -> CGPoint {
-        let area = travel(in: size)
-        let x = fraction(center.x, area.minX, area.width)
-        let y = fraction(center.y, area.minY, area.height)
-        let toEdges = [x, 1 - x, y, 1 - y]   // left, right, top, bottom, as fractions
-        switch toEdges.firstIndex(of: toEdges.min() ?? 0) ?? 0 {
-        case 0: return CGPoint(x: 0, y: y)
-        case 1: return CGPoint(x: 1, y: y)
-        case 2: return CGPoint(x: x, y: 0)
-        default: return CGPoint(x: x, y: 1)
+enum RailGestureRules {
+    static func gesture(forTapWith fingers: Int, usingFingers: Bool) -> RailTouchGesture? {
+        guard usingFingers else { return nil }
+        switch fingers {
+        case 2: return .undo
+        case 3: return .redo
+        default: return nil
         }
-    }
-
-    /// Where the middle of the ring sits when the handle opens: the handle's own place, moved inward just far enough that the
-    /// whole disc is on the page. A handle on an edge therefore slides in when it opens and slides back when it closes.
-    static func openCenter(handleCenter: CGPoint, in size: CGSize) -> CGPoint {
-        CGPoint(x: clamp(handleCenter.x, discRadius, size.width - discRadius),
-                y: clamp(handleCenter.y, discRadius, size.height - discRadius))
-    }
-
-    /// Item centres on a ring, as offsets from the middle, evenly spaced clockwise starting at the top.
-    static func ringOffsets(count: Int, radius: CGFloat, startAngle: CGFloat = -.pi / 2) -> [CGPoint] {
-        guard count > 0 else { return [] }
-        return (0..<count).map { index in
-            let angle = startAngle + 2 * .pi * CGFloat(index) / CGFloat(count)
-            return CGPoint(x: radius * cos(angle), y: radius * sin(angle))
-        }
-    }
-
-    /// "right", "bottom_right" (a corner), ... for the log.
-    static func edgeLabel(fraction: CGPoint) -> String {
-        var parts: [String] = []
-        if fraction.y <= 0.001 { parts.append("top") } else if fraction.y >= 0.999 { parts.append("bottom") }
-        if fraction.x <= 0.001 { parts.append("left") } else if fraction.x >= 0.999 { parts.append("right") }
-        return parts.isEmpty ? "inside" : parts.joined(separator: "_")
-    }
-
-    private static func fraction(_ value: CGFloat, _ origin: CGFloat, _ span: CGFloat) -> CGFloat {
-        span > 0 ? min(max((value - origin) / span, 0), 1) : 0.5
-    }
-
-    /// Like `min(max(v, low), high)` but when the room is smaller than the disc it centres instead of pinning to one side.
-    private static func clamp(_ value: CGFloat, _ low: CGFloat, _ high: CGFloat) -> CGFloat {
-        high < low ? (low + high) / 2 : min(max(value, low), high)
     }
 }
 
-/// The wheel's state, and the one place that sets the canvas's tool. Every choice is logged with labels only.
+/// What an undo or redo did, for the log: `done`, `nothing` (the stack was empty) or `no_undo_manager`.
+enum UndoResult: String {
+    case done, nothing
+    case noUndoManager = "no_undo_manager"
+}
+
+/// The rail's state, and the one place that sets the canvas's tool. Every choice is logged with labels only.
 @MainActor
-final class ToolWheelModel: ObservableObject {
-    @Published private(set) var style: ToolWheelStyle
-    @Published private(set) var isOpen = false
+final class ToolRailModel: ObservableObject {
+    @Published private(set) var style: ToolRailStyle
     @Published private(set) var canUndo = false
     @Published private(set) var canRedo = false
-    /// Handle position as a fraction of its travel area; kept between launches.
-    @Published private(set) var handleFraction: CGPoint
 
     private weak var canvas: PKCanvasView?
     private var log: (String, [String: Any]) -> Void = { _, _ in }
-    private var previousTool: WheelTool = .eraser
+    private var previousTool: RailTool = .eraser
     private let defaults: UserDefaults
 
+    /// UserDefaults keys keep the names the wheel used, so a student's pen, colour and width survive the change.
     private enum Key {
-        static let handleX = "toolWheel.handleX"
-        static let handleY = "toolWheel.handleY"
         static let ink = "toolWheel.ink"
         static let colour = "toolWheel.colour"
         static let width = "toolWheel.width"
@@ -521,16 +505,11 @@ final class ToolWheelModel: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        var style = ToolWheelStyle()
-        if let raw = defaults.string(forKey: Key.ink), let tool = WheelTool(rawValue: raw), tool.isInk { style.select(tool) }
+        var style = ToolRailStyle()
+        if let raw = defaults.string(forKey: Key.ink), let tool = RailTool(rawValue: raw), tool.isInk { style.select(tool) }
         if let raw = defaults.string(forKey: Key.colour), let colour = InkColour(rawValue: raw) { style.colour = colour }
         if let raw = defaults.string(forKey: Key.width), let width = InkWidth(rawValue: raw) { style.width = width }
         self.style = style
-        if defaults.object(forKey: Key.handleX) != nil, defaults.object(forKey: Key.handleY) != nil {
-            handleFraction = CGPoint(x: defaults.double(forKey: Key.handleX), y: defaults.double(forKey: Key.handleY))
-        } else {
-            handleFraction = CGPoint(x: 1, y: 1)   // bottom-right corner
-        }
         previousTool = style.lastInk
     }
 
@@ -540,61 +519,38 @@ final class ToolWheelModel: ObservableObject {
         canvas.tool = style.pkTool()
     }
 
-    /// Replaces the old `tool_picker_items` / `tool_picker_shown` diagnostics: the wheel is up, with this much of it working.
+    /// The rail is up, with this much of it working.
     func reportReady(firstResponder: Bool) {
         refreshUndoState()
-        log("wheel_ready", [
+        log("rail_ready", [
             "first_responder": firstResponder, "has_undo_manager": canvas?.undoManager != nil,
-            "tools": WheelTool.allCases.map(\.rawValue).joined(separator: ","),
+            "tools": RailTool.allCases.map(\.rawValue).joined(separator: ","),
             "tool": style.tool.rawValue, "colour": style.colour.rawValue, "width": style.width.rawValue,
-            "handle": ToolWheelGeometry.edgeLabel(fraction: handleFraction),
             "tap_action": PencilPreference(UIPencilInteraction.preferredTapAction).rawValue,
             "squeeze_action": PencilPreference(UIPencilInteraction.preferredSqueezeAction).rawValue
         ])
     }
 
-    // MARK: Open and close
+    // MARK: Choices (nothing here hides the rail)
 
-    func toggle() {
-        isOpen ? close(reason: "tap_handle") : open(reason: "tap_handle")
-    }
-
-    func open(reason: String) {
-        guard !isOpen else { return }
-        refreshUndoState()
-        isOpen = true
-        log("wheel_opened", ["reason": reason, "tool": style.tool.rawValue])
-    }
-
-    func close(reason: String) {
-        guard isOpen else { return }
-        isOpen = false
-        log("wheel_closed", ["reason": reason, "tool": style.tool.rawValue])
-    }
-
-    // MARK: Choices
-
-    /// Tapping a tool selects it and puts the wheel away.
-    func select(_ tool: WheelTool, source: String = "wheel") {
+    func select(_ tool: RailTool, source: String = "rail") {
         if tool != style.tool { previousTool = style.tool }
         style.select(tool)
         apply(source: source)
         persistStyle()
-        close(reason: "tool_chosen")
     }
 
-    /// A colour or width changes the pen and leaves the wheel open, so both can be set in one visit.
     func choose(colour: InkColour) {
         if !style.tool.isInk { previousTool = style.tool }
         style.choose(colour: colour)
-        apply(source: "wheel")
+        apply(source: "rail")
         persistStyle()
     }
 
     func choose(width: InkWidth) {
         if !style.tool.isInk { previousTool = style.tool }
         style.choose(width: width)
-        apply(source: "wheel")
+        apply(source: "rail")
         persistStyle()
     }
 
@@ -616,23 +572,33 @@ final class ToolWheelModel: ObservableObject {
 
     // MARK: Undo and redo (the canvas's own undo manager: written strokes, erasing, lasso edits and Erase page)
 
-    func undo() { runUndo(redo: false) }
-    func redo() { runUndo(redo: true) }
+    func undo() { runUndo(redo: false, event: "rail_undo") }
+    func redo() { runUndo(redo: true, event: "rail_redo") }
 
-    private func runUndo(redo: Bool) {
-        let name = redo ? "wheel_redo" : "wheel_undo"
-        guard let manager = canvas?.undoManager else {
-            log("\(name)_unavailable", ["why": "canvas has no undo manager"])
-            return
+    /// A two- or three-finger tap on the page.
+    func fingerTap(_ gesture: RailTouchGesture) {
+        switch gesture {
+        case .undo: runUndo(redo: false, event: "gesture_undo")
+        case .redo: runUndo(redo: true, event: "gesture_redo")
         }
-        guard redo ? manager.canRedo : manager.canUndo else {
-            log("\(name)_unavailable", ["why": "nothing to \(redo ? "redo" : "undo")"])
-            refreshUndoState()
-            return
+    }
+
+    @discardableResult
+    private func runUndo(redo: Bool, event: String) -> UndoResult {
+        let result: UndoResult
+        if let manager = canvas?.undoManager {
+            if redo ? manager.canRedo : manager.canUndo {
+                if redo { manager.redo() } else { manager.undo() }
+                result = .done
+            } else {
+                result = .nothing
+            }
+        } else {
+            result = .noUndoManager
         }
-        if redo { manager.redo() } else { manager.undo() }
         refreshUndoState()
-        log(name, ["can_undo": canUndo, "can_redo": canRedo])
+        log(event, ["result": result.rawValue, "can_undo": canUndo, "can_redo": canRedo])
+        return result
     }
 
     func refreshUndoState() {
@@ -652,23 +618,10 @@ final class ToolWheelModel: ObservableObject {
         case .select(let tool):
             log(event, ["action": preferred.rawValue, "result": "select_\(tool.rawValue)", "from": style.tool.rawValue])
             select(tool, source: gesture.rawValue)
-        case .openWheel:
-            log(event, ["action": preferred.rawValue, "result": "open_wheel"])
-            open(reason: gesture.rawValue)
+        case .railAlwaysVisible:
+            log(event, ["action": preferred.rawValue, "result": "rail_always_visible"])
         case .nothing:
             log(event, ["action": preferred.rawValue, "result": "nothing"])
         }
-    }
-
-    // MARK: Handle position
-
-    /// The handle was dropped at `center` inside a container of `size`: snap it to the nearest edge and remember it.
-    func dropHandle(at center: CGPoint, in size: CGSize) {
-        let fraction = ToolWheelGeometry.snappedFraction(center: center, in: size)
-        handleFraction = fraction
-        defaults.set(Double(fraction.x), forKey: Key.handleX)
-        defaults.set(Double(fraction.y), forKey: Key.handleY)
-        log("wheel_handle_moved", ["edge": ToolWheelGeometry.edgeLabel(fraction: fraction),
-                                   "fx": (Double(fraction.x) * 100).rounded() / 100, "fy": (Double(fraction.y) * 100).rounded() / 100])
     }
 }

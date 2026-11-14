@@ -335,7 +335,7 @@ final class TutorSession: ObservableObject {
         let lines = grouper.group(strokes)
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
         // strokes_delta below zero means ink went away (lasso delete or cut, eraser); zero with the lasso is a move; above
-        // zero is writing or a paste. last_tool is the tool of the latest gesture (an undo from the wheel keeps the old label).
+        // zero is writing or a paste. last_tool is the tool of the latest gesture (an undo from the rail keeps the old label).
         env.log.record("ink_changed", [
             "strokes": strokes.count, "lines": lines.count, "revision": drawingRevision,
             "strokes_delta": strokes.count - lastStrokeCount, "last_tool": lastTool
@@ -367,7 +367,7 @@ final class TutorSession: ObservableObject {
 
     func erasePage() {
         if let canvas, !canvas.drawing.strokes.isEmpty {
-            // Undoable from the wheel's undo button, so a fast wipe is never a lost page.
+            // Undoable from the rail's undo button or a two-finger tap, so a fast wipe is never a lost page.
             let previous = canvas.drawing
             canvas.undoManager?.registerUndo(withTarget: canvas) { [weak self] restored in
                 restored.drawing = previous
