@@ -87,16 +87,19 @@ enum PageGeometry {
     }
 
     /// Where to scroll so a mark (and the callout beside or under it) is on screen. Nil when it already is.
-    /// A mark that is off screen or inside `calloutAllowance` of an edge is brought to the middle of the screen horizontally and
-    /// about a third of the way down, which leaves room for a callout below it. The zoom does not change (the student chose it).
+    /// Each axis is handled on its own: where the mark is off screen or inside `calloutAllowance` of an edge, it is brought to the
+    /// middle of the screen horizontally or about a third of the way down (room for a callout below it); an axis already in view
+    /// does not move. The zoom does not change (the student chose it).
     static func offsetToReveal(box: CGRect, offset: CGPoint, zoom: CGFloat, viewport: CGSize, contentSize: CGSize) -> CGPoint? {
         let allowance = calloutAllowance / max(zoom, 0.01)
         let visible = visibleRect(offset: offset, viewport: viewport, zoom: zoom)
         let safe = visible.insetBy(dx: min(allowance, visible.width / 2), dy: min(allowance, visible.height / 2))
-        if safe.contains(box.origin) && safe.contains(CGPoint(x: box.maxX, y: box.maxY)) { return nil }
+        // Edges count as inside on both axes (CGRect.contains would exclude the far edge and scroll a mark that sits exactly on it).
         let inX = box.minX >= safe.minX && box.maxX <= safe.maxX
+        let inY = box.minY >= safe.minY && box.maxY <= safe.maxY
+        if inX && inY { return nil }
         let wanted = CGPoint(x: inX ? offset.x : box.midX * zoom - viewport.width * 0.5,
-                             y: box.midY * zoom - viewport.height * 0.35)
+                             y: inY ? offset.y : box.midY * zoom - viewport.height * 0.35)
         let target = clampedOffset(wanted, contentSize: contentSize, viewport: viewport)
         return abs(target.x - offset.x) < 1 && abs(target.y - offset.y) < 1 ? nil : target
     }

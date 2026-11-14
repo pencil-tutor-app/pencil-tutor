@@ -333,6 +333,7 @@ final class WireAndSnapshotTests: XCTestCase {
         let rightOfScreen = CGRect(x: 4000, y: 300, width: 500, height: 40)
         let right = try XCTUnwrap(PageGeometry.offsetToReveal(box: rightOfScreen, offset: .zero, zoom: 1, viewport: screen, contentSize: content))
         XCTAssertEqual(right.x, 4250 - 590, accuracy: 0.001, "centred sideways")
+        XCTAssertEqual(right.y, 0, "already in view up and down: no vertical jump")
 
         let scrolledPast = try XCTUnwrap(PageGeometry.offsetToReveal(box: onScreen, offset: CGPoint(x: 3000, y: 700), zoom: 1,
                                                                      viewport: screen, contentSize: content))
