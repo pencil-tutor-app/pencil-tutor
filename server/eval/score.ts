@@ -31,6 +31,10 @@ export type Row = {
   reasoning_tokens: number | null;
   est_cost_usd: number | null;
   cost_basis: string | null;
+  // Watch role only: what the tutor said, kept for the course report (hint leak check, failure examples).
+  reason_text?: string | null;
+  hint_spoken?: string | null;
+  hint_written?: string | null;
   answer_text?: string;
   judge?: { claims_error: boolean; error_line: number | null; reveals_answer: boolean; cost_usd: number | null };
 };
