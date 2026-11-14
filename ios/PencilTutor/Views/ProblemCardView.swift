@@ -14,7 +14,8 @@ struct FlowLayout: Layout {
         var rowWidth: CGFloat = 0
         for (index, size) in sizes.enumerated() {
             let needed = rows[rows.count - 1].isEmpty ? size.width : rowWidth + spacing + size.width
-            if needed > width && !rows[rows.count - 1].isEmpty {
+            // A hair of tolerance: a row that just fits when the height is measured must still fit when it is placed.
+            if needed > width + 0.5 && !rows[rows.count - 1].isEmpty {
                 rows.append([index])
                 rowWidth = size.width
             } else {
@@ -40,7 +41,10 @@ struct FlowLayout: Layout {
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        arrange(width: proposal.width ?? .infinity, subviews: subviews).size
+        let result = arrange(width: proposal.width ?? .infinity, subviews: subviews)
+        // Report the width that was offered (not just the widest row), so the rows break in the same places when placed.
+        if let offered = proposal.width, offered.isFinite { return CGSize(width: offered, height: result.size.height) }
+        return result.size
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
