@@ -10,6 +10,8 @@
 //
 // Options: --models a,b (provider:model[:effort], effort none|low|medium|high)   --roles watch,consult
 //          --reps N   --run <name>   --pages <substring filter>   --concurrency N   --budget <usd, stop when the estimate passes it>
+//          --fixtures <subfolder of fixtures/>   (default: the BC Math 9 set; "courses" is the 14 new courses)
+//          --max-calls N   (hard cap on rows in the results file, counted across resumed runs)
 // Results go to server/eval/results/<run>.jsonl (appended, so a rerun with the same --run resumes) and a table prints at the end.
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -27,7 +29,9 @@ import { handleWatch } from "../lib/watch.js";
 import { loadRows, perMinute, summarize, table, type Page, type Row } from "./score.js";
 
 const HERE = new URL(".", import.meta.url).pathname;
-const FIXTURES = `${HERE}fixtures/`;
+// --fixtures <subfolder> picks another page set inside fixtures/ (for example "courses", built by make_course_fixtures.py).
+const FIXTURE_SET = process.argv.includes("--fixtures") ? process.argv[process.argv.indexOf("--fixtures") + 1] : undefined;
+const FIXTURES = FIXTURE_SET ? `${HERE}fixtures/${FIXTURE_SET}/` : `${HERE}fixtures/`;
 // A student code held in an in-memory store (no database), with a cap far above any eval.
 const TOKEN = "K7MQ2XAB";
 const evalStudents = new MemoryStudentStore();
@@ -167,6 +171,12 @@ async function runOne(spec: Spec, role: "watch" | "consult", page: Manifest, rep
     est_cost_usd: (log.est_cost_usd as number | null | undefined) ?? null,
     cost_basis: (log.cost_basis as string | null | undefined) ?? null,
   };
+  if (role === "watch" && res.status === 200) {
+    // What the tutor said (model-written text about a synthetic page), kept so a report can read the hints and check for leaks.
+    row.reason_text = typeof body.reason === "string" ? body.reason : null;
+    row.hint_spoken = typeof body.hint_spoken === "string" ? body.hint_spoken : null;
+    row.hint_written = typeof body.hint_written === "string" ? body.hint_written : null;
+  }
   if (role === "consult" && res.status === 200 && typeof body.answer_text === "string") {
     row.answer_text = body.answer_text;
     const problem = findProblem(page.problem_id)!;
@@ -221,6 +231,9 @@ async function main() {
   }
   console.error(`run ${runName}: ${jobs.length} calls to make (${done.size} already saved), estimated spend so far $${spent.toFixed(3)}`);
 
+  // --max-calls is a hard cap on rows in the results file (every look, failed or not, is one row), counted across resumed runs.
+  const maxCalls = Number(arg("max-calls", "0"));
+  let callsMade = have.length;
   let stopped = false;
   await pool(jobs, concurrency, async (job) => {
     if (stopped) return;
@@ -229,6 +242,12 @@ async function main() {
       console.error(`budget $${budget} reached (estimated $${spent.toFixed(3)}); stopping`);
       return;
     }
+    if (maxCalls > 0 && callsMade >= maxCalls) {
+      stopped = true;
+      console.error(`call cap ${maxCalls} reached (${callsMade} saved); stopping`);
+      return;
+    }
+    callsMade += 1;
     const row = await runOne(job.spec, job.role, job.page, job.rep, job.key);
     spent += (row.est_cost_usd ?? 0) + (row.judge?.cost_usd ?? 0);
     appendFileSync(resultsPath, JSON.stringify(row) + "\n");

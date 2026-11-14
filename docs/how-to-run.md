@@ -247,6 +247,19 @@ Model spec is `provider:model[:effort]`. It drives the real `handleWatch` / `han
 spend (default $4). Re-print a table with `tsx server/eval/score.ts server/eval/results/<run>.jsonl`. The committed run behind
 the defaults is `server/eval/results/main2.md`.
 
+**The 14 new courses (2026-11-15).** A second page set covers grades 5 to 12 and college: 3 problems per course, a correct page and a
+one-planted-mistake page each (84 pages), plus a "messy" copy of the same pages. Build, run and report (watch role only):
+
+```sh
+python3 server/eval/make_course_fixtures.py            # clean set -> server/eval/fixtures/courses/  (needs Pillow and fonttools; downloads OFL fonts)
+python3 server/eval/make_course_fixtures.py --messy    # harder copy -> server/eval/fixtures/courses-messy/
+server/node_modules/.bin/tsx --env-file=/path/to/.env.local server/eval/run-eval.ts --models openai:gpt-6-luna --roles watch \
+  --fixtures courses --run courses-my-run --max-calls 100 --budget 1
+python3 server/eval/report_courses.py server/eval/results/courses-my-run.jsonl --fixtures courses --examples
+```
+
+`--max-calls` is a hard cap on looks (rows in the results file). The findings are in `docs/evals/2026-11-15-courses-watch-eval.md`.
+
 **Pulling Edward's real handwriting for the next eval.** Debug builds only (same gate as `TutorSession.logsWords`; Release never
 writes them) save each page picture sent to watch or consult in the app's Documents folder, next to the session log, as
 `page-<time>-<session>-watch-w<N>-r<revision>.png` or `...-consult-d<id>-a<attempt>-r<revision>.png`. The session log's
