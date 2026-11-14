@@ -8,7 +8,8 @@ import { fileURLToPath } from "node:url";
 //   npm run build-courses -- --check fail (exit 1) when either file is stale; CI runs this through the tests
 //
 // A course is a folder shared/courses/<slug>/ with a problems.json. A new folder needs no code change: it is found, validated
-// and listed on the next run. An optional course.json beside it sets the title, group and grade; without one the title and
+// and listed on the next run. An optional course.json beside it sets the title, group, grade and model tier (default "standard",
+// the cheap model; "advanced" is the frontier model and needs measured handwriting results first); without one the title and
 // group are worked out from the folder name and the problems' level (and the run says so).
 //
 // The first twelve problems (ids u3-..., BC Math 9 unit 3 equations) live in shared/problems.json and are listed as one more
@@ -17,12 +18,16 @@ import { fileURLToPath } from "node:url";
 export type CourseGroup = "elementary" | "high_school" | "college";
 export const GROUP_ORDER: CourseGroup[] = ["elementary", "high_school", "college"];
 
+export type Tier = "standard" | "advanced";
+
 export type CourseEntry = {
   slug: string;
   title: string;
   group: CourseGroup;
   grade: number | null;
   level: string;
+  // Which model tier tutors this course. "standard" (the cheap model) unless course.json says "advanced".
+  tier: Tier;
   count: number;
   file: string; // path under shared/
 };
@@ -115,7 +120,7 @@ function groupFor(level: string, grade: number | null): CourseGroup {
   return level === "elementary" || level === "middle_school" ? "elementary" : "high_school";
 }
 
-type Meta = { title?: string; group?: CourseGroup; grade?: number | null; level?: string };
+type Meta = { title?: string; group?: CourseGroup; grade?: number | null; level?: string; tier?: Tier };
 
 function readMeta(dir: string, slug: string): Meta {
   const path = join(dir, "course.json");
@@ -143,6 +148,12 @@ function readMeta(dir: string, slug: string): Meta {
     if (!isText(raw.level)) throw new CourseBuildError(`course ${slug}: course.json level must be text`);
     meta.level = raw.level;
   }
+  if (raw.tier !== undefined) {
+    if (raw.tier !== "standard" && raw.tier !== "advanced") {
+      throw new CourseBuildError(`course ${slug}: course.json tier must be "standard" or "advanced"`);
+    }
+    meta.tier = raw.tier;
+  }
   return meta;
 }
 
@@ -165,7 +176,7 @@ export function buildCourses(sharedDir: string): Built {
       title = titleFromSlug(slug);
       if (fromFolder) notes.push(`course ${slug}: no course.json, so the title is "${title}" and the group is ${group}; add one to choose them`);
     }
-    entries.push({ slug, title, group, grade, level, count: list.length, file });
+    entries.push({ slug, title, group, grade, level, tier: meta.tier ?? "standard", count: list.length, file });
     for (const p of list) problems.push({ ...p, course: slug });
   };
 
@@ -202,7 +213,7 @@ export function buildCourses(sharedDir: string): Built {
   entries.sort((a, b) => rank(a) - rank(b) || (a.grade ?? 99) - (b.grade ?? 99) || a.title.localeCompare(b.title) || a.slug.localeCompare(b.slug));
 
   const manifestText = JSON.stringify({ version: 1, courses: entries }, null, 2) + "\n";
-  const courseMeta = entries.map(({ slug, title, group, grade, level }) => ({ slug, title, group, grade, level }));
+  const courseMeta = entries.map(({ slug, title, group, grade, level, tier }) => ({ slug, title, group, grade, level, tier }));
   const serverBankText =
     `{"courses":${JSON.stringify(courseMeta)},\n"problems":[\n` + problems.map((p) => JSON.stringify(p)).join(",\n") + "\n]}\n";
   return { manifestText, serverBankText, courses: entries, problems, notes };

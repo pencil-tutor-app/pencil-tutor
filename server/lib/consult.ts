@@ -4,7 +4,7 @@ import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel } from "./models.js";
 import { buildConsultPrompt, CONSULT_POLICY } from "./policy.js";
-import { findProblem, levelOf } from "./problems.js";
+import { findProblem, levelOf, tierOf } from "./problems.js";
 import { usageFields } from "./usage.js";
 
 export const SCRIPTED_CONSULT_ANSWER = "This is a scripted page report. Line one is written and the latest line looks unfinished. Ask what they did to both sides.";
@@ -50,7 +50,7 @@ export async function handleConsult(request: Request, deps: Deps = defaultDeps()
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
-  ctx.note({ course: problem.course ?? "none" });
+  ctx.note({ course: problem.course ?? "none", tier: tierOf(problem) });
 
   // A valid question to the page reader is student activity.
   await meterActivity(ctx, opened, "question");

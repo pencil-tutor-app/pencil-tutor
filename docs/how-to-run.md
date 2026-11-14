@@ -24,8 +24,9 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   a course picker (Elementary, High school, College), then the course's problem list, then the page; it remembers the last course.
 - **Voice:** ElevenLabs Eleven v4 Turbo, tap-to-talk (see Voice below). GPT-Live is a premium option, off unless a
   code's plan has it. Server endpoints: watch, ask, speak, consult, live-session, me, heartbeat, health.
-- **Models:** grade 5 to 12 problems run on OpenAI `gpt-6-luna` for watch and for ask/consult; `college` and `advanced`
-  problems (the three college courses) run on `gpt-6.1-sol` (plan amendment 14, measured for high school only; amendment 18). To try
+- **Models:** every course, college ones too, runs on OpenAI `gpt-6-luna` for watch and for ask/consult. A course moves to
+  `gpt-6.1-sol` only with `"tier": "advanced"` in its `course.json`, and only after handwriting results are measured (plan amendment
+  18; amendment 14 measured high school only). To try
   another model, set `WATCH_MODEL` / `ASK_MODEL` (high school) or `WATCH_MODEL_ADVANCED` / `ASK_MODEL_ADVANCED` in Vercel
   and redeploy; for Gemini also set the matching `_PROVIDER` to `google`. Reasoning effort: `WATCH_EFFORT`, `ASK_EFFORT`
   (`none`, `low`, `medium`, `high`; unset means the provider default).

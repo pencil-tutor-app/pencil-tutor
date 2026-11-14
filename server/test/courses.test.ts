@@ -8,7 +8,7 @@ import { buildCourses, CourseBuildError } from "../scripts/build-courses.js";
 import { handleAsk } from "../lib/ask.js";
 import { handleWatch } from "../lib/watch.js";
 import { buildAskPrompt, buildLiveInstructions, buildWatchPrompt } from "../lib/policy.js";
-import { courseCount, courseOf, findProblem, levelOf, problemCount } from "../lib/problems.js";
+import { courseCount, courseOf, findProblem, levelFor, levelOf, problemCount, tierOf } from "../lib/problems.js";
 import { askBody, captureLogs, deps, fakeModels, liveEnv, post, reply, watchBody } from "./helpers.js";
 
 const here = (rel: string) => fileURLToPath(new URL(rel, import.meta.url));
@@ -99,7 +99,7 @@ describe("course build: a new folder needs no code change", () => {
     try {
       const { courses, notes } = buildCourses(dir);
       assert.deepEqual(courses.find((c) => c.slug === "bc-calc-12"), {
-        slug: "bc-calc-12", title: "Calculus 12", group: "high_school", grade: 12, level: "college", count: 1, file: "courses/bc-calc-12/problems.json",
+        slug: "bc-calc-12", title: "Calculus 12", group: "high_school", grade: 12, level: "college", tier: "standard", count: 1, file: "courses/bc-calc-12/problems.json",
       });
       assert.equal(courses.find((c) => c.slug === "stats-1")!.group, "college");
       assert.ok(!notes.some((n) => n.includes("bc-calc-12")));
@@ -168,11 +168,38 @@ describe("lookup", () => {
     assert.equal(courseOf(findProblem("la-01")!)!.title, "Linear Algebra");
   });
 
-  it("college courses run on the advanced model, everything else on the standard one", () => {
-    assert.equal(levelOf(findProblem("c1-01")!), "advanced");
-    assert.equal(levelOf(findProblem("la-01")!), "advanced");
-    assert.equal(levelOf(findProblem("dm-01")!), "advanced");
-    for (const id of ["m5-01", "m7-01", "m8-01", "m9-01", "u3-01"]) assert.equal(levelOf(findProblem(id)!), "high_school", id);
+  it("every course runs on the standard (cheap) tier by default, college courses included", () => {
+    for (const id of ["c1-01", "la-01", "dm-01", "m5-01", "m7-01", "m8-01", "m9-01", "u3-01", "fm11-33"]) {
+      assert.equal(levelOf(findProblem(id)!), "high_school", id);
+      assert.equal(tierOf(findProblem(id)!), "standard", id);
+    }
+    assert.ok(buildCourses(SHARED).courses.every((c) => c.tier === "standard"), "no committed course escalates");
+  });
+
+  it("a course tier of advanced (course.json) or a problem level of advanced picks the frontier model; a college level alone does not", () => {
+    const p = findProblem("c1-01")!;
+    const course = courseOf(p)!;
+    assert.equal(levelFor(p, course), "high_school");
+    assert.equal(levelFor(p, { ...course, tier: "advanced" }), "advanced");
+    assert.equal(levelFor({ ...p, level: "advanced" }, course), "advanced");
+    assert.equal(levelFor({ ...p, level: "college" }, course), "high_school");
+  });
+
+  it("course.json tier is carried into the manifest and the server bank, and a bad tier fails the build", () => {
+    const dir = sandbox({ "k-1": [problem("k-01")], "k-2": [problem("k-02")] }, { "k-1": { tier: "advanced" } });
+    try {
+      const built = buildCourses(dir);
+      assert.deepEqual(built.courses.filter((c) => c.slug.startsWith("k-")).map((c) => [c.slug, c.tier]), [["k-1", "advanced"], ["k-2", "standard"]]);
+      assert.ok(built.serverBankText.includes('"slug":"k-1"') && built.serverBankText.includes('"tier":"advanced"'));
+    } finally {
+      rmSync(dir, { recursive: true });
+    }
+    const bad = sandbox({ "k-1": [problem("k-01")] }, { "k-1": { tier: "premium" } });
+    try {
+      assert.throws(() => buildCourses(bad), /tier must be "standard" or "advanced"/);
+    } finally {
+      rmSync(bad, { recursive: true });
+    }
   });
 });
 
@@ -230,7 +257,9 @@ describe("the course and level reach the tutor prompts", () => {
     await handleWatch(post("/api/watch", watchBody({ problem_id: "c1-01" })), deps(liveEnv(), calc.models));
     assert.match(calc.prompts[0]!, /Course: Calculus I/);
     const calcLog = logs.lines.filter((l) => l.endpoint === "watch").at(-1)!;
-    assert.deepEqual([calcLog.course, calcLog.level], ["calculus-1", "advanced"]);
+    assert.deepEqual([calcLog.course, calcLog.level, calcLog.tier], ["calculus-1", "high_school", "standard"]);
+    assert.equal(calcLog.model, "gpt-6-luna", "a college course runs on the cheap model by default");
+    assert.equal(watchLog.tier, "standard");
 
     const asked = fakeModels("Try the first step.");
     const a = await reply(await handleAsk(post("/api/ask", askBody({ problem_id: "la-01" })), deps(liveEnv(), asked.models)));

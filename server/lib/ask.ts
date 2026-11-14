@@ -5,7 +5,7 @@ import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
 import { buildAskPrompt } from "./policy.js";
-import { findProblem, levelOf } from "./problems.js";
+import { findProblem, levelOf, tierOf } from "./problems.js";
 import { usageFields } from "./usage.js";
 
 export const MAX_AUDIO_BYTES = 2_500_000;
@@ -51,7 +51,7 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
-  ctx.note({ course: problem.course ?? "none" });
+  ctx.note({ course: problem.course ?? "none", tier: tierOf(problem) });
 
   // A valid question is student activity.
   await meterActivity(ctx, opened, "question");

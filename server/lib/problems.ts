@@ -11,6 +11,9 @@ export type Course = {
   group: CourseGroup;
   grade: number | null;
   level: string;
+  // Which model tier tutors the course: "standard" (cheap model, the default) or "advanced" (frontier model, about ten times
+  // the cost per look). Set in the course's course.json; escalation needs measured handwriting results first.
+  tier: "standard" | "advanced";
 };
 
 export type Problem = {
@@ -20,7 +23,7 @@ export type Problem = {
   final_answer: string;
   // Slug of the course the problem belongs to. Missing means the original BC Math 9 behaviour (no course line in prompts).
   course?: string;
-  // Difficulty. Missing means high_school. college and advanced run on the frontier model.
+  // Per-problem difficulty. Only "advanced" matters to the model choice (the bank's own words, such as college, do not).
   level?: string;
 };
 
@@ -34,7 +37,11 @@ export const problemCount = bank.problems.length;
 export const courseCount = bank.courses.length;
 export const findProblem = (id: string): Problem | undefined => byId.get(id);
 export const courseOf = (problem: Problem): Course | undefined => (problem.course ? coursesBySlug.get(problem.course) : undefined);
-export const levelOf = (problem: Problem): Level => parseLevel(problem.level);
+// The model tier for a problem: advanced when its course's tier is advanced or the problem itself says so; standard otherwise.
+export const levelFor = (problem: Problem, course: Course | undefined): Level =>
+  course?.tier === "advanced" ? "advanced" : parseLevel(problem.level);
+export const levelOf = (problem: Problem): Level => levelFor(problem, courseOf(problem));
+export const tierOf = (problem: Problem): "standard" | "advanced" => (levelOf(problem) === "advanced" ? "advanced" : "standard");
 
 // One line when the function starts, so a deploy that lost or kept a course shows up in the logs.
 logLine("info", { event: "bank_loaded", courses: courseCount, problems: problemCount });

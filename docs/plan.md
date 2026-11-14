@@ -527,10 +527,13 @@ Edward asked for the new course banks (`shared/courses/<slug>/problems.json`) to
 - **Tutor level.** Every watch, ask, consult and live prompt now begins with the course and who the student is (`audienceFor`, `lib/policy.ts`):
   grade 5-7 gets short sentences and simple words, grade 8-12 the words of the course, college the standard terms. A problem with no course
   keeps the original Grade 9 tutor. Requests log `course` (the slug) next to `level`.
-- **Cost call to confirm.** The server's `Level` was `high_school` or `advanced`, and the banks write `college`. `college` now maps to
-  `advanced`, so the three college courses run on `gpt-6.1-sol` (the documented intent of "advanced"), about ten times the cost per look of
-  `gpt-6-luna`, and the advanced route has not been evaluated on handwriting. To keep them on the cheap model, drop `college` from
-  `parseLevel` in `lib/config.ts` or set `WATCH_MODEL_ADVANCED` / `ASK_MODEL_ADVANCED` to `gpt-6-luna` in Vercel.
+- **Model tier is a per-course switch, default standard (decided by the coordinator, 2026-11-14).** Every course, the three college
+  ones included, runs on the cheap tier (`gpt-6-luna`). A course opts into the frontier tier (`gpt-6.1-sol`, about ten times the cost per
+  look, which the CA$19 plan cannot carry) only with `"tier": "advanced"` in its `course.json`; `build-courses` validates it, writes it to
+  the manifest and the server bank, and `levelOf` (`lib/problems.ts`) reads it. A problem whose own `level` is `advanced` also escalates;
+  the bank's `college` level alone does not. Each watch, ask and consult request logs `course`, `tier` (`standard` or `advanced`) and
+  `level`. **Escalating a course needs measured handwriting results first**: the only eval (amendment 14) covers high school pages, and the
+  advanced route has not been measured on calculus or linear algebra handwriting. Run that eval before setting any course to advanced.
 - **Needs a deploy.** The server must be deployed for the new courses to be tutored (it looks problems up by id in its own bundled copy).
   Until then a new app build would get 422 `unknown_problem` for every course problem except `u3-..`.
 

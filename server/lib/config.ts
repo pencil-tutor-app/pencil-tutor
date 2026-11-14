@@ -5,13 +5,13 @@ export type Provider = "openai" | "google";
 export type Role = "watch" | "ask" | "stt" | "speak" | "live";
 type ProviderRole = Exclude<Role, "speak" | "live">;
 
-// How hard a problem is. `high_school` (the default; grade 5 to 12 problems all use it) runs on the cheap model; `advanced`
-// runs on the frontier model. A problem whose level is `college` or `advanced` is advanced (the course banks write `college`).
-// Each level has its own env variables (see roleConfig).
+// How hard a problem is. `high_school` (the default; every course, college ones too) runs on the cheap model; `advanced`
+// runs on the frontier model and is chosen only by a problem's `level: "advanced"` or a course's `tier: "advanced"` in its
+// course.json (see problems.ts levelOf). Each level has its own env variables (see roleConfig).
 export type Level = "high_school" | "advanced";
 export const DEFAULT_LEVEL: Level = "high_school";
 export function parseLevel(value: string | undefined): Level {
-  return value === "advanced" || value === "college" ? "advanced" : DEFAULT_LEVEL;
+  return value === "advanced" ? "advanced" : DEFAULT_LEVEL;
 }
 
 // Reasoning effort sent to the model. Unset means the provider's own default.

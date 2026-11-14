@@ -157,10 +157,11 @@ The script, for the iPad UI test:
 Provider and model are environment variables, set per role and per difficulty level. Checked against the vendors' own pages on
 2026-11-13 and against the keys' model lists on 2026-11-14. `ask` is also what `/api/consult` uses.
 
-A problem has a `level` (`high_school` when missing). `college` and `advanced` problems are **advanced**; every other level
-(`elementary`, `middle_school`, `high_school`) uses the high school row (`parseLevel` in `lib/config.ts`). So the three college courses
-(calculus-1, linear-algebra, discrete-math) now run on `gpt-6.1-sol`, about ten times the cost per look of `gpt-6-luna`. The level
-picks which set of variables applies:
+Which row a problem uses is its **tier**: `standard` (the high school row, the cheap model) unless its course's `course.json` says
+`"tier": "advanced"` or the problem's own `level` is `advanced` (`levelOf` in `lib/problems.ts`). The bank's `college` level does not
+escalate: all 15 courses, calculus-1, linear-algebra and discrete-math included, are standard. The advanced model costs about ten times
+more per look, so a course should move only after handwriting results for it are measured. Every request logs `course` and `tier`. The
+level picks which set of variables applies:
 
 | variable (high school) | default (openai) | default (google) | advanced: variable and default (openai) |
 |---|---|---|---|
@@ -210,7 +211,7 @@ being written in real use, `WATCH_MODEL=gpt-6.1-terra` (same accuracy in the eva
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, course (the course slug, or `none`), effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, `course` (the course slug, or `none`), `tier` (`standard` or `advanced`; watch, ask, consult), effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 
@@ -229,7 +230,7 @@ Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`
 ## Problem banks: `shared/problems.json` and `shared/courses/<slug>/`
 
 One folder per course under `shared/courses/` holds `problems.json` (same fields as below) and a README. An optional `course.json`
-(`{ "title": "BC Math 5", "group": "elementary", "grade": 5 }`; `group` is `elementary`, `high_school` or `college`; `grade` is
+(`{ "title": "BC Math 5", "group": "elementary", "grade": 5, "tier": "standard" }`; `tier` is `standard` (default, the cheap model) or `advanced` (the frontier model, about ten times the cost; only after handwriting results are measured); `group` is `elementary`, `high_school` or `college`; `grade` is
 `null` for college) sets how the picker shows it. Without one, `build-courses` works the title out from the folder name
 (`bc-fmpc-10` becomes "BC Foundations of Math and Pre-calculus 10"), the grade from the trailing number and the group from the grade
 (7 and below elementary) or a `college` level, and prints a note. The original 12 problems stay in `shared/problems.json` and are

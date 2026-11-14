@@ -7,6 +7,7 @@
       "group": "elementary",
       "grade": 5,
       "level": "elementary",
+      "tier": "standard",
       "count": 90,
       "file": "courses/bc-math-5/problems.json"
     },
@@ -16,6 +17,7 @@
       "group": "elementary",
       "grade": 6,
       "level": "elementary",
+      "tier": "standard",
       "count": 91,
       "file": "courses/bc-math-6/problems.json"
     },
@@ -25,6 +27,7 @@
       "group": "elementary",
       "grade": 7,
       "level": "middle_school",
+      "tier": "standard",
       "count": 64,
       "file": "courses/bc-math-7/problems.json"
     },
@@ -34,6 +37,7 @@
       "group": "high_school",
       "grade": 8,
       "level": "middle_school",
+      "tier": "standard",
       "count": 70,
       "file": "courses/bc-math-8/problems.json"
     },
@@ -43,6 +47,7 @@
       "group": "high_school",
       "grade": 9,
       "level": "high_school",
+      "tier": "standard",
       "count": 49,
       "file": "courses/bc-math-9/problems.json"
     },
@@ -52,6 +57,7 @@
       "group": "high_school",
       "grade": 9,
       "level": "high_school",
+      "tier": "standard",
       "count": 12,
       "file": "problems.json"
     },
@@ -61,6 +67,7 @@
       "group": "high_school",
       "grade": 10,
       "level": "high_school",
+      "tier": "standard",
       "count": 54,
       "file": "courses/bc-fmpc-10/problems.json"
     },
@@ -70,6 +77,7 @@
       "group": "high_school",
       "grade": 11,
       "level": "high_school",
+      "tier": "standard",
       "count": 60,
       "file": "courses/bc-fm-11/problems.json"
     },
@@ -79,6 +87,7 @@
       "group": "high_school",
       "grade": 11,
       "level": "high_school",
+      "tier": "standard",
       "count": 118,
       "file": "courses/bc-pc-11/problems.json"
     },
@@ -88,6 +97,7 @@
       "group": "high_school",
       "grade": 12,
       "level": "high_school",
+      "tier": "standard",
       "count": 77,
       "file": "courses/bc-calc-12/problems.json"
     },
@@ -97,6 +107,7 @@
       "group": "high_school",
       "grade": 12,
       "level": "high_school",
+      "tier": "standard",
       "count": 46,
       "file": "courses/bc-fm-12/problems.json"
     },
@@ -106,6 +117,7 @@
       "group": "high_school",
       "grade": 12,
       "level": "high_school",
+      "tier": "standard",
       "count": 84,
       "file": "courses/bc-pc-12/problems.json"
     },
@@ -115,6 +127,7 @@
       "group": "college",
       "grade": null,
       "level": "college",
+      "tier": "standard",
       "count": 70,
       "file": "courses/calculus-1/problems.json"
     },
@@ -124,6 +137,7 @@
       "group": "college",
       "grade": null,
       "level": "college",
+      "tier": "standard",
       "count": 70,
       "file": "courses/discrete-math/problems.json"
     },
@@ -133,6 +147,7 @@
       "group": "college",
       "grade": null,
       "level": "college",
+      "tier": "standard",
       "count": 69,
       "file": "courses/linear-algebra/problems.json"
     }
