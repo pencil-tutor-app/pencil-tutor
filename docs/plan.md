@@ -506,6 +506,10 @@ taps), and against iPadOS's own three-finger gestures; finger-drawing mode (no P
 dot; the voice states "Connecting voice...", "Reconnect voice" and "Listening" (laid out by the same rules, not captured); a window
 shorter than 700 pt (Split View), where the rail scrolls.
 
+### Amendment (2026-11-14): opt-in tutor memory, phase 1
+
+Edward's decision: memory is opt-in only. Nothing is remembered about a student unless a parent or guardian (or an adult student) has explicitly agreed; without it the tutor works as before. Consent is a short plain-language screen with a link to a full policy, not a long policy alone (OPC and OIPC joint *Guidelines for obtaining meaningful consent*; PIPA ss. 6 to 9). Built on branch `tutor-memory`: server `lib/record/`, migration `004_student_memory.sql`, `/api/memory`, `/api/privacy`, `scripts/codes consent|note|export|forget|forget-inactive`, the iPad consent screen, "What the tutor remembers" and a Settings status. Edward's notes can only reword the spoken hint after the watch call has decided (a separate switch, off by default). Plan, three review rounds (REDO, REDO, REDO; the loop was capped at three) and the open objections: `docs/tutor-memory-plan.md`. Draft policy: `docs/privacy-policy.md`. Deploy order: `docs/how-to-run.md`.
+
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
   floor check only. Mitigation: session log turns real use into the test.

@@ -81,15 +81,17 @@ function capturing(): { models: ModelFactory; firstText: () => string | null } {
   const models: ModelFactory = {
     ...realModels,
     language(cfg, apiKey) {
-      const inner = realModels.language(cfg, apiKey) as Exclude<LanguageModel, string>;
+      const inner = realModels.language(cfg, apiKey) as unknown as {
+        doGenerate: (options: unknown) => Promise<{ content: { type: string; text?: string }[] }>;
+      };
       const original = inner.doGenerate.bind(inner);
-      return Object.assign(Object.create(inner), {
-        doGenerate: async (options: Parameters<typeof original>[0]) => {
+      return Object.assign(Object.create(inner as object), {
+        doGenerate: async (options: unknown) => {
           const out = await original(options);
-          if (first === null) first = out.content.map((c) => (c.type === "text" ? c.text : "")).join("");
+          if (first === null) first = out.content.map((c) => (c.type === "text" ? (c.text ?? "") : "")).join("");
           return out;
         },
-      }) as LanguageModel;
+      }) as unknown as LanguageModel;
     },
   };
   return { models, firstText: () => first };

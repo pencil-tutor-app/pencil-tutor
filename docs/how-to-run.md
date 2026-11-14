@@ -13,7 +13,7 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   server and can be deleted from Vercel once no old build is in use.
 - **Database:** Neon Postgres (Vercel Marketplace, Free plan, resource
   `pencil-tutor-db`), connected to the project as `DATABASE_URL`. Holds student
-  codes and monthly usage only.
+  codes and monthly usage, plus the opt-in student memory tables for families who agreed (migration 004).
 - **iPad app:** `ios/`, built and tested on GitHub Actions
   (https://github.com/giaphutran12/pencil-tutor, private). CI draws on a
   simulated iPad and saves screenshots of a mistake being circled and of a
@@ -97,6 +97,26 @@ notices, checks live voice is refused on a plan without it, and deletes both cod
 app wakes it with `GET /api/me`). If the database is unreachable the server answers 503 `database_unavailable` and the app keeps
 the stored code. Every request logs `db_queries` and `db_ms`. Money: Neon Free is $0; if its compute hours (100 a month) ever ran
 out, the plan would need a paid tier (Edward's call).
+
+## Student memory (opt-in, off by default)
+
+Design and review history: `docs/tutor-memory-plan.md`. Draft policy and consent wording (not legal advice, to be reviewed with a BC privacy lawyer): `docs/privacy-policy.md`. Nothing is remembered about a code until a parent or guardian, or an adult student, agrees.
+
+```
+server/scripts/codes consent CODE                  # who agreed, how, which text version, when
+server/scripts/codes consent --list                # every code: memory on or off
+server/scripts/codes consent CODE --by parent|adult [--form-date YYYY-MM-DD]   # record a signed paper form (no name stored)
+server/scripts/codes consent CODE --withdraw [--erase]
+server/scripts/codes note add CODE "text" [--on YYYY-MM-DD] [--pin]   # refused without consent; write it as if the family will read it
+server/scripts/codes note list CODE      /   note delete CODE ID
+server/scripts/codes export CODE                   # everything stored about a code, as JSON (an access request)
+server/scripts/codes forget CODE --yes [--including-consent-log]       # withdraw and delete; run again if a request was in flight
+server/scripts/codes forget-inactive [--months 12] [--yes]             # dry run unless --yes
+```
+
+**Rollout order.** (1) Merge. (2) `server/scripts/codes migrate` (applies `004`, additive). (3) Deploy the server with `STUDENT_RECORD` unset: nothing changes for anyone. (4) Ship the app; it shows no memory controls while the server is silent or off. (5) Before any family is asked: a lawyer hour on the consent text and the policy; fill the contact line in the policy. (6) Set `STUDENT_RECORD=on` in Vercel production and redeploy; then check on the deployed app with a test code: agree, withdraw, erase, and the timings in the logs. (7) Per family: in-app agreement or `scripts/codes consent` from a signed form. Leave `STUDENT_RECORD_REWORD` unset until the open review objections in the plan (section 12) are decided.
+
+**If you change the consent text** (`server/lib/record/notice.ts`), bump `NOTICE_VERSION`: the test that pins the text fails otherwise, and everyone is asked again. After editing `docs/privacy-policy.md` run `npm run sync-policy` in `server/`.
 
 ## Premium: live voice (GPT-Live-1, off by default)
 

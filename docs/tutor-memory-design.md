@@ -1,6 +1,8 @@
 # Pencil Tutor: the student memory layer (design)
 
-Written 2026-11-14. Owner: Edward. Design only: nothing in this document is built, and no code changed. Personal side project (not BLI work).
+Written 2026-11-14. Owner: Edward. Personal side project (not BLI work).
+
+**Status (2026-11-14, later the same day): phase 1 is built on branch `tutor-memory`, as an OPT-IN, and changed in four ways from this document.** (1) Memory is off for everyone until a parent or guardian (or an adult student) agrees; the consent record, text and policy are in `docs/tutor-memory-plan.md` and `docs/privacy-policy.md`. (2) Edward's notes never enter the watch call that decides whether to interrupt; they can only reword the SPOKEN hint after that decision, behind a separate switch (three plan reviews, section 12 of the plan, lists what stayed open). (3) No `cite` field and no shadow mode; a hint may not refer to the past at all. (4) The per-skill record is deferred to phase 2. The rest of this document is the original design and is unchanged.
 
 Plain words first, the official term once at the end of a section where there is one.
 
