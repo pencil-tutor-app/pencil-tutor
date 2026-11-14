@@ -15,6 +15,7 @@ import { DatabaseError, openDb } from "./db.js";
 import { RequestCtx, readBearerCode } from "./http.js";
 import { logLine } from "./log.js";
 import type { LiveGateway } from "./live.js";
+import type { RecordStore } from "./record/store.js";
 import { realModels, type ModelFactory } from "./models.js";
 import {
   allowanceOf,
@@ -35,6 +36,8 @@ export type Deps = {
   live?: LiveGateway;
   students?: StudentStore;
   voice?: VoiceGateway;
+  // The opt-in student record (lib/record). Unset means the real one when STUDENT_RECORD=on, otherwise none.
+  record?: RecordStore;
   now?: () => Date;
 };
 export const defaultDeps = (): Deps => ({ env: process.env, models: realModels });

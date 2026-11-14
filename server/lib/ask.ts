@@ -6,6 +6,7 @@ import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
 import { buildAskPrompt } from "./policy.js";
 import { findProblem, levelOf } from "./problems.js";
+import { afterQuestion } from "./record/runtime.js";
 import { usageFields } from "./usage.js";
 
 export const MAX_AUDIO_BYTES = 2_500_000;
@@ -54,6 +55,7 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
 
   // A valid question is student activity.
   await meterActivity(ctx, opened, "question");
+  await afterQuestion(ctx, deps, opened, { sessionId: req.session_id, problemId: problem.id });
 
   const echo = req.drawing_revision === undefined ? {} : { drawing_revision: req.drawing_revision };
   const done = (transcript: string, answer: string, model: string, label: string) => {

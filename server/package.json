@@ -10,7 +10,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
-    "sync-problems": "cp ../shared/problems.json data/problems.json"
+    "sync-problems": "cp ../shared/problems.json data/problems.json",
+    "sync-policy": "tsx scripts/sync-policy.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.118",
@@ -20,6 +21,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
     "@types/node": "^26.6.6",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"

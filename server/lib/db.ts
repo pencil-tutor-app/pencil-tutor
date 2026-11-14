@@ -7,8 +7,13 @@ import type { Env } from "./config.js";
 
 export type Row = Record<string, unknown>;
 
+export type QueryOptions = {
+  // A shorter limit than the default 5 seconds, for paths that must never hold up a student's request.
+  timeoutMs?: number;
+};
+
 export interface Db {
-  query(text: string, params?: unknown[]): Promise<Row[]>;
+  query(text: string, params?: unknown[], options?: QueryOptions): Promise<Row[]>;
 }
 
 // A database failure as a label only (the driver's message can echo the connection string or a value).
@@ -40,9 +45,9 @@ export function openDb(env: Env): Db | undefined {
   }
   const client = sql;
   return {
-    async query(text, params = []) {
+    async query(text, params = [], options) {
       try {
-        const rows = await client.query(text, params, { fetchOptions: { signal: AbortSignal.timeout(DB_TIMEOUT_MS) } });
+        const rows = await client.query(text, params, { fetchOptions: { signal: AbortSignal.timeout(options?.timeoutMs ?? DB_TIMEOUT_MS) } });
         return rows as Row[];
       } catch (err) {
         throw new DatabaseError(databaseErrorLabel(err));

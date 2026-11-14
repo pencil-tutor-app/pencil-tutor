@@ -20,7 +20,7 @@ const wait = (label: string, reason: string): WatchResult => ({
   label,
 });
 
-const squash = (s: string) => s.toLowerCase().replace(/[−–]/g, "-").replace(/\s+/g, "");
+export const squash = (s: string) => s.toLowerCase().replace(/[−–]/g, "-").replace(/\s+/g, "");
 
 // Validates what the model said. Anything unusable becomes a wait with a labelled reason; this never throws.
 export function finalizeDecision(raw: unknown, lines: PageLine[], problem: Problem): WatchResult {

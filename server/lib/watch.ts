@@ -6,6 +6,7 @@ import { checkImage } from "./image.js";
 import { runWatchModel } from "./models.js";
 import { buildWatchPrompt, HistoryEntrySchema, LineSchema, MAX_HISTORY, MAX_LINES } from "./policy.js";
 import { findProblem, levelOf } from "./problems.js";
+import { afterLook } from "./record/runtime.js";
 import { usageFields } from "./usage.js";
 
 const WatchRequestSchema = z.object({
@@ -87,6 +88,10 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
           }
         : finalizeDecision(out.raw, req.lines, problem);
   }
+
+  // Opt-in student memory (lib/record): records the look for a student who agreed and may reword the SPOKEN hint. The decision
+  // above, and the written hint, are never touched by it. With no consent, or the switch off, this returns the result unchanged.
+  result = await afterLook(ctx, deps, opened, { sessionId: req.session_id, problem, revision: req.drawing_revision, result });
 
   ctx.note({ action: result.action, line: result.line, reason_label: result.label });
   return ctx.respond(

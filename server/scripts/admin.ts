@@ -1,4 +1,6 @@
 import { openDb } from "../lib/db.js";
+import { NOTICE_VERSION } from "../lib/record/notice.js";
+import { RecordAdmin } from "../lib/record/admin.js";
 import { StudentAdmin, type AdminStudent } from "../lib/students-admin.js";
 import { DEFAULT_MONTHLY_CAP_SECONDS, isValidCode, normalizeCode, vancouverMonth } from "../lib/students.js";
 
@@ -18,6 +20,21 @@ const USAGE = `Pencil Tutor student codes
   scripts/codes enable CODE                     turn it back on
   scripts/codes live CODE on|off                allow or forbid the premium live voice
   scripts/codes delete CODE --yes               remove a code and its usage (for test codes)
+
+Student memory (opt-in; nothing is remembered about a code until a parent or guardian, or an adult student, has agreed):
+  scripts/codes consent CODE                    show who agreed, how, which text version, when
+  scripts/codes consent --list                  every code: memory on or off
+  scripts/codes consent CODE --by parent|adult [--form-date YYYY-MM-DD]
+                                                record an agreement from a signed paper form (no name is stored)
+  scripts/codes consent CODE --withdraw         turn memory off (add --erase to delete the record as well)
+  scripts/codes note add CODE "text" [--on YYYY-MM-DD] [--pin]
+                                                a note after a lesson (refused without consent; write it as if the family will read it)
+  scripts/codes note list CODE                  scripts/codes note delete CODE ID
+  scripts/codes export CODE                     everything stored about a code, as JSON (answers an access request)
+  scripts/codes forget CODE --yes [--including-consent-log]
+                                                withdraw and delete the record; safe to run again
+  scripts/codes forget-inactive [--months 12] [--yes]
+                                                codes unused for N months that still hold record data (dry run unless --yes)
 
 CODE can be typed with or without the dash, in any case.`;
 
@@ -142,6 +159,100 @@ async function main(argv: string[]): Promise<number> {
         return 1;
       }
       console.log(`${show(code)}: deleted`);
+      return 0;
+    }
+    case "consent": {
+      const records = new RecordAdmin(db);
+      if (args[0] === "--list") {
+        console.log("text version now: " + NOTICE_VERSION);
+        for (const r of await records.list()) console.log(show(r.code) + "   log id " + r.hash + "   memory " + (r.on ? "ON" : "off") + (r.version && r.version !== NOTICE_VERSION ? "   (agreed to older text " + r.version + ")" : ""));
+        return 0;
+      }
+      const code = codeArg(args);
+      const id = await records.idOf(code);
+      if (!id) { console.error("no such code: " + show(code)); return 1; }
+      if (args.includes("--withdraw")) {
+        const done = await records.withdraw(id, args.includes("--erase"));
+        console.log(show(code) + ": " + (done.withdrawn ? "memory turned off" : "memory was not on") + (args.includes("--erase") ? "; deleted " + done.attempts + " attempts, " + done.hints + " hint events, " + done.notes + " notes" : ""));
+        return 0;
+      }
+      const by = option(args, "--by");
+      if (by !== undefined) {
+        if (by !== "parent" && by !== "adult") throw new Error("--by must be parent or adult");
+        const formDate = option(args, "--form-date") ?? null;
+        if (formDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(formDate)) throw new Error("--form-date must look like 2026-11-14");
+        await records.recordConsent(id, by === "parent" ? "parent_guardian" : "adult_student", formDate);
+        console.log(show(code) + ": agreement recorded (" + (by === "parent" ? "parent or guardian" : "adult student") + ", text version " + NOTICE_VERSION + (formDate ? ", form dated " + formDate : "") + "); memory is on");
+        return 0;
+      }
+      const c = await records.consentOf(id);
+      console.log(c ? show(code) + ": " + (c.granted ? "agreed" : "withdrawn") + " by " + (c.givenBy ?? "-") + " via " + c.recordedVia + ", text version " + c.noticeVersion + (c.noticeVersion !== NOTICE_VERSION ? " (older than " + NOTICE_VERSION + ": memory is off until they agree again)" : "") + ", " + c.at + (c.evidenceOn ? ", form dated " + c.evidenceOn : "") : show(code) + ": no agreement on record; memory is off");
+      return 0;
+    }
+    case "note": {
+      const records = new RecordAdmin(db);
+      const [sub, ...rest] = args;
+      const code = codeArg(rest);
+      const id = await records.idOf(code);
+      if (!id) { console.error("no such code: " + show(code)); return 1; }
+      if (sub === "add") {
+        const text = rest[1];
+        if (!text || text.startsWith("--")) throw new Error('give the note in quotes: note add CODE "text"');
+        if (text.length > 500) throw new Error("a note is at most 500 characters (it is " + text.length + ")");
+        const on = option(rest, "--on") ?? new Intl.DateTimeFormat("en-CA", { timeZone: "America/Vancouver" }).format(new Date());
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(on)) throw new Error("--on must look like 2026-11-14");
+        const noteId = await records.addNote(id, text, on, rest.includes("--pin"));
+        if (!noteId) { console.error(show(code) + ": no agreement on record, so no note was saved"); return 1; }
+        console.log(show(code) + ": note " + noteId + " saved for " + on + " (" + text.length + " characters)");
+        return 0;
+      }
+      if (sub === "list") {
+        const notes = await records.listNotes(id);
+        console.log(notes.length ? notes.map((n) => "#" + n.id + "  " + n.sessionOn + (n.pinned ? "  pinned" : "") + "  " + n.body).join("\n") : "no notes");
+        return 0;
+      }
+      if (sub === "delete") {
+        const noteId = rest[1];
+        if (!noteId || !/^\d+$/.test(noteId)) throw new Error("give the note id: note delete CODE ID");
+        console.log((await records.deleteNote(id, noteId)) ? "note " + noteId + " deleted" : "no such note for that code");
+        return 0;
+      }
+      throw new Error("note add, note list or note delete");
+    }
+    case "export": {
+      const code = codeArg(args);
+      const records = new RecordAdmin(db);
+      const id = await records.idOf(code);
+      if (!id) { console.error("no such code: " + show(code)); return 1; }
+      console.log(JSON.stringify(await records.exportAll(id, code), null, 2));
+      return 0;
+    }
+    case "forget": {
+      const code = codeArg(args);
+      if (!args.includes("--yes")) throw new Error("this deletes the record for good; add --yes to confirm");
+      const records = new RecordAdmin(db);
+      const id = await records.idOf(code);
+      if (!id) { console.error("no such code: " + show(code)); return 1; }
+      const done = await records.withdraw(id, true);
+      const log = args.includes("--including-consent-log") ? await records.deleteConsentLog(id) : 0;
+      console.log(show(code) + ": deleted " + done.attempts + " attempts, " + done.hints + " hint events, " + done.notes + " notes" + (done.withdrawn ? "; memory turned off" : "") + (args.includes("--including-consent-log") ? "; " + log + " consent log rows" : "; consent log kept") + ". Run again if a request was in flight.");
+      return 0;
+    }
+    case "forget-inactive": {
+      const months = Number(option(args, "--months") ?? "12");
+      if (!Number.isInteger(months) || months < 1 || months > 120) throw new Error("--months must be a whole number from 1 to 120");
+      const records = new RecordAdmin(db);
+      const stale = await records.inactive(months);
+      if (!stale.length) { console.log("no code with record data has been unused for " + months + " months"); return 0; }
+      for (const s of stale) {
+        if (args.includes("--yes")) {
+          const done = await records.withdraw(s.id, true);
+          console.log("log id " + s.hash + " (last used " + s.lastUsed.slice(0, 10) + "): deleted " + done.attempts + " attempts, " + done.hints + " hint events, " + done.notes + " notes");
+        } else {
+          console.log("log id " + s.hash + " (last used " + s.lastUsed.slice(0, 10) + "): would be deleted");
+        }
+      }
+      if (!args.includes("--yes")) console.log("dry run: add --yes to delete");
       return 0;
     }
     default:
