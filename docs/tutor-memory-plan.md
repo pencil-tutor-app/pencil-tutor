@@ -4,12 +4,14 @@ Written 2026-11-14. Branch `tutor-memory`. Implements phase 1 of `docs/tutor-mem
 
 Not legal advice. The consent text and `docs/privacy-policy.md` are drafts to review with a BC privacy lawyer before any family is asked.
 
+**Revision 2 (after plan review 1, verdict REDO, 2026-11-14).** The reviewer's central point, accepted: in revision 1 the notes entered the same model call that decides whether to interrupt, so "notes only shape wording" rested on a prompt sentence and a phrase filter, and keeping an interrupt while swapping its words could preserve a false accusation (`watch.ts:69`, `decision.ts:26`). Revision 2 makes the promise structural: **the detection call is untouched and never sees a note.** Notes act only in a second, text-only step that runs after detection has decided to interrupt and can only reword the hint (section 4). The reviewer offered the other branch (accept and measure prompt influence); I chose strict independence because it matches Edward's design rule ("memory never changes whether the tutor interrupts", design 5) and "a false alarm is the worst failure", and it is provable by a byte-identity test instead of a statistical eval. Cost: one extra small text call, and about one extra second, only on an interrupt, only for a consenting student. Other review points taken: the neutral-hint substitution, the in-memory database twin, the keyword test of the notice and the 50-row dashboard are cut; the notice text is now pinned by hash; management stays available when recording is switched off; the leak check for hints is made real. Points overruled with a reason are in section 12.
+
 ## 1. What this slice is, and is not
 
 In:
 
 1. A consent record on the server (who agreed, which text version, when, how it was recorded) and a gate every memory feature passes through.
-2. Edward's session notes per student, injected into the watch prompt when (and only when) consent is on.
+2. Edward's session notes per student, used to **reword** a hint after detection has already decided to give one, when (and only when) consent is on. Detection itself is unchanged.
 3. Silent recording of attempts and hint events (counts, ids, line numbers; no pictures, no audio, no words), consent-gated.
 4. `scripts/codes` commands: `consent`, `note add|list|delete`, `export`, `forget`, `forget-inactive`.
 5. The rule "the tutor may only refer to dated history that is on record", made mechanical (section 5).
@@ -21,8 +23,9 @@ Out, on purpose (each is a cut I would defend):
 
 - **Per-skill record (the design's `skill_state`): deferred to phase 2.** Reasons: problems on `main` carry no skill key (`shared/courses/*/problems.json` fields are `id, level, prompt_*, worked_solution, final_answer, source`; the `skills.json` contract of design section 6.1 was never agreed), and there is no "solved" signal to count (design section 2: the server cannot tell finished-and-right from nothing-wrong-yet; the signal needs a new model field, `work_state`, in the highest-stakes call). A per-skill table filled with attempt counts only would look like mastery data and not be. The attempts recorded now (per problem id) are the raw material for it.
 - No `student_profile`, `skill_state`, `problem_stats`, `student_misconception`, `hint_stats`, `session_summary`, `review_flag`. No new model fields, no hint rungs, no shadow mode (opt-in per student replaces it: Edward's own test code is the shadow).
-- Memory is injected into `/api/watch` only. `/api/ask`, `/api/consult` and the live voice get no brief in this slice (they only record a question count).
-- The one phrase of the design not built as written: a `cite` field in the watch decision. It changes the schema of the highest-stakes call and is phase 2's job. In its place the phase 1 rule is stricter: **a hint may not refer to the past at all**; notes only shape wording.
+- Memory touches `/api/watch` hints only. `/api/ask`, `/api/consult` and the live voice get no notes (they only record a question count). The live voice speaks watch hints, so it gets reworded hints for free.
+- Not built as the design wrote it: a `cite` field in the watch decision (it changes the highest-stakes call's schema; phase 2). In its place the phase 1 rule is stricter: **a hint may not refer to the past at all**; notes only shape wording.
+- Not in this slice (review 1): a second grant UI path beyond what Edward asked for, a 50-row dashboard, an in-memory database twin, a keyword test of the notice, neutral-hint substitution.
 
 ## 2. Consent: what the law asks, and what the screen does
 
@@ -55,6 +58,7 @@ create table if not exists consent_events (          -- append-only; the latest 
   given_by text check (given_by in ('parent_guardian', 'adult_student')),   -- null on a withdrawal
   recorded_via text not null check (recorded_via in ('app', 'admin')),
   notice_version text not null,
+  notice_hash text,                                   -- SHA-256 of the exact text shown (null on a withdrawal)
   evidence_on date,                                   -- admin path: the date on the signed form
   at timestamptz not null default now()
 );
@@ -76,7 +80,6 @@ create table if not exists attempt (                  -- one row per (student, a
   session_id text not null,
   problem_id text not null,
   looks integer not null default 0,
-  interrupts integer not null default 0,
   asks integer not null default 0,
   first_at timestamptz not null default now(),
   last_at timestamptz not null default now(),
@@ -96,19 +99,20 @@ create table if not exists hint_event (               -- one per interrupt; no h
 create index if not exists hint_event_student on hint_event (student_id, at desc);
 ```
 
-Names follow the design where it named a table (`consent_events`, `human_note`, `attempt`, `hint_event`); columns are the subset phase 1 can fill honestly. Stored: ids, counts, dates, line numbers, Edward's notes. Not stored: names, pictures, audio, transcripts, hint text, anything the student wrote or said. The session id is the app's random per-launch UUID.
+Names follow the design where it named a table (`consent_events`, `human_note`, `attempt`, `hint_event`); columns are the subset phase 1 can fill honestly. Stored: ids, counts, dates, line numbers, Edward's notes. Not stored: names, pictures, audio, transcripts, hint text, anything the student wrote or said. The session id is the app's random UUID, created per problem screen. Interrupts are counted from `hint_event` rows (idempotent under retries), not stored twice. The server tables hold no hint text; the device session log and live context do hold hints (see section 12).
 
 Hot queries, all index-backed, no `OFFSET`:
 
 | query | when | shape |
 |---|---|---|
-| brief read | each `/api/watch` when the flag is on | one statement: latest `consent_events` row for the student (`consent_events_latest`), and only if it is a current grant, the top 3 notes by `human_note_pick` (`limit 3`) |
+| notes read | each `/api/watch` when the flag is on | one statement: latest `consent_events` row for the student (`consent_events_latest`), and only if it is a current grant, the top 3 notes by `human_note_pick` (`limit 3`) |
 | look write | each consenting `/api/watch` | one statement: consent check in a CTE, `insert into attempt ... on conflict (student_id, session_id, problem_id) do update` returning id, then `insert into hint_event ... on conflict do nothing` when the look interrupted |
 | question write | each `/api/ask`, `/api/consult` when the flag is on | same attempt upsert, `asks + 1`, consent-checked in SQL |
-| status | `GET /api/memory` | latest consent row, three counts (`count(*)` over one student's rows, tens to hundreds of rows), the 50 most recent attempts (`attempt_recent`) |
+| status | `GET /api/memory` | latest consent row, three counts (`count(*)` over one student's rows, tens to hundreds of rows), the 10 most recent attempts (`attempt_recent`), each with its hint count |
 | erase | on request | one statement, data-modifying CTEs, returns the counts it deleted |
 
 Target under 50 ms warm (design aim; Neon measured 5 to 23 ms warm for a lookup). Measured in the logs (`memory_read_ms`, `memory_write_ms`) once running; not measured before deploy and not claimed.
+
 
 ## 4. Server
 
@@ -116,42 +120,44 @@ New code lives in `server/lib/record/` (the design's chosen home, so nothing is 
 
 | file | what |
 |---|---|
-| `notice.ts` | `NOTICE_VERSION`, the consent text (sections), the policy path |
+| `notice.ts` | `NOTICE_VERSION`, the consent text (sections), its SHA-256, the policy path |
 | `store.ts` | `RecordStore` interface; `PgRecordStore` (all SQL, through `Db.query` only); the 150 ms read limit |
-| `store-memory.ts` | `MemoryRecordStore`, a small in-memory twin for tests and the eval |
-| `brief.ts` | builds the brief block (`briefFromNotes`), the prompt wrapper `withMemoryBrief` (the one named function the watch prompt change goes through), the recall-phrase guard `guardHistory` |
+| `reword.ts` | the post-detection hint rewriter and the recall-phrase guard |
 | `admin.ts` | `RecordAdmin`: the SQL behind `scripts/codes consent/note/export/forget/forget-inactive` |
 | `endpoint.ts` | `handleMemoryStatus` (GET), `handleMemoryAction` (POST), `handlePrivacy` |
 
-Touched existing files, each by a few lines so merges stay mechanical (other branches edit `gate.ts`, `students*.ts`, `watch.ts`, `policy.ts`, `problems.ts`, `package.json`): `gate.ts` (one optional `record?: RecordStore` in `Deps`), `http.ts` (two names in the endpoint union), `watch.ts` (read the brief beside `meterActivity`, wrap the prompt, guard the result, write the look), `ask.ts` and `consult.ts` (one `recordQuestion` call each), `db.ts` (an optional `{ timeoutMs }` third argument to `query`, default unchanged), `api/memory.ts` and `api/privacy.ts` (new Vercel entries), `package.json` (`@electric-sql/pglite` dev dependency, same version as `iap-subscription`; a `sync-policy` script). **`policy.ts` is not touched**: the brief is appended to the already-built prompt text by `withMemoryBrief`.
+Touched existing files, each by a few lines so merges stay mechanical (other branches edit `gate.ts`, `students*.ts`, `watch.ts`, `policy.ts`, `problems.ts`, `package.json`): `gate.ts` (one optional `record?: RecordStore` in `Deps`), `http.ts` (two names in the endpoint union), `watch.ts` (read consent and notes beside `meterActivity`, one call to the rewriter after `finalizeDecision`, write the look), `ask.ts` and `consult.ts` (one `recordQuestion` call each), `db.ts` (an optional `{ timeoutMs }` third argument to `query`, default unchanged), `api/memory.ts` and `api/privacy.ts` (new Vercel entries), `package.json` (`@electric-sql/pglite` dev dependency, same version as `iap-subscription`; a `sync-policy` script). **`policy.ts` and `models.ts` are not touched**, and `buildWatchPrompt` and `WATCH_POLICY` are not changed at all: the detection prompt is the same string for every student.
 
-Feature flag: `STUDENT_RECORD=on` in the server environment. Anything else (including unset) means **no record queries at all** and `GET /api/memory` answers `{feature:"off"}`; the app then hides every memory control. So the deploy order cannot hurt: old app plus new server, new app plus old server (404 is read as "off"), flag off.
+**Feature flag `STUDENT_RECORD=on`** gates *new* memory activity only: reading notes, rewording, recording, and accepting a new grant. Anything else (including unset) means those make **no record queries** and `POST consent` answers 404 `memory_not_available`. Management of an existing record is never gated by the flag (review 1): `GET /api/memory`, withdraw and erase keep working after a rollback, and `GET` returns `feature:"off"` together with the consent state and counts when a record exists. The app shows the Memory section when the feature is on or a record exists. Old app plus new server, and new app plus old server (404 is read as "unavailable"), both behave.
 
-Watch path with the flag on:
+### Watch path with the flag on
 
-1. After the problem is found, start `readBrief` (150 ms limit) concurrently with `meterActivity`; await both before the model call. Skip reasons are logged as `memory=skipped:disabled | no_notes | timeout | db_<code> | notice_outdated`, success as `memory=used`.
-2. Only if consent is current **and** notes exist is the brief appended: `withMemoryBrief(buildWatchPrompt(...), brief)`. Consent without notes changes nothing in the prompt (design: "absence is a state"). No consent: the prompt string is identical to today's (test below compares them).
-3. `finalizeDecision` runs as today. When a brief was injected, `guardHistory` then checks the hint text (section 5).
-4. The look is recorded (consent re-checked inside the SQL, so a withdrawal between read and write wins). A failed write logs `memory_write=failed:<code>` and never fails the request.
+1. After the problem is found, start `readMemory` (150 ms limit; one statement returning consent state and up to 3 notes) concurrently with `meterActivity`; await both before the model call. Result labels: `memory=skipped:flag_off | no_consent | notice_outdated | timeout | db_<code>`, `memory=consented` (notes count logged).
+2. **Detection runs exactly as today** (`buildWatchPrompt`, `runWatchModel`, `finalizeDecision`): same prompt, same image, same schema, notes absent. A test compares the prompt string for a consenting student with notes against the prompt for a student with none and requires byte equality, and requires `action`/`line` to come only from the detection call.
+3. Only if consent is current, notes exist, and the result is `interrupt`: a second, text-only call (`rewordHint`, the watch model, 4 s limit, no image, no reference solution, no final answer in its input). Input: the problem's plain prompt, the line number, the hint just produced, and the notes with their tags and dates. Output (schema-checked): new `hint_spoken` and `hint_written`. Rules in its system text: keep the same meaning and the same kind of slip; change only tone and wording to suit the notes; do not add facts, values or corrected lines; do not refer to earlier sessions, to the notes, or to what the student usually does. `action` and `line` are copied from the detection result, never from this call.
+4. Checks on the reworded hint, any of which falls back to the **original detection hint** (not a wait, not a neutral hint, so a real catch is never lost and never worse than today): schema/parse failure, timeout or provider error, the same answer-leak test `finalizeDecision` applies (`squash` contains `final_answer`), recall phrasing (section 5), a different length class (spoken over 400 or written over 120 characters, as the schema). Each fallback logs its label (`reword=fallback:<reason>`); success logs `reword=used`, with tokens and cost tagged `operation: memory_reword` through `usageFields`.
+5. The look is recorded (consent re-checked inside the SQL, so a withdrawal between read and write wins). A failed write logs `memory_write=failed:<code>` and never fails the request.
 
-Logging (counts, ids and labels only; the student appears as the existing 8-character hash): `memory`, `memory_notes`, `memory_brief_chars`, `memory_read_ms`, `memory_write` (`ok | skipped:no_consent | failed:<code>`), `unsupported_history` (`blocked`). Lifecycle lines: `memory_consent_granted` (given_by, via, notice version), `memory_withdrawn`, `memory_erased` (counts per table). Never logged: note text, the brief, hint text, codes.
+Latency: one extra small text call on interrupts for consenting students only. Not measured yet; the eval and the first device pass report it, and a consent-free student sees no change.
+
+Logging (counts, ids and labels only; the student appears as the existing 8-character hash): `memory`, `memory_notes`, `memory_read_ms`, `reword` (`used | fallback:<reason>`), `memory_write` (`ok | skipped:no_consent | failed:<code>`). Lifecycle lines: `memory_consent_granted` (given_by, via, notice version), `memory_withdrawn`, `memory_erased` (counts per table). Never logged: note text, hint text, codes.
 
 Endpoints (`/api/memory`, code-authenticated, allowed when the month's hours are used up, never counted as activity, no model key needed):
 
-- `GET`: `{feature, notice:{version, title, sections[], policy_url}, consent:{granted, current, given_by, recorded_via, at}, record:{attempts, looks, interrupts, notes, first_at, last_at, recent:[{problem_id, looks, interrupts, asks, last_at}]}}`. Edward's notes are not shown in the app (design section 8: they are released on request, and a child should not read a tutor's private observation unprompted); the count is.
-- `POST {action:"consent", given_by, notice_version, attested:true}`: 422 without `attested: true`, 409 `notice_outdated` on a stale version.
+- `GET`: `{feature, notice:{version, title, sections[], policy_url}, consent:{granted, current, given_by, recorded_via, at}, record:{attempts, looks, interrupts, notes, first_at, last_at, recent:[up to 10 of {problem_id, looks, interrupts, asks, last_at}]}}`. Edward's notes are not shown in the app (design section 8: released on request; a child should not read a tutor's private observation unprompted); the count is.
+- `POST {action:"consent", given_by, notice_version, attested:true}`: 422 without `attested: true`, 409 `notice_outdated` on a stale version, 404 when the flag is off.
 - `POST {action:"withdraw", erase:boolean}` and `POST {action:"erase"}`: both return what was deleted.
 - `GET /api/privacy`: unauthenticated, no database, serves the policy as HTML from `server/data/privacy-policy.md` (copied from `docs/privacy-policy.md`; a test fails if they differ).
 
+Races, stated plainly. The look write and the question write check consent inside their own SQL statement, so a request that starts after a withdrawal commits records nothing. A write already past its check when an erase commits can still add one counter row afterwards (Postgres read committed; no cross-statement lock). That would be a few ids and a count, would be removed by `forget`, and I will say so in the policy rather than claim impossibility. Counters count looks, and a retried request is a real extra look; hint rows are deduplicated by their unique key.
+
 ## 5. The "only cite dated history on record" rule
 
-Three layers, in order of strength:
+1. **Eligibility.** The only past that reaches a model is Edward's dated notes, and only in the reword step: each carries a tag and his session date (`[n1] Edward, 2026-11-09: ...`). Nothing else about the past exists in any prompt. Course or grade never becomes a claim of what was covered (design 6.3 rule 4).
+2. **The rule given to the rewriter**: the notes are for tone only; never mention earlier sessions, the notes, or what the student usually does. (Stricter than the design's "cite by tag and date", which needs the phase 2 `cite` field.)
+3. **Code guard** on the reworded hint: cross-session recall phrasing ("last time", "last session", "last week", "last lesson", "yesterday", "the other day", "we did", "we talked", "we went over", "remember when", "as before", "like before", "previously", "you tend to", and "you always/usually/often" unless followed by a rule-like verb such as "need", "have to", "change", "flip") makes the rewrite fall back to the original hint, label `unsupported_history_claim`. A table test covers phrases that must and must not fire ("check the sign again" must not). This is a heuristic with false negatives; the eval counts how often the rewriter produced such phrasing and the report does not claim zero misses. Because the original hint is always the fallback, a false positive costs only the personalisation.
 
-1. **Eligibility.** The brief is built only from rows that exist: each note carries a tag and Edward's session date (`[n1] Edward, 2026-11-09: ...`). Nothing else about the past is in the prompt. Course or grade never becomes a claim of what was covered (design 6.3 rule 4).
-2. **Prompt rule** (in the brief block): the record may change how a hint is worded, never whether the tutor interrupts; the page is the evidence; do not refer to earlier sessions or to what the student usually does.
-3. **Code guard** (`guardHistory`, beside `finalizeDecision`'s pattern): when a brief was injected, a hint containing cross-session recall phrasing ("last time", "last session", "last week", "yesterday", "we did", "we talked", "remember when", "you always", "you usually", "you often", "you keep", "as before", "like before", "previously", "every time") is replaced by a neutral hint on the same line ("Take another look at this line.", written "Check this line"). The catch itself is kept (its detection is not in doubt, only the wording); the log says `unsupported_history_claim`. Deviation from the design, which said `wait`: dropping a correct catch to protect wording costs the student a hint they needed. This is a heuristic with false negatives; the eval reports how often it fires and does not claim zero misses. No guard runs for a student without consent (their behaviour is unchanged by definition).
-
-The `ask` answer and the live voice are free text and get no brief in this slice, so there is nothing to guard there yet.
+`/api/ask`, `/api/consult` and the live voice's own words are free text with no notes in this slice, so there is nothing to guard there yet.
 
 ## 6. Admin commands (`scripts/codes`)
 
@@ -167,55 +173,61 @@ forget CODE --yes [--including-consent-log]     deletes attempts, hints, notes (
 forget-inactive [--months 12] [--yes]           dry run by default; lists or deletes record data for codes unused for N months
 ```
 
-Each prints counts and ids only. `forget-inactive` exists because the consent text promises that unused records are deleted after 12 months; a promise with no code behind it would not be meaningful consent. Whether 12 months is right, and the interaction of deletion with PIPA s. 35(1) (keep decision data one year), is an open legal question (design 8.3). The consent log is kept by default after an erase as a minimal audit trail (granted or withdrawn, when, which version, no content); the policy says so, and `--including-consent-log` removes it for anyone who objects.
+Each prints counts and ids only. `forget-inactive` exists because the consent text promises that unused records are deleted after 12 months; a promise with no code behind it would not be meaningful consent. Whether 12 months is right, and the interaction of deletion with PIPA s. 35(1) (keep decision data one year), is an open legal question (design 8.3). The consent log is kept by default after an erase as a minimal audit trail (granted or withdrawn, when, which version and text hash, no content); the policy says so, and `--including-consent-log` removes it for anyone who objects.
 
 ## 7. iPad
 
-New files under `ios/PencilTutor/Memory/` (`MemoryStore`, `MemoryConsentView`, `MemoryRecordView`, `MemoryStrings` for fixed UI text), a `memory...` set of methods on `TutorClient` with protocol-extension defaults (so a branch that adds another `TutorClient` conformer still compiles), implementations in `HTTPTutorClient` and `ScriptedTutorClient`.
+New files under `ios/PencilTutor/Memory/` (`MemoryStore`, `MemoryConsentView`, `MemoryRecordView`), a `memory...` set of methods on `TutorClient` with protocol-extension defaults (so a branch that adds another `TutorClient` conformer still compiles), implementations in `HTTPTutorClient` and `ScriptedTutorClient`.
 
-- Settings gets a **Memory** section: "Tutor memory: On since <date> / Off / Not available". Rows: "Turn on memory" (opens consent) or "What the tutor remembers" (opens the record). Hidden entirely when the server says `feature: off`.
-- `RootView` presents the consent sheet once when the account is ready, the feature is on, no decision is on record, and this code has not been offered before (UserDefaults key by code hash). `ProblemListView` is not edited (the course picker branch rewrites it).
-- Consent screen: scrollable, headings and short paragraphs from the server's notice, the two-choice attestation, two equal buttons, "Read the full policy" link. Record screen: status, counts, recent problems (prompt text from the bundled bank, id otherwise), "Turn off memory" and "Erase what the tutor remembers" with confirmation dialogs.
+- Settings gets a **Memory** section: "Tutor memory: On since <date> / Off / Not available". Rows: "Turn on memory" (opens consent) or "What the tutor remembers" (opens the record). Hidden when the server is silent or says off with no record.
+- `RootView` presents the consent sheet once when the account is ready, the feature is on, no decision is on record, and this code has not been offered before (UserDefaults key by code hash). This is Edward's explicit requirement ("offered once, skippable, reachable from Settings"); review 1 suggested dropping the offer and I am keeping it on his instruction. `ProblemListView` is not edited (the course picker branch rewrites it).
+- Consent screen: scrollable, headings and short paragraphs from the server's notice, the two-choice attestation, two equal buttons, "Read the full policy" link. Record screen: status, counts, up to 10 recent problems (prompt text from the bundled bank, id otherwise), "Turn off memory" and "Erase what the tutor remembers" with confirmation dialogs.
 - Calm UI: system type scaling, nothing in `lineLimit(1)`, every control at least 44 pt, text wraps rather than truncates, usable portrait and landscape. No streaks, points, or nudges to opt in.
 - Scripted launch: `--scripted-client` keeps today's behaviour (feature off, no offer) unless `--memory-on` is added; `--offer-memory` also allows the once-only sheet. Existing UI tests are unaffected.
 - No change to StoreKit or code-entry files.
 
 ## 8. Tests
 
-Server (Node test runner; the Postgres tests run on GitHub CI and are skipped on the laptop unless `PT_PGLITE=1`, the convention `iap-subscription` already uses):
+Server (Node test runner; the Postgres tests run on GitHub CI and are skipped on the laptop unless `PT_PGLITE=1`, the convention `iap-subscription` already uses). Fakes are small stubs with fixed answers; there is no in-memory twin of the database (review 1); SQL is exercised on PGlite.
 
-- **Prompt identity**: with no consent, and with the flag off, the prompt sent to the (mock) model equals today's `buildWatchPrompt` output exactly, and `store` is never called with the flag off.
-- Brief: tags and dates, no notes means no block, budget (at most 300 estimated tokens, 4 characters per token, worst realistic record), pinned first, truncation logs a count.
-- Guard: a table of phrases that must trigger and phrases that must not ("check the sign again" passes), neutral replacement keeps the line, label logged.
-- Watch with a record store: consent on records an attempt and a hint; withdrawal between read and write records nothing; store timeout or error degrades to today's behaviour with the right skip label and a 200; question recording on ask and consult.
-- Endpoints: status shape, feature off, attestation required, stale notice version 409, consent then withdraw then erase, unauthenticated privacy page, policy copy equals `docs/`.
-- Notice: a test asserts the required elements exist in the text (what, why, who sees, how long, see/export/erase, AI voice, policy link) so an edit cannot silently drop one.
+- **Detection independence** (the test that carries the premise): for a consenting student with notes, the prompt string, system text, image and schema handed to the detection model equal those for a student with no record; the mock model sees the notes only in the second call; `action` and `line` of the response equal the detection result when the rewriter returns nonsense, times out, or tries to change the line.
+- Flag off and no consent: no second call, no record query beyond the existing gate, response bytes equal today's.
+- Rewriter: falls back to the original hint on parse failure, timeout, leak of `final_answer`, recall phrase; guard table of phrases that must and must not fire; notes never appear in any log line.
+- Watch with a store stub: consent on records an attempt and a hint; withdrawal between read and write records nothing; store timeout or error degrades to today's behaviour with the right label and a 200; question recording on ask and consult.
+- Endpoints: status shape; feature off with and without an existing record; attestation required; stale notice version 409; consent then withdraw then erase; withdraw and erase still work with the flag off; unauthenticated privacy page; policy copy equals `docs/`.
+- **Notice pinned by hash**: a test holds the SHA-256 of the notice text for the current `NOTICE_VERSION`; changing the words without bumping the version fails. The grant row stores the hash, so the exact words shown are recoverable from git at that version and checkable against the stored hash. (Replaces the keyword test.)
 - No-content logging: across all of the above, no log line contains note text, a code, or hint text.
-- **Real SQL on PGlite (Postgres compiled to WebAssembly, in-process, CI only)**: migration 004 applies twice, latest-consent-wins, brief read returns at most 3 notes pinned first, upserts are idempotent, look write refused without consent, erase counts, `forget-inactive`, and the same scenario table run against `MemoryRecordStore` so the twin cannot drift.
+- **Real SQL on PGlite (Postgres compiled to WebAssembly, in-process, CI only)**: migration 004 applies twice, latest-consent-wins, notes read returns at most 3 pinned first, upserts are idempotent for hints, look write refused without consent, erase counts, sequential withdraw-then-write records nothing, `forget-inactive`.
 
 iOS: unit tests for the store's state machine (feature off hides everything, attestation required, version mismatch re-fetches, withdraw with erase, offer-once policy) with a fake client; UI test `MemoryScreensUITests` driving the scripted client through Settings, consent, record and withdrawal, with `XCUIScreen.main.screenshot()` attachments in both orientations, run on the iPad.
 
-## 9. Eval gate (design section 7)
+Not tested here, and said so: Neon timing and concurrent overlap on the real database (PGlite cannot show either), and an iPad pass against the deployed server with real handwriting. Both wait for Edward's rollout step 6.
 
-`server/eval/run-eval.ts` gets `--memory notes,priming`, which runs each model spec again with a synthetic consenting record injected through the same `Deps.record` seam: `notes` (two realistic tone notes) and `priming` (notes that claim a habit, "drops the minus sign when it multiplies a bracket", on pages that are correct). Paired with the no-brief run in the same invocation. Pass rule, printed as `MEMORY GATE: PASS|FAIL`: first-wrong-line hits not below the no-brief run, false alarms not above it, schema failures not above it, zero answer leaks; plus the count of `unsupported_history_claim` and the coverage ("of N looks"). One regression blocks. Model `gpt-6-luna`, 2 repetitions, about 180 calls at roughly US$0.00016 each (about US$0.03). Keys load exec-only through the Vercel CLI; they are never read by me or printed. Same caveats as the existing eval: synthetic fonts, not real handwriting; with this few students there is no power to show a learning effect, and none is claimed.
+## 9. Eval gate (design section 7), reshaped by detection independence
+
+Detection is byte-identical for everyone, so the old pass rule (hits, false alarms, schema failures against a no-brief run) is guaranteed by construction and proven by the test in section 8; re-running it would measure only model noise. What can still go wrong is the reword step, and that is what the eval measures. `server/eval/run-eval.ts` gets `--reword notes,priming`: for each page whose detection result is an interrupt, run `rewordHint` with a synthetic record (`notes`: two realistic tone notes; `priming`: notes that claim a habit, such as dropping a minus sign) and write every original and reworded hint to a results file, with its fallback label. Reported, with coverage ("N interrupts of M looks"): fallback rate by reason; recall-phrase rate before the guard; leak check by the same `squash` test as production **and** a read of every reworded hint by me for corrected intermediate values (the reviewer is right that the runner's judge covers consult only); a check that `line` and `action` are unchanged; latency and cost of the second call. Model `gpt-6-luna`, 2 repetitions over the wrong pages (15 pages, about 30 detection calls plus about 60 reword calls, under US$0.02). Keys load exec-only through the Vercel CLI and are never read or printed. Caveats: synthetic fonts, not real handwriting; with this few students no learning effect is measured or claimed.
 
 ## 10. Rollout order (for Edward or the coordinator)
 
 1. Merge `tutor-memory`. Do not deploy yet.
 2. `server/scripts/codes migrate` (applies `004`, additive; also `003` if that branch merged first).
 3. Deploy the server. `STUDENT_RECORD` unset: nothing changes for anyone.
-4. Ship the app build. It shows no memory controls while the server says off.
+4. Ship the app build. It shows no memory controls while the server is silent or off.
 5. Before any family is asked: lawyer hour on the consent text and `docs/privacy-policy.md`; fill the contact line in the policy.
-6. Set `STUDENT_RECORD=on` in Vercel production and redeploy. Still nobody is remembered until a parent agrees.
+6. Set `STUDENT_RECORD=on` in Vercel production and redeploy. Still nobody is remembered until a parent agrees. Then the deployed-server checks: an iPad pass with real handwriting, withdrawal and erase, and the read/write timings in the logs.
 7. Per family: in-app consent, or `scripts/codes consent CODE --by parent --form-date ...` after a signed form.
 
 ## 11. Verification I can and cannot do
 
-Can: unit and SQL tests on CI, the prompt-identity test, the eval, on-device screenshots. Cannot: the lawfulness of the text, whether a child can tell what they are agreeing to (the OPC suggests testing comprehension with real users; not done), real-handwriting behaviour with a brief, anything on the production database (migration deliberately not run), processors' retention terms beyond what is written in the policy's open items.
+Can: unit and SQL tests on CI, the detection-independence test, the reword eval, on-device screenshots. Cannot: the lawfulness of the text, whether a child can tell what they are agreeing to (the OPC suggests testing comprehension with real users; not done), real-handwriting behaviour, anything on the production database (migration deliberately not run), processors' retention terms beyond what is written in the policy's open items.
 
-## 12. Questions for the reviewer
+## 12. Review notes and where I overruled
 
-1. Is deferring the per-skill table right, or is a per-problem rollup worth adding now?
-2. Is PGlite as a dev-only dependency acceptable here (same one `iap-subscription` already added), or should the SQL be tested some other way?
-3. Is the neutral-hint replacement a sound deviation from "wait"?
-4. Anything above that should be cut from this slice?
+Review 1 (REDO) points and what happened: central premise accepted and rebuilt (section 4); neutral-hint substitution, in-memory twin, notice keyword test, 50-row list cut; notice pinned by hash; management survives the flag; watch leak check made real; session semantics noted (a `TutorSession` is created per problem screen, `ProblemScreen.swift:22`, so an attempt is one opening of a problem); "tens to hundreds of rows" now only claimed for the counts query, bounded by a 10-row recent list and per-student totals (counts over a single student's rows by index; flagged as unmeasured). **Overruled, with reason:** (a) removing the auto-offer, offer-once storage and the second grant path: Edward's instruction names all three; (b) "no hint text stored" now scoped to the server tables in the policy, since device logs and the live context hold hints (Debug builds log words; Release builds do not, `SessionLog.swift`), which the policy states.
+
+Questions for review 2:
+
+1. Does the two-step design now meet the goal at the smallest size, or is the second call itself over-built (for example, should the whole reword step be deferred and notes only be shown to Edward)?
+2. Is falling back to the original hint on any reword problem the right default?
+3. Is PGlite as a dev-only dependency acceptable (same one `iap-subscription` added)?
+4. Anything else to cut?
