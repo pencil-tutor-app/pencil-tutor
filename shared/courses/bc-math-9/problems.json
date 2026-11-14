@@ -1,0 +1,1142 @@
+[
+  {
+    "id": "m9-01",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original (tutor's own, unit 1 extra practice #18)",
+    "prompt_latex": "(-2)^{3} + (-3)^{2} - (-4)^{2}",
+    "prompt_plain": "(−2)³ + (−3)² − (−4)²",
+    "prompt_parts": [
+      {
+        "text": "(−2)³ + (−3)² − (−4)²"
+      }
+    ],
+    "worked_solution": [
+      "(−2)³ = −8, because three negative factors give a negative",
+      "(−3)² = 9 and (−4)² = 16, because two negative factors give a positive",
+      "−8 + 9 − 16",
+      "= 1 − 16 = −15"
+    ],
+    "final_answer": "−15",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-02",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original",
+    "prompt_latex": "3 - 2 \\times \\left(\\dfrac{3}{4}\\right)^{2}",
+    "prompt_plain": "3 − 2 × (3/4)²",
+    "prompt_parts": [
+      {
+        "text": "3 − 2 × ("
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": ")²"
+      }
+    ],
+    "worked_solution": [
+      "Exponent first: (3/4)² = 9/16",
+      "Then multiply: 2 × 9/16 = 18/16 = 9/8",
+      "3 − 9/8 = 24/8 − 9/8",
+      "= 15/8"
+    ],
+    "final_answer": "15/8 (= 1 7/8)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-03",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original (tutor's own, unit 2 extra practice #12)",
+    "prompt_latex": "(-1.5)^{2} - 2.4 \\times (0.5 - 1.3)",
+    "prompt_plain": "(−1.5)² − 2.4 × (0.5 − 1.3)",
+    "prompt_parts": [
+      {
+        "text": "(−1.5)² − 2.4 × (0.5 − 1.3)"
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 0.5 − 1.3 = −0.8",
+      "Exponent: (−1.5)² = 2.25",
+      "Multiply: 2.4 × (−0.8) = −1.92",
+      "2.25 − (−1.92) = 2.25 + 1.92 = 4.17"
+    ],
+    "final_answer": "4.17",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-04",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original (tutor's own, unit 2 extra practice #15)",
+    "prompt_latex": "\\left(-\\dfrac{2}{3}\\right)^{2} \\div \\left(\\dfrac{1}{2} - \\dfrac{5}{6}\\right)",
+    "prompt_plain": "(−2/3)² ÷ (1/2 − 5/6)",
+    "prompt_parts": [
+      {
+        "text": "(−"
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "3"
+        }
+      },
+      {
+        "text": ")² ÷ ("
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "2"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "5",
+          "den": "6"
+        }
+      },
+      {
+        "text": ")"
+      }
+    ],
+    "worked_solution": [
+      "Exponent: (−2/3)² = 4/9",
+      "Bracket: 1/2 − 5/6 = 3/6 − 5/6 = −2/6 = −1/3",
+      "Divide by a fraction: 4/9 ÷ (−1/3) = 4/9 × (−3) = −12/9",
+      "= −4/3"
+    ],
+    "final_answer": "−4/3 (= −1 1/3)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-05",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original (tutor's own, unit 2 extra practice #16)",
+    "prompt_latex": "\\dfrac{5}{6} - \\dfrac{1}{3} \\div \\left(-\\dfrac{2}{9}\\right) \\times \\dfrac{1}{2}",
+    "prompt_plain": "5/6 − (1/3) ÷ (−2/9) × (1/2)",
+    "prompt_parts": [
+      {
+        "frac": {
+          "num": "5",
+          "den": "6"
+        }
+      },
+      {
+        "text": " − ("
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "3"
+        }
+      },
+      {
+        "text": ") ÷ (−"
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "9"
+        }
+      },
+      {
+        "text": ") × ("
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "2"
+        }
+      },
+      {
+        "text": ")"
+      }
+    ],
+    "worked_solution": [
+      "Divide and multiply before subtracting, left to right",
+      "(1/3) ÷ (−2/9) = (1/3) × (−9/2) = −9/6 = −3/2",
+      "(−3/2) × (1/2) = −3/4",
+      "5/6 − (−3/4) = 5/6 + 3/4",
+      "= 10/12 + 9/12 = 19/12"
+    ],
+    "final_answer": "19/12 (= 1 7/12)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-06",
+    "source": "BC Math 9 content: operations with rational numbers (brackets, exponents, order of operations); original",
+    "prompt_latex": "\\left(-\\dfrac{2}{3}\\right) \\div \\dfrac{4}{9} + \\left(\\left(-\\dfrac{1}{2}\\right) \\times \\left(-\\dfrac{3}{4}\\right)\\right)",
+    "prompt_plain": "(−2/3) ÷ (4/9) + ((−1/2) × (−3/4))",
+    "prompt_parts": [
+      {
+        "text": "(−"
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "3"
+        }
+      },
+      {
+        "text": ") ÷ ("
+      },
+      {
+        "frac": {
+          "num": "4",
+          "den": "9"
+        }
+      },
+      {
+        "text": ") + ((−"
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "2"
+        }
+      },
+      {
+        "text": ") × (−"
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": "))"
+      }
+    ],
+    "worked_solution": [
+      "First term: (−2/3) ÷ (4/9) = (−2/3) × (9/4) = −18/12 = −3/2",
+      "Second term: (−1/2) × (−3/4) = 3/8, positive because two negatives",
+      "−3/2 + 3/8 = −12/8 + 3/8",
+      "= −9/8"
+    ],
+    "final_answer": "−9/8 (= −1 1/8)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-07",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original (tutor's own, unit 6 extra practice #11a)",
+    "prompt_latex": "5^{2} - 3 \\times (4 - 6)^{3}",
+    "prompt_plain": "5² − 3 × (4 − 6)³",
+    "prompt_parts": [
+      {
+        "text": "5² − 3 × (4 − 6)³"
+      }
+    ],
+    "worked_solution": [
+      "Bracket first: 4 − 6 = −2",
+      "Exponents: (−2)³ = −8 and 5² = 25",
+      "Multiply: 3 × (−8) = −24",
+      "25 − (−24) = 25 + 24 = 49"
+    ],
+    "final_answer": "49",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-08",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original",
+    "prompt_latex": "\\text{Simplify: } \\dfrac{(3a^{2})^{3}}{a^{4}}",
+    "prompt_plain": "Simplify: (3a²)³/a⁴",
+    "prompt_parts": [
+      {
+        "text": "Simplify: "
+      },
+      {
+        "frac": {
+          "num": "(3a²)³",
+          "den": "a⁴"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Power of a product: (3a²)³ = 3³ × (a²)³",
+      "3³ = 27 and (a²)³ = a⁶, so the top is 27a⁶",
+      "Divide powers of a: a⁶ ÷ a⁴ = a²",
+      "27a⁶ / a⁴ = 27a²"
+    ],
+    "final_answer": "27a²",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-09",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original (tutor's own, unit 6 extra practice #14a)",
+    "prompt_latex": "\\text{Write as a single power, then evaluate: } \\dfrac{(-3)^{7} \\times (-3)^{2}}{(-3)^{6}}",
+    "prompt_plain": "Write as a single power, then evaluate: ((−3)⁷ × (−3)²)/(−3)⁶",
+    "prompt_parts": [
+      {
+        "text": "Write as a single power, then evaluate: "
+      },
+      {
+        "frac": {
+          "num": "(−3)⁷ × (−3)²",
+          "den": "(−3)⁶"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Same base, multiplying: add the exponents, 7 + 2 = 9, so the top is (−3)⁹",
+      "Same base, dividing: subtract the exponents, 9 − 6 = 3",
+      "Single power: (−3)³",
+      "(−3)³ = (−3)(−3)(−3) = 9 × (−3) = −27"
+    ],
+    "final_answer": "(−3)³ = −27",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-10",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original (tutor's own, unit 6 extra practice #16)",
+    "prompt_latex": "\\text{Without a calculator, evaluate } \\dfrac{27^{4}}{9^{5}}",
+    "prompt_plain": "Without a calculator, evaluate 27⁴/9⁵",
+    "prompt_parts": [
+      {
+        "text": "Without a calculator, evaluate "
+      },
+      {
+        "frac": {
+          "num": "27⁴",
+          "den": "9⁵"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Write both as powers of 3: 27 = 3³ and 9 = 3²",
+      "27⁴ = (3³)⁴ = 3¹² and 9⁵ = (3²)⁵ = 3¹⁰",
+      "3¹² / 3¹⁰ = 3² (subtract the exponents)",
+      "3² = 9"
+    ],
+    "final_answer": "9",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-11",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original (tutor's own, unit 6 extra practice #27)",
+    "prompt_latex": "\\text{Simplify to a single power, then evaluate: } \\dfrac{(2^{3} \\times 2^{2})^{2}}{(2^{4})^{2} \\div 2^{3}}",
+    "prompt_plain": "Simplify to a single power, then evaluate: ((2³ × 2²)²)/((2⁴)² ÷ 2³)",
+    "prompt_parts": [
+      {
+        "text": "Simplify to a single power, then evaluate: "
+      },
+      {
+        "frac": {
+          "num": "(2³ × 2²)²",
+          "den": "(2⁴)² ÷ 2³"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Top: 2³ × 2² = 2⁵, then (2⁵)² = 2¹⁰",
+      "Bottom: (2⁴)² = 2⁸, then 2⁸ ÷ 2³ = 2⁵",
+      "2¹⁰ / 2⁵ = 2⁵",
+      "2⁵ = 32"
+    ],
+    "final_answer": "2⁵ = 32",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-12",
+    "source": "BC Math 9 content: exponents and exponent laws with whole-number exponents; original (tutor's own, unit 6 extra practice #25)",
+    "prompt_latex": "\\text{A colony of 800 bacteria doubles every 3 hours. Write an expression with a power for the number of bacteria after 24 hours, then evaluate it.}",
+    "prompt_plain": "A colony of 800 bacteria doubles every 3 hours. Write an expression with a power for the number of bacteria after 24 hours, then evaluate it.",
+    "prompt_parts": [
+      {
+        "text": "A colony of 800 bacteria doubles every 3 hours. Write an expression with a power for the number of bacteria after 24 hours, then evaluate it."
+      }
+    ],
+    "worked_solution": [
+      "Number of doublings: 24 ÷ 3 = 8",
+      "Each doubling multiplies by 2, so N = 800 × 2⁸",
+      "2⁸ = 256",
+      "800 × 256 = 204,800"
+    ],
+    "final_answer": "N = 800 × 2⁸ = 204,800 bacteria",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-13",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original (tutor's own, unit 7 extra practice #5)",
+    "prompt_latex": "\\text{Simplify, then state the degree of the result: } 5p^{2} - 2p + 7 - 8p^{2} + 2p - 7",
+    "prompt_plain": "Simplify, then state the degree of the result: 5p² − 2p + 7 − 8p² + 2p − 7",
+    "prompt_parts": [
+      {
+        "text": "Simplify, then state the degree of the result: 5p² − 2p + 7 − 8p² + 2p − 7"
+      }
+    ],
+    "worked_solution": [
+      "Group the p² terms: 5p² − 8p² = −3p²",
+      "Group the p terms: −2p + 2p = 0",
+      "Group the constants: 7 − 7 = 0",
+      "Result: −3p², a single term of degree 2"
+    ],
+    "final_answer": "−3p² (degree 2)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-14",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original (tutor's own, unit 7 extra practice #12)",
+    "prompt_latex": "(5x^{2} - 3x + 2) - (2x^{2} - 7x - 4)",
+    "prompt_plain": "(5x² − 3x + 2) − (2x² − 7x − 4)",
+    "prompt_parts": [
+      {
+        "text": "(5x² − 3x + 2) − (2x² − 7x − 4)"
+      }
+    ],
+    "worked_solution": [
+      "The minus sign changes every term in the second bracket: 5x² − 3x + 2 − 2x² + 7x + 4",
+      "x² terms: 5x² − 2x² = 3x²",
+      "x terms: −3x + 7x = 4x",
+      "Constants: 2 + 4 = 6",
+      "3x² + 4x + 6"
+    ],
+    "final_answer": "3x² + 4x + 6",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-15",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original",
+    "prompt_latex": "\\text{Expand and simplify: } -3(x^{2} - 2x + 4) + 2x(x - 5)",
+    "prompt_plain": "Expand and simplify: −3(x² − 2x + 4) + 2x(x − 5)",
+    "prompt_parts": [
+      {
+        "text": "Expand and simplify: −3(x² − 2x + 4) + 2x(x − 5)"
+      }
+    ],
+    "worked_solution": [
+      "−3(x² − 2x + 4) = −3x² + 6x − 12",
+      "2x(x − 5) = 2x² − 10x",
+      "x² terms: −3x² + 2x² = −x²",
+      "x terms: 6x − 10x = −4x",
+      "−x² − 4x − 12"
+    ],
+    "final_answer": "−x² − 4x − 12",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-16",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original",
+    "prompt_latex": "\\text{Divide: } \\dfrac{24n^{2} - 18n}{6n}",
+    "prompt_plain": "Divide: (24n² − 18n)/6n",
+    "prompt_parts": [
+      {
+        "text": "Divide: "
+      },
+      {
+        "frac": {
+          "num": "24n² − 18n",
+          "den": "6n"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Divide each term on top by 6n",
+      "24n² / 6n = 4n",
+      "−18n / 6n = −3",
+      "4n − 3",
+      "Check: 6n(4n − 3) = 24n² − 18n"
+    ],
+    "final_answer": "4n − 3",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-17",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original (tutor's own, unit 7 extra practice #25)",
+    "prompt_latex": "\\text{A student simplifies } (6x - 4) - (2x - 9) \\text{ like this: } 6x - 4 - 2x - 9 = 4x - 13. \\text{ Find the first wrong line and give the correct answer.}",
+    "prompt_plain": "A student simplifies (6x − 4) − (2x − 9) like this: 6x − 4 − 2x − 9 = 4x − 13. Find the first wrong line and give the correct answer.",
+    "prompt_parts": [
+      {
+        "text": "A student simplifies (6x − 4) − (2x − 9) like this: 6x − 4 − 2x − 9 = 4x − 13. Find the first wrong line and give the correct answer."
+      }
+    ],
+    "worked_solution": [
+      "The first line is wrong: the minus sign must change both terms in the second bracket",
+      "−(2x − 9) = −2x + 9, not −2x − 9",
+      "Correct: 6x − 4 − 2x + 9",
+      "x terms: 6x − 2x = 4x. Constants: −4 + 9 = 5",
+      "4x + 5"
+    ],
+    "final_answer": "4x + 5 (the −9 should have become +9)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-18",
+    "source": "BC Math 9 content: operations with polynomials of degree 2 or less; original (tutor's own, unit 7 extra practice #31)",
+    "prompt_latex": "\\text{A rectangle has width } (2x + 1) \\text{ cm and length } (5x - 3) \\text{ cm. Its perimeter is 66 cm. Find } x \\text{, then the width and the length.}",
+    "prompt_plain": "A rectangle has width 2x + 1 cm and length 5x − 3 cm. Its perimeter is 66 cm. Find x, then the width and the length.",
+    "prompt_parts": [
+      {
+        "text": "A rectangle has width 2x + 1 cm and length 5x − 3 cm. Its perimeter is 66 cm. Find x, then the width and the length."
+      }
+    ],
+    "worked_solution": [
+      "Perimeter = 2(width + length) = 2(2x + 1 + 5x − 3) = 2(7x − 2) = 14x − 4",
+      "14x − 4 = 66",
+      "14x = 70, so x = 5",
+      "Width: 2(5) + 1 = 11 cm. Length: 5(5) − 3 = 22 cm",
+      "Check: 2(11 + 22) = 66"
+    ],
+    "final_answer": "x = 5; width 11 cm, length 22 cm",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-19",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original (tutor's own, unit 5 extra practice #13d)",
+    "prompt_latex": "\\text{This table is a linear relation. Find its equation. } x: 3, 6, 9, 12 \\quad y: 8, 7, 6, 5",
+    "prompt_plain": "This table is a linear relation. Find its equation.  x: 3, 6, 9, 12  y: 8, 7, 6, 5",
+    "prompt_parts": [
+      {
+        "text": "This table is a linear relation. Find its equation.  x: 3, 6, 9, 12  y: 8, 7, 6, 5"
+      }
+    ],
+    "worked_solution": [
+      "x goes up by 3 each step and y goes down by 1, so the slope is −1/3",
+      "y = −(1/3)x + b. Use the point (3, 8): 8 = −(1/3)(3) + b",
+      "8 = −1 + b, so b = 9",
+      "y = −(1/3)x + 9",
+      "Check (12, 5): −(1/3)(12) + 9 = −4 + 9 = 5"
+    ],
+    "final_answer": "y = −(1/3)x + 9",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-20",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original",
+    "prompt_latex": "\\text{Write the equation of the horizontal line and the equation of the vertical line that both pass through } (3, -2). \\text{ At what point do they cross?}",
+    "prompt_plain": "Write the equation of the horizontal line and the equation of the vertical line that both pass through (3, −2). At what point do they cross?",
+    "prompt_parts": [
+      {
+        "text": "Write the equation of the horizontal line and the equation of the vertical line that both pass through (3, −2). At what point do they cross?"
+      }
+    ],
+    "worked_solution": [
+      "A horizontal line keeps the same y-value everywhere, so it is y = −2",
+      "A vertical line keeps the same x-value everywhere, so it is x = 3",
+      "Both contain (3, −2), so that is where they cross"
+    ],
+    "final_answer": "y = −2 and x = 3; they cross at (3, −2)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-21",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original (tutor's own, unit 5 extra practice #15)",
+    "prompt_latex": "\\text{A tank holds 240 L of water. A valve opens and the water drains at 8 L per minute. Write an equation for the volume } V \\text{ left after } t \\text{ minutes, find } V \\text{ when } t = 12 \\text{, and find when the tank is empty.}",
+    "prompt_plain": "A tank holds 240 L of water. A valve opens and the water drains at 8 L per minute. Write an equation for the volume V left after t minutes, find V when t = 12, and find when the tank is empty.",
+    "prompt_parts": [
+      {
+        "text": "A tank holds 240 L of water. A valve opens and the water drains at 8 L per minute. Write an equation for the volume V left after t minutes, find V when t = 12, and find when the tank is empty."
+      }
+    ],
+    "worked_solution": [
+      "Start at 240 L and lose 8 L each minute: V = 240 − 8t",
+      "t = 12: V = 240 − 8(12) = 240 − 96 = 144",
+      "Empty means V = 0: 240 − 8t = 0",
+      "8t = 240, so t = 30",
+      "The graph is a line from (0, 240) to (30, 0), joined, because time is continuous"
+    ],
+    "final_answer": "V = 240 − 8t; 144 L after 12 min; empty at 30 min",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-22",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original (tutor's own, unit 5 extra practice #18)",
+    "prompt_latex": "\\text{A phone plan's cost graph is a straight line through } (0, 20) \\text{ and } (100, 45), \\text{ where } m \\text{ is minutes used and } C \\text{ is the cost in dollars. Write the equation. Find the cost of 60 minutes and of 300 minutes, and say which answer is interpolation and which is extrapolation.}",
+    "prompt_plain": "A phone plan's cost graph is a straight line through (0, 20) and (100, 45), where m is minutes used and C is the cost in dollars. Write the equation. Find the cost of 60 minutes and of 300 minutes, and say which answer is interpolation and which is extrapolation.",
+    "prompt_parts": [
+      {
+        "text": "A phone plan's cost graph is a straight line through (0, 20) and (100, 45), where m is minutes used and C is the cost in dollars. Write the equation. Find the cost of 60 minutes and of 300 minutes, and say which answer is interpolation and which is extrapolation."
+      }
+    ],
+    "worked_solution": [
+      "Slope = (45 − 20) / (100 − 0) = 25/100 = 0.25 dollars per minute",
+      "The line crosses the C-axis at (0, 20), so C = 0.25m + 20",
+      "m = 60: C = 0.25(60) + 20 = 15 + 20 = 35. This is inside the data (0 to 100): interpolation",
+      "m = 300: C = 0.25(300) + 20 = 75 + 20 = 95. This is beyond the data: extrapolation, so trust it less"
+    ],
+    "final_answer": "C = 0.25m + 20; $35 (interpolation); $95 (extrapolation)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-23",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original (tutor's own, unit 5 extra practice #27)",
+    "prompt_latex": "\\text{A straight line passes through } (-2, 9) \\text{ and } (4, -3). \\text{ Find its equation. Then find } y \\text{ when } x = 10 \\text{, and find } x \\text{ when } y = 1.",
+    "prompt_plain": "A straight line passes through (−2, 9) and (4, −3). Find its equation. Then find y when x = 10, and find x when y = 1.",
+    "prompt_parts": [
+      {
+        "text": "A straight line passes through (−2, 9) and (4, −3). Find its equation. Then find y when x = 10, and find x when y = 1."
+      }
+    ],
+    "worked_solution": [
+      "Slope = (−3 − 9) / (4 − (−2)) = −12/6 = −2",
+      "y = −2x + b. Use (−2, 9): 9 = −2(−2) + b = 4 + b, so b = 5",
+      "y = −2x + 5. Check (4, −3): −2(4) + 5 = −3",
+      "x = 10: y = −2(10) + 5 = −15",
+      "y = 1: 1 = −2x + 5, so −4 = −2x and x = 2"
+    ],
+    "final_answer": "y = −2x + 5; y = −15 when x = 10; x = 2 when y = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-24",
+    "source": "BC Math 9 content: two-variable linear relations (graphing, interpolation, extrapolation); original",
+    "prompt_latex": "\\text{A candle burns at a steady rate. It was 17.5 cm tall after 2 hours and 9.5 cm tall after 6 hours. Use a straight line to find its height after 5 hours, and the time when it burns out.}",
+    "prompt_plain": "A candle burns at a steady rate. It was 17.5 cm tall after 2 hours and 9.5 cm tall after 6 hours. Use a straight line to find its height after 5 hours, and the time when it burns out.",
+    "prompt_parts": [
+      {
+        "text": "A candle burns at a steady rate. It was 17.5 cm tall after 2 hours and 9.5 cm tall after 6 hours. Use a straight line to find its height after 5 hours, and the time when it burns out."
+      }
+    ],
+    "worked_solution": [
+      "Slope = (9.5 − 17.5) / (6 − 2) = −8/4 = −2 cm per hour",
+      "h = −2t + b. Use (2, 17.5): 17.5 = −4 + b, so b = 21.5",
+      "h = 21.5 − 2t",
+      "t = 5: h = 21.5 − 2(5) = 21.5 − 10 = 11.5 cm (between 2 and 6 h: interpolation)",
+      "Burns out when h = 0: 21.5 − 2t = 0, so t = 10.75 h (beyond 6 h: extrapolation)"
+    ],
+    "final_answer": "h = 21.5 − 2t; 11.5 cm at 5 h; burns out at 10.75 h",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-25",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original (tutor's own, unit 3 extra practice #2)",
+    "prompt_latex": "9 - 2m = 5m - 12",
+    "prompt_plain": "9 − 2m = 5m − 12",
+    "prompt_parts": [
+      {
+        "text": "9 − 2m = 5m − 12"
+      }
+    ],
+    "worked_solution": [
+      "Add 2m to both sides: 9 = 7m − 12",
+      "Add 12 to both sides: 21 = 7m",
+      "m = 21 / 7 = 3",
+      "Check: 9 − 2(3) = 3 and 5(3) − 12 = 3"
+    ],
+    "final_answer": "m = 3",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-26",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original (tutor's own, unit 3 extra practice #16)",
+    "prompt_latex": "0.5(2y - 3) = 0.25(y + 6)",
+    "prompt_plain": "0.5(2y − 3) = 0.25(y + 6)",
+    "prompt_parts": [
+      {
+        "text": "0.5(2y − 3) = 0.25(y + 6)"
+      }
+    ],
+    "worked_solution": [
+      "Distribute: y − 1.5 = 0.25y + 1.5",
+      "Subtract 0.25y: 0.75y − 1.5 = 1.5",
+      "Add 1.5: 0.75y = 3",
+      "y = 3 / 0.75 = 4",
+      "Check: 0.5(8 − 3) = 2.5 and 0.25(4 + 6) = 2.5"
+    ],
+    "final_answer": "y = 4",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-27",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original (tutor's own, unit 3 extra practice #14)",
+    "prompt_latex": "\\dfrac{3n}{4} - \\dfrac{n - 2}{6} = \\dfrac{n}{2}",
+    "prompt_plain": "3n/4 − (n − 2)/6 = n/2",
+    "prompt_parts": [
+      {
+        "frac": {
+          "num": "3n",
+          "den": "4"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "n − 2",
+          "den": "6"
+        }
+      },
+      {
+        "text": " = "
+      },
+      {
+        "frac": {
+          "num": "n",
+          "den": "2"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Multiply every term by 12, the common denominator: 9n − 2(n − 2) = 6n",
+      "Distribute the −2: 9n − 2n + 4 = 6n",
+      "7n + 4 = 6n",
+      "n = −4",
+      "Check: 3(−4)/4 − (−4 − 2)/6 = −3 + 1 = −2, and −4/2 = −2"
+    ],
+    "final_answer": "n = −4",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-28",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original (tutor's own, unit 3 extra practice #21)",
+    "prompt_latex": "\\dfrac{x}{2} - \\dfrac{x - 3}{5} = \\dfrac{9}{10}",
+    "prompt_plain": "x/2 − (x − 3)/5 = 9/10",
+    "prompt_parts": [
+      {
+        "frac": {
+          "num": "x",
+          "den": "2"
+        }
+      },
+      {
+        "text": " − "
+      },
+      {
+        "frac": {
+          "num": "x − 3",
+          "den": "5"
+        }
+      },
+      {
+        "text": " = "
+      },
+      {
+        "frac": {
+          "num": "9",
+          "den": "10"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Multiply every term by 10: 5x − 2(x − 3) = 9",
+      "Distribute the −2: 5x − 2x + 6 = 9",
+      "3x + 6 = 9",
+      "3x = 3, so x = 1",
+      "Check: 1/2 − (1 − 3)/5 = 1/2 + 2/5 = 5/10 + 4/10 = 9/10"
+    ],
+    "final_answer": "x = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-29",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original",
+    "prompt_latex": "2 - \\dfrac{1}{3}(x + 9) = \\dfrac{x}{2} + 1",
+    "prompt_plain": "2 − (1/3)(x + 9) = x/2 + 1",
+    "prompt_parts": [
+      {
+        "text": "2 − ("
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "3"
+        }
+      },
+      {
+        "text": ")(x + 9) = "
+      },
+      {
+        "frac": {
+          "num": "x",
+          "den": "2"
+        }
+      },
+      {
+        "text": " + 1"
+      }
+    ],
+    "worked_solution": [
+      "Distribute −1/3: 2 − x/3 − 3 = x/2 + 1",
+      "Combine constants: −1 − x/3 = x/2 + 1",
+      "Multiply every term by 6: −6 − 2x = 3x + 6",
+      "Add 2x and subtract 6 on both sides: −12 = 5x",
+      "x = −12/5",
+      "Check: left 2 − (1/3)(33/5) = 2 − 11/5 = −1/5; right −6/5 + 1 = −1/5"
+    ],
+    "final_answer": "x = −12/5",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-30",
+    "source": "BC Math 9 content: multi-step one-variable linear equations; original (tutor's own, unit 3 extra practice #28)",
+    "prompt_latex": "\\text{The length of a rectangle is 3 cm more than twice its width. The perimeter is 42 cm. Write an equation using } w \\text{ for the width, solve it, and state the width and the length.}",
+    "prompt_plain": "The length of a rectangle is 3 cm more than twice its width. The perimeter is 42 cm. Write an equation using w for the width, solve it, and state the width and the length.",
+    "prompt_parts": [
+      {
+        "text": "The length of a rectangle is 3 cm more than twice its width. The perimeter is 42 cm. Write an equation using w for the width, solve it, and state the width and the length."
+      }
+    ],
+    "worked_solution": [
+      "Width w, length 2w + 3",
+      "Perimeter: 2(w + 2w + 3) = 42",
+      "2(3w + 3) = 42, so 6w + 6 = 42",
+      "6w = 36, so w = 6",
+      "Length: 2(6) + 3 = 15",
+      "Check: 2(6 + 15) = 42"
+    ],
+    "final_answer": "w = 6; width 6 cm, length 15 cm",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-31",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original (tutor's own, unit 4 extra practice #17)",
+    "prompt_latex": "\\text{A blueprint uses a scale of } 1 : 50. \\text{ A wall measures 14 cm on the blueprint. How long is the real wall, in metres?}",
+    "prompt_plain": "A blueprint uses a scale of 1 : 50. A wall measures 14 cm on the blueprint. How long is the real wall, in metres?",
+    "prompt_parts": [
+      {
+        "text": "A blueprint uses a scale of 1 : 50. A wall measures 14 cm on the blueprint. How long is the real wall, in metres?"
+      }
+    ],
+    "worked_solution": [
+      "Scale 1 : 50 means real length = drawing length × 50",
+      "14 × 50 = 700 cm",
+      "Convert to metres: 700 ÷ 100 = 7"
+    ],
+    "final_answer": "7 m",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-32",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original",
+    "prompt_latex": "\\text{A garden is 18 m long and 12 m wide. A scale drawing uses 1 cm to represent 2 m. What are the length and width of the drawing, in centimetres?}",
+    "prompt_plain": "A garden is 18 m long and 12 m wide. A scale drawing uses 1 cm to represent 2 m. What are the length and width of the drawing, in centimetres?",
+    "prompt_parts": [
+      {
+        "text": "A garden is 18 m long and 12 m wide. A scale drawing uses 1 cm to represent 2 m. What are the length and width of the drawing, in centimetres?"
+      }
+    ],
+    "worked_solution": [
+      "Each 2 m of garden becomes 1 cm, so divide the real lengths by 2",
+      "Length: 18 ÷ 2 = 9 cm",
+      "Width: 12 ÷ 2 = 6 cm"
+    ],
+    "final_answer": "9 cm by 6 cm",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-33",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original",
+    "prompt_latex": "\\text{A model bridge is built at a scale of } 1 : 250. \\text{ The model is 42 cm long. How long is the real bridge, in metres?}",
+    "prompt_plain": "A model bridge is built at a scale of 1 : 250. The model is 42 cm long. How long is the real bridge, in metres?",
+    "prompt_parts": [
+      {
+        "text": "A model bridge is built at a scale of 1 : 250. The model is 42 cm long. How long is the real bridge, in metres?"
+      }
+    ],
+    "worked_solution": [
+      "Real length = model length × 250",
+      "42 × 250 = 10500 cm",
+      "10500 ÷ 100 = 105 m"
+    ],
+    "final_answer": "105 m",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-34",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original (tutor's own, unit 4 extra practice #20)",
+    "prompt_latex": "\\text{A map has a scale of 1 cm : 40 km. Two towns are really 260 km apart. A student works out } 260 \\times 40 = 10{,}400 \\text{ cm. Explain the mistake and find how far apart the towns are on the map.}",
+    "prompt_plain": "A map has a scale of 1 cm : 40 km. Two towns are really 260 km apart. A student works out 260 × 40 = 10,400 cm. Explain the mistake and find how far apart the towns are on the map.",
+    "prompt_parts": [
+      {
+        "text": "A map has a scale of 1 cm : 40 km. Two towns are really 260 km apart. A student works out 260 × 40 = 10,400 cm. Explain the mistake and find how far apart the towns are on the map."
+      }
+    ],
+    "worked_solution": [
+      "The map is smaller than real life, so the real distance must be divided by 40, not multiplied",
+      "Every 40 km of real distance is 1 cm on the map",
+      "260 ÷ 40 = 6.5 cm",
+      "Check: 6.5 × 40 = 260"
+    ],
+    "final_answer": "6.5 cm (divide by the scale, do not multiply)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-35",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original (tutor's own, unit 4 extra practice #24)",
+    "prompt_latex": "\\text{Triangle } ABC \\sim \\text{triangle } DEF. \\text{ In triangle } ABC, AB = 8 \\text{ cm}, BC = 12 \\text{ cm}, AC = 10 \\text{ cm}. \\text{ In triangle } DEF, DE = 20 \\text{ cm}. \\text{ Find } EF \\text{ and } DF.",
+    "prompt_plain": "Triangle ABC is similar to triangle DEF. In triangle ABC, AB = 8 cm, BC = 12 cm and AC = 10 cm. In triangle DEF, DE = 20 cm. Find EF and DF.",
+    "prompt_parts": [
+      {
+        "text": "Triangle ABC is similar to triangle DEF. In triangle ABC, AB = 8 cm, BC = 12 cm and AC = 10 cm. In triangle DEF, DE = 20 cm. Find EF and DF."
+      }
+    ],
+    "worked_solution": [
+      "DE matches AB, so the scale factor is 20 / 8 = 2.5",
+      "EF matches BC: EF = 12 × 2.5 = 30 cm",
+      "DF matches AC: DF = 10 × 2.5 = 25 cm",
+      "Check: 30 / 12 = 2.5 and 25 / 10 = 2.5"
+    ],
+    "final_answer": "EF = 30 cm, DF = 25 cm",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-36",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original (tutor's own, unit 4 extra practice #25)",
+    "prompt_latex": "\\text{In triangle } PQR \\text{, point } S \\text{ is on } PQ \\text{ and point } T \\text{ is on } PR \\text{, with } ST \\parallel QR. \\; PS = 6, SQ = 9, ST = 8. \\text{ Find } QR.",
+    "prompt_plain": "In triangle PQR, point S is on PQ and point T is on PR, with ST parallel to QR. PS = 6, SQ = 9 and ST = 8. Find QR.",
+    "prompt_parts": [
+      {
+        "text": "In triangle PQR, point S is on PQ and point T is on PR, with ST parallel to QR. PS = 6, SQ = 9 and ST = 8. Find QR."
+      }
+    ],
+    "worked_solution": [
+      "ST is parallel to QR, so triangle PST is similar to triangle PQR (same angles)",
+      "The whole side PQ = PS + SQ = 6 + 9 = 15",
+      "Scale factor from PST to PQR: 15 / 6 = 2.5",
+      "QR matches ST: QR = 8 × 2.5 = 20"
+    ],
+    "final_answer": "QR = 20",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-37",
+    "source": "BC Math 9 content: spatial proportional reasoning (scale diagrams, similar triangles, metric unit conversions); original (tutor's own, unit 4 extra practice #30)",
+    "prompt_latex": "\\text{A student 1.5 m tall casts a shadow 2 m long. At the same moment a flagpole casts a shadow 24 m long. How tall is the flagpole?}",
+    "prompt_plain": "A student 1.5 m tall casts a shadow 2 m long. At the same moment a flagpole casts a shadow 24 m long. How tall is the flagpole?",
+    "prompt_parts": [
+      {
+        "text": "A student 1.5 m tall casts a shadow 2 m long. At the same moment a flagpole casts a shadow 24 m long. How tall is the flagpole?"
+      }
+    ],
+    "worked_solution": [
+      "The sun makes the same angle for both, so the two triangles are similar",
+      "Shadow scale factor: 24 / 2 = 12",
+      "Flagpole height = 1.5 × 12 = 18",
+      "Check by ratio: 1.5 / 2 = 0.75 and 18 / 24 = 0.75"
+    ],
+    "final_answer": "18 m",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-38",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original",
+    "prompt_latex": "\\text{A school has 840 students. The principal draws 60 student names from a hat and surveys those students. Name the population, the sample and the sampling method.}",
+    "prompt_plain": "A school has 840 students. The principal draws 60 student names from a hat and surveys those students. Name the population, the sample and the sampling method.",
+    "prompt_parts": [
+      {
+        "text": "A school has 840 students. The principal draws 60 student names from a hat and surveys those students. Name the population, the sample and the sampling method."
+      }
+    ],
+    "worked_solution": [
+      "Population: everyone the question is about, all 840 students",
+      "Sample: the part actually surveyed, the 60 students whose names were drawn",
+      "Every student had an equal chance of being drawn: a simple random sample",
+      "The sample is 60 / 840 = 1/14 of the population"
+    ],
+    "final_answer": "Population: 840 students; sample: 60 students; simple random sample",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-39",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original (tutor's own, unit 8 extra practice #6a)",
+    "prompt_latex": "\\text{A survey about winter tires is handed out at a snowmobile show. Name the one factor that most affects the data (who was asked, use of language, timing, cost, privacy or ethics), explain why, and say how to fix it.}",
+    "prompt_plain": "A survey about winter tires is handed out at a snowmobile show. Name the one factor that most affects the data (who was asked, use of language, timing, cost, privacy or ethics), explain why, and say how to fix it.",
+    "prompt_parts": [
+      {
+        "text": "A survey about winter tires is handed out at a snowmobile show. Name the one factor that most affects the data (who was asked, use of language, timing, cost, privacy or ethics), explain why, and say how to fix it."
+      }
+    ],
+    "worked_solution": [
+      "Ask: who is in this sample?",
+      "People at a snowmobile show enjoy winter driving and are not typical of all drivers",
+      "So the factor is who was asked: the sample is biased",
+      "Fix: choose drivers at random from a list of all licensed drivers"
+    ],
+    "final_answer": "Who was asked (sampling bias); sample drivers at random",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-40",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original",
+    "prompt_latex": "\\text{A school has 400 Grade 8, 350 Grade 9 and 250 Grade 10 students. A stratified sample of 100 students is chosen with each grade in proportion to its size. How many students come from each grade?}",
+    "prompt_plain": "A school has 400 Grade 8, 350 Grade 9 and 250 Grade 10 students. A stratified sample of 100 students is chosen with each grade in proportion to its size. How many students come from each grade?",
+    "prompt_parts": [
+      {
+        "text": "A school has 400 Grade 8, 350 Grade 9 and 250 Grade 10 students. A stratified sample of 100 students is chosen with each grade in proportion to its size. How many students come from each grade?"
+      }
+    ],
+    "worked_solution": [
+      "Total students: 400 + 350 + 250 = 1000",
+      "Sampling fraction: 100 / 1000 = 1/10",
+      "Grade 8: 400 ÷ 10 = 40",
+      "Grade 9: 350 ÷ 10 = 35. Grade 10: 250 ÷ 10 = 25",
+      "Check: 40 + 35 + 25 = 100"
+    ],
+    "final_answer": "Grade 8: 40, Grade 9: 35, Grade 10: 25",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-41",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original (tutor's own, unit 8 extra practice #16)",
+    "prompt_latex": "\\text{A bottling plant checks a sample of its bottles and finds } 0.25\\% \\text{ are underfilled. The plant fills } 3{,}600{,}000 \\text{ bottles a day. Predict how many bottles are underfilled each day, and state the assumption your prediction needs.}",
+    "prompt_plain": "A bottling plant checks a sample of its bottles and finds 0.25% are underfilled. The plant fills 3,600,000 bottles a day. Predict how many bottles are underfilled each day, and state the assumption your prediction needs.",
+    "prompt_parts": [
+      {
+        "text": "A bottling plant checks a sample of its bottles and finds 0.25% are underfilled. The plant fills 3,600,000 bottles a day. Predict how many bottles are underfilled each day, and state the assumption your prediction needs."
+      }
+    ],
+    "worked_solution": [
+      "Percent to decimal: 0.25 ÷ 100 = 0.0025",
+      "0.0025 × 3,600,000 = 9000",
+      "Assumption: the checked sample represents the whole day's production"
+    ],
+    "final_answer": "About 9000 bottles; assumes the sample is representative",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-42",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original (tutor's own, unit 8 extra practice #25)",
+    "prompt_latex": "\\text{A bar graph has a vertical axis that starts at 90, not 0. Team A's bar reaches 92 and Team B's bar reaches 100. Find how much higher Team B's real score is, as a percent of Team A's (nearest tenth of a percent), and how many times as tall Team B's bar looks.}",
+    "prompt_plain": "A bar graph has a vertical axis that starts at 90, not 0. Team A's bar reaches 92 and Team B's bar reaches 100. Find how much higher Team B's real score is, as a percent of Team A's (nearest tenth of a percent), and how many times as tall Team B's bar looks.",
+    "prompt_parts": [
+      {
+        "text": "A bar graph has a vertical axis that starts at 90, not 0. Team A's bar reaches 92 and Team B's bar reaches 100. Find how much higher Team B's real score is, as a percent of Team A's (nearest tenth of a percent), and how many times as tall Team B's bar looks."
+      }
+    ],
+    "worked_solution": [
+      "Real difference: 100 − 92 = 8",
+      "As a percent of Team A: 8 ÷ 92 ≈ 0.087, so about 8.7% higher",
+      "Bar heights above the axis start: A is 92 − 90 = 2 and B is 100 − 90 = 10",
+      "10 ÷ 2 = 5, so B's bar looks 5 times as tall",
+      "The graph is misleading because the axis starts at 90"
+    ],
+    "final_answer": "About 8.7% higher; the bar looks 5 times as tall",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-43",
+    "source": "BC Math 9 content: statistics in society (population vs sample, bias, sampling, misleading statistics); original (tutor's own, unit 8 extra practice #26)",
+    "prompt_latex": "\\text{A magazine reports how students get to school, and each student uses exactly one way: Bus } 35\\%, \\text{ Car } 30\\%, \\text{ Walk } 25\\%, \\text{ Bike } 20\\%. \\text{ Show with a calculation that these figures cannot all be correct.}",
+    "prompt_plain": "A magazine reports how students get to school, and each student uses exactly one way: Bus 35%, Car 30%, Walk 25%, Bike 20%. Show with a calculation that these figures cannot all be correct.",
+    "prompt_parts": [
+      {
+        "text": "A magazine reports how students get to school, and each student uses exactly one way: Bus 35%, Car 30%, Walk 25%, Bike 20%. Show with a calculation that these figures cannot all be correct."
+      }
+    ],
+    "worked_solution": [
+      "Add the percents: 35 + 30 + 25 + 20 = 110",
+      "Each student is counted once, so the percents must total 100",
+      "110 is more than 100, so at least one figure is wrong"
+    ],
+    "final_answer": "The total is 110%, not 100%",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-44",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original",
+    "prompt_latex": "\\text{A chequing account starts the month at } \\$215.40. \\text{ A deposit of } \\$80.00 \\text{ is made, then a withdrawal of } \\$126.75, \\text{ then a monthly fee of } \\$4.50, \\text{ then a deposit of } \\$33.25. \\text{ What is the final balance?}",
+    "prompt_plain": "A chequing account starts the month at $215.40. A deposit of $80.00 is made, then a withdrawal of $126.75, then a monthly fee of $4.50, then a deposit of $33.25. What is the final balance?",
+    "prompt_parts": [
+      {
+        "text": "A chequing account starts the month at $215.40. A deposit of $80.00 is made, then a withdrawal of $126.75, then a monthly fee of $4.50, then a deposit of $33.25. What is the final balance?"
+      }
+    ],
+    "worked_solution": [
+      "After the deposit: 215.40 + 80.00 = 295.40",
+      "After the withdrawal: 295.40 − 126.75 = 168.65",
+      "After the fee: 168.65 − 4.50 = 164.15",
+      "After the last deposit: 164.15 + 33.25 = 197.40"
+    ],
+    "final_answer": "$197.40",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-45",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original (tutor's own, unit 2 extra practice #10b)",
+    "prompt_latex": "\\text{Find the simple interest on } \\$1500 \\text{ at } 6\\% \\text{ per year for 8 months. } (I = P \\times R \\times T \\text{, with } T \\text{ in years.})",
+    "prompt_plain": "Find the simple interest on $1500 at 6% per year for 8 months. (I = P × R × T, with T in years.)",
+    "prompt_parts": [
+      {
+        "text": "Find the simple interest on $1500 at 6% per year for 8 months. (I = P × R × T, with T in years.)"
+      }
+    ],
+    "worked_solution": [
+      "Time in years: T = 8/12 = 2/3",
+      "I = 1500 × 0.06 × 2/3",
+      "1500 × 0.06 = 90",
+      "90 × 2/3 = 60"
+    ],
+    "final_answer": "$60",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-46",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original (tutor's own, unit 2 extra practice #27)",
+    "prompt_latex": "\\text{Find the simple interest on } \\$2000 \\text{ at } 4\\% \\text{ per year for 18 months. (A student wrote } 2000 \\times 0.04 \\times 18 = \\$1440 \\text{. Say what went wrong.)}",
+    "prompt_plain": "Find the simple interest on $2000 at 4% per year for 18 months. (A student wrote 2000 × 0.04 × 18 = $1440. Say what went wrong.)",
+    "prompt_parts": [
+      {
+        "text": "Find the simple interest on $2000 at 4% per year for 18 months. (A student wrote 2000 × 0.04 × 18 = $1440. Say what went wrong.)"
+      }
+    ],
+    "worked_solution": [
+      "The rate is per year, so T must be in years, not months",
+      "T = 18/12 = 1.5 years",
+      "I = 2000 × 0.04 × 1.5",
+      "2000 × 0.04 = 80",
+      "80 × 1.5 = 120"
+    ],
+    "final_answer": "$120 (the student used 18 months instead of 1.5 years)",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-47",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original (tutor's own, unit 2 extra practice #25)",
+    "prompt_latex": "\\text{Two simple-interest deposits: Bank A takes } \\$3000 \\text{ at } 3.5\\% \\text{ per year for 4 years. Bank B takes } \\$2500 \\text{ at } 5\\% \\text{ per year for 5 years. Find the interest from each and say which earns more, and by how much.}",
+    "prompt_plain": "Two simple-interest deposits: Bank A takes $3000 at 3.5% per year for 4 years. Bank B takes $2500 at 5% per year for 5 years. Find the interest from each and say which earns more, and by how much.",
+    "prompt_parts": [
+      {
+        "text": "Two simple-interest deposits: Bank A takes $3000 at 3.5% per year for 4 years. Bank B takes $2500 at 5% per year for 5 years. Find the interest from each and say which earns more, and by how much."
+      }
+    ],
+    "worked_solution": [
+      "Bank A: I = 3000 × 0.035 × 4 = 105 × 4 = 420",
+      "Bank B: I = 2500 × 0.05 × 5 = 125 × 5 = 625",
+      "Bank B earns more: 625 − 420 = 205"
+    ],
+    "final_answer": "A: $420, B: $625; Bank B earns $205 more",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-48",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original (tutor's own, unit 2 extra practice #26)",
+    "prompt_latex": "\\text{A loan of } \\$4800 \\text{ at } 6.5\\% \\text{ simple interest per year is repaid after 30 months. How much must be repaid in total?}",
+    "prompt_plain": "A loan of $4800 at 6.5% simple interest per year is repaid after 30 months. How much must be repaid in total?",
+    "prompt_parts": [
+      {
+        "text": "A loan of $4800 at 6.5% simple interest per year is repaid after 30 months. How much must be repaid in total?"
+      }
+    ],
+    "worked_solution": [
+      "Time in years: T = 30/12 = 2.5",
+      "I = 4800 × 0.065 × 2.5",
+      "4800 × 0.065 = 312",
+      "312 × 2.5 = 780",
+      "Total = principal + interest = 4800 + 780 = 5580"
+    ],
+    "final_answer": "$5580",
+    "level": "high_school"
+  },
+  {
+    "id": "m9-49",
+    "source": "BC Math 9 content: financial literacy: simple budgets and transactions (banking, simple interest, savings, planned purchases); original",
+    "prompt_latex": "\\text{A student earns } \\$15 \\text{ per hour and works 10 hours a week. She saves } 40\\% \\text{ of her weekly pay toward a } \\$420 \\text{ bike. How many whole weeks does she need to save?}",
+    "prompt_plain": "A student earns $15 per hour and works 10 hours a week. She saves 40% of her weekly pay toward a $420 bike. How many whole weeks does she need to save?",
+    "prompt_parts": [
+      {
+        "text": "A student earns $15 per hour and works 10 hours a week. She saves 40% of her weekly pay toward a $420 bike. How many whole weeks does she need to save?"
+      }
+    ],
+    "worked_solution": [
+      "Weekly pay: 15 × 10 = 150",
+      "Weekly savings: 150 × 0.40 = 60",
+      "Weeks needed: 420 ÷ 60 = 7",
+      "Check: 7 × 60 = 420"
+    ],
+    "final_answer": "7 weeks",
+    "level": "high_school"
+  }
+]
