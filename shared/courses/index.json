@@ -56,6 +56,42 @@
       "file": "problems.json"
     },
     {
+      "slug": "bc-fmpc-10",
+      "title": "BC Foundations of Math and Pre-calculus 10",
+      "group": "high_school",
+      "grade": 10,
+      "level": "high_school",
+      "count": 54,
+      "file": "courses/bc-fmpc-10/problems.json"
+    },
+    {
+      "slug": "bc-calc-12",
+      "title": "BC Calculus 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "count": 77,
+      "file": "courses/bc-calc-12/problems.json"
+    },
+    {
+      "slug": "bc-fm-12",
+      "title": "BC Foundations of Math 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "count": 46,
+      "file": "courses/bc-fm-12/problems.json"
+    },
+    {
+      "slug": "bc-pc-12",
+      "title": "BC Pre-calculus 12",
+      "group": "high_school",
+      "grade": 12,
+      "level": "high_school",
+      "count": 84,
+      "file": "courses/bc-pc-12/problems.json"
+    },
+    {
       "slug": "calculus-1",
       "title": "Calculus I",
       "group": "college",

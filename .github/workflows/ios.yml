@@ -12,12 +12,12 @@ on:
     branches: [main]
     paths:
       - "ios/**"
-      - "shared/problems.json"
+      - "shared/**"
       - ".github/workflows/ios.yml"
   pull_request:
     paths:
       - "ios/**"
-      - "shared/problems.json"
+      - "shared/**"
       - ".github/workflows/ios.yml"
   workflow_dispatch:
 

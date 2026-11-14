@@ -4,6 +4,8 @@ import SwiftUI
 struct FractionView: View {
     let numerator: String
     let denominator: String
+    /// Point size of the numerals; the card shrinks it for a long prompt.
+    var size: CGFloat = 30
 
     var body: some View {
         VStack(spacing: 3) {
@@ -14,7 +16,7 @@ struct FractionView: View {
             Text(denominator)
                 .padding(.horizontal, 3)
         }
-        .font(.system(size: 30, design: .serif))
+        .font(.system(size: size, design: .serif))
         .fixedSize()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(numerator) over \(denominator)")
@@ -74,11 +76,42 @@ struct FlowLayout: Layout {
     }
 }
 
+/// How a prompt is cut into words for the card, and how big they are drawn.
+enum PromptLayout {
+    /// A bracketed run such as a matrix `[1 2; 3 4]` stays in one piece (its spaces become no-break spaces) so it is never torn
+    /// across two lines. Longer runs are left to wrap normally, so nothing can be wider than the card.
+    static func words(_ text: String) -> [String] {
+        var glued = text
+        if let bracketed = try? NSRegularExpression(pattern: "\\[[^\\]]{1,34}\\]") {
+            let matches = bracketed.matches(in: text, range: NSRange(text.startIndex..., in: text)).reversed()
+            for match in matches {
+                guard let range = Range(match.range, in: glued) else { continue }
+                glued.replaceSubrange(range, with: glued[range].replacingOccurrences(of: " ", with: "\u{00A0}"))
+            }
+        }
+        return glued.split(whereSeparator: { $0 == " " || $0 == "\n" }).map(String.init)
+    }
+
+    /// Point size by prompt length: a short equation is big; a 260 character word problem is 18 so it fits in about six lines.
+    static func fontSize(forLength length: Int) -> CGFloat {
+        switch length {
+        case ..<61: return 26
+        case ..<111: return 23
+        case ..<171: return 20
+        default: return 18
+        }
+    }
+}
+
 /// The problem at the top of the screen.
 struct ProblemCardView: View {
     let problem: Problem
+    /// Small line above the problem, the course name ("BC Math 5"). Nil leaves it out.
+    var heading: String? = nil
     /// Told when the student folds or opens the card (for the session log).
     var onToggle: (Bool) -> Void = { _ in }
+
+    private var fontSize: CGFloat { PromptLayout.fontSize(forLength: problem.promptPlain.count) }
 
     private enum Piece: Identifiable {
         case word(id: Int, text: String)
@@ -97,8 +130,8 @@ struct ProblemCardView: View {
         for part in problem.promptParts {
             switch part {
             case .text(let text):
-                for word in text.split(whereSeparator: { $0 == " " || $0 == "\n" }) {
-                    result.append(.word(id: result.count, text: String(word)))
+                for word in PromptLayout.words(text) {
+                    result.append(.word(id: result.count, text: word))
                 }
             case .fraction(let numerator, let denominator):
                 result.append(.fraction(id: result.count, numerator: numerator, denominator: denominator))
@@ -125,11 +158,13 @@ struct ProblemCardView: View {
     private var expandedCard: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
-                Text("Solve for the letter")
-                    .font(.caption)
-                    .lineLimit(1)
-                    .fixedSize()
-                    .foregroundStyle(.secondary)
+                if let heading {
+                    Text(heading)
+                        .font(.caption)
+                        .fixedSize(horizontal: false, vertical: true)   // wraps to its words, never cut off
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("problemCourseTitle")
+                }
                 Spacer(minLength: 4)
                 Image(systemName: "chevron.up")
                     .font(.caption.weight(.semibold))
@@ -139,9 +174,9 @@ struct ProblemCardView: View {
                 ForEach(pieces) { piece in
                     switch piece {
                     case .word(_, let text):
-                        Text(text).font(.system(size: 26, design: .serif))
+                        Text(text).font(.system(size: fontSize, design: .serif))
                     case .fraction(_, let numerator, let denominator):
-                        FractionView(numerator: numerator, denominator: denominator)
+                        FractionView(numerator: numerator, denominator: denominator, size: fontSize * 1.15)
                     }
                 }
             }
