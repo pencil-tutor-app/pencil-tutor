@@ -1,0 +1,1705 @@
+[
+  {
+    "id": "m6-01",
+    "source": "BC Mathematics 6 content standard: small to large numbers (thousandths to billions); original",
+    "prompt_latex": "\\text{In the number 58 342 716 907, what is the value of the digit 4?}",
+    "prompt_plain": "In the number 58 342 716 907, what is the value of the digit 4?",
+    "prompt_parts": [
+      {
+        "text": "In the number 58 342 716 907, what is the value of the digit 4?"
+      }
+    ],
+    "worked_solution": [
+      "Group the digits in threes: 58 | 342 | 716 | 907 (billions, millions, thousands, ones)",
+      "The 4 is in the millions group 342, in the tens place",
+      "4 ten-millions = 4 × 10000000 = 40000000"
+    ],
+    "final_answer": "40 000 000 (forty million)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-02",
+    "source": "BC Mathematics 6 content standard: small to large numbers (thousandths to billions); original",
+    "prompt_latex": "\\text{Order these from least to greatest: 0.409, 0.49, 0.094, 0.4}",
+    "prompt_plain": "Order these from least to greatest: 0.409, 0.49, 0.094, 0.4",
+    "prompt_parts": [
+      {
+        "text": "Order these from least to greatest: 0.409, 0.49, 0.094, 0.4"
+      }
+    ],
+    "worked_solution": [
+      "Give each number three decimal places: 0.409, 0.490, 0.094, 0.400",
+      "Compare them as thousandths: 409, 490, 94, 400",
+      "94 < 400 < 409 < 490, so 0.094 < 0.400 < 0.409 < 0.490"
+    ],
+    "final_answer": "0.094, 0.4, 0.409, 0.49",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-03",
+    "source": "BC Mathematics 6 content standard: small to large numbers (thousandths to billions); original",
+    "prompt_latex": "\\text{Estimate 38 947 + 41 205 by rounding each number to the nearest thousand. Then find the exact sum to check your estimate.}",
+    "prompt_plain": "Estimate 38 947 + 41 205 by rounding each number to the nearest thousand. Then find the exact sum to check your estimate.",
+    "prompt_parts": [
+      {
+        "text": "Estimate 38 947 + 41 205 by rounding each number to the nearest thousand. Then find the exact sum to check your estimate."
+      }
+    ],
+    "worked_solution": [
+      "38947 rounds to 39000 and 41205 rounds to 41000",
+      "Estimate: 39000 + 41000 = 80000",
+      "Exact: 38947 + 41205 = 80152",
+      "80152 is close to 80000, so the exact answer is reasonable"
+    ],
+    "final_answer": "Estimate 80 000; exact sum 80 152",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-04",
+    "source": "BC Mathematics 6 content standard: small to large numbers (thousandths to billions); original",
+    "prompt_latex": "\\text{A hiker walked 12.375 km on Saturday and 4.86 km on Sunday. How far did the hiker walk in all?}",
+    "prompt_plain": "A hiker walked 12.375 km on Saturday and 4.86 km on Sunday. How far did the hiker walk in all?",
+    "prompt_parts": [
+      {
+        "text": "A hiker walked 12.375 km on Saturday and 4.86 km on Sunday. How far did the hiker walk in all?"
+      }
+    ],
+    "worked_solution": [
+      "Line up the decimal points and fill the empty place with a zero: 12.375 + 4.860",
+      "Add thousandths, hundredths, tenths, then ones: 12.375 + 4.860 = 17.235"
+    ],
+    "final_answer": "17.235 km",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-05",
+    "source": "BC Mathematics 6 content standard: multiplication and division facts to 100 (developing computational fluency); original",
+    "prompt_latex": "\\text{Use the double-double strategy to find 23 × 4 in your head.}",
+    "prompt_plain": "Use the double-double strategy to find 23 × 4 in your head.",
+    "prompt_parts": [
+      {
+        "text": "Use the double-double strategy to find 23 × 4 in your head."
+      }
+    ],
+    "worked_solution": [
+      "Double 23: 23 × 2 = 46",
+      "Double again: 46 × 2 = 92",
+      "So 23 × 4 = 92"
+    ],
+    "final_answer": "92",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-06",
+    "source": "BC Mathematics 6 content standard: multiplication and division facts to 100 (developing computational fluency); original",
+    "prompt_latex": "\\text{Find 49 × 6 in your head. Hint: 49 is one less than 50.}",
+    "prompt_plain": "Find 49 × 6 in your head. Hint: 49 is one less than 50.",
+    "prompt_parts": [
+      {
+        "text": "Find 49 × 6 in your head. Hint: 49 is one less than 50."
+      }
+    ],
+    "worked_solution": [
+      "49 × 6 = 50 × 6 − 1 × 6",
+      "50 × 6 = 300 and 1 × 6 = 6",
+      "300 − 6 = 294"
+    ],
+    "final_answer": "294",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-07",
+    "source": "BC Mathematics 6 content standard: multiplication and division facts to 100 (developing computational fluency); original",
+    "prompt_latex": "\\text{Find 15 × 14 by splitting 14 into 10 + 4.}",
+    "prompt_plain": "Find 15 × 14 by splitting 14 into 10 + 4.",
+    "prompt_parts": [
+      {
+        "text": "Find 15 × 14 by splitting 14 into 10 + 4."
+      }
+    ],
+    "worked_solution": [
+      "15 × 14 = 15 × 10 + 15 × 4",
+      "15 × 10 = 150 and 15 × 4 = 60",
+      "150 + 60 = 210"
+    ],
+    "final_answer": "210",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-08",
+    "source": "BC Mathematics 6 content standard: multiplication and division facts to 100 (developing computational fluency); original",
+    "prompt_latex": "\\text{Find 6 × 3.5 in your head by thinking of 3.5 as 3 + 0.5.}",
+    "prompt_plain": "Find 6 × 3.5 in your head by thinking of 3.5 as 3 + 0.5.",
+    "prompt_parts": [
+      {
+        "text": "Find 6 × 3.5 in your head by thinking of 3.5 as 3 + 0.5."
+      }
+    ],
+    "worked_solution": [
+      "6 × 3.5 = 6 × 3 + 6 × 0.5",
+      "6 × 3 = 18 and 6 × 0.5 = 3 (half of 6)",
+      "18 + 3 = 21"
+    ],
+    "final_answer": "21",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-09",
+    "source": "BC Mathematics 6 content standard: order of operations with whole numbers; original",
+    "prompt_latex": "\\text{Evaluate: }18 - 4 \\times  3",
+    "prompt_plain": "Evaluate: 18 − 4 × 3",
+    "prompt_parts": [
+      {
+        "text": "Evaluate: 18 − 4 × 3"
+      }
+    ],
+    "worked_solution": [
+      "Multiply before subtracting: 4 × 3 = 12",
+      "18 − 12 = 6"
+    ],
+    "final_answer": "6",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-10",
+    "source": "BC Mathematics 6 content standard: order of operations with whole numbers; original",
+    "prompt_latex": "\\text{Evaluate: }(7 + 5) \\times  3 - 8",
+    "prompt_plain": "Evaluate: (7 + 5) × 3 − 8",
+    "prompt_parts": [
+      {
+        "text": "Evaluate: (7 + 5) × 3 − 8"
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 7 + 5 = 12",
+      "12 × 3 = 36",
+      "36 − 8 = 28"
+    ],
+    "final_answer": "28",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-11",
+    "source": "BC Mathematics 6 content standard: order of operations with whole numbers; original",
+    "prompt_latex": "\\text{Evaluate: }36 \\div  (2 + 4) + 9 \\times  2",
+    "prompt_plain": "Evaluate: 36 ÷ (2 + 4) + 9 × 2",
+    "prompt_parts": [
+      {
+        "text": "Evaluate: 36 ÷ (2 + 4) + 9 × 2"
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 2 + 4 = 6",
+      "Divide and multiply, left to right: 36 ÷ 6 = 6 and 9 × 2 = 18",
+      "6 + 18 = 24"
+    ],
+    "final_answer": "24",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-12",
+    "source": "BC Mathematics 6 content standard: order of operations with whole numbers; original",
+    "prompt_latex": "\\text{Evaluate: }20 - 6 \\times  (9 - 4) \\div  4",
+    "prompt_plain": "Evaluate: 20 − 6 × (9 − 4) ÷ 4",
+    "prompt_parts": [
+      {
+        "text": "Evaluate: 20 − 6 × (9 − 4) ÷ 4"
+      }
+    ],
+    "worked_solution": [
+      "Brackets first: 9 − 4 = 5",
+      "Multiply: 6 × 5 = 30",
+      "Divide: 30 ÷ 4 = 7.5",
+      "Subtract: 20 − 7.5 = 12.5"
+    ],
+    "final_answer": "12.5",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-13",
+    "source": "BC Mathematics 6 content standard: order of operations with whole numbers; original",
+    "prompt_latex": "\\text{Evaluate: }3 \\times  (14 - 2 \\times  5) + 48 \\div  8",
+    "prompt_plain": "Evaluate: 3 × (14 − 2 × 5) + 48 ÷ 8",
+    "prompt_parts": [
+      {
+        "text": "Evaluate: 3 × (14 − 2 × 5) + 48 ÷ 8"
+      }
+    ],
+    "worked_solution": [
+      "Inside the brackets, multiply first: 2 × 5 = 10",
+      "14 − 10 = 4",
+      "3 × 4 = 12 and 48 ÷ 8 = 6",
+      "12 + 6 = 18"
+    ],
+    "final_answer": "18",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-14",
+    "source": "BC Mathematics 6 content standard: factors and multiples: greatest common factor and least common multiple; original",
+    "prompt_latex": "\\text{Write 180 as a product of prime factors, using exponents.}",
+    "prompt_plain": "Write 180 as a product of prime factors, using exponents.",
+    "prompt_parts": [
+      {
+        "text": "Write 180 as a product of prime factors, using exponents."
+      }
+    ],
+    "worked_solution": [
+      "180 ÷ 2 = 90",
+      "90 ÷ 2 = 45",
+      "45 ÷ 3 = 15",
+      "15 ÷ 3 = 5, and 5 is prime",
+      "180 = 2 × 2 × 3 × 3 × 5 = 2² × 3² × 5"
+    ],
+    "final_answer": "180 = 2² × 3² × 5",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-15",
+    "source": "BC Mathematics 6 content standard: factors and multiples: greatest common factor and least common multiple; original",
+    "prompt_latex": "\\text{Find the greatest common factor (GCF) of 36 and 48.}",
+    "prompt_plain": "Find the greatest common factor (GCF) of 36 and 48.",
+    "prompt_parts": [
+      {
+        "text": "Find the greatest common factor (GCF) of 36 and 48."
+      }
+    ],
+    "worked_solution": [
+      "Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36",
+      "Factors of 48: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48",
+      "Common factors: 1, 2, 3, 4, 6, 12",
+      "The greatest one is 12"
+    ],
+    "final_answer": "12",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-16",
+    "source": "BC Mathematics 6 content standard: factors and multiples: greatest common factor and least common multiple; original",
+    "prompt_latex": "\\text{Find the least common multiple (LCM) of 12 and 18.}",
+    "prompt_plain": "Find the least common multiple (LCM) of 12 and 18.",
+    "prompt_parts": [
+      {
+        "text": "Find the least common multiple (LCM) of 12 and 18."
+      }
+    ],
+    "worked_solution": [
+      "Multiples of 12: 12, 24, 36, 48, ...",
+      "Multiples of 18: 18, 36, 54, ...",
+      "The first number in both lists is 36"
+    ],
+    "final_answer": "36",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-17",
+    "source": "BC Mathematics 6 content standard: factors and multiples: greatest common factor and least common multiple; original",
+    "prompt_latex": "\\text{Two buses leave the station together at 8:00 a.m. Route A buses leave every 15 minutes and Route B buses leave every 20 minutes. After how many minutes will they leave together again?}",
+    "prompt_plain": "Two buses leave the station together at 8:00 a.m. Route A buses leave every 15 minutes and Route B buses leave every 20 minutes. After how many minutes will they leave together again?",
+    "prompt_parts": [
+      {
+        "text": "Two buses leave the station together at 8:00 a.m. Route A buses leave every 15 minutes and Route B buses leave every 20 minutes. After how many minutes will they leave together again?"
+      }
+    ],
+    "worked_solution": [
+      "We want the least common multiple of 15 and 20",
+      "Multiples of 15: 15, 30, 45, 60, ...",
+      "Multiples of 20: 20, 40, 60, ...",
+      "They match first at 60 minutes (9:00 a.m.)"
+    ],
+    "final_answer": "60 minutes",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-18",
+    "source": "BC Mathematics 6 content standard: factors and multiples: greatest common factor and least common multiple; original",
+    "prompt_latex": "\\text{Use divisibility rules. Which of 2, 3, 5 and 9 divide 4530 evenly?}",
+    "prompt_plain": "Use divisibility rules. Which of 2, 3, 5 and 9 divide 4530 evenly?",
+    "prompt_parts": [
+      {
+        "text": "Use divisibility rules. Which of 2, 3, 5 and 9 divide 4530 evenly?"
+      }
+    ],
+    "worked_solution": [
+      "4530 ends in 0, so it is divisible by 2 and by 5",
+      "Add the digits: 4 + 5 + 3 + 0 = 12",
+      "12 is divisible by 3 but not by 9",
+      "So 4530 is divisible by 2, 3 and 5, but not by 9"
+    ],
+    "final_answer": "2, 3 and 5",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-19",
+    "source": "BC Mathematics 6 content standard: improper fractions and mixed numbers; original",
+    "prompt_latex": "\\text{Write }\\dfrac{23}{6} \\text{ as a mixed number.}",
+    "prompt_plain": "Write 23/6 as a mixed number.",
+    "prompt_parts": [
+      {
+        "text": "Write "
+      },
+      {
+        "frac": {
+          "num": "23",
+          "den": "6"
+        }
+      },
+      {
+        "text": " as a mixed number."
+      }
+    ],
+    "worked_solution": [
+      "6 × 3 = 18, and 23 − 18 = 5, so there are 3 wholes and 5 sixths left over",
+      "23/6 = 3 5/6"
+    ],
+    "final_answer": "3 5/6",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-20",
+    "source": "BC Mathematics 6 content standard: improper fractions and mixed numbers; original",
+    "prompt_latex": "\\text{Write 4 }\\dfrac{2}{5} \\text{ as an improper fraction.}",
+    "prompt_plain": "Write 4 2/5 as an improper fraction.",
+    "prompt_parts": [
+      {
+        "text": "Write 4 "
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "5"
+        }
+      },
+      {
+        "text": " as an improper fraction."
+      }
+    ],
+    "worked_solution": [
+      "4 wholes = 4 × 5 = 20 fifths",
+      "20 fifths + 2 fifths = 22 fifths",
+      "4 2/5 = 22/5"
+    ],
+    "final_answer": "22/5",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-21",
+    "source": "BC Mathematics 6 content standard: improper fractions and mixed numbers; original",
+    "prompt_latex": "\\text{Which is greater, }\\dfrac{7}{4} \\text{ or 1 }\\dfrac{2}{3} \\text{? Use a common denominator.}",
+    "prompt_plain": "Which is greater, 7/4 or 1 2/3? Use a common denominator.",
+    "prompt_parts": [
+      {
+        "text": "Which is greater, "
+      },
+      {
+        "frac": {
+          "num": "7",
+          "den": "4"
+        }
+      },
+      {
+        "text": " or 1 "
+      },
+      {
+        "frac": {
+          "num": "2",
+          "den": "3"
+        }
+      },
+      {
+        "text": "? Use a common denominator."
+      }
+    ],
+    "worked_solution": [
+      "Write 1 2/3 as an improper fraction: 5/3",
+      "The common denominator of 4 and 3 is 12",
+      "7/4 = 21/12 and 5/3 = 20/12",
+      "21/12 is more than 20/12, so 7/4 is greater"
+    ],
+    "final_answer": "7/4 is greater",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-22",
+    "source": "BC Mathematics 6 content standard: improper fractions and mixed numbers; original",
+    "prompt_latex": "\\text{Order from least to greatest: }\\dfrac{5}{2} \\text{, 2 }\\dfrac{1}{3} \\text{, }\\dfrac{9}{4}",
+    "prompt_plain": "Order from least to greatest: 5/2, 2 1/3, 9/4",
+    "prompt_parts": [
+      {
+        "text": "Order from least to greatest: "
+      },
+      {
+        "frac": {
+          "num": "5",
+          "den": "2"
+        }
+      },
+      {
+        "text": ", 2 "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "3"
+        }
+      },
+      {
+        "text": ", "
+      },
+      {
+        "frac": {
+          "num": "9",
+          "den": "4"
+        }
+      }
+    ],
+    "worked_solution": [
+      "Change 2 1/3 to an improper fraction: 7/3",
+      "Common denominator of 2, 3 and 4 is 12",
+      "5/2 = 30/12, 7/3 = 28/12, 9/4 = 27/12",
+      "27 < 28 < 30, so the order is 9/4, 7/3, 5/2"
+    ],
+    "final_answer": "9/4, 2 1/3, 5/2",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-23",
+    "source": "BC Mathematics 6 content standard: introduction to ratios; original",
+    "prompt_latex": "\\text{A bag has 12 red marbles and 20 blue marbles. Write the ratio of red to blue marbles in simplest form.}",
+    "prompt_plain": "A bag has 12 red marbles and 20 blue marbles. Write the ratio of red to blue marbles in simplest form.",
+    "prompt_parts": [
+      {
+        "text": "A bag has 12 red marbles and 20 blue marbles. Write the ratio of red to blue marbles in simplest form."
+      }
+    ],
+    "worked_solution": [
+      "Red : blue = 12 : 20",
+      "The GCF of 12 and 20 is 4: 12 ÷ 4 = 3 and 20 ÷ 4 = 5",
+      "The ratio is 3 : 5"
+    ],
+    "final_answer": "3 : 5",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-24",
+    "source": "BC Mathematics 6 content standard: introduction to ratios; original",
+    "prompt_latex": "\\text{A box holds 15 pencils and 25 pens. Write the part-to-whole ratio of pencils to all the items, in simplest form.}",
+    "prompt_plain": "A box holds 15 pencils and 25 pens. Write the part-to-whole ratio of pencils to all the items, in simplest form.",
+    "prompt_parts": [
+      {
+        "text": "A box holds 15 pencils and 25 pens. Write the part-to-whole ratio of pencils to all the items, in simplest form."
+      }
+    ],
+    "worked_solution": [
+      "Total items: 15 + 25 = 40",
+      "Pencils to total = 15 : 40",
+      "The GCF of 15 and 40 is 5: 15 ÷ 5 = 3 and 40 ÷ 5 = 8",
+      "The ratio is 3 : 8"
+    ],
+    "final_answer": "3 : 8",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-25",
+    "source": "BC Mathematics 6 content standard: introduction to ratios; original",
+    "prompt_latex": "\\text{Fill in the missing number so the ratios are equal: 3 : 4 = ? : 28}",
+    "prompt_plain": "Fill in the missing number so the ratios are equal: 3 : 4 = ? : 28",
+    "prompt_parts": [
+      {
+        "text": "Fill in the missing number so the ratios are equal: 3 : 4 = ? : 28"
+      }
+    ],
+    "worked_solution": [
+      "4 × 7 = 28, so multiply the first number by 7 as well",
+      "3 × 7 = 21",
+      "3 : 4 = 21 : 28"
+    ],
+    "final_answer": "21",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-26",
+    "source": "BC Mathematics 6 content standard: introduction to ratios; original",
+    "prompt_latex": "\\text{Light green paint uses blue and yellow in the ratio 3 : 2. Mei uses 15 mL of blue. How much yellow does she need?}",
+    "prompt_plain": "Light green paint uses blue and yellow in the ratio 3 : 2. Mei uses 15 mL of blue. How much yellow does she need?",
+    "prompt_parts": [
+      {
+        "text": "Light green paint uses blue and yellow in the ratio 3 : 2. Mei uses 15 mL of blue. How much yellow does she need?"
+      }
+    ],
+    "worked_solution": [
+      "Blue is 3 parts and 15 mL, so one part is 15 ÷ 3 = 5 mL",
+      "Yellow is 2 parts: 2 × 5 = 10 mL"
+    ],
+    "final_answer": "10 mL",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-27",
+    "source": "BC Mathematics 6 content standard: introduction to ratios; original",
+    "prompt_latex": "\\text{At a shelter the ratio of cats to dogs is 5 : 3. There are 40 animals, and all are cats or dogs. How many dogs are there?}",
+    "prompt_plain": "At a shelter the ratio of cats to dogs is 5 : 3. There are 40 animals, and all are cats or dogs. How many dogs are there?",
+    "prompt_parts": [
+      {
+        "text": "At a shelter the ratio of cats to dogs is 5 : 3. There are 40 animals, and all are cats or dogs. How many dogs are there?"
+      }
+    ],
+    "worked_solution": [
+      "5 + 3 = 8 parts in all",
+      "40 ÷ 8 = 5 animals in each part",
+      "Dogs are 3 parts: 3 × 5 = 15"
+    ],
+    "final_answer": "15 dogs",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-28",
+    "source": "BC Mathematics 6 content standard: whole-number percents and percentage discounts; original",
+    "prompt_latex": "\\text{On a 10 by 10 grid, 35 squares are shaded. Write the shaded part as a percent, as a fraction in simplest form, and as a decimal.}",
+    "prompt_plain": "On a 10 by 10 grid, 35 squares are shaded. Write the shaded part as a percent, as a fraction in simplest form, and as a decimal.",
+    "prompt_parts": [
+      {
+        "text": "On a 10 by 10 grid, 35 squares are shaded. Write the shaded part as a percent, as a fraction in simplest form, and as a decimal."
+      }
+    ],
+    "worked_solution": [
+      "The grid has 100 squares, so 35 out of 100 is 35%",
+      "35/100 = 7/20 (divide top and bottom by 5)",
+      "35 ÷ 100 = 0.35"
+    ],
+    "final_answer": "35%, 7/20, 0.35",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-29",
+    "source": "BC Mathematics 6 content standard: whole-number percents and percentage discounts; original",
+    "prompt_latex": "\\text{Find 25\\% of 80.}",
+    "prompt_plain": "Find 25% of 80.",
+    "prompt_parts": [
+      {
+        "text": "Find 25% of 80."
+      }
+    ],
+    "worked_solution": [
+      "25% is the same as 1/4",
+      "80 ÷ 4 = 20"
+    ],
+    "final_answer": "20",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-30",
+    "source": "BC Mathematics 6 content standard: whole-number percents and percentage discounts; original",
+    "prompt_latex": "\\text{Nora scored 18 out of 24 on a quiz. What percent is that?}",
+    "prompt_plain": "Nora scored 18 out of 24 on a quiz. What percent is that?",
+    "prompt_parts": [
+      {
+        "text": "Nora scored 18 out of 24 on a quiz. What percent is that?"
+      }
+    ],
+    "worked_solution": [
+      "18/24 = 3/4 (divide top and bottom by 6)",
+      "3/4 = 75/100, which is 75%"
+    ],
+    "final_answer": "75%",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-31",
+    "source": "BC Mathematics 6 content standard: whole-number percents and percentage discounts; original",
+    "prompt_latex": "\\text{A jacket costs \\$60. It is on sale for 30\\% off. What is the sale price?}",
+    "prompt_plain": "A jacket costs $60. It is on sale for 30% off. What is the sale price?",
+    "prompt_parts": [
+      {
+        "text": "A jacket costs $60. It is on sale for 30% off. What is the sale price?"
+      }
+    ],
+    "worked_solution": [
+      "10% of 60 = 60 ÷ 10 = 6",
+      "30% of 60 = 3 × 6 = 18",
+      "Sale price: 60 − 18 = 42"
+    ],
+    "final_answer": "$42",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-32",
+    "source": "BC Mathematics 6 content standard: whole-number percents and percentage discounts; original",
+    "prompt_latex": "\\text{15 is 20\\% of a number. What is the number?}",
+    "prompt_plain": "15 is 20% of a number. What is the number?",
+    "prompt_parts": [
+      {
+        "text": "15 is 20% of a number. What is the number?"
+      }
+    ],
+    "worked_solution": [
+      "20% = 1/5, so 15 is one fifth of the number",
+      "The whole number is 5 × 15 = 75",
+      "Check: 75 ÷ 5 = 15 ✓"
+    ],
+    "final_answer": "75",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-33",
+    "source": "BC Mathematics 6 content standard: multiplication and division of decimals; original",
+    "prompt_latex": "\\text{Find 0.125 × 3.}",
+    "prompt_plain": "Find 0.125 × 3.",
+    "prompt_parts": [
+      {
+        "text": "Find 0.125 × 3."
+      }
+    ],
+    "worked_solution": [
+      "Ignore the decimal point: 125 × 3 = 375",
+      "0.125 has 3 decimal places, so the answer has 3 decimal places",
+      "0.125 × 3 = 0.375"
+    ],
+    "final_answer": "0.375",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-34",
+    "source": "BC Mathematics 6 content standard: multiplication and division of decimals; original",
+    "prompt_latex": "\\text{Find 7.2 ÷ 9.}",
+    "prompt_plain": "Find 7.2 ÷ 9.",
+    "prompt_parts": [
+      {
+        "text": "Find 7.2 ÷ 9."
+      }
+    ],
+    "worked_solution": [
+      "7.2 is 72 tenths",
+      "72 tenths ÷ 9 = 8 tenths, since 72 ÷ 9 = 8",
+      "7.2 ÷ 9 = 0.8"
+    ],
+    "final_answer": "0.8",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-35",
+    "source": "BC Mathematics 6 content standard: multiplication and division of decimals; original",
+    "prompt_latex": "\\text{Find 4.6 × 0.3.}",
+    "prompt_plain": "Find 4.6 × 0.3.",
+    "prompt_parts": [
+      {
+        "text": "Find 4.6 × 0.3."
+      }
+    ],
+    "worked_solution": [
+      "Ignore the decimal points: 46 × 3 = 138",
+      "4.6 has 1 decimal place and 0.3 has 1, so the answer has 2 decimal places",
+      "4.6 × 0.3 = 1.38"
+    ],
+    "final_answer": "1.38",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-36",
+    "source": "BC Mathematics 6 content standard: multiplication and division of decimals; original",
+    "prompt_latex": "\\text{Find 12.6 ÷ 0.6.}",
+    "prompt_plain": "Find 12.6 ÷ 0.6.",
+    "prompt_parts": [
+      {
+        "text": "Find 12.6 ÷ 0.6."
+      }
+    ],
+    "worked_solution": [
+      "Multiply both numbers by 10 so the divisor is whole: 12.6 × 10 = 126 and 0.6 × 10 = 6",
+      "126 ÷ 6 = 21",
+      "12.6 ÷ 0.6 = 21"
+    ],
+    "final_answer": "21",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-37",
+    "source": "BC Mathematics 6 content standard: multiplication and division of decimals; original",
+    "prompt_latex": "\\text{Pens cost \\$2.35 each. How much do 4 pens cost?}",
+    "prompt_plain": "Pens cost $2.35 each. How much do 4 pens cost?",
+    "prompt_parts": [
+      {
+        "text": "Pens cost $2.35 each. How much do 4 pens cost?"
+      }
+    ],
+    "worked_solution": [
+      "Ignore the decimal point: 235 × 4 = 940",
+      "Money has 2 decimal places: $9.40"
+    ],
+    "final_answer": "$9.40",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-38",
+    "source": "BC Mathematics 6 content standard: increasing and decreasing patterns, using expressions, tables, and graphs as functional relationships; original",
+    "prompt_latex": "\\text{A pattern starts 5, 8, 11, 14, ... Write a rule using n for the term number, then find the 10th term.}",
+    "prompt_plain": "A pattern starts 5, 8, 11, 14, ... Write a rule using n for the term number, then find the 10th term.",
+    "prompt_parts": [
+      {
+        "text": "A pattern starts 5, 8, 11, 14, ... Write a rule using n for the term number, then find the 10th term."
+      }
+    ],
+    "worked_solution": [
+      "Each term is 3 more than the one before, so the rule starts with 3n",
+      "For n = 1: 3 × 1 = 3, but the first term is 5, so add 2",
+      "Rule: 3n + 2",
+      "10th term: 3 × 10 + 2 = 32"
+    ],
+    "final_answer": "3n + 2; 10th term is 32",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-39",
+    "source": "BC Mathematics 6 content standard: increasing and decreasing patterns, using expressions, tables, and graphs as functional relationships; original",
+    "prompt_latex": "\\text{A table shows tiles in a pattern. Term n = 1, 2, 3, 4 has 7, 11, 15, 19 tiles. Write a rule for the number of tiles, then find the tiles for n = 12.}",
+    "prompt_plain": "A table shows tiles in a pattern. Term n = 1, 2, 3, 4 has 7, 11, 15, 19 tiles. Write a rule for the number of tiles, then find the tiles for n = 12.",
+    "prompt_parts": [
+      {
+        "text": "A table shows tiles in a pattern. Term n = 1, 2, 3, 4 has 7, 11, 15, 19 tiles. Write a rule for the number of tiles, then find the tiles for n = 12."
+      }
+    ],
+    "worked_solution": [
+      "Each term is 4 more than the one before, so the rule starts with 4n",
+      "For n = 1: 4 × 1 = 4, but there are 7 tiles, so add 3",
+      "Rule: 4n + 3",
+      "n = 12: 4 × 12 + 3 = 51"
+    ],
+    "final_answer": "4n + 3; 51 tiles",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-40",
+    "source": "BC Mathematics 6 content standard: increasing and decreasing patterns, using expressions, tables, and graphs as functional relationships; original",
+    "prompt_latex": "\\text{A decreasing pattern is 50, 44, 38, 32, ... The rule is 56 − 6n, where n is the term number. Check the rule on the first term, then find which term equals 2.}",
+    "prompt_plain": "A decreasing pattern is 50, 44, 38, 32, ... The rule is 56 − 6n, where n is the term number. Check the rule on the first term, then find which term equals 2.",
+    "prompt_parts": [
+      {
+        "text": "A decreasing pattern is 50, 44, 38, 32, ... The rule is 56 − 6n, where n is the term number. Check the rule on the first term, then find which term equals 2."
+      }
+    ],
+    "worked_solution": [
+      "Check n = 1: 56 − 6 × 1 = 50 ✓",
+      "Set 56 − 6n = 2",
+      "6n = 56 − 2 = 54",
+      "n = 54 ÷ 6 = 9"
+    ],
+    "final_answer": "The 9th term",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-41",
+    "source": "BC Mathematics 6 content standard: increasing and decreasing patterns, using expressions, tables, and graphs as functional relationships; original",
+    "prompt_latex": "\\text{Figure n in a tile pattern uses 2n + 1 tiles. How many tiles does Figure 15 use? Which figure uses 41 tiles?}",
+    "prompt_plain": "Figure n in a tile pattern uses 2n + 1 tiles. How many tiles does Figure 15 use? Which figure uses 41 tiles?",
+    "prompt_parts": [
+      {
+        "text": "Figure n in a tile pattern uses 2n + 1 tiles. How many tiles does Figure 15 use? Which figure uses 41 tiles?"
+      }
+    ],
+    "worked_solution": [
+      "Figure 15: 2 × 15 + 1 = 31 tiles",
+      "Set 2n + 1 = 41",
+      "2n = 41 − 1 = 40",
+      "n = 40 ÷ 2 = 20"
+    ],
+    "final_answer": "31 tiles; Figure 20",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-42",
+    "source": "BC Mathematics 6 content standard: increasing and decreasing patterns, using expressions, tables, and graphs as functional relationships; original",
+    "prompt_latex": "\\text{The points (1, 4), (2, 7) and (3, 10) are on a graph. Find the next point on the pattern, and find y when x = 8.}",
+    "prompt_plain": "The points (1, 4), (2, 7) and (3, 10) are on a graph. Find the next point on the pattern, and find y when x = 8.",
+    "prompt_parts": [
+      {
+        "text": "The points (1, 4), (2, 7) and (3, 10) are on a graph. Find the next point on the pattern, and find y when x = 8."
+      }
+    ],
+    "worked_solution": [
+      "y goes up by 3 each time x goes up by 1, so the rule starts with y = 3x",
+      "At x = 1: 3 × 1 = 3, but y = 4, so add 1: y = 3x + 1",
+      "x = 4: 3 × 4 + 1 = 13, so the next point is (4, 13)",
+      "x = 8: 3 × 8 + 1 = 25"
+    ],
+    "final_answer": "(4, 13); y = 25",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-43",
+    "source": "BC Mathematics 6 content standard: one-step equations with whole-number coefficients and solutions; original",
+    "prompt_latex": "\\text{Solve: }x + 9 = 17",
+    "prompt_plain": "Solve: x + 9 = 17",
+    "prompt_parts": [
+      {
+        "text": "Solve: x + 9 = 17"
+      }
+    ],
+    "worked_solution": [
+      "Subtract 9 from both sides: x + 9 − 9 = 17 − 9",
+      "x = 8",
+      "Check: 8 + 9 = 17 ✓"
+    ],
+    "final_answer": "x = 8",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-44",
+    "source": "BC Mathematics 6 content standard: one-step equations with whole-number coefficients and solutions; original",
+    "prompt_latex": "\\text{Solve: }x - 7 = 15",
+    "prompt_plain": "Solve: x − 7 = 15",
+    "prompt_parts": [
+      {
+        "text": "Solve: x − 7 = 15"
+      }
+    ],
+    "worked_solution": [
+      "Add 7 to both sides: x − 7 + 7 = 15 + 7",
+      "x = 22",
+      "Check: 22 − 7 = 15 ✓"
+    ],
+    "final_answer": "x = 22",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-45",
+    "source": "BC Mathematics 6 content standard: one-step equations with whole-number coefficients and solutions; original",
+    "prompt_latex": "\\text{Solve: }6x = 54",
+    "prompt_plain": "Solve: 6x = 54",
+    "prompt_parts": [
+      {
+        "text": "Solve: 6x = 54"
+      }
+    ],
+    "worked_solution": [
+      "Divide both sides by 6: 6x ÷ 6 = 54 ÷ 6",
+      "x = 9",
+      "Check: 6 × 9 = 54 ✓"
+    ],
+    "final_answer": "x = 9",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-46",
+    "source": "BC Mathematics 6 content standard: one-step equations with whole-number coefficients and solutions; original",
+    "prompt_latex": "\\text{Solve: }x \\div  5 = 8",
+    "prompt_plain": "Solve: x ÷ 5 = 8",
+    "prompt_parts": [
+      {
+        "text": "Solve: x ÷ 5 = 8"
+      }
+    ],
+    "worked_solution": [
+      "Multiply both sides by 5: x ÷ 5 × 5 = 8 × 5",
+      "x = 40",
+      "Check: 40 ÷ 5 = 8 ✓"
+    ],
+    "final_answer": "x = 40",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-47",
+    "source": "BC Mathematics 6 content standard: one-step equations with whole-number coefficients and solutions; original",
+    "prompt_latex": "\\text{Maya has some stickers. A friend gives her 14 more, and now she has 31. Write an equation using s for the stickers she started with, then solve it.}",
+    "prompt_plain": "Maya has some stickers. A friend gives her 14 more, and now she has 31. Write an equation using s for the stickers she started with, then solve it.",
+    "prompt_parts": [
+      {
+        "text": "Maya has some stickers. A friend gives her 14 more, and now she has 31. Write an equation using s for the stickers she started with, then solve it."
+      }
+    ],
+    "worked_solution": [
+      "s + 14 = 31",
+      "Subtract 14 from both sides: s = 31 − 14",
+      "s = 17",
+      "Check: 17 + 14 = 31 ✓"
+    ],
+    "final_answer": "s + 14 = 31, so s = 17",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-48",
+    "source": "BC Mathematics 6 content standard: perimeter of complex shapes; original",
+    "prompt_latex": "\\text{An L-shaped garden has these side lengths in order around it: 9 m, 4 m, 3 m, 5 m, 6 m, 9 m. Find the perimeter.}",
+    "prompt_plain": "An L-shaped garden has these side lengths in order around it: 9 m, 4 m, 3 m, 5 m, 6 m, 9 m. Find the perimeter.",
+    "prompt_parts": [
+      {
+        "text": "An L-shaped garden has these side lengths in order around it: 9 m, 4 m, 3 m, 5 m, 6 m, 9 m. Find the perimeter."
+      }
+    ],
+    "worked_solution": [
+      "The perimeter is the distance all the way around, so add every side",
+      "9 + 4 + 3 + 5 + 6 + 9 = 36"
+    ],
+    "final_answer": "36 m",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-49",
+    "source": "BC Mathematics 6 content standard: perimeter of complex shapes; original",
+    "prompt_latex": "\\text{An L-shaped patio has 6 sides. Going around it: 10 m across the bottom, 3 m up, 6 m across to the left, 4 m up, 4 m across to the left, and then one side straight down to the start. Find the missing side and the perimeter.}",
+    "prompt_plain": "An L-shaped patio has 6 sides. Going around it: 10 m across the bottom, 3 m up, 6 m across to the left, 4 m up, 4 m across to the left, and then one side straight down to the start. Find the missing side and the perimeter.",
+    "prompt_parts": [
+      {
+        "text": "An L-shaped patio has 6 sides. Going around it: 10 m across the bottom, 3 m up, 6 m across to the left, 4 m up, 4 m across to the left, and then one side straight down to the start. Find the missing side and the perimeter."
+      }
+    ],
+    "worked_solution": [
+      "Going up: 3 + 4 = 7 m, so the side going down must be 7 m",
+      "Perimeter: 10 + 3 + 6 + 4 + 4 + 7 = 34"
+    ],
+    "final_answer": "Missing side 7 m; perimeter 34 m",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-50",
+    "source": "BC Mathematics 6 content standard: perimeter of complex shapes; original",
+    "prompt_latex": "\\text{A 12 m by 9 m rectangle has a 5 m by 4 m rectangle cut out of one corner. What is the perimeter of the shape that is left?}",
+    "prompt_plain": "A 12 m by 9 m rectangle has a 5 m by 4 m rectangle cut out of one corner. What is the perimeter of the shape that is left?",
+    "prompt_parts": [
+      {
+        "text": "A 12 m by 9 m rectangle has a 5 m by 4 m rectangle cut out of one corner. What is the perimeter of the shape that is left?"
+      }
+    ],
+    "worked_solution": [
+      "Cutting out a corner removes 5 m from one side and 4 m from the other",
+      "But the new edges add back 5 m and 4 m, so the perimeter does not change",
+      "Perimeter = 2 × (12 + 9) = 42"
+    ],
+    "final_answer": "42 m",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-51",
+    "source": "BC Mathematics 6 content standard: perimeter of complex shapes; original",
+    "prompt_latex": "\\text{Four squares with sides of 3 cm are joined edge to edge to make a T: three squares in a row with a fourth square on top of the middle one. Find the perimeter.}",
+    "prompt_plain": "Four squares with sides of 3 cm are joined edge to edge to make a T: three squares in a row with a fourth square on top of the middle one. Find the perimeter.",
+    "prompt_parts": [
+      {
+        "text": "Four squares with sides of 3 cm are joined edge to edge to make a T: three squares in a row with a fourth square on top of the middle one. Find the perimeter."
+      }
+    ],
+    "worked_solution": [
+      "Four squares have 4 × 4 = 16 sides in all",
+      "There are 3 joins, and each join hides 2 sides: 3 × 2 = 6",
+      "Sides showing: 16 − 6 = 10",
+      "Perimeter: 10 × 3 = 30"
+    ],
+    "final_answer": "30 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-52",
+    "source": "BC Mathematics 6 content standard: perimeter of complex shapes; original",
+    "prompt_latex": "\\text{Two rectangles, 8 cm by 5 cm and 4 cm by 5 cm, are joined along their 5 cm sides to make one big rectangle. Find the perimeter of the new shape.}",
+    "prompt_plain": "Two rectangles, 8 cm by 5 cm and 4 cm by 5 cm, are joined along their 5 cm sides to make one big rectangle. Find the perimeter of the new shape.",
+    "prompt_parts": [
+      {
+        "text": "Two rectangles, 8 cm by 5 cm and 4 cm by 5 cm, are joined along their 5 cm sides to make one big rectangle. Find the perimeter of the new shape."
+      }
+    ],
+    "worked_solution": [
+      "New length: 8 + 4 = 12 cm, and the width is still 5 cm",
+      "Perimeter: 2 × (12 + 5) = 2 × 17 = 34"
+    ],
+    "final_answer": "34 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-53",
+    "source": "BC Mathematics 6 content standard: area of triangles, parallelograms, and trapezoids; original",
+    "prompt_latex": "\\text{Find the area of a parallelogram with base 9 cm and height 6 cm.}",
+    "prompt_plain": "Find the area of a parallelogram with base 9 cm and height 6 cm.",
+    "prompt_parts": [
+      {
+        "text": "Find the area of a parallelogram with base 9 cm and height 6 cm."
+      }
+    ],
+    "worked_solution": [
+      "Area of a parallelogram = base × height",
+      "9 × 6 = 54"
+    ],
+    "final_answer": "54 cm²",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-54",
+    "source": "BC Mathematics 6 content standard: area of triangles, parallelograms, and trapezoids; original",
+    "prompt_latex": "\\text{Find the area of a triangle with base 14 cm and height 8 cm.}",
+    "prompt_plain": "Find the area of a triangle with base 14 cm and height 8 cm.",
+    "prompt_parts": [
+      {
+        "text": "Find the area of a triangle with base 14 cm and height 8 cm."
+      }
+    ],
+    "worked_solution": [
+      "A triangle is half of a parallelogram: area = base × height ÷ 2",
+      "14 × 8 = 112",
+      "112 ÷ 2 = 56"
+    ],
+    "final_answer": "56 cm²",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-55",
+    "source": "BC Mathematics 6 content standard: area of triangles, parallelograms, and trapezoids; original",
+    "prompt_latex": "\\text{A trapezoid has parallel sides of 6 cm and 10 cm. The distance between them is 5 cm. Find its area.}",
+    "prompt_plain": "A trapezoid has parallel sides of 6 cm and 10 cm. The distance between them is 5 cm. Find its area.",
+    "prompt_parts": [
+      {
+        "text": "A trapezoid has parallel sides of 6 cm and 10 cm. The distance between them is 5 cm. Find its area."
+      }
+    ],
+    "worked_solution": [
+      "Area = (sum of parallel sides) × height ÷ 2",
+      "(6 + 10) × 5 ÷ 2",
+      "16 × 5 = 80",
+      "80 ÷ 2 = 40"
+    ],
+    "final_answer": "40 cm²",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-56",
+    "source": "BC Mathematics 6 content standard: area of triangles, parallelograms, and trapezoids; original",
+    "prompt_latex": "\\text{A triangle has an area of 30 cm² and a base of 10 cm. Find its height.}",
+    "prompt_plain": "A triangle has an area of 30 cm² and a base of 10 cm. Find its height.",
+    "prompt_parts": [
+      {
+        "text": "A triangle has an area of 30 cm² and a base of 10 cm. Find its height."
+      }
+    ],
+    "worked_solution": [
+      "Area = base × height ÷ 2, so 30 = 10 × height ÷ 2",
+      "Double the area: 30 × 2 = 60, so 10 × height = 60",
+      "height = 60 ÷ 10 = 6"
+    ],
+    "final_answer": "6 cm",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-57",
+    "source": "BC Mathematics 6 content standard: area of triangles, parallelograms, and trapezoids; original",
+    "prompt_latex": "\\text{A house shape is a rectangle 10 cm by 6 cm with a triangle on top. The triangle has base 10 cm and height 4 cm. Find the total area.}",
+    "prompt_plain": "A house shape is a rectangle 10 cm by 6 cm with a triangle on top. The triangle has base 10 cm and height 4 cm. Find the total area.",
+    "prompt_parts": [
+      {
+        "text": "A house shape is a rectangle 10 cm by 6 cm with a triangle on top. The triangle has base 10 cm and height 4 cm. Find the total area."
+      }
+    ],
+    "worked_solution": [
+      "Rectangle: 10 × 6 = 60",
+      "Triangle: 10 × 4 ÷ 2 = 20",
+      "Total: 60 + 20 = 80"
+    ],
+    "final_answer": "80 cm²",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-58",
+    "source": "BC Mathematics 6 content standard: angle measurement and classification; original",
+    "prompt_latex": "\\text{Name each angle as acute, right, obtuse, straight or reflex: 90°, 135°, 200°, 180°.}",
+    "prompt_plain": "Name each angle as acute, right, obtuse, straight or reflex: 90°, 135°, 200°, 180°.",
+    "prompt_parts": [
+      {
+        "text": "Name each angle as acute, right, obtuse, straight or reflex: 90°, 135°, 200°, 180°."
+      }
+    ],
+    "worked_solution": [
+      "Acute is less than 90°, right is exactly 90°, obtuse is between 90° and 180°",
+      "Straight is exactly 180°, reflex is between 180° and 360°",
+      "90° is right, 135° is obtuse, 200° is reflex, 180° is straight"
+    ],
+    "final_answer": "right, obtuse, reflex, straight",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-59",
+    "source": "BC Mathematics 6 content standard: angle measurement and classification; original",
+    "prompt_latex": "\\text{Two angles sit side by side on a straight line. One angle is 115°. Find the other angle.}",
+    "prompt_plain": "Two angles sit side by side on a straight line. One angle is 115°. Find the other angle.",
+    "prompt_parts": [
+      {
+        "text": "Two angles sit side by side on a straight line. One angle is 115°. Find the other angle."
+      }
+    ],
+    "worked_solution": [
+      "A straight line is 180°",
+      "180 − 115 = 65"
+    ],
+    "final_answer": "65°",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-60",
+    "source": "BC Mathematics 6 content standard: angle measurement and classification; original",
+    "prompt_latex": "\\text{Two angles of a triangle are 48° and 67°. Find the third angle.}",
+    "prompt_plain": "Two angles of a triangle are 48° and 67°. Find the third angle.",
+    "prompt_parts": [
+      {
+        "text": "Two angles of a triangle are 48° and 67°. Find the third angle."
+      }
+    ],
+    "worked_solution": [
+      "The angles of a triangle add to 180°",
+      "48 + 67 = 115",
+      "180 − 115 = 65"
+    ],
+    "final_answer": "65°",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-61",
+    "source": "BC Mathematics 6 content standard: angle measurement and classification; original",
+    "prompt_latex": "\\text{Three angles of a quadrilateral are 90°, 110° and 75°. Find the fourth angle.}",
+    "prompt_plain": "Three angles of a quadrilateral are 90°, 110° and 75°. Find the fourth angle.",
+    "prompt_parts": [
+      {
+        "text": "Three angles of a quadrilateral are 90°, 110° and 75°. Find the fourth angle."
+      }
+    ],
+    "worked_solution": [
+      "The angles of a quadrilateral add to 360°",
+      "90 + 110 + 75 = 275",
+      "360 − 275 = 85"
+    ],
+    "final_answer": "85°",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-62",
+    "source": "BC Mathematics 6 content standard: angle measurement and classification; original",
+    "prompt_latex": "\\text{The hands of a clock make an angle at 4:00. Find the angle, then say whether it is closer to 90° or to 180°.}",
+    "prompt_plain": "The hands of a clock make an angle at 4:00. Find the angle, then say whether it is closer to 90° or to 180°.",
+    "prompt_parts": [
+      {
+        "text": "The hands of a clock make an angle at 4:00. Find the angle, then say whether it is closer to 90° or to 180°."
+      }
+    ],
+    "worked_solution": [
+      "A full turn is 360° and the clock has 12 hours: 360 ÷ 12 = 30° for each hour",
+      "At 4:00 the hands are 4 hours apart: 4 × 30 = 120°",
+      "Distance from 90°: 120 − 90 = 30°. Distance from 180°: 180 − 120 = 60°",
+      "30 is smaller than 60, so the angle is closer to 90°"
+    ],
+    "final_answer": "120°, closer to 90°",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-63",
+    "source": "BC Mathematics 6 content standard: volume and capacity; original",
+    "prompt_latex": "\\text{Find the volume of a box that is 5 cm long, 4 cm wide and 3 cm high.}",
+    "prompt_plain": "Find the volume of a box that is 5 cm long, 4 cm wide and 3 cm high.",
+    "prompt_parts": [
+      {
+        "text": "Find the volume of a box that is 5 cm long, 4 cm wide and 3 cm high."
+      }
+    ],
+    "worked_solution": [
+      "Bottom layer: 5 × 4 = 20 cubes",
+      "3 layers: 20 × 3 = 60 cubes"
+    ],
+    "final_answer": "60 cm³",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-64",
+    "source": "BC Mathematics 6 content standard: volume and capacity; original",
+    "prompt_latex": "\\text{A box is filled with 1 cm cubes. It is 6 cubes long, 3 cubes wide and 4 layers high. How many cubes does it hold, and what is the volume?}",
+    "prompt_plain": "A box is filled with 1 cm cubes. It is 6 cubes long, 3 cubes wide and 4 layers high. How many cubes does it hold, and what is the volume?",
+    "prompt_parts": [
+      {
+        "text": "A box is filled with 1 cm cubes. It is 6 cubes long, 3 cubes wide and 4 layers high. How many cubes does it hold, and what is the volume?"
+      }
+    ],
+    "worked_solution": [
+      "One layer: 6 × 3 = 18 cubes",
+      "4 layers: 18 × 4 = 72 cubes",
+      "Each cube is 1 cm³, so the volume is 72 cm³"
+    ],
+    "final_answer": "72 cubes; 72 cm³",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-65",
+    "source": "BC Mathematics 6 content standard: volume and capacity; original",
+    "prompt_latex": "\\text{A fish tank is 20 cm long, 10 cm wide and 15 cm high. How many litres of water can it hold when it is full?}",
+    "prompt_plain": "A fish tank is 20 cm long, 10 cm wide and 15 cm high. How many litres of water can it hold when it is full?",
+    "prompt_parts": [
+      {
+        "text": "A fish tank is 20 cm long, 10 cm wide and 15 cm high. How many litres of water can it hold when it is full?"
+      }
+    ],
+    "worked_solution": [
+      "Volume: 20 × 10 = 200, then 200 × 15 = 3000 cm³",
+      "1 cm³ holds 1 mL, so the tank holds 3000 mL",
+      "1000 mL = 1 L, so 3000 ÷ 1000 = 3 L"
+    ],
+    "final_answer": "3 L",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-66",
+    "source": "BC Mathematics 6 content standard: volume and capacity; original",
+    "prompt_latex": "\\text{A jug holds 2.5 L. How many millilitres is that?}",
+    "prompt_plain": "A jug holds 2.5 L. How many millilitres is that?",
+    "prompt_parts": [
+      {
+        "text": "A jug holds 2.5 L. How many millilitres is that?"
+      }
+    ],
+    "worked_solution": [
+      "1 L = 1000 mL",
+      "2.5 × 1000 = 2500"
+    ],
+    "final_answer": "2500 mL",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-67",
+    "source": "BC Mathematics 6 content standard: volume and capacity; original",
+    "prompt_latex": "\\text{A storage box is 2 m long, 1.5 m wide and 1 m high. Find its volume in cubic metres.}",
+    "prompt_plain": "A storage box is 2 m long, 1.5 m wide and 1 m high. Find its volume in cubic metres.",
+    "prompt_parts": [
+      {
+        "text": "A storage box is 2 m long, 1.5 m wide and 1 m high. Find its volume in cubic metres."
+      }
+    ],
+    "worked_solution": [
+      "Volume = length × width × height",
+      "2 × 1.5 = 3",
+      "3 × 1 = 3"
+    ],
+    "final_answer": "3 m³",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-68",
+    "source": "BC Mathematics 6 content standard: triangles; original",
+    "prompt_latex": "\\text{A triangle has three sides that are each 6 cm long. Name the triangle by its sides.}",
+    "prompt_plain": "A triangle has three sides that are each 6 cm long. Name the triangle by its sides.",
+    "prompt_parts": [
+      {
+        "text": "A triangle has three sides that are each 6 cm long. Name the triangle by its sides."
+      }
+    ],
+    "worked_solution": [
+      "All three sides are equal: 6 = 6 = 6",
+      "A triangle with three equal sides is equilateral"
+    ],
+    "final_answer": "equilateral",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-69",
+    "source": "BC Mathematics 6 content standard: triangles; original",
+    "prompt_latex": "\\text{A triangle has sides of 5 cm, 5 cm and 8 cm, and angles of 38°, 71° and 71°. Name it by its sides and by its angles.}",
+    "prompt_plain": "A triangle has sides of 5 cm, 5 cm and 8 cm, and angles of 38°, 71° and 71°. Name it by its sides and by its angles.",
+    "prompt_parts": [
+      {
+        "text": "A triangle has sides of 5 cm, 5 cm and 8 cm, and angles of 38°, 71° and 71°. Name it by its sides and by its angles."
+      }
+    ],
+    "worked_solution": [
+      "Two sides are equal (5 cm and 5 cm), so it is isosceles",
+      "Every angle is less than 90°, so it is acute"
+    ],
+    "final_answer": "isosceles and acute",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-70",
+    "source": "BC Mathematics 6 content standard: triangles; original",
+    "prompt_latex": "\\text{Two angles of a triangle are 25° and 35°. Find the third angle, then name the triangle by its angles.}",
+    "prompt_plain": "Two angles of a triangle are 25° and 35°. Find the third angle, then name the triangle by its angles.",
+    "prompt_parts": [
+      {
+        "text": "Two angles of a triangle are 25° and 35°. Find the third angle, then name the triangle by its angles."
+      }
+    ],
+    "worked_solution": [
+      "25 + 35 = 60",
+      "180 − 60 = 120",
+      "The third angle is 120°, which is more than 90°, so the triangle is obtuse"
+    ],
+    "final_answer": "120°; obtuse",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-71",
+    "source": "BC Mathematics 6 content standard: triangles; original",
+    "prompt_latex": "\\text{A triangle has one 90° angle and sides of 3 cm, 4 cm and 5 cm. Name it by its angles and by its sides.}",
+    "prompt_plain": "A triangle has one 90° angle and sides of 3 cm, 4 cm and 5 cm. Name it by its angles and by its sides.",
+    "prompt_parts": [
+      {
+        "text": "A triangle has one 90° angle and sides of 3 cm, 4 cm and 5 cm. Name it by its angles and by its sides."
+      }
+    ],
+    "worked_solution": [
+      "It has a 90° angle, so it is a right triangle",
+      "All three side lengths are different, so it is scalene"
+    ],
+    "final_answer": "right and scalene",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-72",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Triangle ABC has A(1, 1), B(4, 1) and C(1, 3). Translate it 3 units right and 2 units up. Give the new points.}",
+    "prompt_plain": "Triangle ABC has A(1, 1), B(4, 1) and C(1, 3). Translate it 3 units right and 2 units up. Give the new points.",
+    "prompt_parts": [
+      {
+        "text": "Triangle ABC has A(1, 1), B(4, 1) and C(1, 3). Translate it 3 units right and 2 units up. Give the new points."
+      }
+    ],
+    "worked_solution": [
+      "3 right adds 3 to x, and 2 up adds 2 to y",
+      "A: (1 + 3, 1 + 2) = (4, 3)",
+      "B: (4 + 3, 1 + 2) = (7, 3)",
+      "C: (1 + 3, 3 + 2) = (4, 5)"
+    ],
+    "final_answer": "A′(4, 3), B′(7, 3), C′(4, 5)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-73",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Points P(2, 3), Q(4, 1) and R(2, 1) are reflected across the vertical line x = 5. Give the new points.}",
+    "prompt_plain": "Points P(2, 3), Q(4, 1) and R(2, 1) are reflected across the vertical line x = 5. Give the new points.",
+    "prompt_parts": [
+      {
+        "text": "Points P(2, 3), Q(4, 1) and R(2, 1) are reflected across the vertical line x = 5. Give the new points."
+      }
+    ],
+    "worked_solution": [
+      "A reflected point is the same distance from the line, on the other side, at the same height",
+      "P is 5 − 2 = 3 left of the line, so P′ is 3 right: x = 5 + 3 = 8",
+      "Q is 5 − 4 = 1 left of the line, so Q′ has x = 5 + 1 = 6",
+      "R is also 3 left, so R′ has x = 8. The y-values do not change"
+    ],
+    "final_answer": "P′(8, 3), Q′(6, 1), R′(8, 1)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-74",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Points D(1, 1), E(3, 2) and F(2, 3) are reflected across the horizontal line y = 4. Give the new points.}",
+    "prompt_plain": "Points D(1, 1), E(3, 2) and F(2, 3) are reflected across the horizontal line y = 4. Give the new points.",
+    "prompt_parts": [
+      {
+        "text": "Points D(1, 1), E(3, 2) and F(2, 3) are reflected across the horizontal line y = 4. Give the new points."
+      }
+    ],
+    "worked_solution": [
+      "The x-values stay the same. Each y-value moves to the same distance on the other side of y = 4",
+      "D: 4 − 1 = 3 below the line, so 4 + 3 = 7, giving D′(1, 7)",
+      "E: 4 − 2 = 2 below, so 4 + 2 = 6, giving E′(3, 6)",
+      "F: 4 − 3 = 1 below, so 4 + 1 = 5, giving F′(2, 5)"
+    ],
+    "final_answer": "D′(1, 7), E′(3, 6), F′(2, 5)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-75",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Points A(6, 5), B(7, 4) and C(6, 2) are rotated 180° about the point (4, 4). Give the new points.}",
+    "prompt_plain": "Points A(6, 5), B(7, 4) and C(6, 2) are rotated 180° about the point (4, 4). Give the new points.",
+    "prompt_parts": [
+      {
+        "text": "Points A(6, 5), B(7, 4) and C(6, 2) are rotated 180° about the point (4, 4). Give the new points."
+      }
+    ],
+    "worked_solution": [
+      "A 180° turn about (4, 4) sends each point straight through (4, 4) to the other side, the same distance away",
+      "A is 2 right and 1 up from (4, 4), so A′ is 2 left and 1 down: (4 − 2, 4 − 1) = (2, 3)",
+      "B is 3 right and 0 up, so B′ is 3 left: (4 − 3, 4) = (1, 4)",
+      "C is 2 right and 2 down, so C′ is 2 left and 2 up: (4 − 2, 4 + 2) = (2, 6)"
+    ],
+    "final_answer": "A′(2, 3), B′(1, 4), C′(2, 6)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-76",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Points K(5, 4), L(5, 6) and M(6, 4) are rotated 90° clockwise about the point (4, 4). Give the new points.}",
+    "prompt_plain": "Points K(5, 4), L(5, 6) and M(6, 4) are rotated 90° clockwise about the point (4, 4). Give the new points.",
+    "prompt_parts": [
+      {
+        "text": "Points K(5, 4), L(5, 6) and M(6, 4) are rotated 90° clockwise about the point (4, 4). Give the new points."
+      }
+    ],
+    "worked_solution": [
+      "Measure each point from the centre (4, 4). A clockwise quarter turn sends 'right' to 'down' and 'up' to 'right'",
+      "K is 1 right of the centre, so K′ is 1 down: (4, 4 − 1) = (4, 3)",
+      "L is 1 right and 2 up, so L′ is 1 down and 2 right: (4 + 2, 4 − 1) = (6, 3)",
+      "M is 2 right, so M′ is 2 down: (4, 4 − 2) = (4, 2)"
+    ],
+    "final_answer": "K′(4, 3), L′(6, 3), M′(4, 2)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-77",
+    "source": "BC Mathematics 6 content standard: combinations of transformations; original",
+    "prompt_latex": "\\text{Triangle with points (1, 1), (3, 1) and (1, 4) is translated 2 right and 1 up, then reflected across the vertical line x = 6. Give the final points.}",
+    "prompt_plain": "Triangle with points (1, 1), (3, 1) and (1, 4) is translated 2 right and 1 up, then reflected across the vertical line x = 6. Give the final points.",
+    "prompt_parts": [
+      {
+        "text": "Triangle with points (1, 1), (3, 1) and (1, 4) is translated 2 right and 1 up, then reflected across the vertical line x = 6. Give the final points."
+      }
+    ],
+    "worked_solution": [
+      "Translate: add 2 to x and 1 to y",
+      "(1, 1) goes to (3, 2), (3, 1) goes to (5, 2), and (1, 4) goes to (3, 5)",
+      "Reflect across x = 6: new x = 12 − old x, and y stays the same",
+      "(3, 2) goes to (9, 2), (5, 2) goes to (7, 2), and (3, 5) goes to (9, 5)"
+    ],
+    "final_answer": "(9, 2), (7, 2), (9, 5)",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-78",
+    "source": "BC Mathematics 6 content standard: line graphs; original",
+    "prompt_latex": "\\text{The temperature was measured each hour: hour 1 was 12°C, hour 2 was 15°C, hour 3 was 19°C, hour 4 was 18°C, hour 5 was 14°C. On a line graph, between which two hours is the line steepest going up, and by how many degrees does it rise?}",
+    "prompt_plain": "The temperature was measured each hour: hour 1 was 12°C, hour 2 was 15°C, hour 3 was 19°C, hour 4 was 18°C, hour 5 was 14°C. On a line graph, between which two hours is the line steepest going up, and by how many degrees does it rise?",
+    "prompt_parts": [
+      {
+        "text": "The temperature was measured each hour: hour 1 was 12°C, hour 2 was 15°C, hour 3 was 19°C, hour 4 was 18°C, hour 5 was 14°C. On a line graph, between which two hours is the line steepest going up, and by how many degrees does it rise?"
+      }
+    ],
+    "worked_solution": [
+      "Find each change: 15 − 12 = 3, 19 − 15 = 4, 18 − 19 = −1, 14 − 18 = −4",
+      "The biggest rise is +4, from hour 2 to hour 3"
+    ],
+    "final_answer": "Between hour 2 and hour 3, up 4°C",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-79",
+    "source": "BC Mathematics 6 content standard: line graphs; original",
+    "prompt_latex": "\\text{A plant was measured at the end of each week: week 1 was 3 cm, week 2 was 5 cm, week 3 was 8 cm, week 4 was 12 cm. How much did it grow from week 1 to week 4, and in which week did it grow the most?}",
+    "prompt_plain": "A plant was measured at the end of each week: week 1 was 3 cm, week 2 was 5 cm, week 3 was 8 cm, week 4 was 12 cm. How much did it grow from week 1 to week 4, and in which week did it grow the most?",
+    "prompt_parts": [
+      {
+        "text": "A plant was measured at the end of each week: week 1 was 3 cm, week 2 was 5 cm, week 3 was 8 cm, week 4 was 12 cm. How much did it grow from week 1 to week 4, and in which week did it grow the most?"
+      }
+    ],
+    "worked_solution": [
+      "Weekly growth: 5 − 3 = 2, 8 − 5 = 3, 12 − 8 = 4",
+      "Total growth: 12 − 3 = 9 cm",
+      "The most growth, 4 cm, was from week 3 to week 4"
+    ],
+    "final_answer": "9 cm; the most growth was from week 3 to week 4",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-80",
+    "source": "BC Mathematics 6 content standard: line graphs; original",
+    "prompt_latex": "\\text{A shop sold 8 hats on Monday, 12 on Tuesday, 12 on Wednesday, 9 on Thursday and 15 on Friday. On a line graph, between which days is the line flat, and by how much does it fall on its one downward step?}",
+    "prompt_plain": "A shop sold 8 hats on Monday, 12 on Tuesday, 12 on Wednesday, 9 on Thursday and 15 on Friday. On a line graph, between which days is the line flat, and by how much does it fall on its one downward step?",
+    "prompt_parts": [
+      {
+        "text": "A shop sold 8 hats on Monday, 12 on Tuesday, 12 on Wednesday, 9 on Thursday and 15 on Friday. On a line graph, between which days is the line flat, and by how much does it fall on its one downward step?"
+      }
+    ],
+    "worked_solution": [
+      "Changes: 12 − 8 = 4 up, 12 − 12 = 0 flat, 9 − 12 = −3 down, 15 − 9 = 6 up",
+      "The line is flat from Tuesday to Wednesday",
+      "It falls from Wednesday to Thursday by 3 hats"
+    ],
+    "final_answer": "Flat from Tuesday to Wednesday; falls by 3 hats",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-81",
+    "source": "BC Mathematics 6 content standard: line graphs; original",
+    "prompt_latex": "\\text{A car wash cleaned 5 cars on day 1, 9 on day 2, 13 on day 3 and 17 on day 4. Write the ordered pairs (day, cars) for a line graph. If the pattern continues, how many cars on day 6?}",
+    "prompt_plain": "A car wash cleaned 5 cars on day 1, 9 on day 2, 13 on day 3 and 17 on day 4. Write the ordered pairs (day, cars) for a line graph. If the pattern continues, how many cars on day 6?",
+    "prompt_parts": [
+      {
+        "text": "A car wash cleaned 5 cars on day 1, 9 on day 2, 13 on day 3 and 17 on day 4. Write the ordered pairs (day, cars) for a line graph. If the pattern continues, how many cars on day 6?"
+      }
+    ],
+    "worked_solution": [
+      "Ordered pairs: (1, 5), (2, 9), (3, 13), (4, 17)",
+      "The number of cars goes up by 4 each day",
+      "Day 5: 17 + 4 = 21, then day 6: 21 + 4 = 25"
+    ],
+    "final_answer": "(1, 5), (2, 9), (3, 13), (4, 17); day 6 has 25 cars",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-82",
+    "source": "BC Mathematics 6 content standard: single-outcome probability, both theoretical and experimental; original",
+    "prompt_latex": "\\text{A spinner has 8 equal sections: 3 red, 2 blue and 3 green. What is the probability of landing on red?}",
+    "prompt_plain": "A spinner has 8 equal sections: 3 red, 2 blue and 3 green. What is the probability of landing on red?",
+    "prompt_parts": [
+      {
+        "text": "A spinner has 8 equal sections: 3 red, 2 blue and 3 green. What is the probability of landing on red?"
+      }
+    ],
+    "worked_solution": [
+      "There are 8 equally likely outcomes",
+      "3 of them are red",
+      "P(red) = 3/8"
+    ],
+    "final_answer": "3/8",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-83",
+    "source": "BC Mathematics 6 content standard: single-outcome probability, both theoretical and experimental; original",
+    "prompt_latex": "\\text{A fair die is rolled once. What is the probability of rolling a number that is even and greater than 2?}",
+    "prompt_plain": "A fair die is rolled once. What is the probability of rolling a number that is even and greater than 2?",
+    "prompt_parts": [
+      {
+        "text": "A fair die is rolled once. What is the probability of rolling a number that is even and greater than 2?"
+      }
+    ],
+    "worked_solution": [
+      "All outcomes: 1, 2, 3, 4, 5, 6 (6 in all)",
+      "Even and greater than 2: 4 and 6 (2 outcomes)",
+      "P = 2/6 = 1/3"
+    ],
+    "final_answer": "1/3",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-84",
+    "source": "BC Mathematics 6 content standard: single-outcome probability, both theoretical and experimental; original",
+    "prompt_latex": "\\text{Ravi tossed a coin 40 times and got 22 heads. Find the experimental probability of heads in simplest form, the theoretical probability, and the number of heads you would expect in 40 tosses.}",
+    "prompt_plain": "Ravi tossed a coin 40 times and got 22 heads. Find the experimental probability of heads in simplest form, the theoretical probability, and the number of heads you would expect in 40 tosses.",
+    "prompt_parts": [
+      {
+        "text": "Ravi tossed a coin 40 times and got 22 heads. Find the experimental probability of heads in simplest form, the theoretical probability, and the number of heads you would expect in 40 tosses."
+      }
+    ],
+    "worked_solution": [
+      "Experimental: 22/40 = 11/20",
+      "Theoretical: 1 of 2 equally likely outcomes is heads, so 1/2",
+      "Expected heads: 1/2 × 40 = 20 (Ravi got 2 more than expected)"
+    ],
+    "final_answer": "11/20; 1/2; 20 heads",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-85",
+    "source": "BC Mathematics 6 content standard: single-outcome probability, both theoretical and experimental; original",
+    "prompt_latex": "\\text{A bag has 5 red, 3 blue and 2 yellow marbles. One marble is drawn without looking. What is the probability it is not blue?}",
+    "prompt_plain": "A bag has 5 red, 3 blue and 2 yellow marbles. One marble is drawn without looking. What is the probability it is not blue?",
+    "prompt_parts": [
+      {
+        "text": "A bag has 5 red, 3 blue and 2 yellow marbles. One marble is drawn without looking. What is the probability it is not blue?"
+      }
+    ],
+    "worked_solution": [
+      "Total marbles: 5 + 3 + 2 = 10",
+      "Not blue means red or yellow: 5 + 2 = 7",
+      "P(not blue) = 7/10"
+    ],
+    "final_answer": "7/10",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-86",
+    "source": "BC Mathematics 6 content standard: single-outcome probability, both theoretical and experimental; original",
+    "prompt_latex": "\\text{The 11 letters of the word MATHEMATICS are written on tiles, mixed up, and one tile is drawn. What is the probability that it is a vowel?}",
+    "prompt_plain": "The 11 letters of the word MATHEMATICS are written on tiles, mixed up, and one tile is drawn. What is the probability that it is a vowel?",
+    "prompt_parts": [
+      {
+        "text": "The 11 letters of the word MATHEMATICS are written on tiles, mixed up, and one tile is drawn. What is the probability that it is a vowel?"
+      }
+    ],
+    "worked_solution": [
+      "Letters: M, A, T, H, E, M, A, T, I, C, S (11 tiles)",
+      "Vowels: A, E, A, I (4 tiles)",
+      "P(vowel) = 4/11"
+    ],
+    "final_answer": "4/11",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-87",
+    "source": "BC Mathematics 6 content standard: financial literacy: simple budgeting and consumer math; original",
+    "prompt_latex": "\\text{Leila gets \\$8 allowance each week. A bike costs \\$152. How many weeks of allowance does she need to buy it?}",
+    "prompt_plain": "Leila gets $8 allowance each week. A bike costs $152. How many weeks of allowance does she need to buy it?",
+    "prompt_parts": [
+      {
+        "text": "Leila gets $8 allowance each week. A bike costs $152. How many weeks of allowance does she need to buy it?"
+      }
+    ],
+    "worked_solution": [
+      "Weeks needed: 152 ÷ 8",
+      "8 × 19 = 152, so 152 ÷ 8 = 19"
+    ],
+    "final_answer": "19 weeks",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-88",
+    "source": "BC Mathematics 6 content standard: financial literacy: simple budgeting and consumer math; original",
+    "prompt_latex": "\\text{Omar has \\$30 and saves \\$12 each week. How many weeks until he has \\$150 for a game console?}",
+    "prompt_plain": "Omar has $30 and saves $12 each week. How many weeks until he has $150 for a game console?",
+    "prompt_parts": [
+      {
+        "text": "Omar has $30 and saves $12 each week. How many weeks until he has $150 for a game console?"
+      }
+    ],
+    "worked_solution": [
+      "He still needs 150 − 30 = 120",
+      "120 ÷ 12 = 10"
+    ],
+    "final_answer": "10 weeks",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-89",
+    "source": "BC Mathematics 6 content standard: financial literacy: simple budgeting and consumer math; original",
+    "prompt_latex": "\\text{A pack of 6 pens costs \\$4.50. A single pen costs \\$0.80. Which is the better buy for each pen, and what is the pack price per pen?}",
+    "prompt_plain": "A pack of 6 pens costs $4.50. A single pen costs $0.80. Which is the better buy for each pen, and what is the pack price per pen?",
+    "prompt_parts": [
+      {
+        "text": "A pack of 6 pens costs $4.50. A single pen costs $0.80. Which is the better buy for each pen, and what is the pack price per pen?"
+      }
+    ],
+    "worked_solution": [
+      "Pack price per pen: 4.50 ÷ 6 = 0.75",
+      "0.75 is less than 0.80, so the pack is the better buy"
+    ],
+    "final_answer": "The pack, at $0.75 per pen",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-90",
+    "source": "BC Mathematics 6 content standard: financial literacy: simple budgeting and consumer math; original",
+    "prompt_latex": "\\text{Jordan earns \\$60 babysitting and plans to save 60\\% and spend the rest. How much does Jordan save, and how much does Jordan spend?}",
+    "prompt_plain": "Jordan earns $60 babysitting and plans to save 60% and spend the rest. How much does Jordan save, and how much does Jordan spend?",
+    "prompt_parts": [
+      {
+        "text": "Jordan earns $60 babysitting and plans to save 60% and spend the rest. How much does Jordan save, and how much does Jordan spend?"
+      }
+    ],
+    "worked_solution": [
+      "10% of 60 = 6",
+      "60% of 60 = 6 × 6 = 36 saved",
+      "Spend the rest: 60 − 36 = 24"
+    ],
+    "final_answer": "Save $36, spend $24",
+    "level": "elementary"
+  },
+  {
+    "id": "m6-91",
+    "source": "BC Mathematics 6 content standard: financial literacy: simple budgeting and consumer math; original",
+    "prompt_latex": "\\text{Sam gets \\$40 a month. Sam spends \\$12 on snacks and \\$15 on games and saves the rest. How many months will it take to save \\$39 for a skateboard helmet?}",
+    "prompt_plain": "Sam gets $40 a month. Sam spends $12 on snacks and $15 on games and saves the rest. How many months will it take to save $39 for a skateboard helmet?",
+    "prompt_parts": [
+      {
+        "text": "Sam gets $40 a month. Sam spends $12 on snacks and $15 on games and saves the rest. How many months will it take to save $39 for a skateboard helmet?"
+      }
+    ],
+    "worked_solution": [
+      "Spent each month: 12 + 15 = 27",
+      "Saved each month: 40 − 27 = 13",
+      "Months needed: 39 ÷ 13 = 3"
+    ],
+    "final_answer": "3 months",
+    "level": "elementary"
+  }
+]
