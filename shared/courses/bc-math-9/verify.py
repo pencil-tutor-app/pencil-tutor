@@ -34,7 +34,9 @@ def req(pid, cond, msg):
 
 # ---------------------------------------------------------------- 1. structure
 FIELDS = {"id", "source", "prompt_latex", "prompt_plain", "prompt_parts", "worked_solution", "final_answer", "level"}
-NAMES = re.compile(r"nghi|sora|ng[aâ]n|kara|minh|trang|marco|phan|ng[oọ]c|\bstudent[s]? named\b", re.I)
+# Real names to block come from the environment (comma-separated), never from the repo: BLOCKED_NAMES="..." python3 verify.py
+_BLOCKED = [re.escape(n.strip()) for n in __import__("os").environ.get("BLOCKED_NAMES", "").split(",") if n.strip()]
+NAMES = re.compile("|".join(_BLOCKED + [r"\bstudent[s]? named\b"]), re.I)
 
 
 def plain_side(s):

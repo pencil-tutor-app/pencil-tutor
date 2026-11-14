@@ -18,7 +18,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ID_PREFIX = "m6-"
 LEVEL = "elementary"
 KEYS = ["id", "source", "prompt_latex", "prompt_plain", "prompt_parts", "worked_solution", "final_answer", "level"]
-BANNED = ["nghi", "kara", "sora", "edward", "tran "]
+# Real names to block come from the environment (comma-separated), never from the repo: BLOCKED_NAMES="..." python3 verify.py
+BANNED = [n.strip().lower() for n in __import__("os").environ.get("BLOCKED_NAMES", "").split(",") if n.strip()] + ["edward", "tran "]
 
 
 def nums(*vals):
