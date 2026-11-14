@@ -51,6 +51,7 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+  ctx.note({ course: problem.course ?? "none" });
 
   // A valid question is student activity.
   await meterActivity(ctx, opened, "question");

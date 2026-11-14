@@ -12,7 +12,8 @@ type Problem = {
 };
 
 const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), "utf8");
-const bank: Problem[] = JSON.parse(read("../data/problems.json"));
+// The original twelve (BC Math 9 unit 3 equations) stay in shared/problems.json, and older app builds still send their ids.
+const bank: Problem[] = JSON.parse(read("../../shared/problems.json"));
 
 // Plain text like "−2(3 − 4x) + 5" -> a JavaScript expression with explicit multiplication.
 const toJs = (s: string) =>
@@ -21,11 +22,7 @@ const toJs = (s: string) =>
     .replace(/(\d|\))\s*([a-z(])/g, "$1*$2")
     .replace(/([a-z])\(/g, "$1*(");
 
-describe("problem bank", () => {
-  it("server/data/problems.json is identical to shared/problems.json", () => {
-    assert.equal(read("../data/problems.json"), read("../../shared/problems.json"));
-  });
-
+describe("original 12 problems (u3-..)", () => {
   it("has 12 problems with unique ids and every field", () => {
     assert.equal(bank.length, 12);
     assert.equal(new Set(bank.map((p) => p.id)).size, 12);

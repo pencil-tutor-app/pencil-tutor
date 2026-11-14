@@ -115,6 +115,7 @@ export async function handleLiveSession(request: Request, deps: Deps = defaultDe
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+  ctx.note({ course: problem.course ?? "none" });
 
   // Opening a live session is not work by itself, so it charges nothing (reason no_activity_reported); the student's talk is
   // reported later by the app's heartbeat. This still settles the allowance and its notices for the reply.

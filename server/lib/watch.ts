@@ -43,6 +43,7 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+  ctx.note({ course: problem.course ?? "none" });
 
   // A valid look is student activity: ink was drawn, and the tutor is looking at it. This keeps the meter running.
   await meterActivity(ctx, opened, "look");

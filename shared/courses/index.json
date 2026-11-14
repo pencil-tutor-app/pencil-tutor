@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "courses": [
+    {
+      "slug": "bc-math-5",
+      "title": "BC Math 5",
+      "group": "elementary",
+      "grade": 5,
+      "level": "elementary",
+      "count": 90,
+      "file": "courses/bc-math-5/problems.json"
+    },
+    {
+      "slug": "bc-math-6",
+      "title": "BC Math 6",
+      "group": "elementary",
+      "grade": 6,
+      "level": "elementary",
+      "count": 91,
+      "file": "courses/bc-math-6/problems.json"
+    },
+    {
+      "slug": "bc-math-7",
+      "title": "BC Math 7",
+      "group": "elementary",
+      "grade": 7,
+      "level": "middle_school",
+      "count": 64,
+      "file": "courses/bc-math-7/problems.json"
+    },
+    {
+      "slug": "bc-math-8",
+      "title": "BC Math 8",
+      "group": "high_school",
+      "grade": 8,
+      "level": "middle_school",
+      "count": 70,
+      "file": "courses/bc-math-8/problems.json"
+    },
+    {
+      "slug": "bc-math-9",
+      "title": "BC Math 9",
+      "group": "high_school",
+      "grade": 9,
+      "level": "high_school",
+      "count": 49,
+      "file": "courses/bc-math-9/problems.json"
+    },
+    {
+      "slug": "bc-math-9-unit-3",
+      "title": "BC Math 9 · Unit 3 equations",
+      "group": "high_school",
+      "grade": 9,
+      "level": "high_school",
+      "count": 12,
+      "file": "problems.json"
+    },
+    {
+      "slug": "calculus-1",
+      "title": "Calculus I",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "count": 70,
+      "file": "courses/calculus-1/problems.json"
+    },
+    {
+      "slug": "discrete-math",
+      "title": "Discrete Mathematics",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "count": 70,
+      "file": "courses/discrete-math/problems.json"
+    },
+    {
+      "slug": "linear-algebra",
+      "title": "Linear Algebra",
+      "group": "college",
+      "grade": null,
+      "level": "college",
+      "count": 69,
+      "file": "courses/linear-algebra/problems.json"
+    }
+  ]
+}
