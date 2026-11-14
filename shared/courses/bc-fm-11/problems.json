@@ -406,11 +406,11 @@
   {
     "id": "fm11-22",
     "source": "BC Foundations of Mathematics 11 content: graphical analysis: quadratic functions (end behaviour, vertex, maximum/minimum, symmetry, intercepts), original",
-    "prompt_latex": "Analyse y = -x^{2} + 6x - 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
-    "prompt_plain": "Analyse y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+    "prompt_latex": "Analyze y = -x^{2} + 6x - 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+    "prompt_plain": "Analyze y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
     "prompt_parts": [
       {
-        "text": "Analyse y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts."
+        "text": "Analyze y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts."
       }
     ],
     "worked_solution": [
@@ -426,11 +426,11 @@
   {
     "id": "fm11-23",
     "source": "BC Foundations of Mathematics 11 content: graphical analysis: quadratic functions (end behaviour, vertex, maximum/minimum, symmetry, intercepts), original",
-    "prompt_latex": "Analyse y = 2x^{2} - 4x - 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
-    "prompt_plain": "Analyse y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+    "prompt_latex": "Analyze y = 2x^{2} - 4x - 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+    "prompt_plain": "Analyze y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
     "prompt_parts": [
       {
-        "text": "Analyse y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts."
+        "text": "Analyze y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts."
       }
     ],
     "worked_solution": [
@@ -641,21 +641,21 @@
   {
     "id": "fm11-34",
     "source": "BC Foundations of Mathematics 11 content: graphical analysis: optimization (feasible region, objective function, profit and cost, area and volume), original",
-    "prompt_latex": "A farmer mixes feed A ($3 per kg) and feed B ($2 per kg). The mix must have at least 10 kg in total, and x + 3y \\ge  18 (a nutrient requirement, with x kg of A and y kg of B). Find the cheapest mix.",
-    "prompt_plain": "A farmer mixes feed A ($3 per kg) and feed B ($2 per kg). The mix must have at least 10 kg in total, and x + 3y ≥ 18 (a nutrient requirement, with x kg of A and y kg of B). Find the cheapest mix.",
+    "prompt_latex": "A farmer mixes feed A ($2 per kg) and feed B ($3 per kg). Let x be the kg of A and y the kg of B. The mix must have at least 10 kg in total, and it must satisfy x + 3y \\ge  18 (a nutrient requirement). Find the cheapest mix.",
+    "prompt_plain": "A farmer mixes feed A ($2 per kg) and feed B ($3 per kg). Let x be the kg of A and y the kg of B. The mix must have at least 10 kg in total, and it must satisfy x + 3y ≥ 18 (a nutrient requirement). Find the cheapest mix.",
     "prompt_parts": [
       {
-        "text": "A farmer mixes feed A ($3 per kg) and feed B ($2 per kg). The mix must have at least 10 kg in total, and x + 3y ≥ 18 (a nutrient requirement, with x kg of A and y kg of B). Find the cheapest mix."
+        "text": "A farmer mixes feed A ($2 per kg) and feed B ($3 per kg). Let x be the kg of A and y the kg of B. The mix must have at least 10 kg in total, and it must satisfy x + 3y ≥ 18 (a nutrient requirement). Find the cheapest mix."
       }
     ],
     "worked_solution": [
-      "Constraints: x ≥ 0, y ≥ 0, x + y ≥ 10, x + 3y ≥ 18. Objective: minimize C = 3x + 2y.",
+      "Constraints: x ≥ 0, y ≥ 0, x + y ≥ 10, x + 3y ≥ 18. Objective: minimize C = 2x + 3y.",
       "Corners of the feasible region (which extends up and to the right): (18, 0) from x + 3y = 18, and (0, 10) from x + y = 10.",
       "The two lines cross where x + y = 10 and x + 3y = 18: subtract to get 2y = 8, so y = 4 and x = 6. Corner (6, 4).",
-      "Cost: (18, 0) gives $54; (6, 4) gives 18 + 8 = $26; (0, 10) gives $20.",
-      "(0, 10) is feasible: 0 + 10 ≥ 10 and 0 + 30 ≥ 18. The minimum cost is $20."
+      "Cost: (18, 0) gives $36; (6, 4) gives 12 + 12 = $24; (0, 10) gives $30.",
+      "(0, 10) is feasible: 0 + 10 ≥ 10 and 0 + 30 ≥ 18. The minimum cost is $24, at (6, 4)."
     ],
-    "final_answer": "10 kg of feed B only: (0, 10), cost $20",
+    "final_answer": "6 kg of feed A and 4 kg of feed B, cost $24",
     "level": "high_school"
   },
   {
@@ -737,18 +737,18 @@
   {
     "id": "fm11-39",
     "source": "BC Foundations of Mathematics 11 content: applications of statistics (central tendency, standard deviation, z-scores, distributions, confidence intervals), original",
-    "prompt_latex": "Find the (population) standard deviation of the data set 2, 4, 4, 4, 5, 5, 7, 9.",
-    "prompt_plain": "Find the (population) standard deviation of the data set 2, 4, 4, 4, 5, 5, 7, 9.",
+    "prompt_latex": "Six students counted the pages they read last night: 11, 12, 14, 15, 15, 17. Find the (population) standard deviation.",
+    "prompt_plain": "Six students counted the pages they read last night: 11, 12, 14, 15, 15, 17. Find the (population) standard deviation.",
     "prompt_parts": [
       {
-        "text": "Find the (population) standard deviation of the data set 2, 4, 4, 4, 5, 5, 7, 9."
+        "text": "Six students counted the pages they read last night: 11, 12, 14, 15, 15, 17. Find the (population) standard deviation."
       }
     ],
     "worked_solution": [
-      "Mean: (2 + 4 + 4 + 4 + 5 + 5 + 7 + 9) / 8 = 40 / 8 = 5.",
-      "Squared deviations from 5: (2 − 5)² = 9, 1, 1, 1, 0, 0, (7 − 5)² = 4, (9 − 5)² = 16.",
-      "Add them: 9 + 1 + 1 + 1 + 0 + 0 + 4 + 16 = 32.",
-      "Variance = 32 / 8 = 4.",
+      "Mean: (11 + 12 + 14 + 15 + 15 + 17) / 6 = 84 / 6 = 14.",
+      "Squared deviations from 14: (11 − 14)² = 9, (12 − 14)² = 4, (14 − 14)² = 0, (15 − 14)² = 1, 1, (17 − 14)² = 9.",
+      "Add them: 9 + 4 + 0 + 1 + 1 + 9 = 24.",
+      "Variance = 24 / 6 = 4.",
       "Standard deviation = √4 = 2."
     ],
     "final_answer": "σ = 2",
@@ -835,11 +835,11 @@
   {
     "id": "fm11-44",
     "source": "BC Foundations of Mathematics 11 content: applications of statistics (central tendency, standard deviation, z-scores, distributions, confidence intervals), original",
-    "prompt_latex": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each standard deviation and say what it tells you.",
-    "prompt_plain": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each standard deviation and say what it tells you.",
+    "prompt_latex": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each population standard deviation to the nearest hundredth and say what it tells you.",
+    "prompt_plain": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each population standard deviation to the nearest hundredth and say what it tells you.",
     "prompt_parts": [
       {
-        "text": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each standard deviation and say what it tells you."
+        "text": "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each population standard deviation to the nearest hundredth and say what it tells you."
       }
     ],
     "worked_solution": [
@@ -1138,20 +1138,20 @@
   {
     "id": "fm11-60",
     "source": "BC Foundations of Mathematics 11 content: financial literacy: compound interest, investments and loans, buy/lease, original",
-    "prompt_latex": "The Rule of 72 says money doubles in about 72 \\div  (interest rate in %) years. Use it for 6% per year compounded annually, then find the exact doubling time with logarithms.",
-    "prompt_plain": "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually, then find the exact doubling time with logarithms.",
+    "prompt_latex": "The Rule of 72 says money doubles in about 72 \\div  (interest rate in %) years. Use it for 6% per year compounded annually. Then use a calculator and trial and error to check: what is the smallest whole number of years in which the money at least doubles?",
+    "prompt_plain": "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually. Then use a calculator and trial and error to check: what is the smallest whole number of years in which the money at least doubles?",
     "prompt_parts": [
       {
-        "text": "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually, then find the exact doubling time with logarithms."
+        "text": "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually. Then use a calculator and trial and error to check: what is the smallest whole number of years in which the money at least doubles?"
       }
     ],
     "worked_solution": [
       "Rule of 72: 72 ÷ 6 = 12 years.",
-      "Exact: (1.06)^n = 2. Take logarithms: n ln 1.06 = ln 2, so n = ln 2 / ln 1.06.",
-      "ln 2 ≈ 0.69315 and ln 1.06 ≈ 0.05827.",
-      "n ≈ 0.69315 / 0.05827 ≈ 11.90 years. The rule gives 12, which is very close."
+      "Doubling means (1.06)^n = 2. Try n = 11: (1.06)^11 ≈ 1.89830, which is less than 2.",
+      "Try n = 12: (1.06)^12 ≈ 2.01220, which is more than 2.",
+      "The money first passes double at n = 12 years, so the rule of 72 gave the right answer here."
     ],
-    "final_answer": "Rule of 72: 12 years; exact: about 11.9 years",
+    "final_answer": "Rule of 72: 12 years; calculator check: 12 years",
     "level": "high_school"
   }
 ]

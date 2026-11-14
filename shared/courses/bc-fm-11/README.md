@@ -78,7 +78,7 @@ Every prompt, number set, context and worked solution was written for this bank.
 `verify.py` is both the source and the checker: it holds every problem together with a check function, regenerates the expected `problems.json`, fails if the file on disk differs (`--write` rewrites it), and exits non-zero on any failure.
 - Per-problem check: each final answer is recomputed independently with sympy (solving, factoring and expanding, calculus for vertices), `fractions`/`math`/`statistics` (money, trigonometry, normal distribution), or brute force (primality, the counting game, corner-point optimization, table search), then compared with the text of `final_answer`. Where a result has more than one required part (all roots, all corner points, every angle) each part is asserted.
 - Automatic line checks on every worked solution: pure-number chains such as `2(5) − 4 = 6` are evaluated, and for equation problems every line that contains only the variable is substituted with the known roots.
-- Intermediate values: rounding steps (powers such as `(1.005)^60 ≈ 1.34885`, logs, trig values) are checked as strings against the computed numbers.
+- Intermediate values: rounding steps (powers such as `(1.005)^60 ≈ 1.34885`, trig values) are checked as strings against the computed numbers.
 - Mutation test: wrong answers deliberately injected into a copy of `verify.py` (changed roots, factors, dollar amounts, an arithmetic step, a corner point) were all caught.
 - Not mechanically verified: free-text explanations in worked-solution lines (the check confirms numbers and key phrases, not that every sentence is well phrased), and the wording of word problems. Lines that mix words and algebra are only covered by the equation and chain checks where they parse.
 
@@ -87,3 +87,11 @@ Every prompt, number set, context and worked solution was written for this bank.
 - Angles are in degrees. Money answers are rounded to the cent; intermediate decimals in worked solutions are shown to five places so the student can follow the rounding.
 - Graphical-analysis problems are the hand versions described under "Standards not set as written work or set differently".
 
+
+## Review (teacher-quality pass, 2026-11-15)
+Every one of the 60 problems was read as a teacher would: one intended answer (units, rounding, form stated), age-appropriate wording, fit with BC Foundations of Mathematics 11, one step per worked line, final answer matching the request, difficulty ramp inside each standard, no duplicated problems, no names, no recognisable textbook or exam items. `verify.py` was updated for every change and `python3 -I verify.py` passes (60/60).
+
+- Counts: 60 reviewed, 6 fixed, 0 dropped, 54 unchanged. Ids are unchanged.
+- Fixed: fm11-22 and fm11-23 ("Analyse" to Canadian "Analyze"), fm11-34 (the cheapest mix was a single feed, not a mix; prices swapped so the best corner is a genuine mix, 6 kg A and 4 kg B at $24; the prompt now defines x and y), fm11-39 (was the very well known 2, 4, 4, 4, 5, 5, 7, 9 example; now six page counts, same answer 2), fm11-44 (said "standard deviation" without population or sample; now says population and the rounding), fm11-60 (asked for logarithms, which are not in Foundations 11; now a calculator trial-and-error check, 12 years).
+- Most common problem: content from a later course or an unstated convention (logarithms in fm11-60, population versus sample in fm11-44).
+- Unsure: fm11-01 uses n^2 + n + 11, a close cousin of the famous n^2 + n + 41; the numbers are different and the counterexample (n = 10) is original, so kept. The "technology only" graphing standard is still done by hand, as the README already says.
