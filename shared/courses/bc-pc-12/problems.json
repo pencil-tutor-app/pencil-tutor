@@ -1,0 +1,1678 @@
+[
+  {
+    "id": "pc12-01",
+    "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
+    "prompt_latex": "The graph of y = |x| is shifted 3 right and 2 down. Write the new equation and its vertex.",
+    "prompt_plain": "The graph of y = |x| is shifted 3 right and 2 down. Write the new equation and its vertex.",
+    "prompt_parts": [
+      {
+        "text": "The graph of y = |x| is shifted 3 right and 2 down. Write the new equation and its vertex."
+      }
+    ],
+    "worked_solution": [
+      "Right 3 replaces x with x − 3: y = |x − 3|",
+      "Down 2 subtracts 2 from y: y = |x − 3| − 2",
+      "The vertex (0, 0) moves right 3 and down 2 to (3, −2)"
+    ],
+    "final_answer": "y = |x − 3| − 2, vertex (3, −2)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-02",
+    "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
+    "prompt_latex": "The point (4, 9) is on y = f(x). Find its image on y = -2f(x - 1) + 3.",
+    "prompt_plain": "The point (4, 9) is on y = f(x). Find its image on y = −2f(x − 1) + 3.",
+    "prompt_parts": [
+      {
+        "text": "The point (4, 9) is on y = f(x). Find its image on y = −2f(x − 1) + 3."
+      }
+    ],
+    "worked_solution": [
+      "x − 1 means a shift right 1, so x goes from 4 to 5",
+      "−2f stretches by 2 and reflects: y = −2(9) = −18",
+      "+3 shifts up: −18 + 3 = −15",
+      "Image point (5, −15)"
+    ],
+    "final_answer": "(5, −15)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-03",
+    "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
+    "prompt_latex": "The graph of y = f(x) has x intercepts at -2 and 4. Find the x intercepts of y = f(3x).",
+    "prompt_plain": "The graph of y = f(x) has x intercepts at −2 and 4. Find the x intercepts of y = f(3x).",
+    "prompt_parts": [
+      {
+        "text": "The graph of y = f(x) has x intercepts at −2 and 4. Find the x intercepts of y = f(3x)."
+      }
+    ],
+    "worked_solution": [
+      "y = f(3x) is a horizontal compression by a factor of 1/3",
+      "Each x value is divided by 3: −2/3 and 4/3",
+      "Check: f(3 · (4/3)) = f(4) = 0 and f(3 · (−2/3)) = f(−2) = 0"
+    ],
+    "final_answer": "x = −2/3 and x = 4/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-04",
+    "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
+    "prompt_latex": "Describe how y = √x becomes y = \\sqrt{2x - 6}.",
+    "prompt_plain": "Describe how y = √x becomes y = √(2x − 6).",
+    "prompt_parts": [
+      {
+        "text": "Describe how y = √x becomes y = √(2x − 6)."
+      }
+    ],
+    "worked_solution": [
+      "Factor inside the root: 2x − 6 = 2(x − 3)",
+      "So y = √(2(x − 3))",
+      "The 2 multiplying x is a horizontal compression by a factor of 1/2",
+      "The (x − 3) is a shift right 3"
+    ],
+    "final_answer": "horizontal compression by a factor of 1/2, then right 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-05",
+    "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
+    "prompt_latex": "Using y = 1/x, state the asymptotes of y = 2/(x - 1) + 3 and the image of the point (1, 1).",
+    "prompt_plain": "Using y = 1/x, state the asymptotes of y = 2/(x − 1) + 3 and the image of the point (1, 1).",
+    "prompt_parts": [
+      {
+        "text": "Using y = 1/x, state the asymptotes of y = 2/(x − 1) + 3 and the image of the point (1, 1)."
+      }
+    ],
+    "worked_solution": [
+      "The parent y = 1/x has asymptotes x = 0 and y = 0",
+      "x − 1 shifts right 1, so the vertical asymptote is x = 1",
+      "+3 shifts up 3, so the horizontal asymptote is y = 3",
+      "(1, 1): x goes to 1 + 1 = 2; y is stretched by 2 to 2, then up 3 to 5",
+      "Image (2, 5)"
+    ],
+    "final_answer": "x = 1 and y = 3; image of (1, 1) is (2, 5)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-06",
+    "source": "BC Pre-calculus 12 content: transformations (inverses: graphs and equations); original",
+    "prompt_latex": "Find the inverse of f(x) = 3x - 5.",
+    "prompt_plain": "Find the inverse of f(x) = 3x − 5.",
+    "prompt_parts": [
+      {
+        "text": "Find the inverse of f(x) = 3x − 5."
+      }
+    ],
+    "worked_solution": [
+      "Write y = 3x − 5",
+      "Swap x and y: x = 3y − 5",
+      "Add 5: x + 5 = 3y",
+      "Divide by 3: y = (x + 5)/3"
+    ],
+    "final_answer": "f⁻¹(x) = (x + 5)/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-07",
+    "source": "BC Pre-calculus 12 content: transformations (inverses: graphs and equations); original",
+    "prompt_latex": "Find the inverse of f(x) = (x - 2)^{2} + 1, x \\ge  2, and state its domain.",
+    "prompt_plain": "Find the inverse of f(x) = (x − 2)² + 1, x ≥ 2, and state its domain.",
+    "prompt_parts": [
+      {
+        "text": "Find the inverse of f(x) = (x − 2)² + 1, x ≥ 2, and state its domain."
+      }
+    ],
+    "worked_solution": [
+      "y = (x − 2)² + 1",
+      "Swap: x = (y − 2)² + 1",
+      "x − 1 = (y − 2)²",
+      "y − 2 = √(x − 1), positive root because y ≥ 2 in the original domain",
+      "y = 2 + √(x − 1)",
+      "Domain of the inverse is the range of f: x ≥ 1"
+    ],
+    "final_answer": "f⁻¹(x) = 2 + √(x − 1), x ≥ 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-08",
+    "source": "BC Pre-calculus 12 content: transformations (inverses: graphs and equations); original",
+    "prompt_latex": "Find the inverse of f(x) = \\dfrac{2x + 1}{x - 3}.",
+    "prompt_plain": "Find the inverse of f(x) = (2x + 1)/(x − 3).",
+    "prompt_parts": [
+      {
+        "text": "Find the inverse of f(x) = "
+      },
+      {
+        "frac": {
+          "num": "2x + 1",
+          "den": "x − 3"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "y = (2x + 1)/(x − 3)",
+      "Swap: x = (2y + 1)/(y − 3)",
+      "x(y − 3) = 2y + 1",
+      "xy − 3x = 2y + 1",
+      "xy − 2y = 3x + 1",
+      "y(x − 2) = 3x + 1",
+      "y = (3x + 1)/(x − 2)"
+    ],
+    "final_answer": "f⁻¹(x) = (3x + 1)/(x − 2)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-09",
+    "source": "BC Pre-calculus 12 content: transformations (inverses: graphs and equations); original",
+    "prompt_latex": "Explain why f(x) = x^{2} - 4 has no inverse function on all real numbers, and give a restriction that fixes it.",
+    "prompt_plain": "Explain why f(x) = x² − 4 has no inverse function on all real numbers, and give a restriction that fixes it.",
+    "prompt_parts": [
+      {
+        "text": "Explain why f(x) = x² − 4 has no inverse function on all real numbers, and give a restriction that fixes it."
+      }
+    ],
+    "worked_solution": [
+      "f(2) = 0 and f(−2) = 0, so two different inputs give the same output",
+      "The graph fails the horizontal line test, so f is not one to one",
+      "Restrict the domain to x ≥ 0 (one branch of the parabola)",
+      "Then f is one to one and the inverse is f⁻¹(x) = √(x + 4)"
+    ],
+    "final_answer": "No: f(2) = f(−2) fails the horizontal line test; restrict to x ≥ 0",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-10",
+    "source": "BC Pre-calculus 12 content: transformations extension (composed functions, operations on functions); original",
+    "prompt_latex": "Let f(x) = 2x + 1 and g(x) = x^{2}. Find f(g(3)) and g(f(3)).",
+    "prompt_plain": "Let f(x) = 2x + 1 and g(x) = x². Find f(g(3)) and g(f(3)).",
+    "prompt_parts": [
+      {
+        "text": "Let f(x) = 2x + 1 and g(x) = x². Find f(g(3)) and g(f(3))."
+      }
+    ],
+    "worked_solution": [
+      "g(3) = 9, so f(g(3)) = f(9) = 2(9) + 1 = 19",
+      "f(3) = 7, so g(f(3)) = g(7) = 49"
+    ],
+    "final_answer": "f(g(3)) = 19, g(f(3)) = 49",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-11",
+    "source": "BC Pre-calculus 12 content: transformations extension (composed functions, operations on functions); original",
+    "prompt_latex": "f(x) = x^{2} - 4 and g(x) = \\sqrt{x + 1}. Find (f\\circ g)(x) in simplest form and its domain.",
+    "prompt_plain": "f(x) = x² − 4 and g(x) = √(x + 1). Find (f∘g)(x) in simplest form and its domain.",
+    "prompt_parts": [
+      {
+        "text": "f(x) = x² − 4 and g(x) = √(x + 1). Find (f∘g)(x) in simplest form and its domain."
+      }
+    ],
+    "worked_solution": [
+      "(f∘g)(x) = f(g(x)) = (√(x + 1))² − 4",
+      "= (x + 1) − 4 = x − 3",
+      "Domain comes from the inside function: x + 1 ≥ 0, so x ≥ −1"
+    ],
+    "final_answer": "(f∘g)(x) = x − 3, x ≥ −1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-12",
+    "source": "BC Pre-calculus 12 content: transformations extension (composed functions, operations on functions); original",
+    "prompt_latex": "f(x) = 3x - 2 and g(x) = x^{2} + 1. Find (f·g)(x) expanded, then evaluate it at x = 2.",
+    "prompt_plain": "f(x) = 3x − 2 and g(x) = x² + 1. Find (f·g)(x) expanded, then evaluate it at x = 2.",
+    "prompt_parts": [
+      {
+        "text": "f(x) = 3x − 2 and g(x) = x² + 1. Find (f·g)(x) expanded, then evaluate it at x = 2."
+      }
+    ],
+    "worked_solution": [
+      "(f·g)(x) = (3x − 2)(x² + 1)",
+      "= 3x³ + 3x − 2x² − 2",
+      "= 3x³ − 2x² + 3x − 2",
+      "At x = 2: 3(8) − 2(4) + 3(2) − 2 = 24 − 8 + 6 − 2 = 20",
+      "Check: f(2) g(2) = 4 · 5 = 20"
+    ],
+    "final_answer": "3x³ − 2x² + 3x − 2; (f·g)(2) = 20",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-13",
+    "source": "BC Pre-calculus 12 content: transformations extension (composed functions, operations on functions); original",
+    "prompt_latex": "f(x) = \\sqrt{x - 1} and g(x) = x - 5. State the domain of (f/g)(x).",
+    "prompt_plain": "f(x) = √(x − 1) and g(x) = x − 5. State the domain of (f/g)(x).",
+    "prompt_parts": [
+      {
+        "text": "f(x) = √(x − 1) and g(x) = x − 5. State the domain of (f/g)(x)."
+      }
+    ],
+    "worked_solution": [
+      "f needs x − 1 ≥ 0, so x ≥ 1",
+      "g is defined for all x",
+      "The denominator g(x) = x − 5 cannot be 0, so x ≠ 5",
+      "Domain: x ≥ 1 with x ≠ 5"
+    ],
+    "final_answer": "x ≥ 1, x ≠ 5",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-14",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (graphing, including transformations); original",
+    "prompt_latex": "For y = 3(2)^{x} - 4, state the y intercept, the horizontal asymptote and the range.",
+    "prompt_plain": "For y = 3(2)^x − 4, state the y intercept, the horizontal asymptote and the range.",
+    "prompt_parts": [
+      {
+        "text": "For y = 3(2)^x − 4, state the y intercept, the horizontal asymptote and the range."
+      }
+    ],
+    "worked_solution": [
+      "y intercept: x = 0 gives 3(1) − 4 = −1",
+      "As x gets very negative, 2^x → 0, so y → −4: asymptote y = −4",
+      "2^x is always positive, so 3(2)^x > 0 and y > −4",
+      "Range: y > −4"
+    ],
+    "final_answer": "y intercept −1; horizontal asymptote y = −4; range y > −4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-15",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (graphing, including transformations); original",
+    "prompt_latex": "Describe the transformations from y = 2^{x} to y = -2^{x + 3} + 1.",
+    "prompt_plain": "Describe the transformations from y = 2^x to y = −2^(x + 3) + 1.",
+    "prompt_parts": [
+      {
+        "text": "Describe the transformations from y = 2^x to y = −2^(x + 3) + 1."
+      }
+    ],
+    "worked_solution": [
+      "The minus sign in front reflects the graph in the x axis",
+      "x + 3 shifts the graph left 3",
+      "+1 shifts the graph up 1",
+      "Asymptote moves from y = 0 to y = 1"
+    ],
+    "final_answer": "reflect in the x axis, left 3, up 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-16",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (graphing, including transformations); original",
+    "prompt_latex": "An exponential function y = a·b^{x} passes through (0, 5) and (2, 45). Find its equation.",
+    "prompt_plain": "An exponential function y = a·b^x passes through (0, 5) and (2, 45). Find its equation.",
+    "prompt_parts": [
+      {
+        "text": "An exponential function y = a·b^x passes through (0, 5) and (2, 45). Find its equation."
+      }
+    ],
+    "worked_solution": [
+      "At x = 0: a·b⁰ = a = 5",
+      "At x = 2: 5b² = 45, so b² = 9",
+      "b = 3 (a base must be positive)",
+      "y = 5(3)^x"
+    ],
+    "final_answer": "y = 5(3)^x",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-17",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (graphing, including transformations); original",
+    "prompt_latex": "Rewrite y = 4^{x - 1} as a power of 2, then describe it as a transformation of y = 2^{x}.",
+    "prompt_plain": "Rewrite y = 4^(x − 1) as a power of 2, then describe it as a transformation of y = 2^x.",
+    "prompt_parts": [
+      {
+        "text": "Rewrite y = 4^(x − 1) as a power of 2, then describe it as a transformation of y = 2^x."
+      }
+    ],
+    "worked_solution": [
+      "4 = 2², so 4^(x − 1) = (2²)^(x − 1) = 2^(2(x − 1))",
+      "The 2 multiplying (x − 1) compresses horizontally by a factor of 1/2",
+      "The (x − 1) shifts right 1"
+    ],
+    "final_answer": "y = 2^(2(x − 1)): horizontal compression by a factor of 1/2, right 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-18",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "Solve 9^{x - 1} = 27.",
+    "prompt_plain": "Solve 9^(x − 1) = 27.",
+    "prompt_parts": [
+      {
+        "text": "Solve 9^(x − 1) = 27."
+      }
+    ],
+    "worked_solution": [
+      "Write both sides with base 3: (3²)^(x − 1) = 3³",
+      "3^(2x − 2) = 3^3",
+      "Same base, so exponents match: 2x − 2 = 3",
+      "2x = 5, x = 5/2",
+      "Check: 9^(3/2) = 27 ✓"
+    ],
+    "final_answer": "x = 5/2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-19",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "Solve 3^{x} = 20. Give x to 2 decimal places.",
+    "prompt_plain": "Solve 3^x = 20. Give x to 2 decimal places.",
+    "prompt_parts": [
+      {
+        "text": "Solve 3^x = 20. Give x to 2 decimal places."
+      }
+    ],
+    "worked_solution": [
+      "Take the natural log of both sides: ln(3^x) = ln 20",
+      "Power law: x ln 3 = ln 20",
+      "x = ln 20 / ln 3 = 2.9957 / 1.0986",
+      "x ≈ 2.73"
+    ],
+    "final_answer": "x ≈ 2.73",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-20",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "Solve 5^{2x} - 6(5^{x}) + 5 = 0.",
+    "prompt_plain": "Solve 5^(2x) − 6(5^x) + 5 = 0.",
+    "prompt_parts": [
+      {
+        "text": "Solve 5^(2x) − 6(5^x) + 5 = 0."
+      }
+    ],
+    "worked_solution": [
+      "Let u = 5^x, so 5^(2x) = u²",
+      "u² − 6u + 5 = 0",
+      "(u − 1)(u − 5) = 0, so u = 1 or u = 5",
+      "5^x = 1 gives x = 0; 5^x = 5 gives x = 1"
+    ],
+    "final_answer": "x = 0 or x = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-21",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "Solve e^{2x} = 7. Give an exact answer and a 2 decimal place answer.",
+    "prompt_plain": "Solve e^(2x) = 7. Give an exact answer and a 2 decimal place answer.",
+    "prompt_parts": [
+      {
+        "text": "Solve e^(2x) = 7. Give an exact answer and a 2 decimal place answer."
+      }
+    ],
+    "worked_solution": [
+      "Take ln of both sides: ln(e^(2x)) = ln 7",
+      "2x = ln 7",
+      "x = (ln 7)/2 = 1.9459/2",
+      "x ≈ 0.97"
+    ],
+    "final_answer": "x = (ln 7)/2 ≈ 0.97",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-22",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?",
+    "prompt_plain": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?",
+    "prompt_parts": [
+      {
+        "text": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?"
+      }
+    ],
+    "worked_solution": [
+      "N = 500(2)^(t/3)",
+      "8000 = 500(2)^(t/3), so 2^(t/3) = 16",
+      "16 = 2⁴, so t/3 = 4",
+      "t = 12 hours"
+    ],
+    "final_answer": "t = 12 hours",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-23",
+    "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
+    "prompt_latex": "$2000 earns 4% compounded annually. How many years until it reaches $3000? Answer to 1 decimal place.",
+    "prompt_plain": "$2000 earns 4% compounded annually. How many years until it reaches $3000? Answer to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "$2000 earns 4% compounded annually. How many years until it reaches $3000? Answer to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "2000(1.04)^n = 3000",
+      "1.04^n = 1.5",
+      "n ln 1.04 = ln 1.5",
+      "n = 0.40547 / 0.03922 ≈ 10.3 years"
+    ],
+    "final_answer": "n ≈ 10.3 years",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-24",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "A geometric sequence has t_{1} = 6 and t_{2} = 18. Find t_{6}.",
+    "prompt_plain": "A geometric sequence has t₁ = 6 and t₂ = 18. Find t₆.",
+    "prompt_parts": [
+      {
+        "text": "A geometric sequence has t₁ = 6 and t₂ = 18. Find t₆."
+      }
+    ],
+    "worked_solution": [
+      "r = 18/6 = 3",
+      "tₙ = 6(3)^(n − 1)",
+      "t₆ = 6(3)⁵ = 6(243) = 1458"
+    ],
+    "final_answer": "t₆ = 1458",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-25",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "How many terms are in the geometric sequence 3, 6, 12, ..., 768?",
+    "prompt_plain": "How many terms are in the geometric sequence 3, 6, 12, ..., 768?",
+    "prompt_parts": [
+      {
+        "text": "How many terms are in the geometric sequence 3, 6, 12, ..., 768?"
+      }
+    ],
+    "worked_solution": [
+      "a = 3, r = 2",
+      "3(2)^(n − 1) = 768",
+      "2^(n − 1) = 256 = 2⁸",
+      "n − 1 = 8, so n = 9"
+    ],
+    "final_answer": "n = 9",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-26",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "Find S_{8} for the geometric series 5 + 10 + 20 + ...",
+    "prompt_plain": "Find S₈ for the geometric series 5 + 10 + 20 + ...",
+    "prompt_parts": [
+      {
+        "text": "Find S₈ for the geometric series 5 + 10 + 20 + ..."
+      }
+    ],
+    "worked_solution": [
+      "a = 5, r = 2, n = 8",
+      "Sₙ = a(rⁿ − 1)/(r − 1)",
+      "S₈ = 5(2⁸ − 1)/(2 − 1) = 5(255)",
+      "S₈ = 1275"
+    ],
+    "final_answer": "S₈ = 1275",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-27",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "Find the sum of the infinite series 12 + 6 + 3 + 1.5 + ...",
+    "prompt_plain": "Find the sum of the infinite series 12 + 6 + 3 + 1.5 + ...",
+    "prompt_parts": [
+      {
+        "text": "Find the sum of the infinite series 12 + 6 + 3 + 1.5 + ..."
+      }
+    ],
+    "worked_solution": [
+      "r = 6/12 = 1/2, and |r| < 1 so the series converges",
+      "S∞ = a/(1 − r) = 12/(1 − 1/2)",
+      "= 12/(1/2) = 24"
+    ],
+    "final_answer": "S∞ = 24",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-28",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "Write the repeating decimal 0.363636... as a fraction in lowest terms.",
+    "prompt_plain": "Write the repeating decimal 0.363636... as a fraction in lowest terms.",
+    "prompt_parts": [
+      {
+        "text": "Write the repeating decimal 0.363636... as a fraction in lowest terms."
+      }
+    ],
+    "worked_solution": [
+      "0.363636... = 0.36 + 0.0036 + 0.000036 + ...",
+      "Geometric with a = 0.36 and r = 0.01",
+      "S∞ = 0.36/(1 − 0.01) = 0.36/0.99",
+      "= 36/99 = 4/11"
+    ],
+    "final_answer": "4/11",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-29",
+    "source": "BC Pre-calculus 12 content: geometric sequences and series (common ratio, general term, infinite series, sigma notation); original",
+    "prompt_latex": "Evaluate \\sum  3(2)^{k - 1} for k = 1 to 5.",
+    "prompt_plain": "Evaluate Σ 3(2)^(k − 1) for k = 1 to 5.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate Σ 3(2)^(k − 1) for k = 1 to 5."
+      }
+    ],
+    "worked_solution": [
+      "Terms: 3, 6, 12, 24, 48",
+      "Geometric with a = 3, r = 2, n = 5",
+      "S₅ = 3(2⁵ − 1)/(2 − 1) = 3(31) = 93"
+    ],
+    "final_answer": "93",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-30",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Write 2^{5} = 32 in logarithmic form, and write \\log_{5} 125 = 3 in exponential form.",
+    "prompt_plain": "Write 2⁵ = 32 in logarithmic form, and write log₅ 125 = 3 in exponential form.",
+    "prompt_parts": [
+      {
+        "text": "Write 2⁵ = 32 in logarithmic form, and write log₅ 125 = 3 in exponential form."
+      }
+    ],
+    "worked_solution": [
+      "A log asks for the exponent: base 2 to what power gives 32?",
+      "2⁵ = 32 is log₂ 32 = 5",
+      "log₅ 125 = 3 says base 5 to the power 3 gives 125: 5³ = 125"
+    ],
+    "final_answer": "log₂ 32 = 5; 5³ = 125",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-31",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Evaluate \\log_{2} 32 - \\log_{3} 81 + \\log 1000.",
+    "prompt_plain": "Evaluate log₂ 32 − log₃ 81 + log 1000.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate log₂ 32 − log₃ 81 + log 1000."
+      }
+    ],
+    "worked_solution": [
+      "log₂ 32 = 5 because 2⁵ = 32",
+      "log₃ 81 = 4 because 3⁴ = 81",
+      "log 1000 = 3 (common log, base 10)",
+      "5 − 4 + 3 = 4"
+    ],
+    "final_answer": "4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-32",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Write \\log_{6} 4 + \\log_{6} 9 as a single logarithm and evaluate.",
+    "prompt_plain": "Write log₆ 4 + log₆ 9 as a single logarithm and evaluate.",
+    "prompt_parts": [
+      {
+        "text": "Write log₆ 4 + log₆ 9 as a single logarithm and evaluate."
+      }
+    ],
+    "worked_solution": [
+      "Product law: log₆ 4 + log₆ 9 = log₆ (4 · 9)",
+      "= log₆ 36",
+      "6² = 36, so log₆ 36 = 2"
+    ],
+    "final_answer": "log₆ 36 = 2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-33",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Evaluate 3 \\log_{2} 6 - \\log_{2} 27.",
+    "prompt_plain": "Evaluate 3 log₂ 6 − log₂ 27.",
+    "prompt_parts": [
+      {
+        "text": "Evaluate 3 log₂ 6 − log₂ 27."
+      }
+    ],
+    "worked_solution": [
+      "Power law: 3 log₂ 6 = log₂ 6³ = log₂ 216",
+      "Quotient law: log₂ 216 − log₂ 27 = log₂ (216/27)",
+      "= log₂ 8 = 3"
+    ],
+    "final_answer": "3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-34",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Use change of base to evaluate \\log_{8} 4 exactly.",
+    "prompt_plain": "Use change of base to evaluate log₈ 4 exactly.",
+    "prompt_parts": [
+      {
+        "text": "Use change of base to evaluate log₈ 4 exactly."
+      }
+    ],
+    "worked_solution": [
+      "Change to base 2: log₈ 4 = log₂ 4 / log₂ 8",
+      "log₂ 4 = 2 and log₂ 8 = 3",
+      "= 2/3",
+      "Check: 8^(2/3) = 4 ✓"
+    ],
+    "final_answer": "2/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-35",
+    "source": "BC Pre-calculus 12 content: logarithms (laws of logarithms, different bases, common and natural logarithms, inverse of exponential); original",
+    "prompt_latex": "Expand \\log(\\dfrac{x^{2}y}{z^{3}}) using the laws of logarithms.",
+    "prompt_plain": "Expand log(x²y/z³) using the laws of logarithms.",
+    "prompt_parts": [
+      {
+        "text": "Expand log("
+      },
+      {
+        "frac": {
+          "num": "x²y",
+          "den": "z³"
+        }
+      },
+      {
+        "text": ") using the laws of logarithms."
+      }
+    ],
+    "worked_solution": [
+      "Quotient law: log(x²y) − log(z³)",
+      "Product law on the first part: log x² + log y − log z³",
+      "Power law: 2 log x + log y − 3 log z"
+    ],
+    "final_answer": "2 log x + log y − 3 log z",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-36",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "Solve \\log_{2} (x + 3) = 4.",
+    "prompt_plain": "Solve log₂ (x + 3) = 4.",
+    "prompt_parts": [
+      {
+        "text": "Solve log₂ (x + 3) = 4."
+      }
+    ],
+    "worked_solution": [
+      "Exponential form: x + 3 = 2⁴",
+      "x + 3 = 16",
+      "x = 13",
+      "Check: log₂ 16 = 4 ✓"
+    ],
+    "final_answer": "x = 13",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-37",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "Solve \\log_{3} x + \\log_{3} (x - 2) = 1.",
+    "prompt_plain": "Solve log₃ x + log₃ (x − 2) = 1.",
+    "prompt_parts": [
+      {
+        "text": "Solve log₃ x + log₃ (x − 2) = 1."
+      }
+    ],
+    "worked_solution": [
+      "Product law: log₃ [x(x − 2)] = 1",
+      "x(x − 2) = 3¹ = 3",
+      "x² − 2x − 3 = 0, (x − 3)(x + 1) = 0",
+      "x = 3 or x = −1",
+      "x = −1 makes log₃ x undefined, so reject it",
+      "x = 3"
+    ],
+    "final_answer": "x = 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-38",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "Solve \\log (x + 2) - \\log (x - 1) = 1.",
+    "prompt_plain": "Solve log (x + 2) − log (x − 1) = 1.",
+    "prompt_parts": [
+      {
+        "text": "Solve log (x + 2) − log (x − 1) = 1."
+      }
+    ],
+    "worked_solution": [
+      "Quotient law: log[(x + 2)/(x − 1)] = 1",
+      "(x + 2)/(x − 1) = 10",
+      "x + 2 = 10x − 10",
+      "12 = 9x, x = 4/3",
+      "x > 1 so both logs are defined ✓"
+    ],
+    "final_answer": "x = 4/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-39",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "Solve \\ln(x^{2}) = \\ln(5x - 6).",
+    "prompt_plain": "Solve ln(x²) = ln(5x − 6).",
+    "prompt_parts": [
+      {
+        "text": "Solve ln(x²) = ln(5x − 6)."
+      }
+    ],
+    "worked_solution": [
+      "Logs are one to one, so x² = 5x − 6",
+      "x² − 5x + 6 = 0, (x − 2)(x − 3) = 0",
+      "x = 2 or x = 3",
+      "Both give positive arguments: 4 and 4 for x = 2, 9 and 9 for x = 3 ✓"
+    ],
+    "final_answer": "x = 2 or x = 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-40",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "For y = \\log_{2} (x - 3) + 1, state the vertical asymptote, the domain and the x intercept.",
+    "prompt_plain": "For y = log₂ (x − 3) + 1, state the vertical asymptote, the domain and the x intercept.",
+    "prompt_parts": [
+      {
+        "text": "For y = log₂ (x − 3) + 1, state the vertical asymptote, the domain and the x intercept."
+      }
+    ],
+    "worked_solution": [
+      "The argument must be positive: x − 3 > 0, so x > 3",
+      "Vertical asymptote x = 3, domain x > 3",
+      "x intercept: log₂ (x − 3) + 1 = 0",
+      "log₂ (x − 3) = −1, so x − 3 = 2⁻¹ = 1/2",
+      "x = 7/2"
+    ],
+    "final_answer": "vertical asymptote x = 3; domain x > 3; x intercept (7/2, 0)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-41",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "Earthquake magnitude is M = \\log(I/I_{0}). How many times as intense is a magnitude 7 quake as a magnitude 5 quake?",
+    "prompt_plain": "Earthquake magnitude is M = log(I/I₀). How many times as intense is a magnitude 7 quake as a magnitude 5 quake?",
+    "prompt_parts": [
+      {
+        "text": "Earthquake magnitude is M = log(I/I₀). How many times as intense is a magnitude 7 quake as a magnitude 5 quake?"
+      }
+    ],
+    "worked_solution": [
+      "M = log(I/I₀) means I = I₀ · 10^M",
+      "I₇/I₅ = 10⁷/10⁵",
+      "= 10² = 100"
+    ],
+    "final_answer": "100 times as intense",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-42",
+    "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
+    "prompt_latex": "An investment grows as A = 500e^{0.05t}. When does it reach 1000? Answer to 1 decimal place.",
+    "prompt_plain": "An investment grows as A = 500e^(0.05t). When does it reach 1000? Answer to 1 decimal place.",
+    "prompt_parts": [
+      {
+        "text": "An investment grows as A = 500e^(0.05t). When does it reach 1000? Answer to 1 decimal place."
+      }
+    ],
+    "worked_solution": [
+      "1000 = 500e^(0.05t), so e^(0.05t) = 2",
+      "0.05t = ln 2",
+      "t = ln 2 / 0.05 = 0.6931 / 0.05",
+      "t ≈ 13.9 years"
+    ],
+    "final_answer": "t ≈ 13.9 years",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-43",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Find the remainder when x^{3} - 4x^{2} + 2x + 5 is divided by x - 3.",
+    "prompt_plain": "Find the remainder when x³ − 4x² + 2x + 5 is divided by x − 3.",
+    "prompt_parts": [
+      {
+        "text": "Find the remainder when x³ − 4x² + 2x + 5 is divided by x − 3."
+      }
+    ],
+    "worked_solution": [
+      "Remainder theorem: the remainder is P(3)",
+      "P(3) = 27 − 36 + 6 + 5",
+      "= 2"
+    ],
+    "final_answer": "remainder 2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-44",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Find k so that x + 2 is a factor of x^{3} + kx^{2} - 5x - 6.",
+    "prompt_plain": "Find k so that x + 2 is a factor of x³ + kx² − 5x − 6.",
+    "prompt_parts": [
+      {
+        "text": "Find k so that x + 2 is a factor of x³ + kx² − 5x − 6."
+      }
+    ],
+    "worked_solution": [
+      "Factor theorem: P(−2) must equal 0",
+      "(−2)³ + k(−2)² − 5(−2) − 6 = 0",
+      "−8 + 4k + 10 − 6 = 0",
+      "4k − 4 = 0, so k = 1"
+    ],
+    "final_answer": "k = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-45",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Factor x^{3} - 7x + 6 completely.",
+    "prompt_plain": "Factor x³ − 7x + 6 completely.",
+    "prompt_parts": [
+      {
+        "text": "Factor x³ − 7x + 6 completely."
+      }
+    ],
+    "worked_solution": [
+      "Try factors of 6. P(1) = 1 − 7 + 6 = 0, so x − 1 is a factor",
+      "Divide: x³ − 7x + 6 = (x − 1)(x² + x − 6)",
+      "x² + x − 6 = (x + 3)(x − 2)",
+      "x³ − 7x + 6 = (x − 1)(x − 2)(x + 3)"
+    ],
+    "final_answer": "(x − 1)(x − 2)(x + 3)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-46",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Factor 2x^{3} + 3x^{2} - 8x + 3 completely.",
+    "prompt_plain": "Factor 2x³ + 3x² − 8x + 3 completely.",
+    "prompt_parts": [
+      {
+        "text": "Factor 2x³ + 3x² − 8x + 3 completely."
+      }
+    ],
+    "worked_solution": [
+      "P(1) = 2 + 3 − 8 + 3 = 0, so x − 1 is a factor",
+      "Synthetic division by 1 gives coefficients 2, 5, −3",
+      "Quotient 2x² + 5x − 3",
+      "2x² + 5x − 3 = (2x − 1)(x + 3)",
+      "(x − 1)(2x − 1)(x + 3)"
+    ],
+    "final_answer": "(x − 1)(2x − 1)(x + 3)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-47",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Factor x^{4} - 13x^{2} + 36 completely.",
+    "prompt_plain": "Factor x⁴ − 13x² + 36 completely.",
+    "prompt_parts": [
+      {
+        "text": "Factor x⁴ − 13x² + 36 completely."
+      }
+    ],
+    "worked_solution": [
+      "Treat x² as one unit: (x²)² − 13(x²) + 36",
+      "Two numbers with product 36 and sum −13: −4 and −9",
+      "(x² − 4)(x² − 9)",
+      "Each is a difference of squares: (x − 2)(x + 2)(x − 3)(x + 3)"
+    ],
+    "final_answer": "(x − 2)(x + 2)(x − 3)(x + 3)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-48",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (factoring, factor theorem, remainder theorem); original",
+    "prompt_latex": "Factor 8x^{3} - 27.",
+    "prompt_plain": "Factor 8x³ − 27.",
+    "prompt_parts": [
+      {
+        "text": "Factor 8x³ − 27."
+      }
+    ],
+    "worked_solution": [
+      "Difference of cubes: a³ − b³ = (a − b)(a² + ab + b²)",
+      "a = 2x, b = 3",
+      "(2x − 3)(4x² + 6x + 9)",
+      "Check: 8x³ + 12x² + 18x − 12x² − 18x − 27 = 8x³ − 27 ✓"
+    ],
+    "final_answer": "(2x − 3)(4x² + 6x + 9)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-49",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (graph characteristics; solving algebraically and graphically); original",
+    "prompt_latex": "Solve 2x^{3} - 3x^{2} - 11x + 6 = 0.",
+    "prompt_plain": "Solve 2x³ − 3x² − 11x + 6 = 0.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2x³ − 3x² − 11x + 6 = 0."
+      }
+    ],
+    "worked_solution": [
+      "Try x = 3: 54 − 27 − 33 + 6 = 0, so x − 3 is a factor",
+      "Synthetic division by 3 gives 2, 3, −2",
+      "2x² + 3x − 2 = (2x − 1)(x + 2)",
+      "(x − 3)(2x − 1)(x + 2) = 0",
+      "x = 3, x = 1/2 or x = −2"
+    ],
+    "final_answer": "x = 3, x = 1/2 or x = −2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-50",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (graph characteristics; solving algebraically and graphically); original",
+    "prompt_latex": "For y = -2x^{5} + x^{2} - 4, state the degree, the end behaviour, the y intercept and the most turning points possible.",
+    "prompt_plain": "For y = −2x⁵ + x² − 4, state the degree, the end behaviour, the y intercept and the most turning points possible.",
+    "prompt_parts": [
+      {
+        "text": "For y = −2x⁵ + x² − 4, state the degree, the end behaviour, the y intercept and the most turning points possible."
+      }
+    ],
+    "worked_solution": [
+      "Highest power is x⁵: degree 5 (odd)",
+      "Odd degree with negative leading coefficient: as x → −∞, y → +∞ and as x → +∞, y → −∞",
+      "y intercept: f(0) = −4",
+      "A degree n polynomial has at most n − 1 turning points: 4"
+    ],
+    "final_answer": "degree 5; left end up, right end down; y intercept −4; at most 4 turning points",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-51",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (graph characteristics; solving algebraically and graphically); original",
+    "prompt_latex": "For y = (x + 1)^{2}(x - 2)(x - 4), find the zeros, say whether the graph crosses or touches the x axis at each, and find the y intercept.",
+    "prompt_plain": "For y = (x + 1)²(x − 2)(x − 4), find the zeros, say whether the graph crosses or touches the x axis at each, and find the y intercept.",
+    "prompt_parts": [
+      {
+        "text": "For y = (x + 1)²(x − 2)(x − 4), find the zeros, say whether the graph crosses or touches the x axis at each, and find the y intercept."
+      }
+    ],
+    "worked_solution": [
+      "Zeros: x = −1 (multiplicity 2), x = 2 and x = 4 (multiplicity 1)",
+      "Even multiplicity at −1: the graph touches the axis and turns around",
+      "Odd multiplicity at 2 and 4: the graph crosses",
+      "y intercept: (1)²(−2)(−4) = 8"
+    ],
+    "final_answer": "zeros −1 (touches), 2 (crosses), 4 (crosses); y intercept 8",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-52",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (graph characteristics; solving algebraically and graphically); original",
+    "prompt_latex": "Write the equation of a cubic with zeros -2, 1 and 3 that passes through (0, 12).",
+    "prompt_plain": "Write the equation of a cubic with zeros −2, 1 and 3 that passes through (0, 12).",
+    "prompt_parts": [
+      {
+        "text": "Write the equation of a cubic with zeros −2, 1 and 3 that passes through (0, 12)."
+      }
+    ],
+    "worked_solution": [
+      "y = a(x + 2)(x − 1)(x − 3)",
+      "Use (0, 12): 12 = a(2)(−1)(−3) = 6a",
+      "a = 2",
+      "y = 2(x + 2)(x − 1)(x − 3)"
+    ],
+    "final_answer": "y = 2(x + 2)(x − 1)(x − 3)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-53",
+    "source": "BC Pre-calculus 12 content: polynomial functions and equations (graph characteristics; solving algebraically and graphically); original",
+    "prompt_latex": "Find the x intercepts of y = x^{3} - 3x^{2} - 4x + 12 and the x values where y < 0.",
+    "prompt_plain": "Find the x intercepts of y = x³ − 3x² − 4x + 12 and the x values where y < 0.",
+    "prompt_parts": [
+      {
+        "text": "Find the x intercepts of y = x³ − 3x² − 4x + 12 and the x values where y < 0."
+      }
+    ],
+    "worked_solution": [
+      "Group: x²(x − 3) − 4(x − 3) = (x − 3)(x² − 4) = (x − 3)(x − 2)(x + 2)",
+      "x intercepts: −2, 2, 3",
+      "Positive leading coefficient: the graph starts below the axis on the far left",
+      "Test between zeros: x < −2 negative, −2 < x < 2 positive, 2 < x < 3 negative, x > 3 positive",
+      "y < 0 for x < −2 and 2 < x < 3"
+    ],
+    "final_answer": "x intercepts −2, 2, 3; y < 0 for x < −2 and 2 < x < 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-54",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "For y = \\dfrac{x + 2}{x - 3}, find the asymptotes and both intercepts.",
+    "prompt_plain": "For y = (x + 2)/(x − 3), find the asymptotes and both intercepts.",
+    "prompt_parts": [
+      {
+        "text": "For y = "
+      },
+      {
+        "frac": {
+          "num": "x + 2",
+          "den": "x − 3"
+        }
+      },
+      {
+        "text": ", find the asymptotes and both intercepts."
+      }
+    ],
+    "worked_solution": [
+      "Denominator is 0 at x = 3: vertical asymptote x = 3",
+      "Degrees are equal, so the horizontal asymptote is the ratio of leading coefficients: y = 1/1 = 1",
+      "x intercept: numerator 0 gives x = −2",
+      "y intercept: f(0) = 2/(−3) = −2/3"
+    ],
+    "final_answer": "vertical asymptote x = 3; horizontal asymptote y = 1; x intercept −2; y intercept −2/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-55",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "Simplify y = \\dfrac{x^{2} - 9}{x - 3} and state the point of discontinuity.",
+    "prompt_plain": "Simplify y = (x² − 9)/(x − 3) and state the point of discontinuity.",
+    "prompt_parts": [
+      {
+        "text": "Simplify y = "
+      },
+      {
+        "frac": {
+          "num": "x² − 9",
+          "den": "x − 3"
+        }
+      },
+      {
+        "text": " and state the point of discontinuity."
+      }
+    ],
+    "worked_solution": [
+      "Factor the numerator: (x − 3)(x + 3)",
+      "Cancel x − 3: y = x + 3, for x ≠ 3",
+      "At x = 3 the cancelled factor leaves a hole, not an asymptote",
+      "Hole at y = 3 + 3 = 6, so (3, 6)"
+    ],
+    "final_answer": "y = x + 3 with a hole at (3, 6)",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-56",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "Find all asymptotes of y = \\dfrac{2x^{2} + 1}{x^{2} - 4}.",
+    "prompt_plain": "Find all asymptotes of y = (2x² + 1)/(x² − 4).",
+    "prompt_parts": [
+      {
+        "text": "Find all asymptotes of y = "
+      },
+      {
+        "frac": {
+          "num": "2x² + 1",
+          "den": "x² − 4"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Denominator: x² − 4 = (x − 2)(x + 2). Numerator is never 0 at those x, so nothing cancels",
+      "Vertical asymptotes x = 2 and x = −2",
+      "Equal degrees: horizontal asymptote y = 2/1 = 2"
+    ],
+    "final_answer": "vertical asymptotes x = 2 and x = −2; horizontal asymptote y = 2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-57",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "Describe y = \\dfrac{x^{2} - x - 6}{x^{2} - 4}: any hole, vertical and horizontal asymptotes, and x intercept.",
+    "prompt_plain": "Describe y = (x² − x − 6)/(x² − 4): any hole, vertical and horizontal asymptotes, and x intercept.",
+    "prompt_parts": [
+      {
+        "text": "Describe y = "
+      },
+      {
+        "frac": {
+          "num": "x² − x − 6",
+          "den": "x² − 4"
+        }
+      },
+      {
+        "text": ": any hole, vertical and horizontal asymptotes, and x intercept."
+      }
+    ],
+    "worked_solution": [
+      "Factor: y = (x − 3)(x + 2) / ((x − 2)(x + 2))",
+      "x + 2 cancels: hole at x = −2. Value there: (−2 − 3)/(−2 − 2) = −5/−4 = 5/4, so the hole is (−2, 5/4)",
+      "Remaining denominator x − 2: vertical asymptote x = 2",
+      "Equal degrees: horizontal asymptote y = 1",
+      "x intercept: x − 3 = 0, so x = 3"
+    ],
+    "final_answer": "hole at (−2, 5/4); vertical asymptote x = 2; horizontal asymptote y = 1; x intercept 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-58",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "Write y = \\dfrac{3x + 1}{x - 2} in the form y = a/(x - h) + k.",
+    "prompt_plain": "Write y = (3x + 1)/(x − 2) in the form y = a/(x − h) + k.",
+    "prompt_parts": [
+      {
+        "text": "Write y = "
+      },
+      {
+        "frac": {
+          "num": "3x + 1",
+          "den": "x − 2"
+        }
+      },
+      {
+        "text": " in the form y = a/(x − h) + k."
+      }
+    ],
+    "worked_solution": [
+      "Rewrite the numerator using the denominator: 3x + 1 = 3(x − 2) + 7",
+      "y = (3(x − 2) + 7)/(x − 2) = 3 + 7/(x − 2)",
+      "y = 7/(x − 2) + 3",
+      "So it is y = 1/x stretched by 7, right 2, up 3"
+    ],
+    "final_answer": "y = 7/(x − 2) + 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-59",
+    "source": "BC Pre-calculus 12 content: rational functions (asymptotes, intercepts, point discontinuities, domain, end behaviour); original",
+    "prompt_latex": "Solve \\dfrac{1}{x} + \\dfrac{1}{x + 2} = \\dfrac{3}{4}.",
+    "prompt_plain": "Solve 1/x + 1/(x + 2) = 3/4.",
+    "prompt_parts": [
+      {
+        "text": "Solve "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "x"
+        }
+      },
+      {
+        "text": " + "
+      },
+      {
+        "frac": {
+          "num": "1",
+          "den": "x + 2"
+        }
+      },
+      {
+        "text": " = "
+      },
+      {
+        "frac": {
+          "num": "3",
+          "den": "4"
+        }
+      },
+      {
+        "text": "."
+      }
+    ],
+    "worked_solution": [
+      "Common denominator 4x(x + 2): 4(x + 2) + 4x = 3x(x + 2)",
+      "8x + 8 = 3x² + 6x",
+      "3x² − 2x − 8 = 0",
+      "(3x + 4)(x − 2) = 0",
+      "x = 2 or x = −4/3. Neither is 0 or −2, so both are allowed"
+    ],
+    "final_answer": "x = 2 or x = −4/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-60",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "Convert 135^\\circ  to radians and 7\\pi /6 to degrees.",
+    "prompt_plain": "Convert 135° to radians and 7π/6 to degrees.",
+    "prompt_parts": [
+      {
+        "text": "Convert 135° to radians and 7π/6 to degrees."
+      }
+    ],
+    "worked_solution": [
+      "Degrees to radians: multiply by π/180. 135π/180 = 3π/4",
+      "Radians to degrees: multiply by 180/π. (7π/6)(180/π) = 210°"
+    ],
+    "final_answer": "135° = 3π/4; 7π/6 = 210°",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-61",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "Find the exact values of \\sin(5\\pi /6) and \\cos(7\\pi /6).",
+    "prompt_plain": "Find the exact values of sin(5π/6) and cos(7π/6).",
+    "prompt_parts": [
+      {
+        "text": "Find the exact values of sin(5π/6) and cos(7π/6)."
+      }
+    ],
+    "worked_solution": [
+      "5π/6 is in quadrant II with reference angle π − 5π/6 = π/6. Sine is positive there: sin = 1/2",
+      "7π/6 is in quadrant III with reference angle 7π/6 − π = π/6. Cosine is negative there: cos = −√3/2"
+    ],
+    "final_answer": "sin(5π/6) = 1/2; cos(7π/6) = −√3/2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-62",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "For the angle -250^\\circ  in standard position, find the coterminal angle between 0^\\circ  and 360^\\circ , its quadrant and its reference angle.",
+    "prompt_plain": "For the angle −250° in standard position, find the coterminal angle between 0° and 360°, its quadrant and its reference angle.",
+    "prompt_parts": [
+      {
+        "text": "For the angle −250° in standard position, find the coterminal angle between 0° and 360°, its quadrant and its reference angle."
+      }
+    ],
+    "worked_solution": [
+      "Add 360°: −250° + 360° = 110°",
+      "90° < 110° < 180°, so quadrant II",
+      "Reference angle: 180° − 110° = 70°"
+    ],
+    "final_answer": "110°, quadrant II, reference angle 70°",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-63",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "The point P(-3, 4) is on the terminal arm of angle \\theta  in standard position. Find \\sin \\theta , \\cos \\theta  and \\tan \\theta .",
+    "prompt_plain": "The point P(−3, 4) is on the terminal arm of angle θ in standard position. Find sin θ, cos θ and tan θ.",
+    "prompt_parts": [
+      {
+        "text": "The point P(−3, 4) is on the terminal arm of angle θ in standard position. Find sin θ, cos θ and tan θ."
+      }
+    ],
+    "worked_solution": [
+      "r = √((−3)² + 4²) = √25 = 5",
+      "sin θ = y/r = 4/5",
+      "cos θ = x/r = −3/5",
+      "tan θ = y/x = 4/(−3) = −4/3"
+    ],
+    "final_answer": "sin θ = 4/5, cos θ = −3/5, tan θ = −4/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-64",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "Find the exact value of \\sin(11\\pi /6) · \\cos(5\\pi /3).",
+    "prompt_plain": "Find the exact value of sin(11π/6) · cos(5π/3).",
+    "prompt_parts": [
+      {
+        "text": "Find the exact value of sin(11π/6) · cos(5π/3)."
+      }
+    ],
+    "worked_solution": [
+      "11π/6 is in quadrant IV, reference angle π/6: sin is negative, so sin(11π/6) = −1/2",
+      "5π/3 is in quadrant IV, reference angle π/3: cos is positive, so cos(5π/3) = 1/2",
+      "(−1/2)(1/2) = −1/4"
+    ],
+    "final_answer": "−1/4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-65",
+    "source": "BC Pre-calculus 12 content: trigonometry (angles in standard position in radians and degrees, unit circle, reference and coterminal angles, special angles); original",
+    "prompt_latex": "A circle has radius 8 cm. Find the arc length for a central angle of 3\\pi /4 radians. Give an exact answer.",
+    "prompt_plain": "A circle has radius 8 cm. Find the arc length for a central angle of 3π/4 radians. Give an exact answer.",
+    "prompt_parts": [
+      {
+        "text": "A circle has radius 8 cm. Find the arc length for a central angle of 3π/4 radians. Give an exact answer."
+      }
+    ],
+    "worked_solution": [
+      "Arc length s = rθ (θ in radians)",
+      "s = 8 · 3π/4",
+      "s = 6π cm (about 18.85 cm)"
+    ],
+    "final_answer": "6π cm",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-66",
+    "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
+    "prompt_latex": "State the amplitude, period, phase shift and midline of y = 3 \\sin(2x - \\pi ) + 1.",
+    "prompt_plain": "State the amplitude, period, phase shift and midline of y = 3 sin(2x − π) + 1.",
+    "prompt_parts": [
+      {
+        "text": "State the amplitude, period, phase shift and midline of y = 3 sin(2x − π) + 1."
+      }
+    ],
+    "worked_solution": [
+      "Factor the horizontal part: 2x − π = 2(x − π/2)",
+      "Amplitude |3| = 3",
+      "Period 2π/2 = π",
+      "Phase shift π/2 to the right",
+      "Midline y = 1"
+    ],
+    "final_answer": "amplitude 3, period π, phase shift π/2 right, midline y = 1",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-67",
+    "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
+    "prompt_latex": "A cosine curve has maximum 7, minimum -1 and period 6. Write its equation.",
+    "prompt_plain": "A cosine curve has maximum 7, minimum −1 and period 6. Write its equation.",
+    "prompt_parts": [
+      {
+        "text": "A cosine curve has maximum 7, minimum −1 and period 6. Write its equation."
+      }
+    ],
+    "worked_solution": [
+      "Amplitude = (7 − (−1))/2 = 4",
+      "Midline = (7 + (−1))/2 = 3",
+      "Period 6 = 2π/b, so b = π/3",
+      "Starting at a maximum means a plain cosine: y = 4 cos(πx/3) + 3",
+      "Check: x = 0 gives 4 + 3 = 7 ✓"
+    ],
+    "final_answer": "y = 4 cos(πx/3) + 3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-68",
+    "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
+    "prompt_latex": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres.",
+    "prompt_plain": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres.",
+    "prompt_parts": [
+      {
+        "text": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres."
+      }
+    ],
+    "worked_solution": [
+      "Amplitude = radius = 10, midline = 12",
+      "Period 40 = 2π/b, so b = π/20",
+      "The rider starts at the minimum, so use a reflected cosine: h(t) = −10 cos(πt/20) + 12",
+      "Check: t = 0 gives −10 + 12 = 2 m; t = 20 gives 22 m ✓"
+    ],
+    "final_answer": "h(t) = −10 cos(πt/20) + 12",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-69",
+    "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
+    "prompt_latex": "For y = \\tan 2x, find the period and the vertical asymptotes for 0 \\le  x \\le  \\pi .",
+    "prompt_plain": "For y = tan 2x, find the period and the vertical asymptotes for 0 ≤ x ≤ π.",
+    "prompt_parts": [
+      {
+        "text": "For y = tan 2x, find the period and the vertical asymptotes for 0 ≤ x ≤ π."
+      }
+    ],
+    "worked_solution": [
+      "Period of tan x is π, so y = tan 2x has period π/2",
+      "Asymptotes where cos 2x = 0: 2x = π/2, 3π/2",
+      "x = π/4 and x = 3π/4"
+    ],
+    "final_answer": "period π/2; asymptotes x = π/4 and x = 3π/4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-70",
+    "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
+    "prompt_latex": "Describe the transformations from y = \\sin x to y = -2 \\sin(x/2) + 3 and state the period.",
+    "prompt_plain": "Describe the transformations from y = sin x to y = −2 sin(x/2) + 3 and state the period.",
+    "prompt_parts": [
+      {
+        "text": "Describe the transformations from y = sin x to y = −2 sin(x/2) + 3 and state the period."
+      }
+    ],
+    "worked_solution": [
+      "−2: reflect in the x axis and stretch vertically by a factor of 2",
+      "x/2 = (1/2)x: stretch horizontally by a factor of 2",
+      "+3: shift up 3",
+      "Period = 2π / (1/2) = 4π"
+    ],
+    "final_answer": "reflect in the x axis, vertical stretch 2, horizontal stretch 2, up 3; period 4π",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-71",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve 2 \\sin x = 1 for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve 2 sin x = 1 for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2 sin x = 1 for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "sin x = 1/2",
+      "Reference angle π/6; sine is positive in quadrants I and II",
+      "x = π/6 or x = π − π/6 = 5π/6"
+    ],
+    "final_answer": "x = π/6 or x = 5π/6",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-72",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve 2 \\cos x + √3 = 0 for 0^\\circ  \\le  x < 360^\\circ .",
+    "prompt_plain": "Solve 2 cos x + √3 = 0 for 0° ≤ x < 360°.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2 cos x + √3 = 0 for 0° ≤ x < 360°."
+      }
+    ],
+    "worked_solution": [
+      "cos x = −√3/2",
+      "Reference angle 30°; cosine is negative in quadrants II and III",
+      "x = 180° − 30° = 150° or x = 180° + 30° = 210°"
+    ],
+    "final_answer": "x = 150° or x = 210°",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-73",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve \\tan x = -1 for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve tan x = −1 for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve tan x = −1 for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "Reference angle π/4; tangent is negative in quadrants II and IV",
+      "x = π − π/4 = 3π/4",
+      "x = 2π − π/4 = 7π/4"
+    ],
+    "final_answer": "x = 3π/4 or x = 7π/4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-74",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve 2\\cos^{2}x - \\cos x - 1 = 0 for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve 2cos²x − cos x − 1 = 0 for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2cos²x − cos x − 1 = 0 for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "Factor like 2u² − u − 1 with u = cos x: (2cos x + 1)(cos x − 1) = 0",
+      "cos x = −1/2 or cos x = 1",
+      "cos x = 1: x = 0",
+      "cos x = −1/2: reference angle π/3, quadrants II and III: x = 2π/3, 4π/3"
+    ],
+    "final_answer": "x = 0, 2π/3 or 4π/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-75",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve 2\\sin^{2}x + \\sin x - 1 = 0 for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve 2sin²x + sin x − 1 = 0 for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2sin²x + sin x − 1 = 0 for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "Factor: (2 sin x − 1)(sin x + 1) = 0",
+      "sin x = 1/2: x = π/6 or 5π/6",
+      "sin x = −1: x = 3π/2"
+    ],
+    "final_answer": "x = π/6, 5π/6 or 3π/2",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-76",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve 2 \\sin x = 1 over all real numbers.",
+    "prompt_plain": "Solve 2 sin x = 1 over all real numbers.",
+    "prompt_parts": [
+      {
+        "text": "Solve 2 sin x = 1 over all real numbers."
+      }
+    ],
+    "worked_solution": [
+      "sin x = 1/2 has solutions π/6 and 5π/6 in one turn",
+      "Sine repeats every 2π, so add 2πk",
+      "x = π/6 + 2πk or x = 5π/6 + 2πk, k an integer"
+    ],
+    "final_answer": "x = π/6 + 2πk or x = 5π/6 + 2πk, k an integer",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-77",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "Solve \\sin 2x = √3/2 for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve sin 2x = √3/2 for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve sin 2x = √3/2 for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "Let u = 2x, so 0 ≤ u < 4π (two turns)",
+      "sin u = √3/2: u = π/3, 2π/3, then add 2π: 7π/3, 8π/3",
+      "Divide by 2: x = π/6, π/3, 7π/6, 4π/3"
+    ],
+    "final_answer": "x = π/6, π/3, 7π/6 or 4π/3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-78",
+    "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
+    "prompt_latex": "The Ferris wheel height is h(t) = -10 \\cos(\\pi t/20) + 12 metres. At what time t, 0 \\le  t \\le  40, is a rider first 17 m up?",
+    "prompt_plain": "The Ferris wheel height is h(t) = −10 cos(πt/20) + 12 metres. At what time t, 0 ≤ t ≤ 40, is a rider first 17 m up?",
+    "prompt_parts": [
+      {
+        "text": "The Ferris wheel height is h(t) = −10 cos(πt/20) + 12 metres. At what time t, 0 ≤ t ≤ 40, is a rider first 17 m up?"
+      }
+    ],
+    "worked_solution": [
+      "−10 cos(πt/20) + 12 = 17",
+      "cos(πt/20) = −1/2",
+      "πt/20 = 2π/3 (first angle in quadrant II)",
+      "t = 20 · 2/3 = 40/3 ≈ 13.3 s"
+    ],
+    "final_answer": "t = 40/3 ≈ 13.3 s",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-79",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "Simplify \\sec x - \\sin x \\tan x.",
+    "prompt_plain": "Simplify sec x − sin x tan x.",
+    "prompt_parts": [
+      {
+        "text": "Simplify sec x − sin x tan x."
+      }
+    ],
+    "worked_solution": [
+      "Reciprocal and quotient identities: 1/cos x − sin x · (sin x / cos x)",
+      "= (1 − sin²x)/cos x",
+      "Pythagorean identity: 1 − sin²x = cos²x",
+      "= cos²x / cos x = cos x"
+    ],
+    "final_answer": "cos x",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-80",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "Prove \\cot x + \\tan x = \\sec x \\csc x.",
+    "prompt_plain": "Prove cot x + tan x = sec x csc x.",
+    "prompt_parts": [
+      {
+        "text": "Prove cot x + tan x = sec x csc x."
+      }
+    ],
+    "worked_solution": [
+      "Left side: cos x / sin x + sin x / cos x",
+      "Common denominator sin x cos x: (cos²x + sin²x)/(sin x cos x)",
+      "Pythagorean identity: = 1/(sin x cos x)",
+      "= (1/cos x)(1/sin x) = sec x csc x = right side"
+    ],
+    "final_answer": "cot x + tan x = sec x csc x",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-81",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "\\sin \\theta  = 3/5 and \\theta  is in quadrant II. Find \\sin 2\\theta  and \\cos 2\\theta .",
+    "prompt_plain": "sin θ = 3/5 and θ is in quadrant II. Find sin 2θ and cos 2θ.",
+    "prompt_parts": [
+      {
+        "text": "sin θ = 3/5 and θ is in quadrant II. Find sin 2θ and cos 2θ."
+      }
+    ],
+    "worked_solution": [
+      "cos²θ = 1 − 9/25 = 16/25. In quadrant II cosine is negative: cos θ = −4/5",
+      "sin 2θ = 2 sin θ cos θ = 2(3/5)(−4/5) = −24/25",
+      "cos 2θ = 1 − 2sin²θ = 1 − 2(9/25) = 7/25"
+    ],
+    "final_answer": "sin 2θ = −24/25, cos 2θ = 7/25",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-82",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "Use a sum formula to find the exact value of \\sin 75^\\circ .",
+    "prompt_plain": "Use a sum formula to find the exact value of sin 75°.",
+    "prompt_parts": [
+      {
+        "text": "Use a sum formula to find the exact value of sin 75°."
+      }
+    ],
+    "worked_solution": [
+      "75° = 45° + 30°",
+      "sin(A + B) = sin A cos B + cos A sin B",
+      "= (√2/2)(√3/2) + (√2/2)(1/2)",
+      "= (√6 + √2)/4"
+    ],
+    "final_answer": "(√6 + √2)/4",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-83",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "Use a difference formula to find the exact value of \\tan 15^\\circ .",
+    "prompt_plain": "Use a difference formula to find the exact value of tan 15°.",
+    "prompt_parts": [
+      {
+        "text": "Use a difference formula to find the exact value of tan 15°."
+      }
+    ],
+    "worked_solution": [
+      "15° = 45° − 30°",
+      "tan(A − B) = (tan A − tan B)/(1 + tan A tan B)",
+      "= (1 − 1/√3)/(1 + 1/√3) = (√3 − 1)/(√3 + 1)",
+      "Multiply by (√3 − 1)/(√3 − 1): (3 − 2√3 + 1)/(3 − 1) = (4 − 2√3)/2",
+      "= 2 − √3"
+    ],
+    "final_answer": "2 − √3",
+    "level": "high_school"
+  },
+  {
+    "id": "pc12-84",
+    "source": "BC Pre-calculus 12 content: trigonometry (identities: Pythagorean, quotient, double angle, reciprocal, sum and difference); original",
+    "prompt_latex": "Solve \\sin 2x = \\sin x for 0 \\le  x < 2\\pi .",
+    "prompt_plain": "Solve sin 2x = sin x for 0 ≤ x < 2π.",
+    "prompt_parts": [
+      {
+        "text": "Solve sin 2x = sin x for 0 ≤ x < 2π."
+      }
+    ],
+    "worked_solution": [
+      "Double angle: 2 sin x cos x = sin x",
+      "Move everything to one side (do not divide by sin x): 2 sin x cos x − sin x = 0",
+      "sin x (2 cos x − 1) = 0",
+      "sin x = 0: x = 0, π",
+      "cos x = 1/2: x = π/3, 5π/3"
+    ],
+    "final_answer": "x = 0, π/3, π or 5π/3",
+    "level": "high_school"
+  }
+]
