@@ -1,17 +1,40 @@
 # Pencil Tutor server
 
-Vercel Functions in TypeScript, no framework, no database, no storage. Six endpoints. The tutor's voice is OpenAI GPT-Live-1 over WebRTC: `/api/live-session` relays the connection and `/api/consult` reads the page for it. `/api/ask` plus `/api/speak` are the fallback path and the device synthesizer is the last fallback (`docs/live-voice-plan.md`).
+Vercel Functions in TypeScript, no framework. Eight endpoints. **The base plan (plan amendment 13):** tap-to-talk, every utterance in ElevenLabs Eleven v4 Turbo streamed from `/api/speak` (falling back to OpenAI text-to-speech, then the device voice), one code per student, an 8-hour monthly cap. The only storage is a Neon Postgres database (Vercel Marketplace, Free plan) holding student codes and monthly usage. GPT-Live-1 (`/api/live-session`, `/api/consult`) is a premium option reachable only when the student's plan has `live: true` (`docs/live-voice-plan.md`).
 
 | endpoint | auth | purpose |
 |---|---|---|
-| `GET /api/health` | none | version, which keys exist (yes/no), configured models |
-| `POST /api/watch` | bearer | page picture in, `wait` or `interrupt` out |
-| `POST /api/ask` | bearer | spoken question (m4a) + page picture in, transcript + answer text out |
-| `POST /api/speak` | bearer | text in, mp3 audio out (fallback voice; `gpt-4o-mini-tts` is deprecated, shutdown 2027-01-06) |
-| `POST /api/live-session` | bearer | the iPad's WebRTC offer in, GPT-Live-1's answer out (the OpenAI key stays here) |
-| `POST /api/consult` | bearer | the page reader GPT-Live delegates to: the student's words and a page picture in, report text out |
+| `GET /api/health` | none | version, which keys exist (yes/no), configured models, the voice provider, whether the database is configured |
+| `GET /api/me` | code | checks a code; returns the plan and the month's allowance; free (not counted as activity) |
+| `POST /api/heartbeat` | code | "a problem is open and the student was active in the last 2 minutes"; counts the time; returns the allowance |
+| `POST /api/watch` | code | page picture in, `wait` or `interrupt` out; counted as activity |
+| `POST /api/ask` | code | spoken question (m4a) + page picture in, transcript + answer text out; counted as activity |
+| `POST /api/speak` | code | text in, a stream of PCM audio out: ElevenLabs, else OpenAI (`gpt-4o-mini-tts` is deprecated, shutdown 2027-01-06) |
+| `POST /api/live-session` | code, plan.live | the iPad's WebRTC offer in, GPT-Live-1's answer out (the OpenAI key stays here) |
+| `POST /api/consult` | code | the page reader GPT-Live delegates to: the student's words and a page picture in, report text out; counted as activity |
 
-Every endpoint except health needs `Authorization: Bearer <APP_ACCESS_TOKEN>`. Anything else is `401 {error:"unauthorized"}`, including when the server has no token configured yet.
+Every endpoint except health needs `Authorization: Bearer <CODE>`, where CODE is the student's 8-character code (see Student codes and the monthly cap below). **The code replaces the old shared `APP_ACCESS_TOKEN`, which the server no longer reads.** Anything that is not a well-formed code is `401 {error:"unauthorized", reason:"missing_header" | "bad_scheme" | "malformed_code"}`; a well-formed code nobody has is `401 … "unknown_code"`; a turned-off code is `403 code_disabled`. The order of checks: code present and well formed (401), method (405), the code exists and is on (401/403, one database query), the plan allows it (403 `live_not_in_plan`), the month's hours are not used up (403 `hours_used_up`), configuration (503), key or scripted mode (503), then the body.
+
+## Student codes and the monthly cap
+
+**Codes.** 8 characters from `ABCDEFGHJKMNPQRSTVWXYZ23456789` (30 symbols; no I, L, O, U, 0, 1), generated with `crypto.randomInt`; 30^8 is about 6.6e11. Stored in `students` with `monthly_cap_seconds` (default 28800 = 8 hours), `plan_live` (default false) and `disabled_at`. No name or any other personal field exists. Logs carry only `student`, an 8-character salted SHA-256 prefix of the code (`scripts/codes list` prints it as "log id"). Admin: `scripts/codes` (`docs/how-to-run.md`).
+
+**What counts.** A counted minute is a minute with a problem open and recent activity: ink, a question or a look within the last 2 minutes. Each activity event keeps the meter running for 120 seconds after it. Counted time is the length of the union of those windows: an event is charged only the part of its 120 seconds that an earlier event did not already cover (`chargeFor` in `lib/students.ts`; the same rule is one SQL statement, `CHARGE_SQL`, checked against it by `test/db.integration.test.ts`). Counted as activity: a valid `/api/watch` (a look), `/api/ask` and `/api/consult` (questions), `/api/live-session` (opening live) and `/api/heartbeat`. Not counted: `/api/me`, `/api/speak`, `/api/health`, and any request refused before its body is valid. The app sends a heartbeat every 60 seconds only while a problem is open and there was ink, a question or a look in the last 2 minutes, so thinking time and long lines are covered; time with no activity is not. The first event of a month is charged a full 120 seconds.
+
+**The month.** `usage_months` has one row per student per month; the month is the first day of the month in America/Vancouver (`vancouverMonth`; the offset comes from the runtime's time-zone database). It resets on the 1st. `counted_seconds` is a running total that is only ever incremented. A top-up (`scripts/codes topup`) adds `bonus_seconds` to the current month's row only.
+
+**The allowance object.** Returned in `/api/me`, `/api/heartbeat`, `/api/watch`, `/api/ask`, `/api/consult`, `/api/live-session` bodies and in the bodies of the 403s:
+
+```json
+{ "month": "2026-11", "used_seconds": 120, "cap_seconds": 28800, "remaining_seconds": 28680, "remaining_minutes": 478,
+  "percent_used": 0.4, "state": "ok", "notice": null }
+```
+
+`state` is `ok` below 80% used, `low` from 80%, `used_up` at 100%. `notice` is `"low"` on exactly one response per month (the one during which 80% was crossed) and `"used_up"` on exactly one (the one during which 100% was crossed), otherwise null; a single jump from ok to used up sends only `used_up`. Each is claimed atomically in the database (`low_notice_at`, `used_up_notice_at`), and a top-up re-arms them. `/api/speak` carries `x-allowance-state` and `x-allowance-remaining-seconds` headers instead. When the hours are used up, `watch`, `ask`, `consult`, `heartbeat`, `live-session` and normal `speak` answer `403 {error:"hours_used_up", allowance}` and count nothing; `/api/me` and the two fixed announcements below still answer. Concurrent requests can overshoot the cap by one window (about 2 minutes). If counting fails after the checks passed, the request is still served and an error line `meter_failed` is logged; if the code lookup fails the answer is `503 database_unavailable` and the app keeps its stored code.
+
+**`GET /api/me`** returns `{plan:{live:boolean, cap_minutes:number}, allowance, request_id}`. The app calls it when a code is typed (that is how a code is checked), at launch and when a problem opens (which also wakes the sleeping database).
+
+**`POST /api/heartbeat`** takes `{session_id?, problem_id}` (`problem_id` must be in the bank) and returns `{ok:true, allowance, request_id}`.
 
 ## Contract
 
@@ -80,13 +103,18 @@ Request:
 
 Request: `{"session_id": "any string", "text": "Take another look at line two.", "purpose": "hint"}`.
 
-- `text`: 1 to 600 characters (not blank), else 422 `invalid_request`.
+- `text`: 1 to 600 characters (not blank), else 422 `invalid_request`. Optional only for the two fixed announcements below.
 - `purpose`: optional short lowercase label (`[a-z0-9_]{1,40}`, e.g. `hint`, `answer`, `check_ok`); it is logged, so free text is a 422.
-- Order of checks is the same as `/api/ask`: token (401), POST (405), key or scripted mode (503), body (400/413/422).
+- `purpose: "allowance_low"` and `"allowance_used_up"` are the fixed allowance announcements. The **server writes the sentence** ("You have about N minutes left this month." / "This month's tutoring hours are used up. Ask Edward for more time."); any `text` the client sends is ignored. They are allowed when the hours are used up; normal speech is then `403 hours_used_up`. This lets the tutor say the last words in its own voice without opening free text-to-speech to a code that is out of hours.
+- Order of checks: code (401/403), POST (405), hours (403, announcements excepted), body (400/413/422), key or scripted mode (503).
 
-Response 200: the raw mp3 bytes, `Content-Type: audio/mpeg`, headers `X-Latency-Ms` (server time) and `x-request-id`. Errors are the usual JSON `{error, reason, request_id}`: 502 provider error, 504 provider timeout, 503 missing key. Scripted mode returns a fixed 1668-byte silent mp3 (4 valid MPEG frames) with no key and no network.
+**Response 200: a stream of raw PCM audio**, signed 16-bit little-endian, 24,000 Hz, mono, no header. `Content-Type: application/octet-stream`; headers `x-audio-format: pcm_s16le_24000`, `x-voice-provider: elevenlabs | openai | scripted`, `x-voice-fallback: <reason>` (only when ElevenLabs was skipped), `x-latency-ms` (server time to the first audio), `x-request-id`, `x-allowance-state`, `x-allowance-remaining-seconds`. ElevenLabs audio is relayed as it arrives (the server waits for the first chunk, so a refusal or an empty stream can still fall back); OpenAI audio is generated whole and sent in one piece. A chunk can end mid-sample (odd byte count); the client must carry the odd byte.
 
-Settings (Vercel env, all optional): `SPEAK_MODEL` (default `gpt-4o-mini-tts`), `SPEAK_VOICE` (default `coral`), `SPEAK_INSTRUCTIONS` (default "Warm, patient math tutor talking to a 14-year-old. Calm, encouraging, natural pace. Say math aloud plainly."). Speech is OpenAI only and uses `OPENAI_API_KEY`. Built on the AI SDK's `generateSpeech` with `openai.speech(...)`, `outputFormat: "mp3"`.
+**The voice and its fallback.** 1. ElevenLabs: `POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream?output_format=pcm_24000` with `xi-api-key`, `model_id: eleven_v4_turbo`, `language_code: en`, `voice_settings: {stability, similarity_boost}`, a 6 s limit to the first audio and 45 s overall. 2. If that cannot start (no `ELEVENLABS_API_KEY`, HTTP error such as `elevenlabs_http_401_quota_exceeded`, timeout, empty stream), the same text goes to OpenAI text-to-speech with `outputFormat: "pcm"` and a warning line `voice_fallback` (`from`, `to`, `reason`) is logged. 3. If both fail the answer is JSON `{error:"model_error", reason}` (502, 504 on timeout), and the app uses the device voice. A failure after the audio has started is logged as `stream_failed`; the client keeps what it received. Provider messages are never copied into replies or logs, only labels.
+
+**Characters are billed per character**, so each utterance's length is counted: the response line logs `text_chars`; `usage_months.tts_chars` is the student's running total for the month (and `tts_chars_eleven` the ElevenLabs part); a second line `stream_done` logs `audio_bytes`, `total_ms` and `tts_chars_month`. The text itself is never logged. A failed write of the count is logged as `chars_not_recorded` and never stops the audio. Scripted mode returns 0.1 s of silent PCM (4,800 bytes) with no key and no network.
+
+Settings (Vercel env): `ELEVENLABS_API_KEY` (secret; without it every utterance goes to OpenAI), `ELEVENLABS_VOICE_ID` (default Eric, the premade American male voice `cjVigY5qzO86Huf0OWal`), `ELEVENLABS_MODEL` (default `eleven_v4_turbo`), `ELEVENLABS_STABILITY` (0.5), `ELEVENLABS_SIMILARITY` (0.75). The OpenAI fallback: `SPEAK_MODEL` (default `gpt-4o-mini-tts`), `SPEAK_VOICE` (default `coral`), `SPEAK_INSTRUCTIONS` (default "Warm, patient math tutor talking to a 14-year-old. Calm, encouraging, natural pace. Say math aloud plainly."), using `OPENAI_API_KEY` through the AI SDK's `generateSpeech`. Sources: model id https://elevenlabs.io/docs/overview/models, streaming endpoint https://elevenlabs.io/docs/api-reference/text-to-speech/stream, price $0.04 per 1,000 characters https://elevenlabs.io/pricing/api (all read 2026-11-14).
 
 ### `POST /api/live-session`
 
@@ -110,11 +138,11 @@ Response 200: `{answer_text, drawing_revision?, model, latency_ms, request_id}`.
 
 ### `GET /api/health`
 
-`{ok, version, vercel_env, openai_key_present, gemini_key_present, app_token_set, scripted, scripted_refused_in_production, models:{watch,ask,stt,speak,live}, live_voice, problems}`. No secrets, ever.
+`{ok, version, vercel_env, openai_key_present, gemini_key_present, database_configured, voice_provider ("elevenlabs" when a key is set, else "openai"), voice:{provider, elevenlabs:{key_present, model, voice_id, output_format}, fallback:["openai","device"]}, scripted, scripted_refused_in_production, models:{watch,ask,stt,speak,live}, models_advanced, live_voice, problems}`. No secrets, ever. It does not touch the database (an unauthenticated URL must not be able to keep it awake); `GET /api/me` proves it.
 
 ## Missing key and scripted mode
 
-If the chosen provider's key is absent, watch and ask answer `503 {error:"missing_key", reason:"OPENAI_API_KEY is not set"}` (Gemini: `GEMINI_API_KEY is not set`; `GOOGLE_GENERATIVE_AI_API_KEY` is also accepted). Auth is checked first, then the key, then the body, so an empty smoke call sees the 503.
+If the chosen provider's key is absent, watch and ask answer `503 {error:"missing_key", reason:"OPENAI_API_KEY is not set"}` (Gemini: `GEMINI_API_KEY is not set`; `GOOGLE_GENERATIVE_AI_API_KEY` is also accepted). The code is checked first, then the key, then the body, so an empty smoke call with a valid code sees the 503. `/api/speak` has its own key rule: it needs `ELEVENLABS_API_KEY` or `OPENAI_API_KEY` (503 `ELEVENLABS_API_KEY is not set` only when neither exists).
 
 `TUTOR_SCRIPTED=1` (tests only) answers from a fixed script with no key and no network. It still validates the request. It refuses to turn on when `VERCEL_ENV` is `production`: the flag is ignored, an error line is logged, and `/api/health` reports `scripted_refused_in_production: true`.
 
@@ -160,17 +188,19 @@ Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is t
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). `/api/speak` logs `text_chars, audio_bytes, purpose, voice, model, latency_ms`. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 
-- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (auth, key, scripted), `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
+- `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (code check, plan, hours, key, scripted; `meterActivity` counts a request), `students.ts` (code alphabet, the counting rule `chargeFor`, `allowanceOf`, the server's SQL in `PgStudentStore`), `students-memory.ts` (the same rules in memory, for tests), `students-admin.ts` (the admin script's SQL and the migration runner), `db.ts` (the one door to Postgres), `voice.ts` (the ElevenLabs stream; tests pass a fake `VoiceGateway`), `speak.ts`, `me.ts`, `heartbeat.ts`, `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
+- `db/migrations/*.sql` additive migrations (`001_students.sql`); `scripts/codes migrate` applies them (idempotent). `scripts/` Edward's local tools: `codes` (admin), `clone-voice`, `set-elevenlabs-key`, `live-check`; none run on the server.
+- `test/db.integration.test.ts` runs the real SQL against the real database and is OFF unless `PT_DB_INTEGRATION=1` and `DATABASE_URL` are set (it makes and deletes its own test codes); CI skips it. Run it with `PT_DB_INTEGRATION=1 vercel env run -e production -- npx tsx --test test/db.integration.test.ts`.
 - `data/problems.json` is a copy of `../shared/problems.json` because `vercel deploy` uploads only `server/`. A test fails if they differ. Refresh with `npm run sync-problems`.
 - `test/` Node's test runner via `tsx`: `npm test`. Typecheck: `npm run typecheck` (CI runs both, `.github/workflows/server.yml`).
 
 ## Deploy
 
-Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `APP_ACCESS_TOKEN`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). Do not set `TUTOR_SCRIPTED` on the production environment.
+Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `DATABASE_URL` (set by the Neon integration; do not edit), `ELEVENLABS_API_KEY` (`scripts/set-elevenlabs-key`), `ELEVENLABS_VOICE_ID`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `ELEVENLABS_MODEL`, `ELEVENLABS_STABILITY`, `ELEVENLABS_SIMILARITY`, `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). Do not set `TUTOR_SCRIPTED` on the production environment.
 
 ## Problem bank: `shared/problems.json`
 

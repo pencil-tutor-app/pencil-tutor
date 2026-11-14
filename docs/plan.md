@@ -164,6 +164,9 @@ are in `server/README.md`.
 
 ### Amendment 12 (2026-11-13): the voice moves to GPT-Live-1; amendment 11's voice is now the fallback
 
+**Superseded as the default by amendment 13 (2026-11-14):** GPT-Live is now a premium option, off unless the student's plan has
+`live: true`. The base voice is ElevenLabs Eleven v4 Turbo with tap-to-talk. Everything below still describes the live path.
+
 Why: `gpt-4o-mini-tts` is an old model, and OpenAI's deprecations page lists it as deprecated with shutdown on
 2027-01-06 (https://developers.openai.com/api/docs/deprecations). The current voice model is GPT-Live-1 (`gpt-live-1`),
 a full-duplex voice model: the student now talks to the tutor naturally while a problem is on screen, instead of holding
@@ -188,6 +191,74 @@ is made that it is cheaper, faster or better sounding than the old path; latenci
 
 Plan and its review: `docs/live-voice-plan.md`, `docs/live-voice-plan.review.md` (verdict CUT; page summaries, auto
 reconnect and hint-timing gates were cut). Server contract: `server/README.md`. Running it: `docs/how-to-run.md`.
+
+### Amendment 13 (2026-11-14): the base plan is tap-to-talk in Edward's own voice, one code per student, 8 hours a month
+
+Edward approved this as the product: **CA$19 a month for 8 hours.** It overrides amendment 12 for the default path. GPT-Live
+stays in the code as a **premium option, off by default**.
+
+**What the student gets.** The tutor speaks in one voice for every utterance (answers, hints, check verdicts): ElevenLabs
+**Eleven v4 Turbo** (`eleven_v4_turbo`), streamed so the first audio plays before the sentence is finished. The mic button is
+tap-to-talk: tap to start, tap again to send (auto-stop at 30 seconds). Until Edward's voice clone exists the voice is the premade
+American male voice **Eric** (`cjVigY5qzO86Huf0OWal`, labelled "Smooth, Trustworthy", conversational); the clone is one setting
+away (`ELEVENLABS_VOICE_ID`). Fallback order: ElevenLabs, then OpenAI text-to-speech (`gpt-4o-mini-tts`, deprecated 2027-01-06), then
+the device voice. Each fallback is logged with its reason. Both servers' audio arrives in one wire format (16-bit little-endian
+mono PCM, 24 kHz), which the iPad plays as it arrives.
+
+**Codes, not accounts.** Each student gets a random 8-character code (30 unambiguous symbols; no I, L, O, U, 0, 1). Edward maps
+codes to students offline; no student name is stored or printed anywhere. The app asks for the code once and keeps it in the
+Keychain. **The code replaces the shared `APP_ACCESS_TOKEN`** on every endpoint: a leaked shared token could not be revoked for
+one student and was shipped inside every copy of the app, whereas a code can be turned off alone, carries its own meter, and
+is the thing the cap is counted against. The server checks the code on every request. `scripts/codes` (run locally by Edward)
+creates, lists, tops up and disables codes (`docs/how-to-run.md`).
+
+**The cap: 8 hours a month per code.** A **counted minute is a minute with a problem open and recent activity: ink, a question or
+a look within the last 2 minutes.** Every activity event keeps the meter running for 120 seconds after it, and counted time is the
+total length of the union of those windows (so activity every minute for an hour counts as an hour plus the final 2 minutes, and
+30 idle minutes count for nothing). The server meters from requests it already receives (a valid `/api/watch` look, `/api/ask` or
+`/api/consult` question) plus a light heartbeat (`POST /api/heartbeat`, every 60 seconds, sent by the app only while a problem is
+open and there was ink, a question or a look in the last 2 minutes). The month is the calendar month in America/Vancouver and resets
+on the 1st. At 80% used, the tutor says how much is left (once a month); at 100% the tutor says the month's hours are used up and to
+ask Edward for more, watching and asking stop (the server refuses with `hours_used_up`), and drawing still works. The app always shows
+the minutes left. A top-up adds time to the current month only. Because requests can overlap, a student can overshoot the cap by one
+window (about 2 minutes).
+
+**Storage.** Neon Postgres on the Vercel Marketplace, Free plan (no payment method; 1 GB, 100 CU-hours of compute a month), provisioned
+into the `pencil-tutor` project in the Vercel team. Two tables (`students`, `usage_months`; `server/db/migrations/001_students.sql`,
+additive only), raw SQL through one module (`server/lib/db.ts`), every lookup on a unique or primary-key index, one running total per
+student per month (never recounted), no OFFSET. Measured on the deployed function: 5 to 23 ms per query warm, 53 to 82 ms for the first
+query after idle (Neon's free compute sleeps after 5 minutes idle). The app calls `GET /api/me` when it opens and when a problem opens, so
+the database is awake before the first real request.
+
+**Premium live voice.** GPT-Live-1 (amendment 12) is reachable only when the student's plan has `live: true`, which defaults to false
+(`scripts/codes live CODE on`). With live off, the app never calls `/api/live-session` and shows no live controls; the server answers 403
+`live_not_in_plan` to anyone else.
+
+**Cost model per counted hour (USD at list price; CAD at 1 USD = 1.425 CAD).** Prices read 2026-11-14.
+
+| item | price | source | per counted hour |
+|---|---|---|---|
+| A page look (`gpt-6.1-sol`, 1,841 input tokens, about 45 output) | $2 / $10 per million tokens | `server/lib/pricing.ts` (OpenAI pricing page, 2026-11-14); tokens **measured** on the deployed server, 4 looks | about $0.0041 each; **assumed** 60 to 120 looks an hour: $0.25 to $0.49 |
+| Tutor voice, ElevenLabs v4 Turbo | $0.04 per 1,000 characters | https://elevenlabs.io/pricing/api (2026-11-14); 1 character = 1 credit **measured** (401 test characters used 401 credits) | **assumed** 2,000 to 10,000 characters an hour (1,000 characters is about 62 seconds of audio, measured): $0.08 to $0.40 |
+| A spoken question (`gpt-6.1-terra` answer plus transcription) | $1 / $5 per million tokens; transcription price **not checked** | `server/lib/pricing.ts` | model part about $0.003 each; **assumed** 5 to 10 an hour: under $0.03 plus transcription |
+| Database (Neon Free), hosting | $0 | Vercel Marketplace plan `free_v3` | $0 (the Vercel plan itself is **not confirmed**, see below) |
+| **Total per counted hour** | | | **light $0.34 (CA$0.48), typical $0.59 (CA$0.83), heavy $0.92 (CA$1.31)** |
+
+At the full 8 hours: typical $4.68 (CA$6.67), heavy $7.36 (CA$10.49), against CA$19 of revenue. Premium live adds $3.00 an hour of open
+session ($0.05 a minute, `gpt-live-1` model page) on top of the looks: about $3.4 an hour, or about $27 (CA$39) for 8 hours, more than
+the CA$19 price, so a live plan needs its own price. The looks per hour and characters per hour are assumptions until real sessions
+are logged; the server logs `text_chars`, `tts_chars_month`, estimated cost per look and counted minutes for each student, so the first
+real month settles them.
+
+**Capacity limit, not just cost.** The ElevenLabs account is on the **Creator plan ($22 a month list)**, whose character allowance for
+this account is **157,028 credits a month and cannot be extended** (`allowed_to_extend_character_limit: false`; 33,812 already used this
+period, resetting 2026-11-22). At the assumed 2,000 to 10,000 characters per counted hour, that is roughly 16 to 78 counted hours a month
+across all students (2 to 10 students using the full 8 hours). When it runs out ElevenLabs refuses; the server then speaks through OpenAI
+(a different voice) and logs `voice_fallback` with the reason. Going past a handful of students needs a larger ElevenLabs plan. That is
+Edward's call and costs money; it is not decided here.
+
+**Not confirmed.** Whether the Vercel team is on the Hobby plan (Hobby is for non-commercial use; a paid product likely needs Pro): not
+checked. The ElevenLabs API key for the server could not be created from the command line (see `docs/how-to-run.md`).
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
