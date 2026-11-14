@@ -69,3 +69,20 @@ What each check does:
 - The harness was tested by corrupting three answers in a scratch copy; all three were caught.
 
 Not verified mechanically: the wording of the English explanations, and the intermediate lines of most worked solutions beyond the checked values above.
+
+## Review
+
+Teacher-quality review, 2026-11-15. All 70 problems were read, and the reasoning of every proof was read line by line rather than trusting the brute-force check: dm-01, 03, 05 to 11, 14 to 16, 22, 23, 26, 27, 35, 40 to 45, 54, 62, 63. For each, the logic was followed end to end: cases exhaustive, the inductive step really uses the hypothesis, base cases cover the start, no step assumes the conclusion. No proof had a logical error. Counting, modular-arithmetic and recurrence answers were also re-derived by hand.
+
+| outcome | count | ids |
+|---|---|---|
+| reviewed | 70 | all |
+| fixed | 9 | dm-04, dm-07, dm-26, dm-29, dm-32, dm-45, dm-54, dm-62, dm-66 |
+| dropped | 0 | none |
+| unchanged | 61 | the rest |
+
+What was fixed: dm-54 said "any 6 numbers", which is false if repeats are allowed, now "6 different numbers"; dm-32 has many correct (s, t) pairs, now says to use back-substitution from the Euclidean algorithm so the answer is unique; dm-66 asked for a transition table but gave none, now a table line is in the solution and the final answer; dm-62 listed the transitive chains without saying chains through a pair (a, a) add nothing new; dm-29 put the question before the loop it refers to; dm-26 stated the partial-fraction split without showing it is true, now a one-line check; dm-45's reason for base cases up to n = 2 now also covers n = 0 and n = 1; dm-07 said "valid only if" where "exactly when" is meant; dm-04 had a stray "(with the original)". No numeric answer changed and `verify.py` needed no edit.
+
+Unsure: dm-68 to dm-70 (graphs and trees) are reach-ahead material beyond the MATH 1130 outline, as the Outline source section already says. dm-15 prints four truth-table rows per solution line, which is dense for a student; left because verify.py compares that exact text.
+
+Verification re-run 2026-11-15 with sympy 1.14.0: `verified 70/70 problems (52 computational, 18 proof) with 0 failures`.

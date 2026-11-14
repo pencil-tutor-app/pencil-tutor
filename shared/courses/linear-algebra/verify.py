@@ -414,7 +414,7 @@ def c29():
     assert A * n1 == zeros(2, 1) and A * n2 == zeros(2, 1)
     assert Matrix.hstack(n1, n2).rank() == 2 and Matrix.hstack(n1, n2, *ns).rank() == 2
     return F(prompt=["A = " + M(A)],
-             sol=[f1, f2, "x = -2s - 2t and z = -t", "s(-2, 1, 0, 0) + t(-2, 0, -1, 1)",
+             sol=[f1, f2, "x₁ = -2s - 2t and x₃ = -t", "s(-2, 1, 0, 0) + t(-2, 0, -1, 1)",
                   "rank = 2, nullity = 2"],
              final=["{(-2, 1, 0, 0), (-2, 0, -1, 1)}", "rank 2, nullity 2"])
 
