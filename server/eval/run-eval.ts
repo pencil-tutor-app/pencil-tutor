@@ -22,12 +22,16 @@ import { setLogSink } from "../lib/log.js";
 import { realModels } from "../lib/models.js";
 import { estimateCostUsd } from "../lib/pricing.js";
 import { findProblem } from "../lib/problems.js";
+import { MemoryStudentStore } from "../lib/students-memory.js";
 import { handleWatch } from "../lib/watch.js";
 import { loadRows, perMinute, summarize, table, type Page, type Row } from "./score.js";
 
 const HERE = new URL(".", import.meta.url).pathname;
 const FIXTURES = `${HERE}fixtures/`;
-const TOKEN = "eval-token";
+// A student code held in an in-memory store (no database), with a cap far above any eval.
+const TOKEN = "K7MQ2XAB";
+const evalStudents = new MemoryStudentStore();
+evalStudents.add(TOKEN, { capSeconds: 1_000_000_000 });
 const CONSULT_QUESTION = "Can you check my work so far? Is it right?";
 
 type Manifest = Page & {
@@ -53,7 +57,6 @@ export function parseSpec(text: string): Spec {
 function envFor(spec: Spec, role: "watch" | "consult"): Env {
   const stem = role === "watch" ? "WATCH" : "ASK";
   return {
-    APP_ACCESS_TOKEN: TOKEN,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     [`${stem}_PROVIDER`]: spec.provider,
@@ -87,7 +90,7 @@ const JudgeSchema = z.object({
 const JUDGE_SYSTEM = `You read a short report that a math tutor's page reader wrote about a student's handwritten page. You do not judge the student's maths. You only extract what the report claims.
 
 Return:
-- claims_error: true if the report says any line or step the student wrote is wrong, has a mistake or a slip. false if it says the work so far is right, correct, fine or unfinished with no mistake named. A gentle suggestion to double-check a specific step as possibly wrong counts as true. A vague "keep going" does not.
+- claims_error: true if the report says a line or step the student ALREADY WROTE is wrong, has a mistake or a slip, or tells the student to recheck a specific written step as probably wrong. false if it says the work so far is right, correct or fine, or that the latest line is unfinished, incomplete or missing a part, as long as it names no mistake in what is written. Saying a line is unfinished is NOT an error claim. A vague "keep going" is not an error claim.
 - error_line: the number of the line the report says is wrong, using the numbered lines you are given (match by number said, or by the content described). If it names several, the lowest number. null if it claims no error or does not say which line.
 - reveals_answer: true only if the report states the problem's CORRECT final answer (you are given it) or writes out a corrected version of a line. Reading back what the student wrote, even a wrong value, is not a leak. false otherwise.`;
 
@@ -111,7 +114,7 @@ async function judge(pageRows: string[], answer: string, finalAnswer: string, ke
 
 async function runOne(spec: Spec, role: "watch" | "consult", page: Manifest, rep: number, key: string): Promise<Row> {
   const png = readFileSync(`${FIXTURES}${page.file}`);
-  const deps: Deps = { env: envFor(spec, role), models: realModels };
+  const deps: Deps = { env: envFor(spec, role), models: realModels, students: evalStudents };
   const imageB64 = png.toString("base64");
   let res: Response;
   if (role === "watch") {

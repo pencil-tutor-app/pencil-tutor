@@ -84,6 +84,9 @@ describe("difficulty routing", () => {
 
   it("advanced reads the _ADVANCED variables and defaults to the frontier model; both levels are overridable", () => {
     const env = {};
+    // Defaults chosen by the eval (server/eval/results/main2.md): luna for high school, sol for advanced.
+    assert.equal(roleConfig("watch", env).model, "gpt-6-luna");
+    assert.equal(roleConfig("ask", env).model, "gpt-6-luna");
     assert.equal(roleConfig("watch", env, "advanced").model, "gpt-6.1-sol");
     assert.equal(roleConfig("ask", env, "advanced").model, "gpt-6.1-sol");
     const over = { WATCH_MODEL: "cheap", WATCH_MODEL_ADVANCED: "big", ASK_MODEL_ADVANCED: "bigger", WATCH_EFFORT: "low" };

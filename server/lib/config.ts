@@ -26,7 +26,10 @@ function parseEffort(value: string | undefined, varName: string): Effort | undef
 // Sources are listed in server/README.md.
 export const DEFAULT_MODELS: Record<Level, Record<Provider, Record<ProviderRole, string>>> = {
   high_school: {
-    openai: { watch: "gpt-6.1-sol", ask: "gpt-6.1-terra", stt: "gpt-transcribe" },
+    // High school math runs on gpt-6-luna for both roles: on the 30-page eval (server/eval/results/main2.md) it matched
+    // gpt-6.1-sol's first-wrong-line accuracy (30/30) with 0 false alarms at about a tenth of the cost per look. To go back
+    // for a deployment: WATCH_MODEL=gpt-6.1-sol ASK_MODEL=gpt-6.1-terra.
+    openai: { watch: "gpt-6-luna", ask: "gpt-6-luna", stt: "gpt-transcribe" },
     google: { watch: "gemini-4-argon", ask: "gemini-3.8-flash", stt: "gemini-3.5-transcribe" },
   },
   advanced: {

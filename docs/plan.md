@@ -182,7 +182,7 @@ What changed:
   check is pushed as `session.thinking.append`.
 - Hold-to-talk becomes a mic mute toggle while live. If Live cannot connect or drops, the earlier path (hold to ask,
   `/api/ask`, `/api/speak`, device voice) takes over and the reason is logged. No automatic reconnect.
-- Voice `gleam` (default, set with `LIVE_VOICE`), chosen from the documented voice table (North American, feminine,
+- Voice `gleam` (this amendment's default; replaced by `meridian` in amendment 14, set with `LIVE_VOICE`), chosen from the documented voice table (North American, feminine,
   recorded rather than generated), not by ear.
 
 Cost: voice is $0.05 per minute of open session (billed per second, $3.00 per hour), plus the normal ask and watch model
@@ -259,6 +259,68 @@ Edward's call and costs money; it is not decided here.
 
 **Not confirmed.** Whether the Vercel team is on the Hobby plan (Hobby is for non-commercial use; a paid product likely needs Pro): not
 checked. The ElevenLabs API key for the server could not be created from the command line (see `docs/how-to-run.md`).
+
+### Amendment 14 (2026-11-14): high school math runs on gpt-6-luna; problems carry a level; every look logs its tokens and cost
+
+Edward: "for high school math, you don't need a frontier model ... college-level and harder, then 6.1, but for high school math,
+Luna or Terra will do." The question was whether the cheaper model still catches mistakes. It was measured, not assumed.
+
+**What changed.**
+- Every `/api/watch`, `/api/ask` and `/api/consult` call logs the model, input, cached-input, output and reasoning token counts, the
+  provider time, and an estimated USD cost from `server/lib/pricing.ts` (counts and labels only, never text or pictures).
+- Problems have a `level` (`high_school` by default, or `advanced`). Config maps `high_school` to `gpt-6-luna` for watch and for
+  ask/consult, and `advanced` (college level and harder) to `gpt-6.1-sol`. Nothing in the bank is advanced yet; the route exists so a
+  harder problem set needs no code change. Both levels are env-overridable: `WATCH_MODEL`, `ASK_MODEL`, `WATCH_EFFORT`, `ASK_EFFORT`
+  for high school, the same names with `_ADVANCED` for advanced. Nothing bigger than that was built.
+- The iPad Debug build keeps a copy of each page picture sent to watch or consult next to the session log (Release never does), so
+  Edward's real handwriting can be pulled off the iPad for the next eval.
+- The default live voice is `meridian` (Edward's choice, 2026-11-14), replacing `gleam` in amendment 12.
+
+**The eval.** `server/eval/`: 30 synthetic handwritten BC Math 9 pages with known answers (8 correct and finished, 7 correct but
+unfinished, 15 wrong at a known line: sign, distribution, combining like terms, moving a term, dividing or multiplying only one side),
+rendered 1024 x 544 PNG like the app sends. Each page went through the real `handleWatch` and `handleConsult` with each candidate
+model, 2 repetitions per page (1 for Gemini 4 Argon). Results: `server/eval/results/main2.md` and `.jsonl`. Pages are fonts with
+jitter, **not real handwriting**.
+
+| model | watch: exact first wrong line | watch: false alarms | consult: exact line | consult: false alarms | schema failures | watch p50 / p90 | cost per watch look | cost per consult look |
+|---|---|---|---|---|---|---|---|---|
+| gpt-6.1-sol (old watch default) | 30/30 | 0/30 | 30/30 | 0/30 | 0 | 3.1 s / 4.2 s | $0.00243 | $0.00315 |
+| gpt-6.1-terra (old ask default) | 30/30 | 0/30 | 30/30 | 0/30 | 0 | 2.6 s / 3.4 s | $0.00128 | $0.00179 |
+| **gpt-6-luna (new default)** | 30/30 | 0/30 | 30/30 | 0/30 | 0 | 2.5 s / 3.3 s | **$0.00016** | **$0.00022** |
+| gpt-6-luna, low effort | 29/30 | 0/30 | 29/30 | 0/30 | 0 | 3.2 s / 4.4 s | $0.00015 | $0.00015 |
+| gpt-6.1-terra, low effort | 30/30 | 0/30 | 29/30 | 0/30 | 0 | 2.5 s / 2.8 s | $0.00123 | $0.00113 |
+| gemini-3.8-flash | 30/30 | 0/30 | 30/30 | 0/30 | 0 | 4.3 s / 5.6 s | $0.00265 | $0.00261 |
+| gemini-4-argon (1 repetition) | 15/15 | 0/15 | 15/15 | 0/15 | 0 | 6.8 s / 9.7 s | $0.00648 | $0.00445 |
+
+Consult accuracy is read by a judge model (`gpt-6.1-sol`, low effort) that only extracts what the report claims. Provider errors: 0
+across all runs.
+
+**Choice rule and result.** The default for high school becomes the cheapest model within 1 page of Sol's first-wrong-line accuracy
+with no more false alarms than Sol. That is `gpt-6-luna` for both roles (equal to Sol on all four scores). Low effort saved under
+$0.0001 a look and lost one page, so effort stays at the provider default.
+
+**Cost per minute of session, watch plus consult only (voice not included).** A real 3-minute iPad session made 7 watch looks and 6
+asks. Priced at the measured per-look costs: before (Sol watch, Terra ask) 7 x $0.00243 + 6 x $0.00179 = $0.0278 per 3 minutes, **US$0.0093
+per minute (CA$0.0132)**; after (Luna) 7 x $0.00016 + 6 x $0.00022 = $0.0024 per 3 minutes, **US$0.0008 per minute (CA$0.0012)**, about 11
+times less. The unmeasured US$0.05 per minute estimate was about five times too high even before the change. The voice
+($0.05 per minute for GPT-Live-1) is unchanged and now dominates. These are estimates from a price table (OpenAI pricing page, fetched
+2026-11-14), checked against token counts the API reported, not an invoice.
+
+**What the numbers do not settle.**
+- The pages are synthetic. Real handwriting is messier; no model was tested on it. The Debug capture exists to fix that.
+- 15 wrong pages x 2 repetitions is a small set. Two earlier fixtures (a half-written line that read as a complete wrong equation) made
+  every model flag a "correct" page; they were fixed, rerun, and are the one place Luna's watch differed from Sol's: on the line
+  `8x - 1 = 3x`, which looks finished, Luna interrupted twice where Sol and Terra waited twice. If real use shows Luna interrupting on
+  lines still being written, set `WATCH_MODEL=gpt-6.1-terra` (half the saving, same accuracy here).
+- `/api/ask` (the spoken-question fallback) shares the ask model but was not evaluated on free-form questions; only page reading
+  (`/api/consult`) was.
+- Claude Haiku was not run: no Anthropic key exists in the environment or in `tutoring/.env.local`, so no provider was added.
+- The `advanced` route has no problems on it and no eval.
+- Google raises Gemini 4 Argon prices on 2026-12-01 ($4 / $20) and Gemini 3.8 Flash on 2027-01-01 ($1.50 / $7.50); the price table
+  switches on those dates.
+- The recalled note about the Vals AI SAGE benchmark was partly wrong. The archived SAGE v1 board (2026-10-08, not 11-12) lists Gemini 4
+  Argon 53.65%, GPT-6 Luna 48.09%, GPT-6.1 Sol 46.54%, Claude Haiku 5.5 45.78%. Luna did beat Sol there, but Argon led those
+  three, and v1.1 has replaced v1 (https://www.vals.ai/benchmarks/sage-v1). This is a different task from watching live pages.
 
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a

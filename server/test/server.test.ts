@@ -213,7 +213,7 @@ describe("watch with a model", () => {
     assert.equal(r.json.action, "interrupt");
     assert.equal(r.json.line, 2);
     assert.equal(r.json.drawing_revision, 7);
-    assert.equal(r.json.model, "gpt-6.1-sol");
+    assert.equal(r.json.model, "gpt-6-luna");
   });
 
   it("turns malformed model output into a wait with a logged reason, never a crash", async () => {

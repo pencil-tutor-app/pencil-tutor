@@ -22,8 +22,11 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   solutions held on the server only (`shared/problems.json`).
 - **Voice:** ElevenLabs Eleven v4 Turbo, tap-to-talk (see Voice below). GPT-Live is a premium option, off unless a
   code's plan has it. Server endpoints: watch, ask, speak, consult, live-session, me, heartbeat, health.
-- **Watcher model:** OpenAI `gpt-6.1-sol`. To try Gemini, set `WATCH_PROVIDER`
-  to `google` and `WATCH_MODEL` to `gemini-4-argon` in Vercel, then redeploy.
+- **Models:** high school problems (every problem in the bank) run on OpenAI `gpt-6-luna` for watch and for ask/consult;
+  `advanced` problems (college level and harder; none yet) run on `gpt-6.1-sol` (plan amendment 14, measured). To try
+  another model, set `WATCH_MODEL` / `ASK_MODEL` (high school) or `WATCH_MODEL_ADVANCED` / `ASK_MODEL_ADVANCED` in Vercel
+  and redeploy; for Gemini also set the matching `_PROVIDER` to `google`. Reasoning effort: `WATCH_EFFORT`, `ASK_EFFORT`
+  (`none`, `low`, `medium`, `high`; unset means the provider default).
 
 ## Voice (the base plan, 2026-11-14)
 
@@ -98,7 +101,7 @@ out, the plan would need a paid tier (Edward's call).
 Only a code whose plan has `live: true` reaches this. While a problem is open the student talks to the tutor naturally: OpenAI's `gpt-live-1`
 over WebRTC, $0.05 per minute of open session. The OpenAI key never reaches the iPad: the app sends its connection offer to
 our server (`POST /api/live-session`), which relays it to OpenAI. Change the voice or model in Vercel, then redeploy:
-`LIVE_VOICE` (default `gleam`; English options: quartz, ripple, vesper, willow, stone, gleam, meridian, beacon, delta,
+`LIVE_VOICE` (default `meridian`; English options: quartz, ripple, vesper, willow, stone, gleam, meridian, beacon, delta,
 cinder, plus marin and the older named voices) and `LIVE_MODEL` (default `gpt-live-1`). The voice was picked from the
 documented voice table, **not by ear**: if it does not sound like a warm, patient tutor, try `willow`, `meridian` or
 `marin` and say which one wins. The tutor's personality is `LIVE_TUTOR_INSTRUCTIONS` in `server/lib/policy.ts`.
@@ -205,6 +208,37 @@ Time to first audio byte, 77-character sentence (about 4.7 s of speech), measure
 Database time per request on the deployed server (log field `db_ms`): 5 to 23 ms warm for the code lookup, 53 to 82 ms for the
 first query after idle; a counted request (lookup plus counting) is 2 queries, 18 to 65 ms in total. One page look
 (`/api/watch`, `gpt-6.1-sol`, 4 looks): 1,841 input tokens, about 45 output tokens, about $0.0041 estimated, 2.5 s of model time.
+That was before amendment 14; `gpt-6-luna` now does the look at about $0.00016 (see the next section).
+
+## Model eval and cost per look (2026-11-14)
+
+Every watch, ask and consult call logs `model, level, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens,
+model_ms, est_cost_usd, cost_basis` (counts only). To see real cost per session, add up `est_cost_usd` from the Vercel runtime
+logs for the session's requests. The price table is `server/lib/pricing.ts` (sources and date in the file).
+
+Re-run the model comparison (a script, not part of CI; it makes real API calls, about $0.01 to $0.03 per 30-page pass per cheap
+model and about $0.25 for Sol). Keys load from an env file with Node's flag and are never printed:
+
+```sh
+python3 server/eval/make_fixtures.py        # only to regenerate the 30 pages (needs Pillow and macOS fonts); they are committed
+server/node_modules/.bin/tsx --env-file=/path/to/.env.local server/eval/run-eval.ts \
+  --models openai:gpt-6-luna,openai:gpt-6.1-sol,google:gemini-4-argon --reps 2 --run my-run
+```
+
+Model spec is `provider:model[:effort]`. It drives the real `handleWatch` / `handleConsult`. Results append to
+`server/eval/results/<run>.jsonl` (a rerun with the same `--run` resumes) and a table prints; `--budget` stops at an estimated
+spend (default $4). Re-print a table with `tsx server/eval/score.ts server/eval/results/<run>.jsonl`. The committed run behind
+the defaults is `server/eval/results/main2.md`.
+
+**Pulling Edward's real handwriting for the next eval.** Debug builds only (same gate as `TutorSession.logsWords`; Release never
+writes them) save each page picture sent to watch or consult in the app's Documents folder, next to the session log, as
+`page-<time>-<session>-watch-w<N>-r<revision>.png` or `...-consult-d<id>-a<attempt>-r<revision>.png`. The session log's
+`page_saved` events name the file and size. They are not uploaded and not part of the share-sheet export. Copy them off:
+
+```sh
+xcrun devicectl device copy from --device 00008030-0002101902D0202E --domain-type appDataContainer \
+  --domain-identifier com.edwardtran.penciltutor --source Documents --destination ~/Desktop/pencil-pages
+```
 
 ## The real test
 

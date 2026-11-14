@@ -73,7 +73,7 @@ Response 200:
   "hint_spoken": null,
   "hint_written": null,
   "drawing_revision": 17,
-  "model": "gpt-6.1-sol",
+  "model": "gpt-6-luna",
   "latency_ms": 5200,
   "request_id": "..."
 }
@@ -124,7 +124,7 @@ Request: `{"session_id": "any string", "problem_id": "u3-04", "sdp": "<the offer
 
 Response 200: `{session_id, sdp, model, voice, latency_ms, request_id}`. `session_id` is OpenAI's Live session id and `sdp` is the answer to apply as the remote description. The app then uses the data channel `oai-events` (create it before the offer; do not send `session.start`).
 
-The session it creates: `model` from `LIVE_MODEL` (default `gpt-live-1`), `audio.output.voice` from `LIVE_VOICE` (default `gleam`), `instructions` = `LIVE_TUTOR_INSTRUCTIONS` in `lib/policy.ts` plus the problem statement (never the worked solution), a developer greeting message, `delegation: {type: "client"}`, and `client.data_channel.allowed_client_events` = exactly `session.input_audio.mute`, `session.input_audio.unmute`, `session.thinking.append`, `session.commentary.append`, `session.close`.
+The session it creates: `model` from `LIVE_MODEL` (default `gpt-live-1`), `audio.output.voice` from `LIVE_VOICE` (default `meridian`), `instructions` = `LIVE_TUTOR_INSTRUCTIONS` in `lib/policy.ts` plus the problem statement (never the worked solution), a developer greeting message, `delegation: {type: "client"}`, and `client.data_channel.allowed_client_events` = exactly `session.input_audio.mute`, `session.input_audio.unmute`, `session.thinking.append`, `session.commentary.append`, `session.close`.
 
 Errors: 401 token, 405 method, 400/413 body, 422 invalid request (`sdp` missing, over 64 KB or not an SDP; unknown `problem_id`), 502 provider error (`reason` is `provider_http_<status>` and similar, never OpenAI's message), 504 provider timeout (15 s), 503 missing key, or scripted mode (it has no real session to give).
 
@@ -154,13 +154,26 @@ The script, for the iPad UI test:
 
 ## Models and where the defaults come from
 
-Provider and model are environment variables, set per role. Checked against the vendors' own pages on 2026-11-13.
+Provider and model are environment variables, set per role and per difficulty level. Checked against the vendors' own pages on
+2026-11-13 and against the keys' model lists on 2026-11-14. `ask` is also what `/api/consult` uses.
 
-| variable | default (openai) | default (google) |
-|---|---|---|
-| `WATCH_PROVIDER` / `WATCH_MODEL` | `openai` / `gpt-6.1-sol` | `gemini-4-argon` |
-| `ASK_PROVIDER` / `ASK_MODEL` | `openai` / `gpt-6.1-terra` | `gemini-3.8-flash` |
-| `STT_MODEL` | `gpt-transcribe` | `gemini-3.5-transcribe` |
+A problem has a `level` in `shared/problems.json` (`high_school` when missing; every bank problem is `high_school`). The level picks
+which set of variables applies:
+
+| variable (high school) | default (openai) | default (google) | advanced: variable and default (openai) |
+|---|---|---|---|
+| `WATCH_PROVIDER` / `WATCH_MODEL` / `WATCH_EFFORT` | `openai` / `gpt-6-luna` / provider default | `gemini-4-argon` | `WATCH_PROVIDER_ADVANCED` / `WATCH_MODEL_ADVANCED` / `WATCH_EFFORT_ADVANCED`: `gpt-6.1-sol` |
+| `ASK_PROVIDER` / `ASK_MODEL` / `ASK_EFFORT` | `openai` / `gpt-6-luna` / provider default | `gemini-3.8-flash` | `ASK_PROVIDER_ADVANCED` / `ASK_MODEL_ADVANCED` / `ASK_EFFORT_ADVANCED`: `gpt-6.1-sol` |
+| `STT_MODEL` | `gpt-transcribe` | `gemini-3.5-transcribe` | same for both levels |
+
+`*_EFFORT` is `none`, `low`, `medium` or `high` (OpenAI `reasoningEffort`; Google `thinkingLevel`, `none` meaning `minimal`); a bad value
+is a 503 `bad_config`. `/api/health` shows `models` (high school, with an effort if set) and `models_advanced`. The advanced route has no
+problems on it yet and was not evaluated.
+
+Why `gpt-6-luna` for high school (plan amendment 14): 30 synthetic pages, 2 repetitions, through the real handlers. Luna matched
+`gpt-6.1-sol` on first-wrong-line accuracy (30/30 each, watch and consult), had 0 false alarms and 0 schema failures, and cost about
+$0.00016 a watch look against $0.00243, and $0.00022 a consult look against $0.00315 (estimated from the price table). Table and
+caveats: `docs/plan.md` amendment 14; raw rows: `eval/results/main2.jsonl`. The pages are fonts with jitter, not real handwriting.
 
 `STT_MODEL` unset follows `ASK_PROVIDER`. `STT_MODEL` set: a name starting with `gemini` uses Google, anything else OpenAI.
 
@@ -180,7 +193,9 @@ Capability proof, per default:
 
 Also checked: `gpt-6-luna` takes text and image (cheaper, an option for ask). `gpt-6-astra` is listed at $10/$50 per million tokens, not used by default. `gpt-realtime-2.1` was not verified and is not used (this path is request and response, not a live session).
 
-Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is too slow, set `WATCH_MODEL=gpt-6.1-terra` or `gpt-6-luna`.
+Latency (eval, 1024 x 544 page, median / p90): gpt-6-luna watch 2.5 s / 3.3 s, consult 4.4 s / 6.1 s; gpt-6.1-sol watch 3.1 s / 4.2 s. To go
+back to the earlier models without a code change: `WATCH_MODEL=gpt-6.1-sol` and `ASK_MODEL=gpt-6.1-terra`. If Luna interrupts on lines still
+being written in real use, `WATCH_MODEL=gpt-6.1-terra` (same accuracy in the eval, about 8 times Luna's cost).
 
 ## Watch policy
 
@@ -188,7 +203,7 @@ Latency is unmeasured. GPT-6.1 Sol reasons at "medium" by default; if watch is t
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, latency_ms, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 
@@ -196,6 +211,8 @@ One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint
 - `db/migrations/*.sql` additive migrations (`001_students.sql`); `scripts/codes migrate` applies them (idempotent). `scripts/` Edward's local tools: `codes` (admin), `clone-voice`, `set-elevenlabs-key`, `live-check`; none run on the server.
 - `test/db.integration.test.ts` runs the real SQL against the real database and is OFF unless `PT_DB_INTEGRATION=1` and `DATABASE_URL` are set (it makes and deletes its own test codes); CI skips it. Run it with `PT_DB_INTEGRATION=1 vercel env run -e production -- npx tsx --test test/db.integration.test.ts`.
 - `data/problems.json` is a copy of `../shared/problems.json` because `vercel deploy` uploads only `server/`. A test fails if they differ. Refresh with `npm run sync-problems`.
+- `lib/pricing.ts` the price table (USD per million tokens, sources and fetch date in the file; dated Google increases switch on their day) and `lib/usage.ts` (counts to a log report). An unknown model logs `cost_basis: "no_price"` and no dollar figure; a model that reports no usage logs `no_usage`.
+- `eval/` the model eval, run by hand (not CI): `make_fixtures.py` (30 synthetic pages into `eval/fixtures/`, committed), `run-eval.ts` (drives the real `handleWatch` and `handleConsult`), `score.ts` (table), `results/` (committed runs). How to run it: `docs/how-to-run.md`.
 - `test/` Node's test runner via `tsx`: `npm test`. Typecheck: `npm run typecheck` (CI runs both, `.github/workflows/server.yml`).
 
 ## Deploy

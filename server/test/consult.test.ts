@@ -65,7 +65,7 @@ describe("consult answers", () => {
     const r = await reply(await handleConsult(post("/api/consult", consultBody()), deps(liveEnv(), models)));
     assert.equal(r.status, 200);
     assert.equal(r.json.answer_text, "Line one is 2x + 3 = 11. Line two looks unfinished. What did you do to both sides?");
-    assert.equal(r.json.model, "gpt-6.1-terra");
+    assert.equal(r.json.model, "gpt-6-luna");
     assert.equal(prompts.length, 1);
     const sent = prompts[0]!;
     assert.match(sent, /page reader behind a voice math tutor/);

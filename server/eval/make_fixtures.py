@@ -83,8 +83,8 @@ for _pid in ("u3-01", "u3-04", "u3-05", "u3-07", "u3-10", "u3-12", "u3-15", "u3-
 correct_unfinished("u3-06", 3)                                        # stopped after a complete line
 correct_unfinished("u3-11", 2)
 correct_unfinished("u3-13", 3)
-correct_unfinished("u3-20", 2, half=0.7, last="8x – 1 = 3x + 14")    # third line half written
-correct_unfinished("u3-01", 3, half=0.6, last="4x = 16 + 4")         # fourth line half written
+correct_unfinished("u3-20", 2, half=0.82, last="8x – 1 = 3x + 14")   # third line half written, stops at "8x – 1 = 3x +"
+correct_unfinished("u3-01", 3, half=0.85, last="4x = 16 + 4")        # fourth line half written, stops at "4x = 16 +" (not a complete wrong equation)
 correct_unfinished("u3-10", 2, half=0.5, last="2 – 3x = 5")         # "2 – 3x =" with the right side missing
 correct_unfinished("u3-04", 1, half=0.55, last="–8p – 20 = 12")     # second line half written
 
