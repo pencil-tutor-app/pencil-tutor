@@ -314,7 +314,8 @@
     "worked_solution": [
       "6² = 36 and 7² = 49, so 6 < √47 < 7.",
       "47 is close to 49, so try 6.8 and 6.9: 6.8² = 46.24 and 6.9² = 47.61.",
-      "47 − 46.24 = 0.76 and 47.61 − 47 = 0.61, so 47 is closer to 6.9²."
+      "47 − 46.24 = 0.76 and 47.61 − 47 = 0.61, so 47 is closer to 6.9².",
+      "So √47 is between 6 and 7, and √47 ≈ 6.9."
     ],
     "final_answer": "between 6 and 7; √47 ≈ 6.9",
     "level": "high_school"
@@ -539,11 +540,11 @@
   {
     "id": "pc11-29",
     "source": "BC Pre-calculus 11 content: radical equations (algebraic and graphical, domain, extraneous roots), original",
-    "prompt_latex": "The time t, in seconds, for an object to fall h metres is t = \\sqrt{h / 4.9}. From what height does an object take 3 s to land?",
-    "prompt_plain": "The time t, in seconds, for an object to fall h metres is t = √(h / 4.9). From what height does an object take 3 s to land?",
+    "prompt_latex": "An object dropped from rest takes t = \\sqrt{h / 4.9} seconds to fall h metres, ignoring air resistance. From what height must it be dropped to take 3 s to land?",
+    "prompt_plain": "An object dropped from rest takes t = √(h / 4.9) seconds to fall h metres, ignoring air resistance. From what height must it be dropped to take 3 s to land?",
     "prompt_parts": [
       {
-        "text": "The time t, in seconds, for an object to fall h metres is t = √(h / 4.9). From what height does an object take 3 s to land?"
+        "text": "An object dropped from rest takes t = √(h / 4.9) seconds to fall h metres, ignoring air resistance. From what height must it be dropped to take 3 s to land?"
       }
     ],
     "worked_solution": [
@@ -939,6 +940,7 @@
       "The lowest common denominator is (x − 2)(x + 1).",
       "3(x + 1) / ((x − 2)(x + 1)) + 2(x − 2) / ((x − 2)(x + 1))",
       "Numerator: 3x + 3 + 2x − 4 = 5x − 1",
+      "Sum: (5x − 1) / ((x − 2)(x + 1))",
       "Non-permissible values: x ≠ 2 and x ≠ −1."
     ],
     "final_answer": "(5x − 1)/((x − 2)(x + 1)), x ≠ 2, −1",
@@ -976,6 +978,7 @@
       "Factor the first denominator: x² − 9 = (x − 3)(x + 3). That is the common denominator.",
       "Rewrite the second fraction: 1/(x − 3) = (x + 3) / ((x − 3)(x + 3)).",
       "Subtract numerators: x − (x + 3) = −3. Keep the brackets so the minus applies to both terms.",
+      "Difference: −3 / ((x − 3)(x + 3)), which does not simplify further.",
       "Non-permissible values: x ≠ 3 and x ≠ −3."
     ],
     "final_answer": "−3/((x − 3)(x + 3)), x ≠ 3, −3",
@@ -1167,11 +1170,11 @@
   {
     "id": "pc11-55",
     "source": "BC Pre-calculus 11 content: quadratic functions: characteristics of graphs (vertex, intercepts, domain and range, extrema), original",
-    "prompt_latex": "Find the axis of symmetry, the vertex and the range of f(x) = 2x^{2} - 8x + 3, using x = -b / (2a).",
-    "prompt_plain": "Find the axis of symmetry, the vertex and the range of f(x) = 2x² − 8x + 3, using x = −b / (2a).",
+    "prompt_latex": "Find the axis of symmetry, the vertex, the range and the y-intercept of f(x) = 2x^{2} - 8x + 3, using x = -b / (2a).",
+    "prompt_plain": "Find the axis of symmetry, the vertex, the range and the y-intercept of f(x) = 2x² − 8x + 3, using x = −b / (2a).",
     "prompt_parts": [
       {
-        "text": "Find the axis of symmetry, the vertex and the range of f(x) = 2x² − 8x + 3, using x = −b / (2a)."
+        "text": "Find the axis of symmetry, the vertex, the range and the y-intercept of f(x) = 2x² − 8x + 3, using x = −b / (2a)."
       }
     ],
     "worked_solution": [
@@ -1507,9 +1510,9 @@
       "Let n be the number of $2 increases. Price: 60 + 2n. Jackets sold: 200 − 4n.",
       "Revenue R = (60 + 2n)(200 − 4n) = 12000 − 240n + 400n − 8n² = −8n² + 160n + 12000.",
       "Vertex: n = −160 / (2 · (−8)) = 10.",
-      "Price = 60 + 2(10) = $80. Revenue = (80)(200 − 40) = 80 · 160 = $12800."
+      "Price = 60 + 2(10) = $80. Revenue = (80)(200 − 40) = 80 · 160 = $12,800."
     ],
-    "final_answer": "$80 per jacket, revenue $12 800",
+    "final_answer": "$80 per jacket, revenue $12,800",
     "level": "high_school"
   },
   {
@@ -1754,20 +1757,20 @@
   {
     "id": "pc11-85",
     "source": "BC Pre-calculus 11 content: linear and quadratic inequalities (single variable, interval notation, sign analysis, restrictions), original",
-    "prompt_latex": "A club's profit in dollars is P = -2n^{2} + 80n - 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
-    "prompt_plain": "A club's profit in dollars is P = −2n² + 80n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
+    "prompt_latex": "A drama club's profit in dollars is P = -3n^{2} + 90n - 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
+    "prompt_plain": "A drama club's profit in dollars is P = −3n² + 90n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
     "prompt_parts": [
       {
-        "text": "A club's profit in dollars is P = −2n² + 80n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?"
+        "text": "A drama club's profit in dollars is P = −3n² + 90n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?"
       }
     ],
     "worked_solution": [
-      "A profit means P > 0: −2n² + 80n − 600 > 0.",
-      "Divide by −2 and flip the sign: n² − 40n + 300 < 0, so (n − 10)(n − 30) < 0.",
-      "The zeros are n = 10 and n = 30. A positive-opening parabola is below the axis between its zeros.",
-      "So 10 < n < 30. Check n = 20: −800 + 1600 − 600 = 200 > 0."
+      "A profit means P > 0: −3n² + 90n − 600 > 0.",
+      "Divide by −3 and flip the sign: n² − 30n + 200 < 0, so (n − 10)(n − 20) < 0.",
+      "The zeros are n = 10 and n = 20. A positive-opening parabola is below the axis between its zeros.",
+      "So 10 < n < 20. Check n = 15: −675 + 1350 − 600 = 75 > 0."
     ],
-    "final_answer": "Ticket prices between $10 and $30",
+    "final_answer": "Ticket prices between $10 and $20",
     "level": "high_school"
   },
   {
@@ -1792,18 +1795,18 @@
   {
     "id": "pc11-87",
     "source": "BC Pre-calculus 11 content: trigonometry: angles in standard position, reference and coterminal angles, terminal arm, original",
-    "prompt_latex": "The angle 210^{\\circ} is in standard position. Name its quadrant, its reference angle, and one positive and one negative coterminal angle.",
-    "prompt_plain": "The angle 210° is in standard position. Name its quadrant, its reference angle, and one positive and one negative coterminal angle.",
+    "prompt_latex": "The angle 210^{\\circ} is in standard position. Name its quadrant, its reference angle, and the two coterminal angles found by adding one full turn and by subtracting one full turn.",
+    "prompt_plain": "The angle 210° is in standard position. Name its quadrant, its reference angle, and the two coterminal angles found by adding one full turn and by subtracting one full turn.",
     "prompt_parts": [
       {
-        "text": "The angle 210° is in standard position. Name its quadrant, its reference angle, and one positive and one negative coterminal angle."
+        "text": "The angle 210° is in standard position. Name its quadrant, its reference angle, and the two coterminal angles found by adding one full turn and by subtracting one full turn."
       }
     ],
     "worked_solution": [
       "Standard position: vertex at the origin, initial arm on the positive x-axis, rotating counterclockwise.",
       "180° < 210° < 270°, so the terminal arm is in Quadrant III.",
       "Reference angle = 210° − 180° = 30°.",
-      "Add or subtract 360°: 210° + 360° = 570° and 210° − 360° = −150°."
+      "One full turn is 360°. Add it: 210° + 360° = 570°. Subtract it: 210° − 360° = −150°."
     ],
     "final_answer": "Quadrant III; reference angle 30°; coterminal angles 570° and −150°",
     "level": "high_school"
@@ -2191,20 +2194,20 @@
   {
     "id": "pc11-108",
     "source": "BC Pre-calculus 11 content: trigonometry: sine law and cosine law (non-right triangles, ambiguous case, contextual problems), original",
-    "prompt_latex": "Two hikers leave the same trailhead on trails that are 120^{\\circ} apart. After one hour, one has walked 3 km and the other 5 km. How far apart are they?",
-    "prompt_plain": "Two hikers leave the same trailhead on trails that are 120° apart. After one hour, one has walked 3 km and the other 5 km. How far apart are they?",
+    "prompt_latex": "Two hikers leave the same trailhead on trails that are 120^{\\circ} apart. After two hours, one has walked 6 km and the other 10 km. How far apart are they?",
+    "prompt_plain": "Two hikers leave the same trailhead on trails that are 120° apart. After two hours, one has walked 6 km and the other 10 km. How far apart are they?",
     "prompt_parts": [
       {
-        "text": "Two hikers leave the same trailhead on trails that are 120° apart. After one hour, one has walked 3 km and the other 5 km. How far apart are they?"
+        "text": "Two hikers leave the same trailhead on trails that are 120° apart. After two hours, one has walked 6 km and the other 10 km. How far apart are they?"
       }
     ],
     "worked_solution": [
-      "Draw a triangle: the two trails are sides of length 3 and 5, and the angle between them is 120°.",
-      "Cosine law: d² = 3² + 5² − 2(3)(5) cos 120°",
-      "cos 120° = −0.5, so d² = 9 + 25 − 30(−0.5) = 34 + 15 = 49",
-      "d = √49 = 7"
+      "Draw a triangle: the two trails are sides of length 6 and 10, and the angle between them is 120°.",
+      "Cosine law: d² = 6² + 10² − 2(6)(10) cos 120°",
+      "cos 120° = −0.5, so d² = 36 + 100 − 120(−0.5) = 136 + 60 = 196",
+      "d = √196 = 14"
     ],
-    "final_answer": "7 km",
+    "final_answer": "14 km",
     "level": "high_school"
   },
   {
@@ -2286,20 +2289,21 @@
   {
     "id": "pc11-113",
     "source": "BC Pre-calculus 11 content: financial literacy: compound interest, investments and loans, buy/lease, original",
-    "prompt_latex": "At 7.2% per year compounded annually, about how many years does it take an investment to double?",
-    "prompt_plain": "At 7.2% per year compounded annually, about how many years does it take an investment to double?",
+    "prompt_latex": "An investment earns 7.2% per year compounded annually. Using a calculator and trial and error, find the smallest whole number of years in which it at least doubles.",
+    "prompt_plain": "An investment earns 7.2% per year compounded annually. Using a calculator and trial and error, find the smallest whole number of years in which it at least doubles.",
     "prompt_parts": [
       {
-        "text": "At 7.2% per year compounded annually, about how many years does it take an investment to double?"
+        "text": "An investment earns 7.2% per year compounded annually. Using a calculator and trial and error, find the smallest whole number of years in which it at least doubles."
       }
     ],
     "worked_solution": [
       "Doubling means A = 2P, so P(1.072)^n = 2P. Divide by P: (1.072)^n = 2.",
-      "Take logarithms of both sides: n log(1.072) = log 2, so n = log 2 / log 1.072.",
-      "Using natural logs: ln 2 ≈ 0.69315 and ln 1.072 ≈ 0.06953.",
-      "n ≈ 0.69315 / 0.06953 ≈ 9.97"
+      "Try n = 8: (1.072)^8 ≈ 1.74405, which is less than 2.",
+      "Try n = 9: (1.072)^9 ≈ 1.86962, which is still less than 2.",
+      "Try n = 10: (1.072)^10 ≈ 2.00423, which is more than 2.",
+      "The value first passes 2 at n = 10 years."
     ],
-    "final_answer": "≈ 9.97 years (about 10 years)",
+    "final_answer": "10 years",
     "level": "high_school"
   },
   {

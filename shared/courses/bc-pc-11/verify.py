@@ -537,7 +537,8 @@ add(S, "Order from least to greatest: 4√2, 5, 3√3, 2√7.",
 add(S, "Between which two consecutive integers does √47 lie? Then estimate √47 to the nearest tenth without a calculator.",
     ["6² = 36 and 7² = 49, so 6 < √47 < 7.",
      "47 is close to 49, so try 6.8 and 6.9: 6.8² = 46.24 and 6.9² = 47.61.",
-     "47 − 46.24 = 0.76 and 47.61 − 47 = 0.61, so 47 is closer to 6.9²."],
+     "47 − 46.24 = 0.76 and 47.61 − 47 = 0.61, so 47 is closer to 6.9².",
+     "So √47 is between 6 and 7, and √47 ≈ 6.9."],
     "between 6 and 7; √47 ≈ 6.9", lambda p: (6 < math.sqrt(47) < 7, round(math.sqrt(47), 1) == 6.9,
                                               close(6.8 ** 2, 46.24, 1e-9), close(6.9 ** 2, 47.61, 1e-9),
                                               has_final(p, "6 and 7", "6.9")))
@@ -636,7 +637,7 @@ add(S, "The graphs of y = √(x + 4) and y = x − 2 cross at one point. Find it
      "x = 0 gives √4 = 2 but 0 − 2 = −2, so reject. x = 5 gives √9 = 3 and 5 − 2 = 3, so y = 3."],
     "(5, 3)", _inter_check, roots=[5])
 
-add(S, "The time t, in seconds, for an object to fall h metres is t = √(h / 4.9). From what height does an object take 3 s to land?",
+add(S, "An object dropped from rest takes t = √(h / 4.9) seconds to fall h metres, ignoring air resistance. From what height must it be dropped to take 3 s to land?",
     ["Substitute t = 3: 3 = √(h / 4.9)",
      "Square both sides: 9 = h / 4.9",
      "h = 9 · 4.9 = 44.1",
@@ -801,6 +802,7 @@ add(S, "Add and state the non-permissible values: [[3//x − 2]] + [[2//x + 1]].
     ["The lowest common denominator is (x − 2)(x + 1).",
      "3(x + 1) / ((x − 2)(x + 1)) + 2(x − 2) / ((x − 2)(x + 1))",
      "Numerator: 3x + 3 + 2x − 4 = 5x − 1",
+     "Sum: (5x − 1) / ((x − 2)(x + 1))",
      "Non-permissible values: x ≠ 2 and x ≠ −1."],
     "(5x − 1)/((x − 2)(x + 1)), x ≠ 2, −1", lambda p: rat_check(p, "3/(x-2)+2/(x+1)", ["x-2", "x+1"]))
 
@@ -808,6 +810,7 @@ add(S, "Subtract and simplify, then state the non-permissible values: [[x//x² �
     ["Factor the first denominator: x² − 9 = (x − 3)(x + 3). That is the common denominator.",
      "Rewrite the second fraction: 1/(x − 3) = (x + 3) / ((x − 3)(x + 3)).",
      "Subtract numerators: x − (x + 3) = −3. Keep the brackets so the minus applies to both terms.",
+     "Difference: −3 / ((x − 3)(x + 3)), which does not simplify further.",
      "Non-permissible values: x ≠ 3 and x ≠ −3."],
     "−3/((x − 3)(x + 3)), x ≠ 3, −3", lambda p: rat_check(p, "x/(x^2-9) - 1/(x-3)", ["x^2-9", "x-3"]))
 
@@ -914,7 +917,7 @@ def _q4(p):
     has_final(p, "Vertex (2, −5)", "axis x = 2", "range y ≥ −5", "y-intercept 3")
 
 
-add(S, "Find the axis of symmetry, the vertex and the range of f(x) = 2x² − 8x + 3, using x = −b / (2a).",
+add(S, "Find the axis of symmetry, the vertex, the range and the y-intercept of f(x) = 2x² − 8x + 3, using x = −b / (2a).",
     ["a = 2, b = −8, so the axis is x = −(−8) / (2 · 2) = 8/4 = 2.",
      "The vertex lies on the axis, so substitute x = 2: f(2) = 2(4) − 8(2) + 3 = 8 − 16 + 3 = −5.",
      "Vertex (2, −5). Since a = 2 > 0 the parabola opens up, so the range is y ≥ −5.",
@@ -1124,15 +1127,15 @@ def _jackets(p):
     rev = (60 + 2 * n_) * (200 - 4 * n_)
     nv = sp.solve(sp.diff(rev, n_), n_)[0]
     assert nv == 10 and rev.subs(n_, 10) == 12800 and 60 + 2 * nv == 80
-    has_final(p, "$80", "$12 800")
+    has_final(p, "$80", "$12,800")
 
 
 add(S, "A store sells 200 jackets a week at $60. For every $2 increase in price, it sells 4 fewer jackets. What price gives the greatest weekly revenue, and what is that revenue?",
     ["Let n be the number of $2 increases. Price: 60 + 2n. Jackets sold: 200 − 4n.",
      "Revenue R = (60 + 2n)(200 − 4n) = 12000 − 240n + 400n − 8n² = −8n² + 160n + 12000.",
      "Vertex: n = −160 / (2 · (−8)) = 10.",
-     "Price = 60 + 2(10) = $80. Revenue = (80)(200 − 40) = 80 · 160 = $12800."],
-    "$80 per jacket, revenue $12 800", _jackets)
+     "Price = 60 + 2(10) = $80. Revenue = (80)(200 − 40) = 80 · 160 = $12,800."],
+    "$80 per jacket, revenue $12,800", _jackets)
 
 
 def _fence(p):
@@ -1263,17 +1266,18 @@ add(S, "Solve x² − 6x + 9 ≤ 0.",
 
 
 def _profit_ineq(p):
-    P = -2 * n ** 2 + 80 * n - 600
-    assert sp.solve_univariate_inequality(P > 0, n, relational=False) == sp.Interval.open(10, 30)
-    has_final(p, "between $10 and $30")
+    P = -3 * n ** 2 + 90 * n - 600
+    assert sp.solve_univariate_inequality(P > 0, n, relational=False) == sp.Interval.open(10, 20)
+    assert P.subs(n, 15) == 75
+    has_final(p, "between $10 and $20")
 
 
-add(S, "A club's profit in dollars is P = −2n² + 80n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
-    ["A profit means P > 0: −2n² + 80n − 600 > 0.",
-     "Divide by −2 and flip the sign: n² − 40n + 300 < 0, so (n − 10)(n − 30) < 0.",
-     "The zeros are n = 10 and n = 30. A positive-opening parabola is below the axis between its zeros.",
-     "So 10 < n < 30. Check n = 20: −800 + 1600 − 600 = 200 > 0."],
-    "Ticket prices between $10 and $30", _profit_ineq)
+add(S, "A drama club's profit in dollars is P = −3n² + 90n − 600, where n is the ticket price in dollars. For which ticket prices does the club make a profit?",
+    ["A profit means P > 0: −3n² + 90n − 600 > 0.",
+     "Divide by −3 and flip the sign: n² − 30n + 200 < 0, so (n − 10)(n − 20) < 0.",
+     "The zeros are n = 10 and n = 20. A positive-opening parabola is below the axis between its zeros.",
+     "So 10 < n < 20. Check n = 15: −675 + 1350 − 600 = 75 > 0."],
+    "Ticket prices between $10 and $20", _profit_ineq)
 
 
 def _dom_range(p):
@@ -1315,11 +1319,11 @@ def _t1(p):
     has_final(p, "Quadrant III", "30°", "570°", "−150°")
 
 
-add(S, "The angle 210° is in standard position. Name its quadrant, its reference angle, and one positive and one negative coterminal angle.",
+add(S, "The angle 210° is in standard position. Name its quadrant, its reference angle, and the two coterminal angles found by adding one full turn and by subtracting one full turn.",
     ["Standard position: vertex at the origin, initial arm on the positive x-axis, rotating counterclockwise.",
      "180° < 210° < 270°, so the terminal arm is in Quadrant III.",
      "Reference angle = 210° − 180° = 30°.",
-     "Add or subtract 360°: 210° + 360° = 570° and 210° − 360° = −150°."],
+     "One full turn is 360°. Add it: 210° + 360° = 570°. Subtract it: 210° − 360° = −150°."],
     "Quadrant III; reference angle 30°; coterminal angles 570° and −150°", _t1)
 
 
@@ -1563,12 +1567,12 @@ add(S, "A triangle has sides 7 cm, 8 cm and 13 cm. Find its largest angle.",
      "C = cos⁻¹(−0.5) = 120° (obtuse, because the cosine is negative)."],
     "120°", lambda p: (close(math.degrees(math.acos((49 + 64 - 169) / (2 * 7 * 8))), 120, 1e-9), has_final(p, "120°")))
 
-add(S, "Two hikers leave the same trailhead on trails that are 120° apart. After one hour, one has walked 3 km and the other 5 km. How far apart are they?",
-    ["Draw a triangle: the two trails are sides of length 3 and 5, and the angle between them is 120°.",
-     "Cosine law: d² = 3² + 5² − 2(3)(5) cos 120°",
-     "cos 120° = −0.5, so d² = 9 + 25 − 30(−0.5) = 34 + 15 = 49",
-     "d = √49 = 7"],
-    "7 km", lambda p: (math.isclose(math.sqrt(9 + 25 - 30 * cd(120)), 7, abs_tol=1e-9), has_final(p, "7 km")))
+add(S, "Two hikers leave the same trailhead on trails that are 120° apart. After two hours, one has walked 6 km and the other 10 km. How far apart are they?",
+    ["Draw a triangle: the two trails are sides of length 6 and 10, and the angle between them is 120°.",
+     "Cosine law: d² = 6² + 10² − 2(6)(10) cos 120°",
+     "cos 120° = −0.5, so d² = 36 + 100 − 120(−0.5) = 136 + 60 = 196",
+     "d = √196 = 14"],
+    "14 km", lambda p: (math.isclose(math.sqrt(36 + 100 - 120 * cd(120)), 14, abs_tol=1e-9), has_final(p, "14 km")))
 
 
 def _river(p):
@@ -1631,13 +1635,16 @@ add(S, "How much should you deposit today at 4% per year compounded quarterly to
      "P = 5000 / 1.26973 ≈ $3,937.83"],
     "$3,937.83", lambda p: (money_is(p, round(5000 / 1.01 ** 24, 2)), has_steps(p, f"{1.01 ** 24:.5f}")))
 
-add(S, "At 7.2% per year compounded annually, about how many years does it take an investment to double?",
+add(S, "An investment earns 7.2% per year compounded annually. Using a calculator and trial and error, find the smallest whole number of years in which it at least doubles.",
     ["Doubling means A = 2P, so P(1.072)^n = 2P. Divide by P: (1.072)^n = 2.",
-     "Take logarithms of both sides: n log(1.072) = log 2, so n = log 2 / log 1.072.",
-     "Using natural logs: ln 2 ≈ 0.69315 and ln 1.072 ≈ 0.06953.",
-     "n ≈ 0.69315 / 0.06953 ≈ 9.97"],
-    "≈ 9.97 years (about 10 years)",
-    lambda p: (close(math.log(2) / math.log(1.072), 9.97, 0.005), has_steps(p, f"{math.log(2):.5f}", f"{math.log(1.072):.5f}")))
+     "Try n = 8: (1.072)^8 ≈ 1.74405, which is less than 2.",
+     "Try n = 9: (1.072)^9 ≈ 1.86962, which is still less than 2.",
+     "Try n = 10: (1.072)^10 ≈ 2.00423, which is more than 2.",
+     "The value first passes 2 at n = 10 years."],
+    "10 years",
+    lambda p: (1.072 ** 9 < 2 <= 1.072 ** 10, min(k_ for k_ in range(1, 30) if 1.072 ** k_ >= 2) == 10,
+               has_final(p, "10 years"),
+               has_steps(p, f"{1.072 ** 8:.5f}", f"{1.072 ** 9:.5f}", f"{1.072 ** 10:.5f}")))
 
 add(S, "Which is worth more after 10 years: $1000 at 5% per year compounded annually, or $1000 at 4.9% per year compounded monthly?",
     ["Annual: A = 1000(1.05)^10 ≈ 1000 × 1.62889 ≈ $1,628.89.",

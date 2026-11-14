@@ -115,7 +115,7 @@ Every prompt, number set, context and worked solution was written for this bank.
 `verify.py` is both the source and the checker: it holds every problem together with a check function, regenerates the expected `problems.json`, fails if the file on disk differs (`--write` rewrites it), and exits non-zero on any failure.
 - Per-problem check: each final answer is recomputed independently with sympy (solving, factoring and expanding, calculus for vertices), `fractions`/`math`/`statistics` (money, trigonometry, normal distribution), or brute force (primality, the counting game, corner-point optimization, table search), then compared with the text of `final_answer`. Where a result has more than one required part (all roots, all corner points, every angle) each part is asserted.
 - Automatic line checks on every worked solution: pure-number chains such as `2(5) − 4 = 6` are evaluated, and for equation problems every line that contains only the variable is substituted with the known roots.
-- Intermediate values: rounding steps (powers such as `(1.005)^60 ≈ 1.34885`, logs, trig values) are checked as strings against the computed numbers.
+- Intermediate values: rounding steps (powers such as `(1.005)^60 ≈ 1.34885`, trig values) are checked as strings against the computed numbers.
 - Mutation test: wrong answers deliberately injected into a copy of `verify.py` (changed roots, factors, dollar amounts, an arithmetic step, a corner point) were all caught.
 - Not mechanically verified: free-text explanations in worked-solution lines (the check confirms numbers and key phrases, not that every sentence is well phrased), and the wording of word problems. Lines that mix words and algebra are only covered by the equation and chain checks where they parse.
 
@@ -124,3 +124,11 @@ Every prompt, number set, context and worked solution was written for this bank.
 - Angles in trigonometry answers are in degrees, to the nearest tenth where a calculator is needed.
 - Money answers are rounded to the cent; intermediate decimals in the worked solution are shown to five places so the student can follow the rounding.
 
+
+## Review (teacher-quality pass, 2026-11-15)
+Every one of the 118 problems was read as a teacher would: one intended answer (units, rounding, form stated), age-appropriate wording, fit with BC Pre-calculus 11, one step per worked line with no skipped steps, final answer matching the request, difficulty ramp inside each standard, no duplicated problems, no names, no recognisable textbook or exam items. `verify.py` was updated for every change and `python3 -I verify.py` passes (118/118).
+
+- Counts: 118 reviewed, 10 fixed, 0 dropped, 108 unchanged. Ids are unchanged.
+- Fixed: pc11-17 (worked solution never stated the conclusion), pc11-29 (the context was vague about dropping from rest), pc11-46 and pc11-47 (worked solution ended at the non-permissible values without writing the combined fraction), pc11-55 (answer gave a y-intercept the prompt never asked for), pc11-72 (money written as "$12 800" and "$12800"; now "$12,800" everywhere), pc11-85 (reused the profit function of pc11-76; now a different function, answer $10 to $20), pc11-87 ("one positive and one negative coterminal angle" has many correct answers; now asks for +360° and −360°), pc11-108 (the classic 3-5-7 triangle, and the same answer 7 as pc11-106; now 6 km and 10 km, answer 14 km), pc11-113 (needed logarithms, which are Pre-calculus 12; now a calculator trial-and-error to the smallest whole number of years, 10).
+- Most common problem: a prompt that allowed more than one correct answer or asked for less than the answer gave (pc11-55, pc11-87, pc11-113), followed by worked solutions that stop before stating the result (pc11-17, 46, 47).
+- Unsure: pc11-38 says x^2 + 9 "does not factor over the real numbers", fine for this course but a Pre-calculus 11 teacher may prefer "over the integers". pc11-110 ignores the observer eye height (stated as level ground only). Both left as they are.

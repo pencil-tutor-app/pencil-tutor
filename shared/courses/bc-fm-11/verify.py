@@ -691,7 +691,7 @@ def _fq1(p):
     has_final(p, "Opens down", "(3, 4)", "maximum", "x = 3", "x-intercepts 1, 5", "y-intercept −5")
 
 
-add(S, "Analyse y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+add(S, "Analyze y = −x² + 6x − 5: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
     ["a = −1 < 0, so the parabola opens down. Both ends go down: as x → ±∞, y → −∞.",
      "Axis of symmetry: x = −b / (2a) = −6 / (−2) = 3.",
      "Vertex: y = −(3)² + 6(3) − 5 = −9 + 18 − 5 = 4, so (3, 4). It is the maximum value, 4.",
@@ -706,7 +706,7 @@ def _fq2(p):
     has_final(p, "Opens up", "(1, −8)", "minimum", "x = 1", "x-intercepts −1, 3", "y-intercept −6")
 
 
-add(S, "Analyse y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
+add(S, "Analyze y = 2x² − 4x − 6: end behaviour, axis of symmetry, vertex, maximum or minimum, and intercepts.",
     ["a = 2 > 0, so the parabola opens up. Both ends go up: as x → ±∞, y → +∞.",
      "Axis of symmetry: x = −(−4) / (2 · 2) = 4/4 = 1.",
      "Vertex: y = 2(1)² − 4(1) − 6 = 2 − 4 − 6 = −8, so (1, −8). It is the minimum value, −8.",
@@ -869,19 +869,19 @@ add(S, "A bakery makes x cakes and y pies in a day. A cake takes 2 hours of oven
 
 def _o3(p):
     cons = [(1, 0, 0, ">="), (0, 1, 0, ">="), (1, 1, 10, ">="), (1, 3, 18, ">=")]
-    best, where, vals = lp_best(cons, lambda a_, b_: 3 * a_ + 2 * b_, "min")
-    assert best == 20 and where == {(0, 10)}
-    assert vals[(6, 4)] == 26 and vals[(18, 0)] == 54
-    has_final(p, "(0, 10)", "$20")
+    best, where, vals = lp_best(cons, lambda a_, b_: 2 * a_ + 3 * b_, "min")
+    assert best == 24 and where == {(6, 4)}
+    assert vals[(0, 10)] == 30 and vals[(18, 0)] == 36
+    has_final(p, "6 kg of feed A", "4 kg of feed B", "$24")
 
 
-add(S, "A farmer mixes feed A ($3 per kg) and feed B ($2 per kg). The mix must have at least 10 kg in total, and x + 3y ≥ 18 (a nutrient requirement, with x kg of A and y kg of B). Find the cheapest mix.",
-    ["Constraints: x ≥ 0, y ≥ 0, x + y ≥ 10, x + 3y ≥ 18. Objective: minimize C = 3x + 2y.",
+add(S, "A farmer mixes feed A ($2 per kg) and feed B ($3 per kg). Let x be the kg of A and y the kg of B. The mix must have at least 10 kg in total, and it must satisfy x + 3y ≥ 18 (a nutrient requirement). Find the cheapest mix.",
+    ["Constraints: x ≥ 0, y ≥ 0, x + y ≥ 10, x + 3y ≥ 18. Objective: minimize C = 2x + 3y.",
      "Corners of the feasible region (which extends up and to the right): (18, 0) from x + 3y = 18, and (0, 10) from x + y = 10.",
      "The two lines cross where x + y = 10 and x + 3y = 18: subtract to get 2y = 8, so y = 4 and x = 6. Corner (6, 4).",
-     "Cost: (18, 0) gives $54; (6, 4) gives 18 + 8 = $26; (0, 10) gives $20.",
-     "(0, 10) is feasible: 0 + 10 ≥ 10 and 0 + 30 ≥ 18. The minimum cost is $20."],
-    "10 kg of feed B only: (0, 10), cost $20", _o3)
+     "Cost: (18, 0) gives $36; (6, 4) gives 12 + 12 = $24; (0, 10) gives $30.",
+     "(0, 10) is feasible: 0 + 10 ≥ 10 and 0 + 30 ≥ 18. The minimum cost is $24, at (6, 4)."],
+    "6 kg of feed A and 4 kg of feed B, cost $24", _o3)
 
 
 def _o4(p):
@@ -953,16 +953,16 @@ add(S, "Eight students recorded how many minutes they spent on homework: 12, 15,
 
 
 def _st2(p):
-    data = [2, 4, 4, 4, 5, 5, 7, 9]
-    assert mean(data) == 5 and sum((d - 5) ** 2 for d in data) == 32 and pstdev(data) == 2
+    data = [11, 12, 14, 15, 15, 17]
+    assert mean(data) == 14 and sum((d - 14) ** 2 for d in data) == 24 and pstdev(data) == 2
     has_final(p, "2")
 
 
-add(S, "Find the (population) standard deviation of the data set 2, 4, 4, 4, 5, 5, 7, 9.",
-    ["Mean: (2 + 4 + 4 + 4 + 5 + 5 + 7 + 9) / 8 = 40 / 8 = 5.",
-     "Squared deviations from 5: (2 − 5)² = 9, 1, 1, 1, 0, 0, (7 − 5)² = 4, (9 − 5)² = 16.",
-     "Add them: 9 + 1 + 1 + 1 + 0 + 0 + 4 + 16 = 32.",
-     "Variance = 32 / 8 = 4.",
+add(S, "Six students counted the pages they read last night: 11, 12, 14, 15, 15, 17. Find the (population) standard deviation.",
+    ["Mean: (11 + 12 + 14 + 15 + 15 + 17) / 6 = 84 / 6 = 14.",
+     "Squared deviations from 14: (11 − 14)² = 9, (12 − 14)² = 4, (14 − 14)² = 0, (15 − 14)² = 1, 1, (17 − 14)² = 9.",
+     "Add them: 9 + 4 + 0 + 1 + 1 + 9 = 24.",
+     "Variance = 24 / 6 = 4.",
      "Standard deviation = √4 = 2."],
     "σ = 2", _st2)
 
@@ -1036,7 +1036,7 @@ def _st7(p):
     has_final(p, "0.71", "3.16")
 
 
-add(S, "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each standard deviation and say what it tells you.",
+add(S, "Data set A is 4, 5, 5, 6 and data set B is 1, 3, 7, 9. Both have mean 5. Find each population standard deviation to the nearest hundredth and say what it tells you.",
     ["Set A squared deviations: (4 − 5)² = 1, 0, 0, (6 − 5)² = 1. Sum = 2, variance = 2 / 4 = 0.5, σ = √0.5 ≈ 0.71.",
      "Set B squared deviations: (1 − 5)² = 16, (3 − 5)² = 4, (7 − 5)² = 4, (9 − 5)² = 16. Sum = 40, variance = 40 / 4 = 10, σ = √10 ≈ 3.16.",
      "Same mean, but 3.16 is much larger than 0.71.",
@@ -1198,18 +1198,18 @@ add(S, "Compare the 3-year cost of leasing and buying a car. Lease: $0 down and 
 
 
 def _rule72(p):
-    exact = math.log(2) / math.log(1.06)
-    assert close(exact, 11.90, 0.005) and 72 / 6 == 12
-    has_final(p, "12", "11.9")
-    has_steps(p, f"{math.log(2):.5f}", f"{math.log(1.06):.5f}")
+    first = min(k_ for k_ in range(1, 40) if 1.06 ** k_ >= 2)
+    assert first == 12 and 1.06 ** 11 < 2 <= 1.06 ** 12 and 72 / 6 == 12
+    has_final(p, "12 years")
+    has_steps(p, f"{1.06 ** 11:.5f}", f"{1.06 ** 12:.5f}")
 
 
-add(S, "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually, then find the exact doubling time with logarithms.",
+add(S, "The Rule of 72 says money doubles in about 72 ÷ (interest rate in %) years. Use it for 6% per year compounded annually. Then use a calculator and trial and error to check: what is the smallest whole number of years in which the money at least doubles?",
     ["Rule of 72: 72 ÷ 6 = 12 years.",
-     "Exact: (1.06)^n = 2. Take logarithms: n ln 1.06 = ln 2, so n = ln 2 / ln 1.06.",
-     "ln 2 ≈ 0.69315 and ln 1.06 ≈ 0.05827.",
-     "n ≈ 0.69315 / 0.05827 ≈ 11.90 years. The rule gives 12, which is very close."],
-    "Rule of 72: 12 years; exact: about 11.9 years", _rule72)
+     "Doubling means (1.06)^n = 2. Try n = 11: (1.06)^11 ≈ 1.89830, which is less than 2.",
+     "Try n = 12: (1.06)^12 ≈ 2.01220, which is more than 2.",
+     "The money first passes double at n = 12 years, so the rule of 72 gave the right answer here."],
+    "Rule of 72: 12 years; calculator check: 12 years", _rule72)
 
 
 if __name__ == "__main__":
