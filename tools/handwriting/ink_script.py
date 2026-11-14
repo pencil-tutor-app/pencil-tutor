@@ -113,12 +113,15 @@ def plant_mistake(lines: list[str], line_no: int, rng: random.Random) -> tuple[l
 
 # ------------------------------------------------------------------------------------------------ the page of ink
 def build_script(lines: list[str], seed: int, meta: dict, expected: dict, cap: float = 30.0, speed: float | None = None,
-                 think: float = 1.0) -> dict:
+                 think: float = 1.0, gap_scale: float = 1.0, jitter: float = 1.0) -> dict:
+    """`gap_scale` shrinks the space between lines (0.4 is cramped: lines nearly touch); `jitter` multiplies the hand's wobble,
+    baseline drift and tilt (2 is a rushed, messy writer)."""
     writer = synth.Writer.make(seed, speed=speed, think=think)
+    writer.jitter *= jitter
     rng = random.Random(seed)
     for _ in range(8):
         boxes = [synth.layout_text(line, cap * writer.size) for line in lines]
-        gap = 0.7 * cap + 14
+        gap = (0.7 * cap + 14) * gap_scale
         total = TOP_MARGIN + sum(b.asc + b.desc for b in boxes) + gap * (len(boxes) - 1)
         if total <= CANVAS_H - 40 or cap <= 18:
             break
@@ -129,7 +132,7 @@ def build_script(lines: list[str], seed: int, meta: dict, expected: dict, cap: f
     out_lines, app_line = [], 1
     for index, (text, box) in enumerate(zip(lines, boxes), start=1):
         x_here = x0 + rng.gauss(0, 5)
-        strokes, t_end, bbox = synth.write_line(box, (x_here, baseline), writer, rng, t, tilt=rng.gauss(0, 0.006))
+        strokes, t_end, bbox = synth.write_line(box, (x_here, baseline), writer, rng, t, tilt=rng.gauss(0, 0.006 * jitter))
         rows = synth.count_visual_rows(text)
         out_lines.append({
             "index": index, "text": text, "app_line_start": app_line, "app_lines": rows,
@@ -190,7 +193,7 @@ def mistakable_line(lines: list[str], rng: random.Random) -> int | None:
 
 
 def make_case(course: str, problem: dict, lines: list[str], mistake_line: int | None, seed: int, think: float = 1.0,
-              suffix: str = "") -> dict:
+              suffix: str = "", gap_scale: float = 1.0, jitter: float = 1.0) -> dict:
     rng = random.Random(seed)
     meta = {"id": f"{course}_{problem['id']}_" + ("mistake" if mistake_line else "correct") + suffix, "course": course,
             "problem_id": problem["id"], "source": "worked_solution"}
@@ -202,7 +205,7 @@ def make_case(course: str, problem: dict, lines: list[str], mistake_line: int | 
             raise ValueError(f"cannot plant a mistake on line {mistake_line} of {problem['id']}")
         written, info = planted
         expected = {"outcome": "mistake", "line": mistake_line, "mutation": info, "truth_lines": lines}
-    script = build_script(written, seed, meta, expected, think=think)
+    script = build_script(written, seed, meta, expected, think=think, gap_scale=gap_scale, jitter=jitter)
     if mistake_line:
         script["expected"]["app_line"] = script["lines"][mistake_line - 1]["app_line_start"]
     return script
@@ -221,7 +224,8 @@ def cmd_gen(args):
     reason = check_drawable(lines)
     if reason:
         sys.exit(f"{args.problem}: {reason}")
-    script = make_case(args.course, problem, lines, args.mistake_line, args.seed, think=args.think)
+    script = make_case(args.course, problem, lines, args.mistake_line, args.seed, think=args.think,
+                       suffix=args.suffix, gap_scale=args.gap_scale, jitter=args.jitter)
     with open(args.out, "w", encoding="utf-8") as handle:
         json.dump(script, handle, ensure_ascii=False, separators=(",", ":"))
     print(args.out, stats(script))
@@ -239,21 +243,29 @@ PINNED = {"bc-math-5": ["m5-26", "m5-28"], "bc-math-9": ["m9-07", "m9-02"], "bc-
 def cmd_cases(args):
     os.makedirs(args.out_dir, exist_ok=True)
     manifest = []
-    for course in CASE_COURSES:
+    # `--pick course:problem` (repeatable) writes exactly those problems; otherwise one pinned problem per course.
+    picks = [p.split(":", 1) for p in (args.pick or [])]
+    for course in ([c for c, _ in picks] if picks else CASE_COURSES):
         picked = 0
         by_id = {p["id"]: p for p in load_problems(course)}
-        ordered = [by_id[i] for i in PINNED.get(course, []) if i in by_id] + list(by_id.values())
+        if picks:
+            ordered = [by_id[i] for c, i in picks if c == course and i in by_id]
+        else:
+            ordered = [by_id[i] for i in PINNED.get(course, []) if i in by_id] + list(by_id.values())
         for problem in ordered:
-            lines = candidate(problem, allow_matrix=False)
+            lines = candidate(problem, allow_matrix=args.matrix)
             if not lines:
+                if picks:
+                    print(f"WARNING: {problem['id']} is not a clean page of equations (see `plan`)", file=sys.stderr)
                 continue
             rng = random.Random(f"{course}{problem['id']}")
             n = mistakable_line(lines, rng)
             if n is None:
                 continue
-            for mistake in (None, n):
+            for mistake in ((n,) if args.mistake_only else (None, n)):
                 seed = sum(map(ord, problem["id"])) + (7 if mistake else 0)   # fixed, so the same case is the same ink
-                script = make_case(course, problem, lines, mistake, seed, think=args.think, suffix=args.suffix)
+                script = make_case(course, problem, lines, mistake, seed, think=args.think, suffix=args.suffix,
+                                   gap_scale=args.gap_scale, jitter=args.jitter)
                 path = os.path.join(args.out_dir, script["id"] + ".json")
                 with open(path, "w", encoding="utf-8") as handle:
                     json.dump(script, handle, ensure_ascii=False, separators=(",", ":"))
@@ -270,6 +282,29 @@ def cmd_cases(args):
     with open(os.path.join(args.out_dir, "cases.json"), "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, ensure_ascii=False, indent=1)
     print("wrote", len(manifest), "cases to", args.out_dir)
+
+
+def cmd_stress(args):
+    """A pile of pages for testing line grouping offline (no iPad): every drawable problem in every course, at several line
+    spacings and wobbles. Files only; the lines each page should group into are in `lines[].app_lines`."""
+    os.makedirs(args.out_dir, exist_ok=True)
+    courses = sorted(d for d in os.listdir(COURSES) if os.path.isdir(os.path.join(COURSES, d)))
+    made = 0
+    for course in courses:
+        for problem in load_problems(course):
+            lines = math_lines(problem["worked_solution"])
+            if not 2 <= len(lines) <= 8 or check_drawable(lines):
+                continue
+            if not args.matrix and any(synth.count_visual_rows(l) > 1 for l in lines):
+                continue
+            for gap_scale, jitter in ((1.0, 1.0), (0.6, 1.0), (0.4, 1.0), (0.6, 2.0), (0.4, 2.0)):
+                seed = sum(map(ord, problem["id"])) + int(gap_scale * 10) + int(jitter * 3)
+                script = make_case(course, problem, lines, None, seed, suffix=f"-g{int(gap_scale * 100)}j{int(jitter * 10)}",
+                                   gap_scale=gap_scale, jitter=jitter)
+                with open(os.path.join(args.out_dir, script["id"] + ".json"), "w", encoding="utf-8") as handle:
+                    json.dump(script, handle, ensure_ascii=False, separators=(",", ":"))
+                made += 1
+    print("wrote", made, "pages to", args.out_dir)
 
 
 def cmd_from_eval_manifest(args):
@@ -320,6 +355,9 @@ def main():
     p.add_argument("--mistake-line", type=int)
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--think", type=float, default=1.0)
+    p.add_argument("--suffix", default="")
+    p.add_argument("--gap-scale", type=float, default=1.0, help="space between lines; 0.4 is cramped")
+    p.add_argument("--jitter", type=float, default=1.0, help="wobble, drift and tilt; 2 is a rushed writer")
     p.add_argument("--out", required=True)
     p.set_defaults(fn=cmd_gen)
     p = sub.add_parser("cases")
@@ -327,7 +365,16 @@ def main():
     p.add_argument("--per-course", type=int, default=1, help="problems per course; each gives one correct and one mistake case")
     p.add_argument("--think", type=float, default=1.0, help="multiplier on the pause after each line (1 = brisk, 3 = a student who thinks)")
     p.add_argument("--suffix", default="", help="added to every case id, e.g. -think, so two sets can share a folder")
+    p.add_argument("--gap-scale", type=float, default=1.0, help="space between lines; 0.4 is cramped")
+    p.add_argument("--jitter", type=float, default=1.0, help="wobble, drift and tilt; 2 is a rushed writer")
+    p.add_argument("--pick", action="append", help="COURSE:PROBLEM to write instead of the pinned set (repeatable)")
+    p.add_argument("--matrix", action="store_true", help="allow problems whose lines include a matrix")
+    p.add_argument("--mistake-only", action="store_true", help="only the page with a planted mistake")
     p.set_defaults(fn=cmd_cases)
+    p = sub.add_parser("stress")
+    p.add_argument("--out-dir", required=True)
+    p.add_argument("--matrix", action="store_true")
+    p.set_defaults(fn=cmd_stress)
     p = sub.add_parser("preview")
     p.add_argument("script")
     p.add_argument("out")
