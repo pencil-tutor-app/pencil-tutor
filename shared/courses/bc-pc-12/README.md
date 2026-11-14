@@ -73,3 +73,12 @@ Each problem has a check function that recomputes the result independently: brut
 Result on 2026-11-14: 84 of 84 problems verified, 0 failures.
 
 Not verified mechanically: the wording of the worked steps (read by hand against the checked answers), and the Ontario/Alberta topic comparison above.
+
+## Review (2026-11-15)
+
+Teacher-quality read of all 84 problems against seven checks: one unambiguous answer (units, rounding, domain stated), age-appropriate wording and Canadian context, fit to BC Pre-calculus 12, worked solution reads like a student's lines with no skipped step, final answer matches the request, difficulty ramp inside each group, no names or recognisable textbook problems.
+
+- Reviewed 84, fixed 10, dropped 0, unchanged 74. Every final answer is unchanged; `python3 -I verify.py` still passes 84 of 84.
+- Fixed: `pc12-05` (the point (1, 1) now belongs to the parent explicitly), `pc12-15` (`−(2^(x + 3))` so the minus sign cannot read as a negative base), `pc12-22` and `pc12-42` (the question names the unit and the quantity asked), `pc12-45` and `pc12-83` and `pc12-58` (a skipped division or multiplication step is now written out), `pc12-67` (cosine curve now says the maximum is at x = 0; before, the phase was not determined), `pc12-68` and `pc12-78` (t in seconds stated).
+- Most common problem: a prompt that left one thing for the student to guess (unit, phase, which point), then a worked step that jumped a line.
+- Unsure: `pc12-09` is an explain-why problem whose final answer is a sentence; kept because the restriction x >= 0 is a single checkable answer. `pc12-46` and `pc12-49` use the same factor-by-synthetic-division pattern; kept because one factors and the other solves. `pc12-74` and `pc12-75` are close in shape; kept because the second has a different set of solutions.

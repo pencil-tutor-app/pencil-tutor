@@ -74,3 +74,12 @@ Each problem has a check that recomputes the result independently. Limits are ev
 Result on 2026-11-14: 77 of 77 problems verified, 0 failures.
 
 Not verified mechanically: the wording of worked steps (read by hand), the Ontario/Alberta comparison above.
+
+## Review (2026-11-15)
+
+Teacher-quality read of all 77 problems against seven checks: one unambiguous answer, age-appropriate wording, fit to BC Calculus 12, worked solution reads like a student's lines with no skipped step, final answer matches the request, difficulty ramp inside each group, no names or recognisable textbook problems.
+
+- Reviewed 77, fixed 7, dropped 0, unchanged 70. No final answer changed in value; `python3 -I verify.py` passes 77 of 77.
+- Fixed: `ca12-06` (table values now show the arithmetic), `ca12-15` (the x < 0 side is now explained as a student would write it), `ca12-23` and `ca12-41` (a skipped algebra line written out), `ca12-26` (the answer was printed with the odd character x⁻½, now x^(−1/2)), `ca12-24` and `ca12-63` (the words "Point-slope" and "Back-substitute" were printed with a minus sign instead of a hyphen because the minus-sign helper in `verify.py` rewrote every hyphen; the helper now keeps hyphens between two letters on each side).
+- Most common problem: a worked solution that skips one algebra line, then typography.
+- Unsure: ramp order in two groups is not strictly easy to hard (`ca12-61` before `ca12-62`; `ca12-74` before `ca12-75`); ids are stable so the order was left. The limit problems print "limit as x → a of ..." in prose, which is clear on screen; a proper lim notation would need app support.

@@ -69,3 +69,12 @@ Each problem has a check that recomputes the result independently: brute force e
 Result on 2026-11-14: 46 of 46 problems verified, 0 failures (one check was wrong on the first run, a mistaken T(26) value in the temperature model, and was corrected; the answer itself was right).
 
 Not verified mechanically: the wording of worked steps (read by hand), the Ontario/Alberta comparison above.
+
+## Review (2026-11-15)
+
+Teacher-quality read of all 46 problems against seven checks: one unambiguous answer, age-appropriate wording and Canadian context, fit to BC Foundations of Mathematics 12, worked solution reads like a student's lines, final answer matches the request, difficulty ramp inside each group, no names or recognisable textbook problems.
+
+- Reviewed 46, fixed 7, dropped 0, unchanged 39. `python3 -I verify.py` passes 46 of 46.
+- Fixed: `fm12-03` (asks for each interior and each exterior angle), `fm12-11` (asks for the coordinates of the focus), `fm12-22` (the sinusoidal model was not unique; now a > 0, b > 0 and c is the time of the maximum), `fm12-30` (Pascal row numbering varies by book; the prompt now says the row that begins 1, 4), `fm12-39` (says the player is paid $6, so the net is unambiguous), `fm12-40` (the worked line used 1.19689 and gave 5984.45, not the stated 5984.47; now carries 1.1968948), `fm12-42` (answer shown as "$226 131" in the same style as the prompt; it is exact for the stated payment, so "about" was dropped; `verify.py` check changed to match).
+- Most common problem: a prompt with more than one defensible answer, then a rounding line that did not reproduce the printed answer.
+- Unsure: hyperbola foci and asymptotes (`fm12-09`) and ellipse foci (`fm12-08`) may be deeper than the Foundations 12 conics outcome ("locus definition and constructions, conic sections, applications"; the elaborations ask how circles, ellipses, parabolas and hyperbolas are related) and were kept. Mortgage problems compound monthly as the prompt states; Canadian fixed-rate mortgages usually compound semi-annually (already noted above).
