@@ -154,7 +154,7 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertEqual(wire.box.x, Double(lines[0].box.minX * snapshot.scale), accuracy: 0.001)
     }
 
-    // MARK: - The endless page (every direction, zoom) and the tool wheel
+    // MARK: - The endless page (every direction, zoom) and the tool rail
 
     /// A short horizontal-ish pen stroke whose left end is at (x, y), for building pages in tests.
     private func penStroke(x: CGFloat, y: CGFloat, created: Date = Date()) -> PKStroke {
@@ -391,7 +391,7 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertLessThan(lines[0].box.maxX, lines[1].box.minX)
     }
 
-    // MARK: Pencil rules and the tool wheel
+    // MARK: Pencil rules, finger-tap gestures and the tool rail
 
     func testPencilDoubleTapSwitchesToTheEraserAndBack() {
         XCTAssertEqual(PencilRules.outcome(for: .switchEraser, current: .pen, previous: .pen), .select(.eraser))
@@ -399,13 +399,22 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertEqual(PencilRules.outcome(for: .switchEraser, current: .eraser, previous: .eraser), .select(.pen), "never stuck on the eraser")
         XCTAssertEqual(PencilRules.outcome(for: .switchPrevious, current: .lasso, previous: .pen), .select(.pen))
         XCTAssertEqual(PencilRules.outcome(for: .switchPrevious, current: .pen, previous: .pen), .nothing)
-        XCTAssertEqual(PencilRules.outcome(for: .openPalette, current: .pen, previous: .pen), .openWheel)
+        XCTAssertEqual(PencilRules.outcome(for: .openPalette, current: .pen, previous: .pen), .railAlwaysVisible, "the rail is already up")
         XCTAssertEqual(PencilRules.outcome(for: .ignore, current: .pen, previous: .pen), .nothing)
         XCTAssertEqual(PencilRules.outcome(for: .system, current: .pen, previous: .pen), .nothing)
     }
 
+    func testTwoFingerTapIsUndoThreeFingerTapIsRedoAndOnlyFingersCount() {
+        XCTAssertEqual(RailGestureRules.gesture(forTapWith: 2, usingFingers: true), .undo)
+        XCTAssertEqual(RailGestureRules.gesture(forTapWith: 3, usingFingers: true), .redo)
+        XCTAssertNil(RailGestureRules.gesture(forTapWith: 1, usingFingers: true), "one finger is just a touch of the page")
+        XCTAssertNil(RailGestureRules.gesture(forTapWith: 4, usingFingers: true))
+        XCTAssertNil(RailGestureRules.gesture(forTapWith: 2, usingFingers: false), "the Pencil never undoes")
+        XCTAssertNil(RailGestureRules.gesture(forTapWith: 3, usingFingers: false))
+    }
+
     func testChoosingAColourOrWidthWithTheEraserGoesBackToTheLastInkTool() {
-        var style = ToolWheelStyle()
+        var style = ToolRailStyle()
         style.select(.marker)
         style.select(.eraser)
         style.choose(colour: .blue)
@@ -415,14 +424,23 @@ final class WireAndSnapshotTests: XCTestCase {
         style.choose(width: .thick)
         XCTAssertEqual(style.tool, .marker)
         XCTAssertEqual(style.width, .thick)
-        XCTAssertEqual(ToolWheelStyle().summary, "Pen, black, medium")
-        var eraser = ToolWheelStyle()
+        XCTAssertEqual(ToolRailStyle().summary, "Pen, black, medium")
+        var eraser = ToolRailStyle()
         eraser.select(.eraser)
         XCTAssertEqual(eraser.summary, "Eraser")
     }
 
-    func testEachWheelToolMakesTheMatchingPencilKitTool() throws {
-        var style = ToolWheelStyle()
+    func testSwatchesShowTheHighlighterColoursWhileTheHighlighterIsOn() {
+        var style = ToolRailStyle()
+        XCTAssertEqual(style.swatchColour(.black), UIColor.black)
+        style.select(.marker)
+        XCTAssertEqual(style.swatchColour(.black), InkColour.black.highlighterColor, "black shows yellow")
+        XCTAssertNotEqual(style.swatchColour(.black), UIColor.black)
+        XCTAssertEqual(style.swatchColour(.blue), InkColour.blue.uiColor)
+    }
+
+    func testEachRailToolMakesTheMatchingPencilKitTool() throws {
+        var style = ToolRailStyle()
         let pen = try XCTUnwrap(style.pkTool() as? PKInkingTool)
         XCTAssertEqual(pen.inkType, .pen)
         XCTAssertEqual(pen.width, InkWidth.medium.penWidth, accuracy: 0.001)
@@ -438,112 +456,74 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertTrue(style.pkTool() is PKLassoTool)
     }
 
-    func testHandleSnapsToTheNearestEdgeAndStaysInsideTheTravelArea() {
-        let size = CGSize(width: 1080, height: 760)
-        let area = ToolWheelGeometry.travel(in: size)
-        XCTAssertEqual(area.minX, 14 + 28)
-        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 1060, y: 380), in: size).x, 1)
-        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 1060, y: 380), in: size).y, 0.5, accuracy: 0.02)
-        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 540, y: 20), in: size), CGPoint(x: 0.5, y: 0), "top edge")
-        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 30, y: 400), in: size).x, 0, "left edge")
-        XCTAssertEqual(ToolWheelGeometry.snappedFraction(center: CGPoint(x: 540, y: 740), in: size).y, 1, "bottom edge")
-        let outside = ToolWheelGeometry.snappedFraction(center: CGPoint(x: 5000, y: -300), in: size)
-        XCTAssertTrue((0...1).contains(outside.x) && (0...1).contains(outside.y), "a drop off the page is pulled back")
-        // The bottom-right default sits in the corner of the travel area.
-        XCTAssertEqual(ToolWheelGeometry.handleCenter(fraction: CGPoint(x: 1, y: 1), in: size), CGPoint(x: area.maxX, y: area.maxY))
-        XCTAssertEqual(ToolWheelGeometry.edgeLabel(fraction: CGPoint(x: 1, y: 1)), "bottom_right")
-        XCTAssertEqual(ToolWheelGeometry.edgeLabel(fraction: CGPoint(x: 0, y: 0.4)), "left")
-    }
-
-    func testOpenWheelIsAlwaysEntirelyOnThePage() {
-        let size = CGSize(width: 1080, height: 760)
-        let r = ToolWheelGeometry.discRadius
-        let inner = ToolWheelGeometry.ringOffsets(count: 6, radius: ToolWheelGeometry.innerRadius)
-        let outer = ToolWheelGeometry.ringOffsets(count: 7, radius: ToolWheelGeometry.outerRadius)
-        for fraction in [CGPoint(x: 1, y: 1), CGPoint(x: 0, y: 0), CGPoint(x: 0, y: 1), CGPoint(x: 1, y: 0.5), CGPoint(x: 0.5, y: 0)] {
-            let handle = ToolWheelGeometry.handleCenter(fraction: fraction, in: size)
-            let hub = ToolWheelGeometry.openCenter(handleCenter: handle, in: size)
-            XCTAssertGreaterThanOrEqual(hub.x - r, 0)
-            XCTAssertLessThanOrEqual(hub.x + r, size.width)
-            XCTAssertGreaterThanOrEqual(hub.y - r, 0)
-            XCTAssertLessThanOrEqual(hub.y + r, size.height)
-            for offset in inner + outer {
-                let item = CGPoint(x: hub.x + offset.x, y: hub.y + offset.y)
-                XCTAssertTrue(CGRect(origin: .zero, size: size).insetBy(dx: 22, dy: 22).contains(item))
-            }
-        }
-        // A handle already in the middle does not move when it opens.
-        let middle = CGPoint(x: 540, y: 380)
-        XCTAssertEqual(ToolWheelGeometry.openCenter(handleCenter: middle, in: size), middle)
-        // A window smaller than the wheel centres it instead of pinning it to one side.
-        XCTAssertEqual(ToolWheelGeometry.openCenter(handleCenter: CGPoint(x: 10, y: 10), in: CGSize(width: 200, height: 200)).x, 100)
-    }
-
-    func testRingItemsAreEvenlySpacedAndStartAtTheTop() {
-        let offsets = ToolWheelGeometry.ringOffsets(count: 6, radius: 70)
-        XCTAssertEqual(offsets.count, 6)
-        XCTAssertEqual(offsets[0].x, 0, accuracy: 0.001)
-        XCTAssertEqual(offsets[0].y, -70, accuracy: 0.001)
-        XCTAssertTrue(offsets.allSatisfy { abs(hypot($0.x, $0.y) - 70) < 0.001 })
-        let gap = hypot(offsets[0].x - offsets[1].x, offsets[0].y - offsets[1].y)
-        XCTAssertGreaterThan(gap, ToolWheelGeometry.innerItemSize, "neighbours do not overlap")
-        let outerGap = hypot(ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[0].x - ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[1].x,
-                             ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[0].y - ToolWheelGeometry.ringOffsets(count: 7, radius: 128)[1].y)
-        XCTAssertGreaterThan(outerGap, ToolWheelGeometry.outerItemSize)
-        XCTAssertTrue(ToolWheelGeometry.ringOffsets(count: 0, radius: 70).isEmpty)
-    }
-
     @MainActor
-    func testWheelRemembersWhereTheHandleWasDropped() throws {
-        let suite = "wheel-test-\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
-        defer { defaults.removePersistentDomain(forName: suite) }
-        let first = ToolWheelModel(defaults: defaults)
-        XCTAssertEqual(first.handleFraction, CGPoint(x: 1, y: 1), "bottom-right to begin with")
-        var logged: [String] = []
-        first.attach(canvas: PKCanvasView()) { type, _ in logged.append(type) }
-        first.dropHandle(at: CGPoint(x: 30, y: 300), in: CGSize(width: 1080, height: 760))
-        XCTAssertEqual(first.handleFraction.x, 0)
-        XCTAssertEqual(logged, ["wheel_handle_moved"])
-        let second = ToolWheelModel(defaults: defaults)
-        XCTAssertEqual(second.handleFraction, first.handleFraction, "kept between launches")
-    }
-
-    @MainActor
-    func testSelectingAToolSetsTheCanvasToolClosesTheWheelAndLogsLabelsOnly() throws {
-        let suite = "wheel-test-\(UUID().uuidString)"
+    func testEveryRailChoiceSetsTheCanvasToolLogsLabelsOnlyAndNeverNeedsReopening() throws {
+        let suite = "rail-test-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
         let canvas = PKCanvasView()
         var events: [(String, [String: Any])] = []
-        let model = ToolWheelModel(defaults: defaults)
+        let model = ToolRailModel(defaults: defaults)
         model.attach(canvas: canvas) { type, fields in events.append((type, fields)) }
         XCTAssertTrue(canvas.tool is PKInkingTool, "starts as the black pen")
 
-        model.open(reason: "test")
-        model.choose(colour: .red)
-        XCTAssertTrue(model.isOpen, "a colour keeps the wheel open for a width")
+        // Edward's case: eraser, then a colour. The colour takes the pen back and there is no second step.
         model.select(.eraser)
         XCTAssertTrue(canvas.tool is PKEraserTool)
-        XCTAssertFalse(model.isOpen, "a tool closes it")
+        model.choose(colour: .red)
+        XCTAssertEqual((canvas.tool as? PKInkingTool)?.inkType, .pen, "a colour while erasing returns to the pen")
+        XCTAssertEqual(model.style.tool, .pen)
+        XCTAssertEqual(model.style.colour, .red)
+        model.choose(width: .thick)
+        XCTAssertEqual((canvas.tool as? PKInkingTool)?.width ?? 0, InkWidth.thick.penWidth, accuracy: 0.001)
 
         // The Pencil double-tap goes to the eraser and back to the red pen.
-        model.select(.pen)
         model.pencilGesture(.doubleTap, preferred: .switchEraser)
         XCTAssertTrue(canvas.tool is PKEraserTool)
         model.pencilGesture(.doubleTap, preferred: .switchEraser)
         XCTAssertEqual((canvas.tool as? PKInkingTool)?.inkType, .pen)
+        // "Show the palette" has nothing to show: it changes nothing and says so in the log.
+        model.pencilGesture(.squeeze, preferred: .openPalette)
+        XCTAssertEqual((canvas.tool as? PKInkingTool)?.inkType, .pen)
+        let squeeze = try XCTUnwrap(events.last { $0.0 == "pencil_squeeze" }?.1)
+        XCTAssertEqual(squeeze["result"] as? String, "rail_always_visible")
 
         let types = events.map(\.0)
-        XCTAssertTrue(types.contains("wheel_opened") && types.contains("wheel_closed") && types.contains("tool_selected") && types.contains("pencil_double_tap"))
+        XCTAssertTrue(types.contains("tool_selected") && types.contains("pencil_double_tap"))
+        XCTAssertFalse(types.contains { $0.hasPrefix("wheel_") }, "no wheel left to open or close")
         let selected = try XCTUnwrap(events.first { $0.0 == "tool_selected" }?.1)
-        XCTAssertEqual(selected["tool"] as? String, "pen")
-        XCTAssertEqual(selected["colour"] as? String, "red")
-        XCTAssertEqual(selected["width"] as? String, "medium")
+        XCTAssertEqual(selected["tool"] as? String, "eraser")
+        XCTAssertEqual(selected["source"] as? String, "rail")
         XCTAssertTrue(events.allSatisfy { JSONSerialization.isValidJSONObject($0.1) }, "plain labels and numbers only")
 
         // A new model (the next problem) starts with the same pen.
-        XCTAssertEqual(ToolWheelModel(defaults: defaults).style.colour, .red)
+        let next = ToolRailModel(defaults: defaults)
+        XCTAssertEqual(next.style.colour, .red)
+        XCTAssertEqual(next.style.width, .thick)
+    }
+
+    @MainActor
+    func testUndoRedoFromTheRailAndFromFingerTapsLogTheirResult() throws {
+        let suite = "rail-test-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let canvas = PKCanvasView()
+        var events: [(String, [String: Any])] = []
+        let model = ToolRailModel(defaults: defaults)
+        model.attach(canvas: canvas) { type, fields in events.append((type, fields)) }
+        XCTAssertFalse(model.canUndo)
+        XCTAssertFalse(model.canRedo)
+
+        model.undo()
+        model.redo()
+        model.fingerTap(.undo)
+        model.fingerTap(.redo)
+
+        XCTAssertEqual(events.map(\.0), ["rail_undo", "rail_redo", "gesture_undo", "gesture_redo"])
+        // A blank page has nothing to undo; a canvas outside a window may have no undo manager at all.
+        let expected = canvas.undoManager == nil ? "no_undo_manager" : "nothing"
+        XCTAssertTrue(events.allSatisfy { $0.1["result"] as? String == expected }, "result was \(events.map { $0.1["result"] ?? "-" })")
+        XCTAssertTrue(events.allSatisfy { JSONSerialization.isValidJSONObject($0.1) })
     }
 
     func testSessionLogWritesOneJSONObjectPerLineAndNoSecrets() throws {

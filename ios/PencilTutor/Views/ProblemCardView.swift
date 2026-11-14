@@ -127,6 +127,8 @@ struct ProblemCardView: View {
             HStack(spacing: 6) {
                 Text("Solve for the letter")
                     .font(.caption)
+                    .lineLimit(1)
+                    .fixedSize()
                     .foregroundStyle(.secondary)
                 Spacer(minLength: 4)
                 Image(systemName: "chevron.up")
@@ -160,19 +162,29 @@ struct ProblemCardView: View {
     }
 
     /// One line, plain text: enough to remember the problem while the page gets all the room. Tap to bring the card back.
+    /// A prompt too long for the pill is never cut off with an ellipsis: the pill says "Problem" instead, and the tap still
+    /// opens the whole card. Same 44 pt height as the Back button.
     private var collapsedPill: some View {
         HStack(spacing: 6) {
-            Text(problem.promptPlain)
-                .font(.system(size: 17, design: .serif))
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .accessibilityIdentifier("problemPrompt")
+            ViewThatFits(in: .horizontal) {
+                Text(problem.promptPlain)
+                    .font(.system(size: 17, design: .serif))
+                    .lineLimit(1)
+                    .fixedSize()
+                Text("Problem")
+                    .font(.system(size: 17, design: .serif))
+                    .lineLimit(1)
+                    .fixedSize()
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(problem.promptPlain)
+            .accessibilityIdentifier("problemPrompt")
             Image(systemName: "chevron.down")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, 14)
+        .frame(minHeight: 44)
         .frame(maxWidth: 320, alignment: .leading)
         .background(.thinMaterial, in: Capsule())
         .shadow(color: .black.opacity(0.12), radius: 6, y: 2)
