@@ -18,8 +18,8 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   (https://github.com/giaphutran12/pencil-tutor, private). CI draws on a
   simulated iPad and saves screenshots of a mistake being circled and of a
   clean problem being left alone (artifact `ios-screenshots`).
-- **Content:** the course banks under `shared/courses/` (BC Math 5 to 9, Foundations of Math and Pre-calculus 10, Pre-calculus 12,
-  Calculus 12, Foundations of Math 12, Calculus I, Linear Algebra, Discrete Mathematics; 846 problems at 13 courses) plus the
+- **Content:** the course banks under `shared/courses/` (BC Math 5 to 9, Foundations of Math and Pre-calculus 10, Pre-calculus and Foundations of Math 11 and 12,
+  Calculus 12, Calculus I, Linear Algebra, Discrete Mathematics; 1,024 problems at 15 courses) plus the
   original 12 BC Math 9 unit 3 problems (`shared/problems.json`). Worked solutions are held on the server only. The iPad opens on
   a course picker (Elementary, High school, College), then the course's problem list, then the page; it remembers the last course.
 - **Voice:** ElevenLabs Eleven v4 Turbo, tap-to-talk (see Voice below). GPT-Live is a premium option, off unless a

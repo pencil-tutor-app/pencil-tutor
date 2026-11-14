@@ -65,6 +65,24 @@
       "file": "courses/bc-fmpc-10/problems.json"
     },
     {
+      "slug": "bc-fm-11",
+      "title": "BC Foundations of Math 11",
+      "group": "high_school",
+      "grade": 11,
+      "level": "high_school",
+      "count": 60,
+      "file": "courses/bc-fm-11/problems.json"
+    },
+    {
+      "slug": "bc-pc-11",
+      "title": "BC Pre-calculus 11",
+      "group": "high_school",
+      "grade": 11,
+      "level": "high_school",
+      "count": 118,
+      "file": "courses/bc-pc-11/problems.json"
+    },
+    {
       "slug": "bc-calc-12",
       "title": "BC Calculus 12",
       "group": "high_school",

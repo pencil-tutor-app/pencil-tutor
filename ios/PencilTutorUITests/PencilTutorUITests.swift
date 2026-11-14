@@ -265,7 +265,7 @@ final class PencilTutorUITests: XCTestCase {
     func testLongPromptsWrapInsideTheCardInPortraitAndLandscape() throws {
         defer { XCUIDevice.shared.orientation = .portrait }
         let cases = [("m5-79", "grade5-word-problem"), ("c1-59", "calculus-word-problem"), ("la-69", "linear-algebra-matrix"),
-                     ("fm12-19", "grade12-word-problem"), ("m9-22", "grade9-longest-prompt")]
+                     ("fm12-19", "grade12-word-problem"), ("m9-22", "grade9-long-prompt"), ("fm11-33", "grade11-longest-prompt")]
         for (id, label) in cases {
             for (name, orientation) in [("portrait", UIDeviceOrientation.portrait), ("landscape", UIDeviceOrientation.landscapeLeft)] {
                 XCUIDevice.shared.orientation = orientation

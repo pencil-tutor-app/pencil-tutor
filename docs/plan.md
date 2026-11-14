@@ -513,13 +513,13 @@ Edward asked for the new course banks (`shared/courses/<slug>/problems.json`) to
 - **Manifest and bank.** `server/scripts/build-courses.ts` (`npm run build-courses`) reads the original 12 (`shared/problems.json`, listed
   as the course `bc-math-9-unit-3`) and every folder under `shared/courses/`, validates each problem, fails on a duplicate id across all
   courses, and writes `shared/courses/index.json` (slug, title, group, grade, level, count, file) and the server's `server/data/problems.json`
-  (courses plus trimmed problems: 846 problems, about 340 KB at 13 courses). A new folder needs no code change; an optional `course.json`
+  (courses plus trimmed problems: 1,024 problems, about 430 KB at 15 courses). A new folder needs no code change; an optional `course.json`
   sets the title, group and grade, otherwise they are inferred from the folder name and level. `test/courses.test.ts` fails when a generated
   file is stale. This replaces `npm run sync-problems`.
 - **iPad.** `ProblemListView` is now the home: a course picker grouped Elementary (grades 5-7), High school (8-12), College, then the
   course's problem list, then the existing problem screen. The last course is remembered (`lastCourseSlug` in UserDefaults) and opens at
   launch; Back goes to the picker. The bundle step (`ios/Scripts/bundle_problems.py`) writes `courses.json` and one `course-<slug>.json`
-  per course (prompts only, no solutions; about 215 KB) and fails the build when a folder is missing from the manifest. `--open-problem <id>`
+  per course (prompts only, no solutions; about 270 KB) and fails the build when a folder is missing from the manifest. `--open-problem <id>`
   finds the course itself. Code: `Core/Courses.swift`, `Core/CourseCatalog.swift`, `Views/ProblemListView.swift`, `Views/AppToolbar.swift`.
 - **Problem card.** The fixed "Solve for the letter" line is replaced by the course name. The prompt font steps down with length
   (26, 23, 20, 18 pt for 60, 110, 170 and longer characters) so a 260-character word problem fits in about six lines inside the 460 pt card; a
