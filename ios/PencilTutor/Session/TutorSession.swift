@@ -219,7 +219,9 @@ final class TutorSession: ObservableObject {
     /// 0 while the card has not been measured or the page is not on screen yet.
     private var topClearance: CGFloat {
         guard let canvas, canvas.window != nil, let bottom = cardBottomInWindow else { return 0 }
-        return max(0, bottom - canvas.convert(CGPoint.zero, to: nil).y) + PageGeometry.cardMargin
+        // The canvas is a scroll view: its bounds start at the scroll position, so the top of what is on screen is the bounds
+        // origin, not the point (0, 0) of its content.
+        return max(0, bottom - canvas.convert(canvas.bounds.origin, to: nil).y) + PageGeometry.cardMargin
     }
 
     /// Scrolls to the first screen, with the page's origin `topClearance` below the top so the first line of work is not under
