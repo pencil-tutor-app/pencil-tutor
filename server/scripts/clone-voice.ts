@@ -43,6 +43,8 @@ async function viaApi(path: string, apiKey: string): Promise<string> {
   const form = new FormData();
   form.set("name", VOICE_NAME);
   form.set("description", "The tutor's voice (instant voice clone).");
+  // Home recordings carry room noise; ElevenLabs strips it before cloning so the clone does not copy the hiss.
+  form.set("remove_background_noise", "true");
   form.append("files", new Blob([readFileSync(path)]), basename(path));
   const response = await fetch(ADD_VOICE_URL, { method: "POST", headers: { "xi-api-key": apiKey }, body: form });
   const text = await response.text();
