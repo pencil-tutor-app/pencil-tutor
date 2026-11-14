@@ -14,6 +14,7 @@ import {
   post,
   reply,
   TOKEN,
+  UNKNOWN_CODE,
   watchBody,
 } from "./helpers.js";
 
@@ -26,24 +27,28 @@ afterEach(() => logs.restore());
 const SCRIPTED = { APP_ACCESS_TOKEN: TOKEN, TUTOR_SCRIPTED: "1" };
 
 describe("auth", () => {
-  it("answers 401 with no token, a wrong token, a wrong scheme, and when the server has no token configured", async () => {
+  it("answers 401 with no code, a malformed code, a wrong scheme, and a well formed code nobody has", async () => {
     const d = deps(SCRIPTED);
     assert.equal((await handleWatch(post("/api/watch", watchBody(), null), d)).status, 401);
     assert.equal((await handleWatch(post("/api/watch", watchBody(), "nope"), d)).status, 401);
     const basic = new Request("https://example.test/api/watch", { method: "POST", headers: { authorization: `Basic ${TOKEN}` }, body: "{}" });
     assert.equal((await handleWatch(basic, d)).status, 401);
     assert.equal((await handleAsk(post("/api/ask", askBody(), null), d)).status, 401);
-    // No APP_ACCESS_TOKEN at all: nothing can match, so 401 (this is the state of a fresh deploy).
-    const bare = deps({ TUTOR_SCRIPTED: "1" });
-    assert.equal((await handleWatch(post("/api/watch", watchBody(), TOKEN), bare)).status, 401);
+    assert.equal((await handleWatch(post("/api/watch", watchBody(), UNKNOWN_CODE), d)).status, 401);
     const labels = logs.lines.map((l) => l.outcome);
     assert.deepEqual(labels, [
       "unauthorized:missing_header",
-      "unauthorized:bad_token",
+      "unauthorized:malformed_code",
       "unauthorized:bad_scheme",
       "unauthorized:missing_header",
-      "unauthorized:token_not_configured",
+      "unauthorized:unknown_code",
     ]);
+  });
+
+  it("the old shared token is not a credential any more", async () => {
+    const d = deps({ ...SCRIPTED, APP_ACCESS_TOKEN: "an-old-shared-token-value" });
+    const r = await reply(await handleWatch(post("/api/watch", watchBody(), "an-old-shared-token-value"), d));
+    assert.deepEqual([r.status, r.json.error, r.json.reason], [401, "unauthorized", "malformed_code"]);
   });
 
   it("lets health through without a token", async () => {

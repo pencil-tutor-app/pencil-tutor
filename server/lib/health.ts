@@ -1,4 +1,6 @@
 import { apiKeyFor, appVersion, ConfigError, liveSettings, roleConfig, scriptedState, type Env, type Role } from "./config.js";
+import { databaseUrl } from "./db.js";
+import { voiceSummary } from "./voice.js";
 import { RequestCtx } from "./http.js";
 import { problemCount } from "./problems.js";
 
@@ -39,7 +41,9 @@ export function handleHealth(request: Request, env: Env = process.env): Response
       vercel_env: env.VERCEL_ENV ?? null,
       openai_key_present: openai,
       gemini_key_present: google,
-      app_token_set: Boolean(env.APP_ACCESS_TOKEN),
+      database_configured: Boolean(databaseUrl(env)),
+      voice_provider: voiceSummary(env).provider,
+      voice: voiceSummary(env),
       scripted: scripted.on,
       scripted_refused_in_production: scripted.refusedInProduction,
       models,

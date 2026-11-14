@@ -11,34 +11,118 @@ import {
   type Role,
   type RoleConfig,
 } from "./config.js";
-import { checkAuth, type RequestCtx } from "./http.js";
+import { DatabaseError, openDb } from "./db.js";
+import { RequestCtx, readBearerCode } from "./http.js";
 import { logLine } from "./log.js";
 import type { LiveGateway } from "./live.js";
 import { realModels, type ModelFactory } from "./models.js";
+import {
+  allowanceOf,
+  codeHash,
+  PgStudentStore,
+  vancouverMonth,
+  type ActivityKind,
+  type StudentRecord,
+  type StudentStore,
+} from "./students.js";
+import type { VoiceGateway } from "./voice.js";
 
 // `live` is the one place the server talks to OpenAI's Live endpoint; tests pass a fake. Unset means the real one.
-export type Deps = { env: Env; models: ModelFactory; live?: LiveGateway };
+// `students` is where codes and usage live (Postgres on Neon); tests pass an in-memory one. `voice` is the ElevenLabs call.
+export type Deps = {
+  env: Env;
+  models: ModelFactory;
+  live?: LiveGateway;
+  students?: StudentStore;
+  voice?: VoiceGateway;
+  now?: () => Date;
+};
 export const defaultDeps = (): Deps => ({ env: process.env, models: realModels });
+
+export type GateOptions = {
+  method?: "POST" | "GET";
+  // GPT-Live is reachable only when the student's plan has live: true.
+  requireLive?: boolean;
+  // Out-of-hours students are refused unless the endpoint is one of the fixed allowance notices.
+  allowOverCap?: boolean;
+};
 
 export type GateOpen = {
   ok: true;
   scripted: boolean;
   configs: Partial<Record<Role, RoleConfig>>;
   keys: Partial<Record<Role, string>>;
+  student: StudentRecord;
+  store: StudentStore;
+  code: string;
+  month: string;
+  now: Date;
 };
 export type GateResult = GateOpen | { ok: false; response: Response };
 
-// Everything that must hold before a model endpoint reads the body, in this order:
-// bearer token (401), POST (405), configuration (503), key or scripted mode (503).
-export function gate(ctx: RequestCtx, request: Request, deps: Deps, roles: Role[]): GateResult {
+function resolveStore(deps: Deps): StudentStore | undefined {
+  if (deps.students) return deps.students;
+  const db = openDb(deps.env);
+  return db ? new PgStudentStore(db) : undefined;
+}
+
+// Runs one store call and adds its wall time to the request's db_ms. Any failure becomes a DatabaseError label.
+export async function timedDb<T>(ctx: RequestCtx, run: () => Promise<T>): Promise<T> {
+  const started = Date.now();
+  try {
+    return await run();
+  } catch (err) {
+    if (err instanceof DatabaseError) throw err;
+    throw new DatabaseError(`db_error_${err instanceof Error ? err.name : "unknown"}`);
+  } finally {
+    ctx.noteDb(Date.now() - started);
+  }
+}
+
+const databaseDown = (ctx: RequestCtx, label: string) => ctx.fail(503, "database_unavailable", label, `database_unavailable:${label}`);
+
+// Everything that must hold before an endpoint reads the body, in this order:
+// bearer code present and well formed (401), method (405), the code exists and is not disabled (401/403, database),
+// the plan allows it (403), the month's hours are not used up (403), configuration (503), key or scripted mode (503).
+export async function gate(ctx: RequestCtx, request: Request, deps: Deps, roles: Role[], options: GateOptions = {}): Promise<GateResult> {
   const { env } = deps;
 
-  const auth = checkAuth(request, env);
-  if (!auth.ok) {
-    return { ok: false, response: ctx.fail(401, "unauthorized", "missing or invalid bearer token", `unauthorized:${auth.label}`) };
+  const bearer = readBearerCode(request);
+  if (!bearer.ok) {
+    return { ok: false, response: ctx.fail(401, "unauthorized", bearer.label, `unauthorized:${bearer.label}`) };
   }
-  if (request.method !== "POST") {
-    return { ok: false, response: ctx.fail(405, "method_not_allowed", "use POST", "method_not_allowed") };
+  if (request.method !== (options.method ?? "POST")) {
+    return { ok: false, response: ctx.fail(405, "method_not_allowed", `use ${options.method ?? "POST"}`, "method_not_allowed") };
+  }
+
+  const store = resolveStore(deps);
+  if (!store) return { ok: false, response: databaseDown(ctx, "DATABASE_URL is not set") };
+  const now = deps.now?.() ?? new Date();
+  const month = vancouverMonth(now);
+  const hash = codeHash(bearer.code);
+  ctx.note({ student: hash });
+
+  let student: StudentRecord | null;
+  try {
+    student = await timedDb(ctx, () => store.lookup(bearer.code, month));
+  } catch (err) {
+    return { ok: false, response: databaseDown(ctx, err instanceof DatabaseError ? err.label : "db_error") };
+  }
+  if (!student) {
+    return { ok: false, response: ctx.fail(401, "unauthorized", "unknown_code", "unauthorized:unknown_code") };
+  }
+  if (student.disabled) {
+    return { ok: false, response: ctx.fail(403, "code_disabled", "this code has been turned off", "code_disabled") };
+  }
+  const allowance = allowanceOf(month, student.usage, student.capSeconds);
+  ctx.allowance = allowance;
+  ctx.note({ allowance_state: allowance.state, used_seconds: allowance.used_seconds, cap_seconds: allowance.cap_seconds });
+
+  if (options.requireLive && !student.planLive) {
+    return { ok: false, response: ctx.fail(403, "live_not_in_plan", "this plan does not include the live voice", "live_not_in_plan") };
+  }
+  if (allowance.state === "used_up" && !options.allowOverCap) {
+    return { ok: false, response: ctx.fail(403, "hours_used_up", "this month's hours are used up", "hours_used_up") };
   }
 
   const scripted = scriptedState(env);
@@ -50,9 +134,10 @@ export function gate(ctx: RequestCtx, request: Request, deps: Deps, roles: Role[
       reason: "TUTOR_SCRIPTED=1 ignored because VERCEL_ENV is production",
     });
   }
+  const opened = { student, store, code: bearer.code, month, now };
   if (scripted.on) {
     ctx.note({ provider: "scripted", model: "scripted" });
-    return { ok: true, scripted: true, configs: {}, keys: {} };
+    return { ok: true, scripted: true, configs: {}, keys: {}, ...opened };
   }
 
   const configs: GateOpen["configs"] = {};
@@ -75,7 +160,38 @@ export function gate(ctx: RequestCtx, request: Request, deps: Deps, roles: Role[
   }
   const primary = configs[roles[0] as Role];
   if (primary) ctx.note({ provider: primary.provider, model: primary.model });
-  return { ok: true, scripted: false, configs, keys };
+  return { ok: true, scripted: false, configs, keys, ...opened };
+}
+
+// Counts this request as activity (a look, a question or a heartbeat), then settles the allowance the reply will carry,
+// including the one-time "low" (80%) and "used up" (100%) notices. Called by a handler once the request is known to be valid.
+// If the database fails here the student is not locked out of the request they already passed the cap check for; the failure
+// is logged as an error so it is never silent.
+export async function meterActivity(ctx: RequestCtx, opened: GateOpen, kind: ActivityKind): Promise<void> {
+  const { store, student, month, now } = opened;
+  try {
+    const usage = await timedDb(ctx, () => store.chargeActivity(student.id, month, now, kind));
+    const settled = allowanceOf(month, usage, student.capSeconds);
+    let notice: "low" | "used_up" | null = null;
+    if (settled.state === "used_up") {
+      if (!usage.usedUpNoticed && (await timedDb(ctx, () => store.claimNotice(student.id, month, "used_up")))) notice = "used_up";
+      if (!usage.lowNoticed) await timedDb(ctx, () => store.claimNotice(student.id, month, "low"));
+    } else if (settled.state === "low" && !usage.lowNoticed) {
+      if (await timedDb(ctx, () => store.claimNotice(student.id, month, "low"))) notice = "low";
+    }
+    ctx.allowance = { ...settled, notice };
+    ctx.note({
+      counted_kind: kind,
+      allowance_state: settled.state,
+      used_seconds: settled.used_seconds,
+      cap_seconds: settled.cap_seconds,
+      remaining_minutes: settled.remaining_minutes,
+      allowance_notice: notice,
+    });
+  } catch (err) {
+    const label = err instanceof DatabaseError ? err.label : "db_error";
+    logLine("error", { request_id: ctx.id, endpoint: ctx.endpoint, student: ctx.fields.student as string, outcome: "meter_failed", reason: label });
+  }
 }
 
 // The gate resolves watch/ask at the default level so the key check can happen before the body is read. Once the problem

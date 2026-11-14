@@ -2,8 +2,24 @@ import { MockLanguageModelV4 } from "ai/test";
 import type { Deps } from "../lib/gate.js";
 import { setLogSink } from "../lib/log.js";
 import type { ModelFactory } from "../lib/models.js";
+import { MemoryStudentStore } from "../lib/students-memory.js";
+import type { StudentStore } from "../lib/students.js";
+import type { VoiceGateway, VoiceStream, VoiceFailure } from "../lib/voice.js";
 
-export const TOKEN = "test-token-123";
+// A student code in the real format (8 characters from the code alphabet). It is the bearer credential in every test.
+export const TOKEN = "K7MQ2XAB";
+// Well formed but nobody has it.
+export const UNKNOWN_CODE = "R4WZ9CHD";
+// A fixed moment so the month (America/Vancouver) is the same on every run: 2026-11.
+export const FIXED_NOW = new Date("2026-11-14T18:00:00Z");
+export const TEST_MONTH = "2026-11-01";
+
+// A store holding one student, TOKEN, with the default 8-hour cap and the live plan off.
+export function testStore(options: { capSeconds?: number; planLive?: boolean; disabled?: boolean } = {}) {
+  const store = new MemoryStudentStore();
+  const id = store.add(TOKEN, options);
+  return { store, id };
+}
 
 // A header-only PNG: the server reads signature and IHDR only; the model is mocked in tests.
 export function makePng(width: number, height: number, totalBytes = 2000): string {
@@ -130,9 +146,35 @@ export const liveEnv = (extra: Record<string, string | undefined> = {}) => ({
   ...extra,
 });
 
-export function deps(env: Record<string, string | undefined>, models?: ModelFactory): Deps {
+// A fake ElevenLabs: streams `chunks` (the first one is the first audio), or fails with `failure`. The calls it got are kept.
+export function fakeVoice(result: Uint8Array[] | { failure: string }) {
+  const calls: { voiceId: string; model: string; text: string }[] = [];
+  const gateway: VoiceGateway = {
+    async stream({ settings, text }): Promise<VoiceStream | VoiceFailure> {
+      calls.push({ voiceId: settings.voiceId, model: settings.model, text });
+      if (!Array.isArray(result)) return { kind: "failed", label: result.failure };
+      const [first, ...rest] = result;
+      let index = 0;
+      const reader = {
+        read: async () => (index < rest.length ? { done: false, value: rest[index++] as Uint8Array } : { done: true, value: undefined }),
+        cancel: async () => {},
+      } as unknown as ReadableStreamDefaultReader<Uint8Array>;
+      return { kind: "stream", firstChunk: first as Uint8Array, reader };
+    },
+  };
+  return { gateway, calls };
+}
+
+export function deps(
+  env: Record<string, string | undefined>,
+  models?: ModelFactory,
+  extra: { store?: StudentStore; voice?: VoiceGateway; now?: () => Date } = {},
+): Deps {
   return {
     env,
+    students: extra.store ?? testStore().store,
+    voice: extra.voice,
+    now: extra.now ?? (() => FIXED_NOW),
     models:
       models ??
       ({

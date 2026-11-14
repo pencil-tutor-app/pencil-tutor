@@ -15,6 +15,7 @@
   "dependencies": {
     "@ai-sdk/google": "^4.0.118",
     "@ai-sdk/openai": "^4.0.115",
+    "@neondatabase/serverless": "^1.2.1",
     "ai": "^7.0.170",
     "zod": "^4.6.7"
   },

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Live check of the deployed server with receipts (throwaway codes, time to first audio, the hours cap). Cleans up after itself.
+# Usage: scripts/live-check [base-url]    (default https://pencil-tutor.vercel.app)
+cd "$(dirname "$0")/.." || exit 1
+exec vercel env run -e production --scope edwards-projects-7fd27381 -- npx tsx scripts/live-check.ts "$@"

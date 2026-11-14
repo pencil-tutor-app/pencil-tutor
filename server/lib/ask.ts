@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { SCRIPTED_ANSWER, SCRIPTED_TRANSCRIPT } from "./decision.js";
-import { configForLevel, defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
@@ -25,7 +25,7 @@ const AskRequestSchema = z.object({
 export async function handleAsk(request: Request, deps: Deps = defaultDeps()): Promise<Response> {
   const ctx = new RequestCtx("ask", request.method);
 
-  const opened = gate(ctx, request, deps, ["ask", "stt"]);
+  const opened = await gate(ctx, request, deps, ["ask", "stt"]);
   if (!opened.ok) return opened.response;
 
   const body = await readJson(request);
@@ -51,6 +51,9 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+
+  // A valid question is student activity.
+  await meterActivity(ctx, opened, "question");
 
   const echo = req.drawing_revision === undefined ? {} : { drawing_revision: req.drawing_revision };
   const done = (transcript: string, answer: string, model: string, label: string) => {

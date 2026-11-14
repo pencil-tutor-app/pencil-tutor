@@ -59,6 +59,8 @@ const ASK_TIMEOUT_MS = 30_000;
 const STT_TIMEOUT_MS = 20_000;
 const SPEAK_TIMEOUT_MS = 20_000;
 
+// The fallback voice. It answers in `pcm` (16-bit little-endian mono, 24 kHz), the same wire format the ElevenLabs stream uses,
+// so the iPad plays either with one code path.
 export async function runSpeech(args: {
   model: SpeechModel;
   text: string;
@@ -70,7 +72,7 @@ export async function runSpeech(args: {
       model: args.model,
       text: args.text,
       voice: args.voice,
-      outputFormat: "mp3",
+      outputFormat: "pcm",
       instructions: args.instructions,
       abortSignal: AbortSignal.timeout(SPEAK_TIMEOUT_MS),
       maxRetries: 1,
