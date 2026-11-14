@@ -11,9 +11,11 @@ final class PencilTutorUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    private func launchApp() -> XCUIApplication {
+    /// `-lastCourseSlug` is set on purpose: an empty one means "no remembered course", so a device that ran the app before still
+    /// starts on the course picker.
+    private func launchApp(extra: [String] = [], lastCourse: String = "") -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--scripted-client", "--any-input"]
+        app.launchArguments = ["--scripted-client", "--any-input", "-lastCourseSlug", lastCourse] + extra
         app.launch()
         return app
     }
@@ -22,7 +24,11 @@ final class PencilTutorUITests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
 
-    private func open(problem id: String, in app: XCUIApplication) {
+    /// Picks the course, then the problem, the way a student does. The original twelve (u3-..) are the "bc-math-9-unit-3" course.
+    private func open(problem id: String, course: String = "bc-math-9-unit-3", in app: XCUIApplication) {
+        let courseRow = element(app, "course-\(course)")
+        XCTAssertTrue(courseRow.waitForExistence(timeout: 15), "course \(course) should be on the picker")
+        courseRow.tap()
         let row = element(app, "problem-\(id)")
         XCTAssertTrue(row.waitForExistence(timeout: 15), "problem \(id) should be in the list")
         row.tap()
@@ -195,6 +201,90 @@ final class PencilTutorUITests: XCTestCase {
             screenshot(app, named: "12-chrome-\(name)-card-folded")
             element(app, "problemPrompt").tap()   // open it again for the next pass
             Thread.sleep(forTimeInterval: 0.5)
+        }
+    }
+
+    // MARK: - Courses
+
+    /// Scrolls the list until the element can be tapped (a List only builds the rows on screen).
+    private func scrollTo(_ target: XCUIElement, in app: XCUIApplication) {
+        var tries = 0
+        while !(target.exists && target.isHittable) && tries < 12 {
+            app.swipeUp()
+            tries += 1
+        }
+    }
+
+    /// The picker shows the three shelves with their courses, every row is at least 44 pt tall and inside the screen in both
+    /// orientations, a course opens its problem list, and the next launch opens straight into the course used last.
+    func testCoursePickerGroupsCoursesAndRemembersTheLastOne() throws {
+        defer { XCUIDevice.shared.orientation = .portrait }
+        var app = launchApp()
+        for (name, orientation) in [("portrait", UIDeviceOrientation.portrait), ("landscape", UIDeviceOrientation.landscapeLeft)] {
+            XCUIDevice.shared.orientation = orientation
+            Thread.sleep(forTimeInterval: 1.0)
+            XCTAssertTrue(element(app, "course-bc-math-5").waitForExistence(timeout: 15), "\(name): the picker is up")
+            let window = app.windows.firstMatch.frame
+            for id in ["courseSection-elementary", "course-bc-math-5", "course-bc-math-9-unit-3"] {
+                let frame = element(app, id).frame
+                XCTAssertGreaterThanOrEqual(frame.minX, 0, "\(name): \(id) starts on screen")
+                XCTAssertLessThanOrEqual(frame.maxX, window.maxX + 0.5, "\(name): \(id) ends on screen, was \(frame)")
+            }
+            for id in ["course-bc-math-5", "course-bc-math-9-unit-3"] {
+                XCTAssertGreaterThanOrEqual(element(app, id).frame.height, 43.5, "\(name): \(id) is at least 44 pt tall")
+            }
+            screenshot(app, named: "20-course-picker-\(name)")
+            scrollTo(element(app, "course-linear-algebra"), in: app)
+            XCTAssertTrue(element(app, "courseSection-college").exists, "\(name): the College shelf is listed")
+            XCTAssertTrue(element(app, "course-linear-algebra").exists, "\(name): a college course is listed")
+            screenshot(app, named: "21-course-picker-scrolled-\(name)")
+            for _ in 0..<12 { app.swipeDown() }
+        }
+        XCUIDevice.shared.orientation = .portrait
+
+        // A course opens its problems; a problem opens the page.
+        element(app, "course-bc-math-5").tap()
+        XCTAssertTrue(element(app, "problem-m5-01").waitForExistence(timeout: 10), "the course lists its problems")
+        screenshot(app, named: "22-course-problem-list")
+        element(app, "problem-m5-01").tap()
+        XCTAssertTrue(element(app, "drawingCanvas").waitForExistence(timeout: 10))
+        XCTAssertEqual(element(app, "problemCourseTitle").label, "BC Math 5")
+        app.terminate()
+
+        // Next launch: the remembered course opens by itself, and Back goes to the picker.
+        app = launchApp(lastCourse: "bc-math-5")
+        XCTAssertTrue(element(app, "problem-m5-01").waitForExistence(timeout: 15), "the last course opens at launch")
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(element(app, "course-bc-math-6").waitForExistence(timeout: 10), "Back shows the picker")
+        screenshot(app, named: "23-picker-after-back-last-used")
+    }
+
+    /// The longest prompts of the bank wrap inside the problem card in both orientations: a grade 5 word problem, a calculus word
+    /// problem, a linear algebra matrix, a grade 12 word problem and the longest grade 9 one. The card stays inside the screen,
+    /// at most 432 pt wide, and does not grow past about 45% of the height. Screenshots are the receipt that nothing is cut off.
+    func testLongPromptsWrapInsideTheCardInPortraitAndLandscape() throws {
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let cases = [("m5-79", "grade5-word-problem"), ("c1-59", "calculus-word-problem"), ("la-69", "linear-algebra-matrix"),
+                     ("fm12-19", "grade12-word-problem"), ("m9-22", "grade9-long-prompt"), ("fm11-33", "grade11-longest-prompt")]
+        for (id, label) in cases {
+            for (name, orientation) in [("portrait", UIDeviceOrientation.portrait), ("landscape", UIDeviceOrientation.landscapeLeft)] {
+                XCUIDevice.shared.orientation = orientation
+                Thread.sleep(forTimeInterval: 1.0)
+                let app = launchApp(extra: ["--open-problem", id])
+                let prompt = element(app, "problemPrompt")
+                XCTAssertTrue(prompt.waitForExistence(timeout: 20), "\(id) \(name): the problem opens from the launch argument")
+                Thread.sleep(forTimeInterval: 1.0)
+                let window = app.windows.firstMatch.frame
+                let frame = prompt.frame
+                XCTAssertGreaterThanOrEqual(frame.minX, 0, "\(id) \(name): prompt starts on screen")
+                XCTAssertLessThanOrEqual(frame.maxX, window.maxX, "\(id) \(name): prompt ends on screen, was \(frame)")
+                XCTAssertLessThanOrEqual(frame.width, 433, "\(id) \(name): prompt fits the card width, was \(frame.width)")
+                XCTAssertLessThanOrEqual(frame.maxY, window.height * 0.45, "\(id) \(name): the card leaves the page its room, was \(frame)")
+                XCTAssertLessThanOrEqual(element(app, "toolRail").frame.maxX, frame.minX, "\(id) \(name): rail clear of the card")
+                XCTAssertTrue(element(app, "problemCourseTitle").exists, "\(id) \(name): the course name is shown")
+                screenshot(app, named: "3-\(label)-\(name)")
+                app.terminate()
+            }
         }
     }
 }

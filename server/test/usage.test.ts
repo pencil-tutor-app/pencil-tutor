@@ -76,8 +76,9 @@ describe("watch and consult log tokens and cost", () => {
 });
 
 describe("difficulty routing", () => {
-  it("every bank problem is high school; a missing level means high school", () => {
+  it("every course in the bank is high school (the cheap model), college courses too; a missing level means high school", () => {
     assert.equal(levelOf(findProblem("u3-01")!), "high_school");
+    assert.equal(levelOf(findProblem("c1-01")!), "high_school");
     assert.equal(levelOf({ id: "x", prompt_plain: "", worked_solution: [], final_answer: "" }), "high_school");
     assert.equal(levelOf({ id: "x", prompt_plain: "", worked_solution: [], final_answer: "", level: "advanced" }), "advanced");
   });

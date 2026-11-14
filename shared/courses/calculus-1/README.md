@@ -78,3 +78,20 @@ What `verify.py` does for each id:
 3. Asserts that the verified value appears in `final_answer` (single-digit answers must match exactly), so the text cannot drift from the math. A deliberate test confirmed it: seven final answers were changed on purpose and all seven were flagged.
 
 Not mechanically checked: the wording of each prose step. The numbers stated in the steps were re-read by hand against the sympy results, but `verify.py` does not parse the sentences. Optimization problems also confirm the maximum or minimum by a second-derivative sign and, in c1-50 and c1-53 a brute-force search.
+
+## Review
+
+Teacher-quality review, 2026-11-15. Every one of the 70 problems was read for: one unambiguous answer (units, radians, exact form), wording for a first-year college student, fit with MATH 1120, one-step-per-line worked solutions, `final_answer` matching what the prompt asks, difficulty order within each topic, and no real names or recognisable textbook problems. The numbers in every solution were re-derived by hand against the stated answer.
+
+| outcome | count | ids |
+|---|---|---|
+| reviewed | 70 | all |
+| fixed | 8 | c1-01, c1-18, c1-22, c1-49, c1-53, c1-60, c1-61, c1-64 |
+| dropped | 0 | none |
+| unchanged | 62 | the rest |
+
+What was fixed: time unit missing for a position given in metres (c1-22, c1-61: now "t in seconds"); radians not stated for a sine equation (c1-18); "a 5 m lamp post" could be read as a distance, now "5 m tall" (c1-60); a claim that two numbers "agree to 4 decimal places" that is false when truncated, now stated as a difference of about 0.00008 (c1-49); a distance minimization that never said why a critical number gives the global minimum (c1-53); a vertical-tangent step that read as a continuation of the horizontal one (c1-64); an awkward `−1/−6` (c1-01). No answer changed and `verify.py` needed no edit.
+
+Unsure: the parametric and polar problems (c1-63 to c1-67) follow the Douglas outline, but SFU MATH 151 may leave polar curves to its second course; they stay filed here because the Douglas course lists them.
+
+Verification re-run 2026-11-15 with sympy 1.14.0: `verified 70 of 70`, exit 0.

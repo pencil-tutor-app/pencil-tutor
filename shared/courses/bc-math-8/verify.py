@@ -61,7 +61,7 @@ need("m8-06", [f"{math.isqrt(16)}/{math.isqrt(169)}"])
 assert math.isqrt(16) ** 2 == 16 and math.isqrt(169) ** 2 == 169
 need("m8-07", [round(125 ** (1 / 3)), "2/3"])
 assert 5 ** 3 == 125 and F(2, 3) ** 3 == F(8, 27)
-need("m8-08", [round(math.sqrt(30), 1)], ["30.25", "29.16"])
+need("m8-08", [round(math.sqrt(30), 1)], ["30.25", "29.16", "29.7025"]); assert 5.45 ** 2 < 30 < 5.55 ** 2
 assert abs(5.5 ** 2 - 30.25) < 1e-9 and abs(5.4 ** 2 - 29.16) < 1e-9
 side = math.isqrt(289); assert side ** 2 == 289
 need("m8-09", [4 * side], [side])
@@ -130,7 +130,7 @@ assert 150 / 25 == 6; need("m8-47", ["6 cm"])
 # ---- S10
 need("m8-48", [math.isqrt(6*6+8*8)]); assert math.isqrt(100) ** 2 == 100
 need("m8-49", [math.isqrt(13*13-5*5)]); assert math.isqrt(144) ** 2 == 144
-need("m8-50", [math.isqrt(15*15-9*9)]); assert math.isqrt(144) ** 2 == 144
+need("m8-50", [math.isqrt(17*17-8*8), "15 m"]); assert math.isqrt(225) ** 2 == 225
 assert 7 ** 2 + 24 ** 2 == 25 ** 2; need("m8-51", ["Yes"])
 assert 40 ** 2 + 30 ** 2 == 50 ** 2; need("m8-52", [70 - 50])
 h = math.sqrt(52); need("m8-53", [f"{h:.1f}"]); assert 7.2 ** 2 < 52 < 7.3 ** 2
@@ -156,7 +156,7 @@ need("m8-64", [str(F(3, 5) * F(2, 5))])
 s7 = [(a, b) for a, b in product(range(1, 7), repeat=2) if a + b == 7]
 need("m8-65", [str(F(len(s7), 36))], [len(s7)])
 # ---- S14
-assert F(300, 500) > F(420, 750); need("m8-66", ["Juice B"])
+assert 3 * F(300, 100) > 2 * F(420, 100) and F(300, 500) > F(420, 750); need("m8-66", ["Juice B"], ["9.00", "8.40"])
 assert 40 * F(3, 4) == 30 and 30 < 32; need("m8-67", ["Store A", "$2"])
 assert F("3.90") / 6 == F("0.65") and F(6) / 10 == F("0.60"); need("m8-68", ["10 for $6.00"])
 first = next(m for m in range(0, 100) if 25 + 30 * m < 38 * m)

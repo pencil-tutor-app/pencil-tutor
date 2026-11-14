@@ -1,0 +1,6362 @@
+[
+ {
+  "id": "bc-math-5__m5-26__correct",
+  "file": "bc-math-5__m5-26__correct.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-26",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 41664,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 74,
+     "y": 42,
+     "w": 134,
+     "h": 49
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 124,
+     "w": 203,
+     "h": 46
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 192,
+     "w": 252,
+     "h": 48
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 272,
+     "w": 203,
+     "h": 47
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 71,
+     "y": 345,
+     "w": 261,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "36 × 24",
+   "24 = 20 + 4",
+   "36 × 20 = 720",
+   "36 × 4 = 144",
+   "720 + 144 = 864"
+  ]
+ },
+ {
+  "id": "bc-math-5__m5-26__wrong-w4",
+  "file": "bc-math-5__m5-26__wrong-w4.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-26",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "36 x 4 written as 124 (should be 144)",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 47151,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 42,
+     "w": 157,
+     "h": 45
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 115,
+     "w": 242,
+     "h": 51
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 73,
+     "y": 189,
+     "w": 278,
+     "h": 46
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 262,
+     "w": 265,
+     "h": 51
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 75,
+     "y": 331,
+     "w": 344,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "36 × 24",
+   "24 = 20 + 4",
+   "36 × 20 = 720",
+   "36 × 4 = 124",
+   "720 + 124 = 844"
+  ]
+ },
+ {
+  "id": "bc-math-5__m5-33__correct",
+  "file": "bc-math-5__m5-33__correct.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-33",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 85963,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 215,
+     "h": 44
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 113,
+     "w": 230,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 66,
+     "y": 181,
+     "w": 912,
+     "h": 57
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 69,
+     "y": 261,
+     "w": 785,
+     "h": 57
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 58,
+     "y": 333,
+     "w": 129,
+     "h": 44
+    }
+   }
+  ],
+  "rows": [
+   "1.25 + 0.875",
+   "1.250 + 0.875",
+   "thousandths 0+5 = 5, hundredths 5+7 = 12 write 2 carry 1",
+   "tenths 2+8+1 = 11 write 1 carry 1, ones 1+0+1 = 2",
+   "2.125 L"
+  ]
+ },
+ {
+  "id": "bc-math-5__m5-33__wrong-w4",
+  "file": "bc-math-5__m5-33__wrong-w4.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-33",
+  "category": "wrong",
+  "error_type": "dropped carry",
+  "planted": "carry from the hundredths forgotten in the tenths column",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 77438,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 57,
+     "y": 42,
+     "w": 206,
+     "h": 43
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 116,
+     "w": 205,
+     "h": 42
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 69,
+     "y": 185,
+     "w": 911,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 57,
+     "y": 261,
+     "w": 766,
+     "h": 63
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 57,
+     "y": 344,
+     "w": 125,
+     "h": 40
+    }
+   }
+  ],
+  "rows": [
+   "1.25 + 0.875",
+   "1.250 + 0.875",
+   "thousandths 0+5 = 5, hundredths 5+7 = 12 write 2 carry 1",
+   "tenths 2+8 = 10 write 0 carry 1, ones 1+0+1 = 2",
+   "2.025 L"
+  ]
+ },
+ {
+  "id": "bc-math-5__m5-58__correct",
+  "file": "bc-math-5__m5-58__correct.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-58",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 56949,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 58,
+     "y": 42,
+     "w": 368,
+     "h": 55
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 119,
+     "w": 412,
+     "h": 52
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 199,
+     "w": 253,
+     "h": 48
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 74,
+     "y": 276,
+     "w": 233,
+     "h": 50
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 344,
+     "w": 292,
+     "h": 62
+    }
+   }
+  ],
+  "rows": [
+   "P = 36, width = 7",
+   "2 widths: 7 + 7 = 14",
+   "36 – 14 = 22",
+   "22 ÷ 2 = 11",
+   "length = 11 cm"
+  ]
+ },
+ {
+  "id": "bc-math-5__m5-58__wrong-w3",
+  "file": "bc-math-5__m5-58__wrong-w3.png",
+  "course": "bc-math-5",
+  "problem_id": "m5-58",
+  "category": "wrong",
+  "error_type": "wrong operation",
+  "planted": "added the widths to the perimeter instead of subtracting",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 47612,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 42,
+     "w": 302,
+     "h": 51
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 115,
+     "w": 337,
+     "h": 52
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 189,
+     "w": 213,
+     "h": 48
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 53,
+     "y": 264,
+     "w": 207,
+     "h": 45
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 336,
+     "w": 261,
+     "h": 60
+    }
+   }
+  ],
+  "rows": [
+   "P = 36, width = 7",
+   "2 widths: 7 + 7 = 14",
+   "36 + 14 = 50",
+   "50 ÷ 2 = 25",
+   "length = 25 cm"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-12__correct",
+  "file": "bc-math-6__m6-12__correct.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-12",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 27935,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 41,
+     "w": 284,
+     "h": 44
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 109,
+     "w": 217,
+     "h": 43
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 188,
+     "w": 175,
+     "h": 38
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 260,
+     "w": 133,
+     "h": 41
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 72,
+     "y": 330,
+     "w": 74,
+     "h": 42
+    }
+   }
+  ],
+  "rows": [
+   "20 – 6 × (9 – 4) ÷ 4",
+   "20 – 6 × 5 ÷ 4",
+   "20 – 30 ÷ 4",
+   "20 – 7.5",
+   "12.5"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-12__wrong-w3",
+  "file": "bc-math-6__m6-12__wrong-w3.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-12",
+  "category": "wrong",
+  "error_type": "order of operations",
+  "planted": "subtracted 20 - 6 before multiplying",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 33583,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 42,
+     "w": 335,
+     "h": 50
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 122,
+     "w": 241,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 57,
+     "y": 202,
+     "w": 173,
+     "h": 46
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 70,
+     "y": 278,
+     "w": 116,
+     "h": 43
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 73,
+     "y": 346,
+     "w": 77,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "20 – 6 × (9 – 4) ÷ 4",
+   "20 – 6 × 5 ÷ 4",
+   "14 × 5 ÷ 4",
+   "70 ÷ 4",
+   "17.5"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-27__correct",
+  "file": "bc-math-6__m6-27__correct.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-27",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 61602,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 454,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 121,
+     "w": 267,
+     "h": 62
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 61,
+     "y": 199,
+     "w": 395,
+     "h": 64
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 68,
+     "y": 280,
+     "w": 301,
+     "h": 58
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 68,
+     "y": 355,
+     "w": 132,
+     "h": 64
+    }
+   }
+  ],
+  "rows": [
+   "cats : dogs = 5 : 3, total 40",
+   "5 + 3 = 8 parts",
+   "40 ÷ 8 = 5 in each part",
+   "dogs = 3 × 5 = 15",
+   "15 dogs"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-27__wrong-w3",
+  "file": "bc-math-6__m6-27__wrong-w3.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-27",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "40 / 8 written as 6 (should be 5)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 67352,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 534,
+     "h": 61
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 77,
+     "y": 117,
+     "w": 314,
+     "h": 58
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 190,
+     "w": 464,
+     "h": 64
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 269,
+     "w": 355,
+     "h": 60
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 67,
+     "y": 346,
+     "w": 160,
+     "h": 63
+    }
+   }
+  ],
+  "rows": [
+   "cats : dogs = 5 : 3, total 40",
+   "5 + 3 = 8 parts",
+   "40 ÷ 8 = 6 in each part",
+   "dogs = 3 × 6 = 18",
+   "18 dogs"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-55__correct",
+  "file": "bc-math-6__m6-55__correct.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-55",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 41577,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 71,
+     "y": 42,
+     "w": 323,
+     "h": 53
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 60,
+     "y": 120,
+     "w": 274,
+     "h": 53
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 61,
+     "y": 192,
+     "w": 182,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 75,
+     "y": 273,
+     "w": 202,
+     "h": 46
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 58,
+     "y": 338,
+     "w": 127,
+     "h": 51
+    }
+   }
+  ],
+  "rows": [
+   "A = (a + b) × h ÷ 2",
+   "(6 + 10) × 5 ÷ 2",
+   "16 × 5 = 80",
+   "80 ÷ 2 = 40",
+   "40 cm^2"
+  ]
+ },
+ {
+  "id": "bc-math-6__m6-55__wrong-w2",
+  "file": "bc-math-6__m6-55__wrong-w2.png",
+  "course": "bc-math-6",
+  "problem_id": "m6-55",
+  "category": "wrong",
+  "error_type": "misapplied formula",
+  "planted": "multiplied the parallel sides instead of adding them",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 36650,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 42,
+     "w": 311,
+     "h": 49
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 124,
+     "w": 246,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 200,
+     "w": 194,
+     "h": 41
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 72,
+     "y": 280,
+     "w": 219,
+     "h": 42
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 74,
+     "y": 344,
+     "w": 146,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "A = (a + b) × h ÷ 2",
+   "(6 × 10) × 5 ÷ 2",
+   "60 × 5 = 300",
+   "300 ÷ 2 = 150",
+   "150 cm^2"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-08__correct",
+  "file": "bc-math-7__m7-08__correct.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-08",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 33580,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 75,
+     "y": 42,
+     "w": 364,
+     "h": 66
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 66,
+     "y": 122,
+     "w": 312,
+     "h": 68
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 79,
+     "y": 215,
+     "w": 138,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 81,
+     "y": 295,
+     "w": 54,
+     "h": 46
+    }
+   }
+  ],
+  "rows": [
+   "3 + (-4) × (2 – 6)",
+   "3 + (-4) × (-4)",
+   "3 + 16",
+   "19"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-08__wrong-w3",
+  "file": "bc-math-7__m7-08__wrong-w3.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-08",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "negative times negative written as negative",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 28794,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 293,
+     "h": 58
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 57,
+     "y": 120,
+     "w": 252,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 194,
+     "w": 162,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 69,
+     "y": 280,
+     "w": 65,
+     "h": 44
+    }
+   }
+  ],
+  "rows": [
+   "3 + (-4) × (2 – 6)",
+   "3 + (-4) × (-4)",
+   "3 + (-16)",
+   "-13"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-28__correct",
+  "file": "bc-math-7__m7-28__correct.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-28",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 32915,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 61,
+     "y": 42,
+     "w": 191,
+     "h": 43
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 55,
+     "y": 119,
+     "w": 176,
+     "h": 43
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 198,
+     "w": 124,
+     "h": 43
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 276,
+     "w": 91,
+     "h": 41
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 72,
+     "y": 343,
+     "w": 324,
+     "h": 46
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 59,
+     "y": 418,
+     "w": 86,
+     "h": 42
+    }
+   }
+  ],
+  "rows": [
+   "3k + 4 = 25",
+   "3k = 25 – 4",
+   "3k = 21",
+   "k = 7",
+   "check: 3(7) + 4 = 25",
+   "7 km"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-28__wrong-w2",
+  "file": "bc-math-7__m7-28__wrong-w2.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-28",
+  "category": "wrong",
+  "error_type": "wrong inverse operation",
+  "planted": "added 4 to the right side instead of subtracting",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 33408,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 213,
+     "h": 45
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 110,
+     "w": 207,
+     "h": 46
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 192,
+     "w": 136,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 63,
+     "y": 257,
+     "w": 117,
+     "h": 75
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 59,
+     "y": 346,
+     "w": 174,
+     "h": 48
+    }
+   }
+  ],
+  "rows": [
+   "3k + 4 = 25",
+   "3k = 25 + 4",
+   "3k = 29",
+   "k = {29/3}",
+   "k ≈ 9.7 km"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-63__correct",
+  "file": "bc-math-7__m7-63__correct.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-63",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 39624,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 316,
+     "h": 47
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 124,
+     "w": 214,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 196,
+     "w": 212,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 270,
+     "w": 116,
+     "h": 45
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 340,
+     "w": 67,
+     "h": 49
+    }
+   }
+  ],
+  "rows": [
+   "100% – 20% = 80%",
+   "0.8 × P = 36",
+   "P = 36 ÷ 0.8",
+   "P = 45",
+   "$45"
+  ]
+ },
+ {
+  "id": "bc-math-7__m7-63__wrong-w3",
+  "file": "bc-math-7__m7-63__wrong-w3.png",
+  "course": "bc-math-7",
+  "problem_id": "m7-63",
+  "category": "wrong",
+  "error_type": "wrong operation",
+  "planted": "multiplied by 0.8 instead of dividing",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 51063,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 77,
+     "y": 42,
+     "w": 379,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 114,
+     "w": 252,
+     "h": 59
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 62,
+     "y": 197,
+     "w": 268,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 270,
+     "w": 175,
+     "h": 53
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 71,
+     "y": 337,
+     "w": 143,
+     "h": 60
+    }
+   }
+  ],
+  "rows": [
+   "100% – 20% = 80%",
+   "0.8 × P = 36",
+   "P = 36 × 0.8",
+   "P = 28.8",
+   "$28.80"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-16__correct",
+  "file": "bc-math-8__m8-16__correct.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-16",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 51777,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 331,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 111,
+     "w": 266,
+     "h": 48
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 191,
+     "w": 166,
+     "h": 45
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 267,
+     "w": 182,
+     "h": 46
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 348,
+     "w": 170,
+     "h": 44
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 62,
+     "y": 416,
+     "w": 344,
+     "h": 54
+    }
+   }
+  ],
+  "rows": [
+   "3 + 5 + 7 = 15 parts",
+   "105 ÷ 15 = 7 cm",
+   "3 × 7 = 21",
+   "5 × 7 = 35",
+   "7 × 7 = 49",
+   "21 cm, 35 cm, 49 cm"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-16__wrong-w4",
+  "file": "bc-math-8__m8-16__wrong-w4.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-16",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "5 x 7 written as 30 (should be 35)",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 43899,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 330,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 119,
+     "w": 256,
+     "h": 43
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 66,
+     "y": 194,
+     "w": 162,
+     "h": 40
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 57,
+     "y": 265,
+     "w": 154,
+     "h": 40
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 75,
+     "y": 338,
+     "w": 158,
+     "h": 40
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 55,
+     "y": 412,
+     "w": 335,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "3 + 5 + 7 = 15 parts",
+   "105 ÷ 15 = 7 cm",
+   "3 × 7 = 21",
+   "5 × 7 = 30",
+   "7 × 7 = 49",
+   "21 cm, 30 cm, 49 cm"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-34__correct",
+  "file": "bc-math-8__m8-34__correct.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-34",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 552,
+  "bytes": 55095,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 674,
+     "h": 65
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 121,
+     "w": 356,
+     "h": 71
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 69,
+     "y": 208,
+     "w": 251,
+     "h": 63
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 67,
+     "y": 286,
+     "w": 181,
+     "h": 64
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 65,
+     "y": 379,
+     "w": 142,
+     "h": 46
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 72,
+     "y": 448,
+     "w": 98,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "2(a + 3b) – c, a = 4, b = -2, c = 5",
+   "2(4 + 3(-2)) – 5",
+   "2(4 – 6) – 5",
+   "2(-2) – 5",
+   "-4 – 5",
+   "= -9"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-34__wrong-w3",
+  "file": "bc-math-8__m8-34__wrong-w3.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-34",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "3 times (-2) written as +6",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 47806,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 55,
+     "y": 42,
+     "w": 573,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 115,
+     "w": 266,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 66,
+     "y": 192,
+     "w": 207,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 270,
+     "w": 158,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 58,
+     "y": 354,
+     "w": 112,
+     "h": 44
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 66,
+     "y": 432,
+     "w": 77,
+     "h": 46
+    }
+   }
+  ],
+  "rows": [
+   "2(a + 3b) – c, a = 4, b = -2, c = 5",
+   "2(4 + 3(-2)) – 5",
+   "2(4 + 6) – 5",
+   "2(10) – 5",
+   "20 – 5",
+   "= 15"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-49__correct",
+  "file": "bc-math-8__m8-49__correct.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-49",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 31258,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 73,
+     "y": 42,
+     "w": 209,
+     "h": 47
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 58,
+     "y": 119,
+     "w": 210,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 59,
+     "y": 192,
+     "w": 223,
+     "h": 51
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 265,
+     "w": 144,
+     "h": 47
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 71,
+     "y": 344,
+     "w": 165,
+     "h": 40
+    }
+   }
+  ],
+  "rows": [
+   "a^2 + b^2 = c^2",
+   "a^2 + 5^2 = 13^2",
+   "a^2 + 25 = 169",
+   "a^2 = 144",
+   "a = 12 cm"
+  ]
+ },
+ {
+  "id": "bc-math-8__m8-49__wrong-w3",
+  "file": "bc-math-8__m8-49__wrong-w3.png",
+  "course": "bc-math-8",
+  "problem_id": "m8-49",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "5 squared written as 10 (doubled instead of squared)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 34889,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 42,
+     "w": 212,
+     "h": 51
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 118,
+     "w": 217,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 64,
+     "y": 197,
+     "w": 217,
+     "h": 46
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 272,
+     "w": 139,
+     "h": 47
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 346,
+     "w": 194,
+     "h": 43
+    }
+   }
+  ],
+  "rows": [
+   "a^2 + b^2 = c^2",
+   "a^2 + 5^2 = 13^2",
+   "a^2 + 10 = 169",
+   "a^2 = 159",
+   "a ≈ 12.6 cm"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-08__correct",
+  "file": "bc-math-9__m9-08__correct.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-08",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 20855,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 110,
+     "h": 90
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 146,
+     "w": 109,
+     "h": 94
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 60,
+     "y": 255,
+     "w": 87,
+     "h": 93
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 362,
+     "w": 89,
+     "h": 51
+    }
+   }
+  ],
+  "rows": [
+   "{(3a^2)^3/a^4}",
+   "{3^3 · a^6/a^4}",
+   "{27a^6/a^4}",
+   "27a^2"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-08__wrong-w2",
+  "file": "bc-math-9__m9-08__wrong-w2.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-08",
+  "category": "wrong",
+  "error_type": "misapplied power rule",
+  "planted": "cubed only the variable part, left the coefficient 3 uncubed",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 20900,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 123,
+     "h": 109
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 56,
+     "y": 165,
+     "w": 103,
+     "h": 97
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 276,
+     "w": 75,
+     "h": 98
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 62,
+     "y": 389,
+     "w": 72,
+     "h": 54
+    }
+   }
+  ],
+  "rows": [
+   "{(3a^2)^3/a^4}",
+   "{3 · a^6/a^4}",
+   "{3a^6/a^4}",
+   "3a^2"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-14__correct",
+  "file": "bc-math-9__m9-14__correct.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-14",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 58834,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 58,
+     "y": 41,
+     "w": 513,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 118,
+     "w": 471,
+     "h": 50
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 64,
+     "y": 192,
+     "w": 600,
+     "h": 58
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 63,
+     "y": 276,
+     "w": 206,
+     "h": 48
+    }
+   }
+  ],
+  "rows": [
+   "(5x^2 – 3x + 2) – (2x^2 – 7x – 4)",
+   "5x^2 – 3x + 2 – 2x^2 + 7x + 4",
+   "(5x^2 – 2x^2) + (-3x + 7x) + (2 + 4)",
+   "3x^2 + 4x + 6"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-14__wrong-w2",
+  "file": "bc-math-9__m9-14__wrong-w2.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-14",
+  "category": "wrong",
+  "error_type": "dropped sign when removing brackets",
+  "planted": "the minus changed the first two terms but not the last",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 48186,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 42,
+     "w": 453,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 118,
+     "w": 422,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 64,
+     "y": 192,
+     "w": 533,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 269,
+     "w": 198,
+     "h": 44
+    }
+   }
+  ],
+  "rows": [
+   "(5x^2 – 3x + 2) – (2x^2 – 7x – 4)",
+   "5x^2 – 3x + 2 – 2x^2 + 7x – 4",
+   "(5x^2 – 2x^2) + (-3x + 7x) + (2 – 4)",
+   "3x^2 + 4x – 2"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-26__correct",
+  "file": "bc-math-9__m9-26__correct.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-26",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 55839,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 488,
+     "h": 69
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 55,
+     "y": 125,
+     "w": 405,
+     "h": 58
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 201,
+     "w": 339,
+     "h": 56
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 69,
+     "y": 276,
+     "w": 180,
+     "h": 57
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 51,
+     "y": 361,
+     "w": 117,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "0.5(2y – 3) = 0.25(y + 6)",
+   "y – 1.5 = 0.25y + 1.5",
+   "0.75y – 1.5 = 1.5",
+   "0.75y = 3",
+   "y = 4"
+  ]
+ },
+ {
+  "id": "bc-math-9__m9-26__wrong-w2",
+  "file": "bc-math-9__m9-26__wrong-w2.png",
+  "course": "bc-math-9",
+  "problem_id": "m9-26",
+  "category": "wrong",
+  "error_type": "distribution (second term forgotten)",
+  "planted": "0.5 multiplied the 2y but not the 3",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 48868,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 60,
+     "y": 42,
+     "w": 415,
+     "h": 65
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 121,
+     "w": 335,
+     "h": 64
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 200,
+     "w": 253,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 63,
+     "y": 273,
+     "w": 195,
+     "h": 59
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 56,
+     "y": 350,
+     "w": 95,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "0.5(2y – 3) = 0.25(y + 6)",
+   "y – 3 = 0.25y + 1.5",
+   "0.75y – 3 = 1.5",
+   "0.75y = 4.5",
+   "y = 6"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-03__correct",
+  "file": "bc-fmpc-10__f10-03__correct.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-03",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 26158,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 42,
+     "w": 134,
+     "h": 92
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 148,
+     "w": 148,
+     "h": 39
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 215,
+     "w": 160,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 289,
+     "w": 178,
+     "h": 51
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 368,
+     "w": 107,
+     "h": 48
+    }
+   }
+  ],
+  "rows": [
+   "{12m^5n^{-2} / 4m^2n^{-5}}",
+   "12 ÷ 4 = 3",
+   "m^{5–2} = m^3",
+   "n^{-2–(-5)} = n^3",
+   "3m^3n^3"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-03__wrong-w4",
+  "file": "bc-fmpc-10__f10-03__wrong-w4.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-03",
+  "category": "wrong",
+  "error_type": "sign error with negative exponents",
+  "planted": "subtracted 5 instead of subtracting -5",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 37160,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 73,
+     "y": 42,
+     "w": 133,
+     "h": 92
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 148,
+     "w": 178,
+     "h": 45
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 218,
+     "w": 174,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 63,
+     "y": 290,
+     "w": 177,
+     "h": 48
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 63,
+     "y": 356,
+     "w": 256,
+     "h": 87
+    }
+   }
+  ],
+  "rows": [
+   "{12m^5n^{-2} / 4m^2n^{-5}}",
+   "12 ÷ 4 = 3",
+   "m^{5–2} = m^3",
+   "n^{-2–5} = n^{-7}",
+   "3m^3n^{-7} = {3m^3/n^7}"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-21__correct",
+  "file": "bc-fmpc-10__f10-21__correct.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-21",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 48900,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 60,
+     "y": 42,
+     "w": 387,
+     "h": 66
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 122,
+     "w": 304,
+     "h": 61
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 73,
+     "y": 198,
+     "w": 261,
+     "h": 63
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 277,
+     "w": 238,
+     "h": 57
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 61,
+     "y": 358,
+     "w": 182,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "y = 2x – 5, point (3, 4)",
+   "parallel so m = 2",
+   "y – 4 = 2(x – 3)",
+   "y – 4 = 2x – 6",
+   "y = 2x – 2"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-21__wrong-w2",
+  "file": "bc-fmpc-10__f10-21__wrong-w2.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-21",
+  "category": "wrong",
+  "error_type": "misapplied rule",
+  "planted": "used the perpendicular slope for a parallel line",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 57447,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 50,
+     "y": 42,
+     "w": 445,
+     "h": 67
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 57,
+     "y": 123,
+     "w": 354,
+     "h": 78
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 215,
+     "w": 359,
+     "h": 80
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 51,
+     "y": 309,
+     "w": 321,
+     "h": 77
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 59,
+     "y": 400,
+     "w": 268,
+     "h": 80
+    }
+   }
+  ],
+  "rows": [
+   "y = 2x – 5, point (3, 4)",
+   "parallel so m = -{1/2}",
+   "y – 4 = -{1/2}(x – 3)",
+   "y – 4 = -{1/2}x + {3/2}",
+   "y = -{1/2}x + {11/2}"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-31__correct",
+  "file": "bc-fmpc-10__f10-31__correct.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-31",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 675,
+  "bytes": 51148,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 42,
+     "w": 206,
+     "h": 50
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 115,
+     "w": 195,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 58,
+     "y": 191,
+     "w": 213,
+     "h": 45
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 268,
+     "w": 94,
+     "h": 43
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 334,
+     "w": 257,
+     "h": 63
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 67,
+     "y": 417,
+     "w": 189,
+     "h": 53
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 72,
+     "y": 496,
+     "w": 123,
+     "h": 51
+    }
+   },
+   {
+    "index": 8,
+    "box": {
+     "x": 60,
+     "y": 568,
+     "w": 85,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "2x + 3y = 11",
+   "5x – 3y = 17",
+   "add: 7x = 28",
+   "x = 4",
+   "2(4) + 3y = 11",
+   "3y = 11 – 8",
+   "3y = 3",
+   "y = 1"
+  ]
+ },
+ {
+  "id": "bc-fmpc-10__f10-31__wrong-w6",
+  "file": "bc-fmpc-10__f10-31__wrong-w6.png",
+  "course": "bc-fmpc-10",
+  "problem_id": "f10-31",
+  "category": "wrong",
+  "error_type": "moved term with wrong sign",
+  "planted": "added 8 to the right side instead of subtracting",
+  "wrong_line": 6,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 709,
+  "bytes": 47302,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 193,
+     "h": 61
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 117,
+     "w": 193,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 188,
+     "w": 214,
+     "h": 50
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 58,
+     "y": 273,
+     "w": 87,
+     "h": 43
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 349,
+     "w": 237,
+     "h": 57
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 69,
+     "y": 425,
+     "w": 170,
+     "h": 58
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 60,
+     "y": 504,
+     "w": 116,
+     "h": 57
+    }
+   },
+   {
+    "index": 8,
+    "box": {
+     "x": 63,
+     "y": 576,
+     "w": 106,
+     "h": 79
+    }
+   }
+  ],
+  "rows": [
+   "2x + 3y = 11",
+   "5x – 3y = 17",
+   "add: 7x = 28",
+   "x = 4",
+   "2(4) + 3y = 11",
+   "3y = 11 + 8",
+   "3y = 19",
+   "y = {19/3}"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-11__correct",
+  "file": "bc-fm-11__fm11-11__correct.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-11",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 548,
+  "bytes": 88527,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 42,
+     "w": 380,
+     "h": 66
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 122,
+     "w": 647,
+     "h": 70
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 77,
+     "y": 211,
+     "w": 171,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 287,
+     "w": 141,
+     "h": 46
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 77,
+     "y": 349,
+     "w": 653,
+     "h": 67
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 63,
+     "y": 430,
+     "w": 262,
+     "h": 63
+    }
+   }
+  ],
+  "rows": [
+   "angles add to 180°",
+   "x + (2x + 10) + (3x – 10) = 180",
+   "6x = 180",
+   "x = 30",
+   "2(30) + 10 = 70, 3(30) – 10 = 80",
+   "30°, 70°, 80°"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-11__wrong-w3",
+  "file": "bc-fm-11__fm11-11__wrong-w3.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-11",
+  "category": "wrong",
+  "error_type": "combining like terms",
+  "planted": "1 + 2 + 3 written as 5 for the x coefficient",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 70830,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 73,
+     "y": 42,
+     "w": 291,
+     "h": 61
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 59,
+     "y": 117,
+     "w": 536,
+     "h": 59
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 194,
+     "w": 156,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 55,
+     "y": 274,
+     "w": 117,
+     "h": 42
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 59,
+     "y": 343,
+     "w": 545,
+     "h": 54
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 64,
+     "y": 424,
+     "w": 199,
+     "h": 51
+    }
+   }
+  ],
+  "rows": [
+   "angles add to 180°",
+   "x + (2x + 10) + (3x – 10) = 180",
+   "5x = 180",
+   "x = 36",
+   "2(36) + 10 = 82, 3(36) – 10 = 98",
+   "36°, 82°, 98°"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-27__correct",
+  "file": "bc-fm-11__fm11-27__correct.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-27",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 46425,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 42,
+     "w": 277,
+     "h": 49
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 118,
+     "w": 236,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 60,
+     "y": 193,
+     "w": 259,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 265,
+     "w": 227,
+     "h": 44
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 340,
+     "w": 324,
+     "h": 62
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 55,
+     "y": 417,
+     "w": 258,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "x^2 – 4x + 3 = x – 1",
+   "x^2 – 5x + 4 = 0",
+   "(x – 1)(x – 4) = 0",
+   "x = 1 or x = 4",
+   "y = x – 1: y = 0, y = 3",
+   "(1, 0) and (4, 3)"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-27__wrong-w3",
+  "file": "bc-fm-11__fm11-27__wrong-w3.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-27",
+  "category": "wrong",
+  "error_type": "factoring sign error",
+  "planted": "factored with plus signs where both brackets need minus",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 61522,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 42,
+     "w": 314,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 58,
+     "y": 122,
+     "w": 259,
+     "h": 45
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 196,
+     "w": 315,
+     "h": 57
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 280,
+     "w": 270,
+     "h": 45
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 54,
+     "y": 362,
+     "w": 415,
+     "h": 52
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 72,
+     "y": 428,
+     "w": 379,
+     "h": 58
+    }
+   }
+  ],
+  "rows": [
+   "x^2 – 4x + 3 = x – 1",
+   "x^2 – 5x + 4 = 0",
+   "(x + 1)(x + 4) = 0",
+   "x = -1 or x = -4",
+   "y = x – 1: y = -2, y = -5",
+   "(-1, -2) and (-4, -5)"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-39__correct",
+  "file": "bc-fm-11__fm11-39__correct.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-39",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 70490,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 576,
+     "h": 84
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 140,
+     "w": 643,
+     "h": 63
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 70,
+     "y": 218,
+     "w": 168,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 281,
+     "w": 303,
+     "h": 82
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 68,
+     "y": 377,
+     "w": 201,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "mean = {2+4+4+4+5+5+7+9/8} = {40/8} = 5",
+   "squared deviations: 9, 1, 1, 1, 0, 0, 4, 16",
+   "sum = 32",
+   "variance = {32/8} = 4",
+   "σ = sqrt{4} = 2"
+  ]
+ },
+ {
+  "id": "bc-fm-11__fm11-39__wrong-w2",
+  "file": "bc-fm-11__fm11-39__wrong-w2.png",
+  "course": "bc-fm-11",
+  "problem_id": "fm11-39",
+  "category": "wrong",
+  "error_type": "skipped a squaring step",
+  "planted": "9 - 5 = 4 written without squaring (4 instead of 16)",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 79949,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 42,
+     "w": 644,
+     "h": 84
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 140,
+     "w": 739,
+     "h": 64
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 77,
+     "y": 222,
+     "w": 190,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 67,
+     "y": 280,
+     "w": 392,
+     "h": 82
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 72,
+     "y": 376,
+     "w": 351,
+     "h": 67
+    }
+   }
+  ],
+  "rows": [
+   "mean = {2+4+4+4+5+5+7+9/8} = {40/8} = 5",
+   "squared deviations: 9, 1, 1, 1, 0, 0, 4, 4",
+   "sum = 20",
+   "variance = {20/8} = 2.5",
+   "σ = sqrt{2.5} ≈ 1.58"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-26__correct",
+  "file": "bc-pc-11__pc11-26__correct.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-26",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 599,
+  "bytes": 70000,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 74,
+     "y": 42,
+     "w": 256,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 112,
+     "w": 286,
+     "h": 56
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 59,
+     "y": 190,
+     "w": 339,
+     "h": 51
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 260,
+     "w": 253,
+     "h": 48
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 73,
+     "y": 337,
+     "w": 436,
+     "h": 59
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 67,
+     "y": 414,
+     "w": 548,
+     "h": 62
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 69,
+     "y": 499,
+     "w": 187,
+     "h": 46
+    }
+   }
+  ],
+  "rows": [
+   "sqrt{2x – 1} = x – 2",
+   "2x – 1 = (x – 2)^2",
+   "2x – 1 = x^2 – 4x + 4",
+   "0 = x^2 – 6x + 5",
+   "0 = (x – 1)(x – 5), x = 1, 5",
+   "x = 1: sqrt{1} = 1 but x – 2 = -1, reject",
+   "x = 5 works"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-26__wrong-w3",
+  "file": "bc-pc-11__pc11-26__wrong-w3.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-26",
+  "category": "wrong",
+  "error_type": "squaring a binomial",
+  "planted": "(x - 2)^2 expanded as x^2 - 4 (middle term lost)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 43743,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 64,
+     "y": 42,
+     "w": 244,
+     "h": 53
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 120,
+     "w": 250,
+     "h": 52
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 62,
+     "y": 189,
+     "w": 231,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 274,
+     "w": 231,
+     "h": 46
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 71,
+     "y": 348,
+     "w": 408,
+     "h": 49
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 60,
+     "y": 430,
+     "w": 228,
+     "h": 40
+    }
+   }
+  ],
+  "rows": [
+   "sqrt{2x – 1} = x – 2",
+   "2x – 1 = (x – 2)^2",
+   "2x – 1 = x^2 – 4",
+   "0 = x^2 – 2x – 3",
+   "0 = (x – 3)(x + 1), x = 3, -1",
+   "x = 3 or x = -1"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-67__correct",
+  "file": "bc-pc-11__pc11-67__correct.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-67",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 743,
+  "bytes": 64195,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 354,
+     "h": 57
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 113,
+     "w": 324,
+     "h": 80
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 58,
+     "y": 207,
+     "w": 265,
+     "h": 80
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 301,
+     "w": 367,
+     "h": 78
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 67,
+     "y": 393,
+     "w": 272,
+     "h": 83
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 71,
+     "y": 490,
+     "w": 279,
+     "h": 88
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 68,
+     "y": 593,
+     "w": 257,
+     "h": 96
+    }
+   }
+  ],
+  "rows": [
+   "2x^2 – 12x + 7 = 0",
+   "x^2 – 6x + {7/2} = 0",
+   "x^2 – 6x = -{7/2}",
+   "x^2 – 6x + 9 = 9 – {7/2}",
+   "(x – 3)^2 = {11/2}",
+   "x – 3 = ±sqrt{{11/2}}",
+   "x = 3 ± {sqrt{22}/2}"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-67__wrong-w2",
+  "file": "bc-pc-11__pc11-67__wrong-w2.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-67",
+  "category": "wrong",
+  "error_type": "dropped term",
+  "planted": "divided 2x^2 and 12x by 2 but left the 7 undivided",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 602,
+  "bytes": 50332,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 42,
+     "w": 309,
+     "h": 50
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 114,
+     "w": 252,
+     "h": 51
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 61,
+     "y": 190,
+     "w": 213,
+     "h": 54
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 70,
+     "y": 264,
+     "w": 319,
+     "h": 55
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 56,
+     "y": 339,
+     "w": 208,
+     "h": 55
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 72,
+     "y": 409,
+     "w": 213,
+     "h": 58
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 73,
+     "y": 489,
+     "w": 195,
+     "h": 59
+    }
+   }
+  ],
+  "rows": [
+   "2x^2 – 12x + 7 = 0",
+   "x^2 – 6x + 7 = 0",
+   "x^2 – 6x = -7",
+   "x^2 – 6x + 9 = 9 – 7",
+   "(x – 3)^2 = 2",
+   "x – 3 = ±sqrt{2}",
+   "x = 3 ± sqrt{2}"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-94__correct",
+  "file": "bc-pc-11__pc11-94__correct.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-94",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 620,
+  "bytes": 39583,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 244,
+     "h": 82
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 138,
+     "w": 225,
+     "h": 69
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 231,
+     "w": 209,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 289,
+     "w": 252,
+     "h": 85
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 55,
+     "y": 389,
+     "w": 219,
+     "h": 82
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 63,
+     "y": 486,
+     "w": 106,
+     "h": 79
+    }
+   }
+  ],
+  "rows": [
+   "sin 240° = -{sqrt{3}/2}",
+   "cos 300° = {1/2}",
+   "tan 135° = -1",
+   "-{sqrt{3}/2} + {1/2} – (-1)",
+   "-{sqrt{3}/2} + {1/2} + 1",
+   "{3 – sqrt{3}/2}"
+  ]
+ },
+ {
+  "id": "bc-pc-11__pc11-94__wrong-w3",
+  "file": "bc-pc-11__pc11-94__wrong-w3.png",
+  "course": "bc-pc-11",
+  "problem_id": "pc11-94",
+  "category": "wrong",
+  "error_type": "wrong quadrant sign",
+  "planted": "tan 135 degrees written as positive (it is negative in quadrant II)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 619,
+  "bytes": 43298,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 72,
+     "y": 42,
+     "w": 274,
+     "h": 83
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 59,
+     "y": 139,
+     "w": 219,
+     "h": 74
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 66,
+     "y": 227,
+     "w": 192,
+     "h": 42
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 283,
+     "w": 244,
+     "h": 82
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 73,
+     "y": 379,
+     "w": 169,
+     "h": 86
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 64,
+     "y": 480,
+     "w": 128,
+     "h": 84
+    }
+   }
+  ],
+  "rows": [
+   "sin 240° = -{sqrt{3}/2}",
+   "cos 300° = {1/2}",
+   "tan 135° = 1",
+   "-{sqrt{3}/2} + {1/2} – 1",
+   "-{sqrt{3}/2} – {1/2}",
+   "{-sqrt{3} – 1/2}"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-22__correct",
+  "file": "bc-calc-12__ca12-22__correct.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-22",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 79155,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 74,
+     "y": 42,
+     "w": 446,
+     "h": 90
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 146,
+     "w": 556,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 218,
+     "w": 503,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 292,
+     "w": 427,
+     "h": 85
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 391,
+     "w": 380,
+     "h": 57
+    }
+   }
+  ],
+  "rows": [
+   "f'(x) = lim_{h→0} {f(x+h) – f(x)/h}",
+   "f(x+h) = x^2 + 2xh + h^2 – 3x – 3h",
+   "f(x+h) – f(x) = 2xh + h^2 – 3h",
+   "{2xh + h^2 – 3h/h} = 2x + h – 3",
+   "h → 0: f'(x) = 2x – 3"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-22__wrong-w2",
+  "file": "bc-calc-12__ca12-22__wrong-w2.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-22",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "-3(x + h) expanded as -3x + 3h",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 89667,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 75,
+     "y": 42,
+     "w": 502,
+     "h": 99
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 155,
+     "w": 640,
+     "h": 65
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 66,
+     "y": 236,
+     "w": 576,
+     "h": 66
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 58,
+     "y": 317,
+     "w": 531,
+     "h": 92
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 61,
+     "y": 423,
+     "w": 437,
+     "h": 67
+    }
+   }
+  ],
+  "rows": [
+   "f'(x) = lim_{h→0} {f(x+h) – f(x)/h}",
+   "f(x+h) = x^2 + 2xh + h^2 – 3x + 3h",
+   "f(x+h) – f(x) = 2xh + h^2 + 3h",
+   "{2xh + h^2 + 3h/h} = 2x + h + 3",
+   "h → 0: f'(x) = 2x + 3"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-28__correct",
+  "file": "bc-calc-12__ca12-28__correct.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-28",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 553,
+  "bytes": 50602,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 55,
+     "y": 42,
+     "w": 151,
+     "h": 75
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 131,
+     "w": 505,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 202,
+     "w": 398,
+     "h": 99
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 69,
+     "y": 316,
+     "w": 218,
+     "h": 86
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 416,
+     "w": 178,
+     "h": 82
+    }
+   }
+  ],
+  "rows": [
+   "y = {x + 1/x – 2}",
+   "u = x + 1, v = x – 2, u' = 1, v' = 1",
+   "y' = {(1)(x – 2) – (x + 1)(1)/(x – 2)^2}",
+   "= {x – 2 – x – 1/(x – 2)^2}",
+   "= {-3/(x – 2)^2}"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-28__wrong-w3",
+  "file": "bc-calc-12__ca12-28__wrong-w3.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-28",
+  "category": "wrong",
+  "error_type": "misapplied rule",
+  "planted": "quotient rule numerator written as u v' - u' v (reversed)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 549,
+  "bytes": 44048,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 71,
+     "y": 42,
+     "w": 149,
+     "h": 77
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 133,
+     "w": 484,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 58,
+     "y": 205,
+     "w": 358,
+     "h": 94
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 313,
+     "w": 207,
+     "h": 85
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 412,
+     "w": 145,
+     "h": 82
+    }
+   }
+  ],
+  "rows": [
+   "y = {x + 1/x – 2}",
+   "u = x + 1, v = x – 2, u' = 1, v' = 1",
+   "y' = {(x + 1)(1) – (1)(x – 2)/(x – 2)^2}",
+   "= {x + 1 – x + 2/(x – 2)^2}",
+   "= {3/(x – 2)^2}"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-74__correct",
+  "file": "bc-calc-12__ca12-74__correct.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-74",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 648,
+  "bytes": 53640,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 42,
+     "w": 187,
+     "h": 96
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 152,
+     "w": 218,
+     "h": 92
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 259,
+     "w": 283,
+     "h": 68
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 341,
+     "w": 163,
+     "h": 76
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 61,
+     "y": 432,
+     "w": 350,
+     "h": 66
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 64,
+     "y": 512,
+     "w": 161,
+     "h": 81
+    }
+   }
+  ],
+  "rows": [
+   "{dy/dx} = 2xy",
+   "{dy/y} = 2x dx",
+   "ln|y| = x^2 + C",
+   "y = Ae^{x^2}",
+   "y(0) = 3 so A = 3",
+   "y = 3e^{x^2}"
+  ]
+ },
+ {
+  "id": "bc-calc-12__ca12-74__wrong-w3",
+  "file": "bc-calc-12__ca12-74__wrong-w3.png",
+  "course": "bc-calc-12",
+  "problem_id": "ca12-74",
+  "category": "wrong",
+  "error_type": "integration slip",
+  "planted": "antiderivative of 2x written as 2x^2",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 627,
+  "bytes": 48548,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 165,
+     "h": 92
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 148,
+     "w": 199,
+     "h": 99
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 50,
+     "y": 261,
+     "w": 258,
+     "h": 67
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 343,
+     "w": 145,
+     "h": 69
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 426,
+     "w": 300,
+     "h": 62
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 61,
+     "y": 503,
+     "w": 159,
+     "h": 69
+    }
+   }
+  ],
+  "rows": [
+   "{dy/dx} = 2xy",
+   "{dy/y} = 2x dx",
+   "ln|y| = 2x^2 + C",
+   "y = Ae^{2x^2}",
+   "y(0) = 3 so A = 3",
+   "y = 3e^{2x^2}"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-01__correct",
+  "file": "bc-fm-12__fm12-01__correct.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-01",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 575,
+  "bytes": 63417,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 58,
+     "y": 42,
+     "w": 253,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 57,
+     "y": 110,
+     "w": 477,
+     "h": 72
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 197,
+     "w": 411,
+     "h": 71
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 60,
+     "y": 282,
+     "w": 269,
+     "h": 69
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 69,
+     "y": 365,
+     "w": 268,
+     "h": 71
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 63,
+     "y": 450,
+     "w": 211,
+     "h": 70
+    }
+   }
+  ],
+  "rows": [
+   "A(1, 2)  B(7, 6)",
+   "midpoint = ({1+7/2}, {2+6/2}) = (4, 4)",
+   "slope AB = {6–2/7–1} = {4/6} = {2/3}",
+   "perp slope = -{3/2}",
+   "y – 4 = -{3/2}(x – 4)",
+   "y = -{3/2}x + 10"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-01__wrong-w4",
+  "file": "bc-fm-12__fm12-01__wrong-w4.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-01",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "perpendicular slope was the reciprocal but lost its negative sign",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 592,
+  "bytes": 76694,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 42,
+     "w": 255,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 110,
+     "w": 517,
+     "h": 74
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 61,
+     "y": 198,
+     "w": 431,
+     "h": 77
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 290,
+     "w": 256,
+     "h": 74
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 67,
+     "y": 378,
+     "w": 306,
+     "h": 72
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 52,
+     "y": 464,
+     "w": 204,
+     "h": 74
+    }
+   }
+  ],
+  "rows": [
+   "A(1, 2)  B(7, 6)",
+   "midpoint = ({1+7/2}, {2+6/2}) = (4, 4)",
+   "slope AB = {6–2/7–1} = {4/6} = {2/3}",
+   "perp slope = {3/2}",
+   "y – 4 = {3/2}(x – 4)",
+   "y = {3/2}x – 2"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-20__correct",
+  "file": "bc-fm-12__fm12-20__correct.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-20",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 551,
+  "bytes": 69623,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 42,
+     "w": 163,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 73,
+     "y": 119,
+     "w": 244,
+     "h": 54
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 60,
+     "y": 196,
+     "w": 341,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 60,
+     "y": 270,
+     "w": 262,
+     "h": 54
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 58,
+     "y": 345,
+     "w": 186,
+     "h": 65
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 66,
+     "y": 425,
+     "w": 514,
+     "h": 72
+    }
+   }
+  ],
+  "rows": [
+   "y = a · b^x",
+   "(0, 50): a = 50",
+   "(3, 400): 50b^3 = 400",
+   "b^3 = 8 so b = 2",
+   "y = 50(2)^x",
+   "y(5) = 50(2)^5 = 50(32) = 1600"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-20__wrong-w4",
+  "file": "bc-fm-12__fm12-20__wrong-w4.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-20",
+  "category": "wrong",
+  "error_type": "misapplied root",
+  "planted": "took the cube root of 8 as 8 divided by 3",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 598,
+  "bytes": 73474,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 49,
+     "y": 42,
+     "w": 195,
+     "h": 59
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 115,
+     "w": 286,
+     "h": 64
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 69,
+     "y": 193,
+     "w": 409,
+     "h": 67
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 274,
+     "w": 315,
+     "h": 81
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 54,
+     "y": 369,
+     "w": 224,
+     "h": 81
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 53,
+     "y": 464,
+     "w": 439,
+     "h": 80
+    }
+   }
+  ],
+  "rows": [
+   "y = a · b^x",
+   "(0, 50): a = 50",
+   "(3, 400): 50b^3 = 400",
+   "b^3 = 8 so b = {8/3}",
+   "y = 50({8/3})^x",
+   "y(5) = 50({8/3})^5 ≈ 6742"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-37__correct",
+  "file": "bc-fm-12__fm12-37__correct.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-37",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 46701,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 42,
+     "w": 302,
+     "h": 74
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 130,
+     "w": 360,
+     "h": 73
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 60,
+     "y": 217,
+     "w": 207,
+     "h": 55
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 59,
+     "y": 286,
+     "w": 188,
+     "h": 78
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 65,
+     "y": 378,
+     "w": 119,
+     "h": 78
+    }
+   }
+  ],
+  "rows": [
+   "n = 6, k = 4, p = {1/2}",
+   "P = C(6,4)({1/2})^4({1/2})^2",
+   "C(6,4) = 15",
+   "({1/2})^6 = {1/64}",
+   "P = {15/64}"
+  ]
+ },
+ {
+  "id": "bc-fm-12__fm12-37__wrong-w3",
+  "file": "bc-fm-12__fm12-37__wrong-w3.png",
+  "course": "bc-fm-12",
+  "problem_id": "fm12-37",
+  "category": "wrong",
+  "error_type": "misapplied counting formula",
+  "planted": "C(6,4) computed as 6 times 4",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 43819,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 62,
+     "y": 42,
+     "w": 298,
+     "h": 72
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 128,
+     "w": 311,
+     "h": 72
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 56,
+     "y": 215,
+     "w": 290,
+     "h": 48
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 67,
+     "y": 278,
+     "w": 182,
+     "h": 72
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 56,
+     "y": 364,
+     "w": 182,
+     "h": 75
+    }
+   }
+  ],
+  "rows": [
+   "n = 6, k = 4, p = {1/2}",
+   "P = C(6,4)({1/2})^4({1/2})^2",
+   "C(6,4) = 6 · 4 = 24",
+   "({1/2})^6 = {1/64}",
+   "P = {24/64} = {3/8}"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-37__correct",
+  "file": "bc-pc-12__pc12-37__correct.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-37",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 628,
+  "bytes": 94524,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 74,
+     "y": 42,
+     "w": 459,
+     "h": 71
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 69,
+     "y": 127,
+     "w": 363,
+     "h": 72
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 69,
+     "y": 214,
+     "w": 245,
+     "h": 60
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 68,
+     "y": 288,
+     "w": 318,
+     "h": 56
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 359,
+     "w": 596,
+     "h": 67
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 64,
+     "y": 441,
+     "w": 624,
+     "h": 66
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 68,
+     "y": 530,
+     "w": 111,
+     "h": 44
+    }
+   }
+  ],
+  "rows": [
+   "log_3 x + log_3 (x – 2) = 1",
+   "log_3 [x(x – 2)] = 1",
+   "x(x – 2) = 3",
+   "x^2 – 2x – 3 = 0",
+   "(x – 3)(x + 1) = 0, x = 3 or -1",
+   "x = -1 rejected, log of a negative",
+   "x = 3"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-37__wrong-w3",
+  "file": "bc-pc-12__pc12-37__wrong-w3.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-37",
+  "category": "wrong",
+  "error_type": "misapplied log rule",
+  "planted": "log equals 1 turned into argument equals 1 instead of 3^1",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 641,
+  "bytes": 72844,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 420,
+     "h": 66
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 122,
+     "w": 318,
+     "h": 65
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 73,
+     "y": 202,
+     "w": 207,
+     "h": 54
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 274,
+     "w": 254,
+     "h": 55
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 73,
+     "y": 344,
+     "w": 358,
+     "h": 92
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 71,
+     "y": 451,
+     "w": 530,
+     "h": 67
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 73,
+     "y": 532,
+     "w": 193,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "log_3 x + log_3 (x – 2) = 1",
+   "log_3 [x(x – 2)] = 1",
+   "x(x – 2) = 1",
+   "x^2 – 2x – 1 = 0",
+   "x = {2 ± sqrt{8}/2} = 1 ± sqrt{2}",
+   "x = 1 + sqrt{2} (1 – sqrt{2} is negative)",
+   "x = 1 + sqrt{2}"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-08__correct",
+  "file": "bc-pc-12__pc12-08__correct.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-08",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 674,
+  "bytes": 52480,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 159,
+     "h": 76
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 58,
+     "y": 132,
+     "w": 163,
+     "h": 104
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 250,
+     "w": 265,
+     "h": 61
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 328,
+     "w": 262,
+     "h": 58
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 64,
+     "y": 402,
+     "w": 264,
+     "h": 58
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 66,
+     "y": 475,
+     "w": 266,
+     "h": 56
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 59,
+     "y": 546,
+     "w": 165,
+     "h": 74
+    }
+   }
+  ],
+  "rows": [
+   "y = {2x + 1/x – 3}",
+   "x = {2y + 1/y – 3}",
+   "x(y – 3) = 2y + 1",
+   "xy – 3x = 2y + 1",
+   "xy – 2y = 3x + 1",
+   "y(x – 2) = 3x + 1",
+   "y = {3x + 1/x – 2}"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-08__wrong-w5",
+  "file": "bc-pc-12__pc12-08__wrong-w5.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-08",
+  "category": "wrong",
+  "error_type": "moved term with wrong sign",
+  "planted": "2y moved across the equals sign without changing its sign",
+  "wrong_line": 5,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 673,
+  "bytes": 63441,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 62,
+     "y": 42,
+     "w": 164,
+     "h": 80
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 136,
+     "w": 166,
+     "h": 89
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 239,
+     "w": 308,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 321,
+     "w": 264,
+     "h": 55
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 54,
+     "y": 395,
+     "w": 276,
+     "h": 55
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 57,
+     "y": 465,
+     "w": 310,
+     "h": 63
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 51,
+     "y": 542,
+     "w": 164,
+     "h": 76
+    }
+   }
+  ],
+  "rows": [
+   "y = {2x + 1/x – 3}",
+   "x = {2y + 1/y – 3}",
+   "x(y – 3) = 2y + 1",
+   "xy – 3x = 2y + 1",
+   "xy + 2y = 3x + 1",
+   "y(x + 2) = 3x + 1",
+   "y = {3x + 1/x + 2}"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-84__correct",
+  "file": "bc-pc-12__pc12-84__correct.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-84",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 69375,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 42,
+     "w": 237,
+     "h": 46
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 59,
+     "y": 121,
+     "w": 338,
+     "h": 46
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 70,
+     "y": 194,
+     "w": 406,
+     "h": 46
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 69,
+     "y": 257,
+     "w": 364,
+     "h": 55
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 58,
+     "y": 338,
+     "w": 307,
+     "h": 48
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 64,
+     "y": 400,
+     "w": 374,
+     "h": 81
+    }
+   }
+  ],
+  "rows": [
+   "sin 2x = sin x",
+   "2 sin x cos x = sin x",
+   "2 sin x cos x – sin x = 0",
+   "sin x (2 cos x – 1) = 0",
+   "sin x = 0: x = 0, π",
+   "cos x = {1/2}: x = {π/3}, {5π/3}"
+  ]
+ },
+ {
+  "id": "bc-pc-12__pc12-84__wrong-w3",
+  "file": "bc-pc-12__pc12-84__wrong-w3.png",
+  "course": "bc-pc-12",
+  "problem_id": "pc12-84",
+  "category": "wrong",
+  "error_type": "divided by a factor (lost roots)",
+  "planted": "divided both sides by sin x, losing x = 0 and x = pi",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 43828,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 72,
+     "y": 42,
+     "w": 271,
+     "h": 45
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 120,
+     "w": 387,
+     "h": 46
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 75,
+     "y": 202,
+     "w": 209,
+     "h": 43
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 76,
+     "y": 260,
+     "w": 187,
+     "h": 81
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 65,
+     "y": 355,
+     "w": 219,
+     "h": 79
+    }
+   }
+  ],
+  "rows": [
+   "sin 2x = sin x",
+   "2 sin x cos x = sin x",
+   "2 cos x = 1",
+   "cos x = {1/2}",
+   "x = {π/3}, {5π/3}"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-01__correct",
+  "file": "calculus-1__c1-01__correct.png",
+  "course": "calculus-1",
+  "problem_id": "c1-01",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 663,
+  "bytes": 64721,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 73,
+     "y": 42,
+     "w": 298,
+     "h": 88
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 60,
+     "y": 144,
+     "w": 343,
+     "h": 72
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 74,
+     "y": 230,
+     "w": 325,
+     "h": 104
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 63,
+     "y": 348,
+     "w": 185,
+     "h": 80
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 60,
+     "y": 443,
+     "w": 145,
+     "h": 77
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 61,
+     "y": 535,
+     "w": 171,
+     "h": 74
+    }
+   }
+  ],
+  "rows": [
+   "lim_{x→-3} {x^2 + 5x + 6/x^2 – 9}",
+   "plug in: {0/0}, so factor",
+   "= lim {(x + 2)(x + 3)/(x – 3)(x + 3)}",
+   "= lim {x + 2/x – 3}",
+   "= {-3 + 2/-3 – 3}",
+   "= {-1/-6} = {1/6}"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-01__wrong-w6",
+  "file": "calculus-1__c1-01__wrong-w6.png",
+  "course": "calculus-1",
+  "problem_id": "c1-01",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "negative over negative written as negative",
+  "wrong_line": 6,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 616,
+  "bytes": 53336,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 287,
+     "h": 84
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 140,
+     "w": 329,
+     "h": 66
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 220,
+     "w": 285,
+     "h": 82
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 62,
+     "y": 316,
+     "w": 167,
+     "h": 70
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 401,
+     "w": 126,
+     "h": 73
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 68,
+     "y": 489,
+     "w": 162,
+     "h": 73
+    }
+   }
+  ],
+  "rows": [
+   "lim_{x→-3} {x^2 + 5x + 6/x^2 – 9}",
+   "plug in: {0/0}, so factor",
+   "= lim {(x + 2)(x + 3)/(x – 3)(x + 3)}",
+   "= lim {x + 2/x – 3}",
+   "= {-3 + 2/-3 – 3}",
+   "= {-1/-6} = -{1/6}"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-30__correct",
+  "file": "calculus-1__c1-30__correct.png",
+  "course": "calculus-1",
+  "problem_id": "c1-30",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 544,
+  "bytes": 88428,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 60,
+     "y": 42,
+     "w": 261,
+     "h": 71
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 50,
+     "y": 127,
+     "w": 534,
+     "h": 89
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 230,
+     "w": 450,
+     "h": 93
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 51,
+     "y": 338,
+     "w": 496,
+     "h": 68
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 53,
+     "y": 420,
+     "w": 456,
+     "h": 65
+    }
+   }
+  ],
+  "rows": [
+   "y = (sin 4x)^3",
+   "y' = 3(sin 4x)^2 · {d/dx}(sin 4x)",
+   "{d/dx}(sin 4x) = cos 4x · 4",
+   "y' = 3 sin^2(4x) · 4 cos(4x)",
+   "y' = 12 sin^2(4x) cos(4x)"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-30__wrong-w3",
+  "file": "calculus-1__c1-30__wrong-w3.png",
+  "course": "calculus-1",
+  "problem_id": "c1-30",
+  "category": "wrong",
+  "error_type": "chain rule omission",
+  "planted": "forgot the inner derivative 4",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 72212,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 214,
+     "h": 72
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 128,
+     "w": 457,
+     "h": 86
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 228,
+     "w": 342,
+     "h": 84
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 66,
+     "y": 326,
+     "w": 412,
+     "h": 71
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 65,
+     "y": 412,
+     "w": 382,
+     "h": 66
+    }
+   }
+  ],
+  "rows": [
+   "y = (sin 4x)^3",
+   "y' = 3(sin 4x)^2 · {d/dx}(sin 4x)",
+   "{d/dx}(sin 4x) = cos 4x",
+   "y' = 3 sin^2(4x) · cos(4x)",
+   "y' = 3 sin^2(4x) cos(4x)"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-42__correct",
+  "file": "calculus-1__c1-42__correct.png",
+  "course": "calculus-1",
+  "problem_id": "c1-42",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 586,
+  "bytes": 71429,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 64,
+     "y": 42,
+     "w": 328,
+     "h": 51
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 57,
+     "y": 117,
+     "w": 243,
+     "h": 44
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 57,
+     "y": 189,
+     "w": 240,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 257,
+     "w": 284,
+     "h": 51
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 55,
+     "y": 333,
+     "w": 360,
+     "h": 45
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 57,
+     "y": 407,
+     "w": 367,
+     "h": 47
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 71,
+     "y": 484,
+     "w": 473,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "f'(x) = 6x^2 – 18x + 12",
+   "= 6(x – 1)(x – 2)",
+   "critical: x = 1, 2",
+   "f(0) = 0, f(1) = 5",
+   "f(2) = 16 – 36 + 24 = 4",
+   "f(3) = 54 – 81 + 36 = 9",
+   "max 9 at x = 3, min 0 at x = 0"
+  ]
+ },
+ {
+  "id": "calculus-1__c1-42__wrong-w5",
+  "file": "calculus-1__c1-42__wrong-w5.png",
+  "course": "calculus-1",
+  "problem_id": "c1-42",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "16 - 36 + 24 written as -4 (should be 4)",
+  "wrong_line": 5,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 607,
+  "bytes": 92838,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 42,
+     "w": 361,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 73,
+     "y": 119,
+     "w": 307,
+     "h": 53
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 70,
+     "y": 194,
+     "w": 255,
+     "h": 51
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 266,
+     "w": 296,
+     "h": 58
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 63,
+     "y": 348,
+     "w": 443,
+     "h": 53
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 71,
+     "y": 419,
+     "w": 410,
+     "h": 51
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 69,
+     "y": 498,
+     "w": 518,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "f'(x) = 6x^2 – 18x + 12",
+   "= 6(x – 1)(x – 2)",
+   "critical: x = 1, 2",
+   "f(0) = 0, f(1) = 5",
+   "f(2) = 16 – 36 + 24 = -4",
+   "f(3) = 54 – 81 + 36 = 9",
+   "max 9 at x = 3, min -4 at x = 2"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-31__correct",
+  "file": "discrete-math__dm-31__correct.png",
+  "course": "discrete-math",
+  "problem_id": "dm-31",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 63440,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 64,
+     "y": 42,
+     "w": 322,
+     "h": 49
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 123,
+     "w": 294,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 193,
+     "w": 290,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 57,
+     "y": 267,
+     "w": 268,
+     "h": 47
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 336,
+     "w": 227,
+     "h": 50
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 65,
+     "y": 412,
+     "w": 147,
+     "h": 60
+    }
+   }
+  ],
+  "rows": [
+   "1274 = 2·504 + 266",
+   "504 = 1·266 + 238",
+   "266 = 1·238 + 28",
+   "238 = 8·28 + 14",
+   "28 = 2·14 + 0",
+   "gcd = 14"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-31__wrong-w4",
+  "file": "discrete-math__dm-31__wrong-w4.png",
+  "course": "discrete-math",
+  "problem_id": "dm-31",
+  "category": "wrong",
+  "error_type": "arithmetic slip",
+  "planted": "238 - 8*28 written as 12 (should be 14)",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 604,
+  "bytes": 75269,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 79,
+     "y": 42,
+     "w": 379,
+     "h": 49
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 61,
+     "y": 117,
+     "w": 369,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 193,
+     "w": 340,
+     "h": 50
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 62,
+     "y": 263,
+     "w": 338,
+     "h": 54
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 76,
+     "y": 343,
+     "w": 278,
+     "h": 48
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 66,
+     "y": 419,
+     "w": 255,
+     "h": 47
+    }
+   },
+   {
+    "index": 7,
+    "box": {
+     "x": 59,
+     "y": 489,
+     "w": 145,
+     "h": 60
+    }
+   }
+  ],
+  "rows": [
+   "1274 = 2·504 + 266",
+   "504 = 1·266 + 238",
+   "266 = 1·238 + 28",
+   "238 = 8·28 + 12",
+   "28 = 2·12 + 4",
+   "12 = 3·4 + 0",
+   "gcd = 4"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-52__correct",
+  "file": "discrete-math__dm-52__correct.png",
+  "course": "discrete-math",
+  "problem_id": "dm-52",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 69730,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 42,
+     "w": 493,
+     "h": 48
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 54,
+     "y": 114,
+     "w": 323,
+     "h": 54
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 193,
+     "w": 267,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 266,
+     "w": 470,
+     "h": 57
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 69,
+     "y": 344,
+     "w": 366,
+     "h": 45
+    }
+   }
+  ],
+  "rows": [
+   "at least 2 W = all – 0 W – 1 W",
+   "all: C(13,5) = 1287",
+   "0 W: C(7,5) = 21",
+   "1 W: 6 · C(7,4) = 6 · 35 = 210",
+   "1287 – 21 – 210 = 1056"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-52__wrong-w4",
+  "file": "discrete-math__dm-52__wrong-w4.png",
+  "course": "discrete-math",
+  "problem_id": "dm-52",
+  "category": "wrong",
+  "error_type": "dropped factor",
+  "planted": "chose the woman but forgot to choose the 4 men",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 53592,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 42,
+     "w": 473,
+     "h": 47
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 117,
+     "w": 279,
+     "h": 53
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 58,
+     "y": 196,
+     "w": 256,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 271,
+     "w": 235,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 65,
+     "y": 346,
+     "w": 307,
+     "h": 41
+    }
+   }
+  ],
+  "rows": [
+   "at least 2 W = all – 0 W – 1 W",
+   "all: C(13,5) = 1287",
+   "0 W: C(7,5) = 21",
+   "1 W: C(6,1) = 6",
+   "1287 – 21 – 6 = 1260"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-41__correct",
+  "file": "discrete-math__dm-41__correct.png",
+  "course": "discrete-math",
+  "problem_id": "dm-41",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 554,
+  "bytes": 77565,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 42,
+     "w": 480,
+     "h": 57
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 73,
+     "y": 121,
+     "w": 378,
+     "h": 54
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 70,
+     "y": 194,
+     "w": 402,
+     "h": 61
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 270,
+     "w": 326,
+     "h": 65
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 69,
+     "y": 349,
+     "w": 450,
+     "h": 68
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 67,
+     "y": 434,
+     "w": 355,
+     "h": 66
+    }
+   }
+  ],
+  "rows": [
+   "n = 0: 7^0 – 1 = 0 = 6 · 0",
+   "assume 7^m – 1 = 6t",
+   "7^{m+1} – 1 = 7 · 7^m – 1",
+   "= 7(7^m – 1) + 6",
+   "= 7(6t) + 6 = 6(7t + 1)",
+   "multiple of 6, done"
+  ]
+ },
+ {
+  "id": "discrete-math__dm-41__wrong-w3",
+  "file": "discrete-math__dm-41__wrong-w3.png",
+  "course": "discrete-math",
+  "problem_id": "dm-41",
+  "category": "wrong",
+  "error_type": "misapplied exponent law",
+  "planted": "7^(m+1) written as 7^m + 7",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 544,
+  "bytes": 58473,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 412,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 120,
+     "w": 331,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 187,
+     "w": 361,
+     "h": 51
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 259,
+     "w": 238,
+     "h": 59
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 73,
+     "y": 334,
+     "w": 309,
+     "h": 60
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 63,
+     "y": 411,
+     "w": 311,
+     "h": 64
+    }
+   }
+  ],
+  "rows": [
+   "n = 0: 7^0 – 1 = 0 = 6 · 0",
+   "assume 7^m – 1 = 6t",
+   "7^{m+1} – 1 = 7^m + 7 – 1",
+   "= (7^m – 1) + 6",
+   "= 6t + 6 = 6(t + 1)",
+   "multiple of 6, done"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-07__correct",
+  "file": "linear-algebra__la-07__correct.png",
+  "course": "linear-algebra",
+  "problem_id": "la-07",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 720,
+  "bytes": 59593,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 42,
+     "w": 341,
+     "h": 100
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 57,
+     "y": 156,
+     "w": 267,
+     "h": 100
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 271,
+     "w": 206,
+     "h": 100
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 386,
+     "w": 293,
+     "h": 100
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 53,
+     "y": 501,
+     "w": 209,
+     "h": 100
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 70,
+     "y": 616,
+     "w": 148,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "A = matrix{2|-1;0|3}  B = matrix{1|4;-2|5}",
+   "AB = matrix{2+2|8–5;0–6|0+15}",
+   "AB = matrix{4|3;-6|15}",
+   "BA = matrix{2+0|-1+12;-4+0|2+15}",
+   "BA = matrix{2|11;-4|17}",
+   "AB ≠ BA"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-07__wrong-w2",
+  "file": "linear-algebra__la-07__wrong-w2.png",
+  "course": "linear-algebra",
+  "problem_id": "la-07",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "(-1)(-2) written as -2 so 2 + 2 became 2 - 2",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 698,
+  "bytes": 68693,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 61,
+     "y": 42,
+     "w": 372,
+     "h": 96
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 152,
+     "w": 277,
+     "h": 97
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 263,
+     "w": 214,
+     "h": 96
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 373,
+     "w": 320,
+     "h": 97
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 54,
+     "y": 485,
+     "w": 215,
+     "h": 98
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 56,
+     "y": 597,
+     "w": 149,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "A = matrix{2|-1;0|3}  B = matrix{1|4;-2|5}",
+   "AB = matrix{2–2|8–5;0–6|0+15}",
+   "AB = matrix{0|3;-6|15}",
+   "BA = matrix{2+0|-1+12;-4+0|2+15}",
+   "BA = matrix{2|11;-4|17}",
+   "AB ≠ BA"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-61__correct",
+  "file": "linear-algebra__la-61__correct.png",
+  "course": "linear-algebra",
+  "problem_id": "la-61",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "patrick",
+  "width": 1024,
+  "height": 574,
+  "bytes": 60964,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 42,
+     "w": 164,
+     "h": 109
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 165,
+     "w": 614,
+     "h": 58
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 61,
+     "y": 237,
+     "w": 313,
+     "h": 57
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 65,
+     "y": 317,
+     "w": 252,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 392,
+     "w": 289,
+     "h": 54
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 67,
+     "y": 473,
+     "w": 159,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "A = matrix{4|1;2|3}",
+   "det(A – λI) = (4 – λ)(3 – λ) – (1)(2)",
+   "= λ^2 – 7λ + 12 – 2",
+   "= λ^2 – 7λ + 10",
+   "= (λ – 2)(λ – 5)",
+   "λ = 2, 5"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-61__wrong-w2",
+  "file": "linear-algebra__la-61__wrong-w2.png",
+  "course": "linear-algebra",
+  "problem_id": "la-61",
+  "category": "wrong",
+  "error_type": "misapplied determinant formula",
+  "planted": "added the off-diagonal product instead of subtracting it",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "caveat",
+  "width": 1024,
+  "height": 619,
+  "bytes": 87241,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 42,
+     "w": 186,
+     "h": 131
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 75,
+     "y": 187,
+     "w": 742,
+     "h": 68
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 75,
+     "y": 270,
+     "w": 384,
+     "h": 66
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 60,
+     "y": 351,
+     "w": 324,
+     "h": 61
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 68,
+     "y": 431,
+     "w": 455,
+     "h": 52
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 67,
+     "y": 501,
+     "w": 371,
+     "h": 64
+    }
+   }
+  ],
+  "rows": [
+   "A = matrix{4|1;2|3}",
+   "det(A – λI) = (4 – λ)(3 – λ) + (1)(2)",
+   "= λ^2 – 7λ + 12 + 2",
+   "= λ^2 – 7λ + 14",
+   "disc = 49 – 56 = -7 < 0",
+   "no real eigenvalues"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-36__correct",
+  "file": "linear-algebra__la-36__correct.png",
+  "course": "linear-algebra",
+  "problem_id": "la-36",
+  "category": "correct_finished",
+  "error_type": null,
+  "planted": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "kalam",
+  "width": 1024,
+  "height": 544,
+  "bytes": 81438,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 57,
+     "y": 41,
+     "w": 602,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 119,
+     "w": 365,
+     "h": 105
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 53,
+     "y": 238,
+     "w": 710,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 54,
+     "y": 317,
+     "w": 486,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 61,
+     "y": 385,
+     "w": 180,
+     "h": 73
+    }
+   }
+  ],
+  "rows": [
+   "point (4, 0, 1), plane 2x – 2y + z = 3",
+   "d = {|ax_0 + by_0 + cz_0 – d| / sqrt{a^2 + b^2 + c^2}}",
+   "top: |2(4) – 2(0) + 1 – 3| = |8 + 1 – 3| = 6",
+   "bottom: sqrt{4 + 4 + 1} = sqrt{9} = 3",
+   "d = {6/3} = 2"
+  ]
+ },
+ {
+  "id": "linear-algebra__la-36__wrong-w3",
+  "file": "linear-algebra__la-36__wrong-w3.png",
+  "course": "linear-algebra",
+  "problem_id": "la-36",
+  "category": "wrong",
+  "error_type": "sign error",
+  "planted": "the plane's constant 3 added instead of subtracted",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "indie",
+  "width": 1024,
+  "height": 544,
+  "bytes": 70045,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 42,
+     "w": 583,
+     "h": 60
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 116,
+     "w": 346,
+     "h": 114
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 69,
+     "y": 245,
+     "w": 641,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 64,
+     "y": 318,
+     "w": 459,
+     "h": 54
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 62,
+     "y": 387,
+     "w": 177,
+     "h": 69
+    }
+   }
+  ],
+  "rows": [
+   "point (4, 0, 1), plane 2x – 2y + z = 3",
+   "d = {|ax_0 + by_0 + cz_0 – d| / sqrt{a^2 + b^2 + c^2}}",
+   "top: |2(4) – 2(0) + 1 + 3| = |8 + 1 + 3| = 12",
+   "bottom: sqrt{4 + 4 + 1} = sqrt{9} = 3",
+   "d = {12/3} = 4"
+  ]
+ }
+]

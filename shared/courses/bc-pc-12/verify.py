@@ -322,7 +322,7 @@ def c_tr1_5():
     g = lambda x: 2 / (x - 1) + 3
     req(near(g(2), 5))
     return "x = 1 and y = 3; image of (1, 1) is (2, 5)"
-P("tr1", "Using y = 1/x, state the asymptotes of y = 2/(x - 1) + 3 and the image of the point (1, 1).",
+P("tr1", "The point (1, 1) is on y = 1/x. For y = 2/(x - 1) + 3, state the asymptotes and the image of that point.",
   ["The parent y = 1/x has asymptotes x = 0 and y = 0", "x - 1 shifts right 1, so the vertical asymptote is x = 1",
    "+3 shifts up 3, so the horizontal asymptote is y = 3",
    "(1, 1): x goes to 1 + 1 = 2; y is stretched by 2 to 2, then up 3 to 5", "Image (2, 5)"],
@@ -439,7 +439,7 @@ def c_ex1_2():
     for x in [-2, 0, 1.5]:
         req(near(g(x), -f(x + 3) + 1))
     return "reflect in the x axis, left 3, up 1"
-P("ex1", "Describe the transformations from y = 2^x to y = -2^(x + 3) + 1.",
+P("ex1", "Describe the transformations from y = 2^x to y = -(2^(x + 3)) + 1.",
   ["The minus sign in front reflects the graph in the x axis", "x + 3 shifts the graph left 3", "+1 shifts the graph up 1",
    "Asymptote moves from y = 0 to y = 1"],
   "reflect in the x axis, left 3, up 1", c_ex1_2)
@@ -508,7 +508,7 @@ def c_ex2_5():
     t = 3 * math.log2(8000 / 500)
     req(near(500 * 2 ** (t / 3), 8000) and near(t, 12))
     return f"t = {fmt(t)} hours"
-P("ex2", "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?",
+P("ex2", "A culture of 500 bacteria doubles every 3 hours. After how many hours will it reach 8000 bacteria?",
   ["N = 500(2)^(t/3)", "8000 = 500(2)^(t/3), so 2^(t/3) = 16", "16 = 2⁴, so t/3 = 4", "t = 12 hours"],
   "t = 12 hours", c_ex2_5)
 
@@ -694,7 +694,7 @@ def c_lg2_7():
     t = log(2) / 0.05
     req(near(500 * exp(0.05 * t), 1000))
     return f"t ≈ {rnd(t, 1)} years"
-P("lg2", "An investment grows as A = 500e^(0.05t). When does it reach 1000? Answer to 1 decimal place.",
+P("lg2", "An investment grows as A = 500e^(0.05t), where A is in dollars and t is in years. After how many years does it reach $1000? Answer to 1 decimal place.",
   ["1000 = 500e^(0.05t), so e^(0.05t) = 2", "0.05t = ln 2", "t = ln 2 / 0.05 = 0.6931 / 0.05", "t ≈ 13.9 years"],
   "t ≈ 13.9 years", c_lg2_7)
 
@@ -727,7 +727,7 @@ def c_po1_3():
     req(polymul(polymul([1, -1], [1, -2]), [1, 3]) == c)
     return "(x - 1)(x - 2)(x + 3)"
 P("po1", "Factor x³ - 7x + 6 completely.",
-  ["Try factors of 6. P(1) = 1 - 7 + 6 = 0, so x - 1 is a factor", "Divide: x³ - 7x + 6 = (x - 1)(x² + x - 6)", "x² + x - 6 = (x + 3)(x - 2)",
+  ["Try factors of 6. P(1) = 1 - 7 + 6 = 0, so x - 1 is a factor", "Synthetic division by 1 on 1, 0, -7, 6 gives 1, 1, -6, remainder 0", "So x³ - 7x + 6 = (x - 1)(x² + x - 6)", "x² + x - 6 = (x + 3)(x - 2)",
    "x³ - 7x + 6 = (x - 1)(x - 2)(x + 3)"],
   "(x - 1)(x - 2)(x + 3)", c_po1_3)
 
@@ -875,7 +875,7 @@ def c_ra_5():
         req(near(f(x), g(x)))
     return "y = 7/(x - 2) + 3"
 P("ra", "Write y = {3x + 1|x - 2} in the form y = a/(x - h) + k.",
-  ["Rewrite the numerator using the denominator: 3x + 1 = 3(x - 2) + 7", "y = (3(x - 2) + 7)/(x - 2) = 3 + 7/(x - 2)", "y = 7/(x - 2) + 3",
+  ["Rewrite the numerator using the denominator: 3(x - 2) = 3x - 6, so 3x + 1 = 3(x - 2) + 7", "y = (3(x - 2) + 7)/(x - 2) = 3 + 7/(x - 2)", "y = 7/(x - 2) + 3",
    "So it is y = 1/x stretched by 7, right 2, up 3"],
   "y = 7/(x - 2) + 3", c_ra_5)
 
@@ -963,8 +963,8 @@ def c_tg2_2():
     f = lambda x: 4 * cos(pi * x / 3) + 3
     req(near(f(0), 7) and near(f(3), -1) and near(f(6), 7))
     return "y = 4 cos(πx/3) + 3"
-P("tg2", "A cosine curve has maximum 7, minimum -1 and period 6. Write its equation.",
-  ["Amplitude = (7 - (-1))/2 = 4", "Midline = (7 + (-1))/2 = 3", "Period 6 = 2π/b, so b = π/3", "Starting at a maximum means a plain cosine: y = 4 cos(πx/3) + 3",
+P("tg2", "A cosine curve has maximum 7, minimum -1 and period 6, with a maximum at x = 0. Write its equation.",
+  ["Amplitude = (7 - (-1))/2 = 4", "Midline = (7 + (-1))/2 = 3", "Period 6 = 2π/b, so b = π/3", "A maximum at x = 0 means a plain cosine: y = 4 cos(πx/3) + 3",
    "Check: x = 0 gives 4 + 3 = 7 ✓"],
   "y = 4 cos(πx/3) + 3", c_tg2_2)
 
@@ -973,7 +973,7 @@ def c_tg2_3():
     h = lambda t: -10 * cos(pi * t / 20) + 12
     req(near(h(0), 2) and near(h(20), 22) and near(h(40), 2) and near(h(10), 12))
     return "h(t) = -10 cos(πt/20) + 12"
-P("tg2", "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres.",
+P("tg2", "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres, t seconds after the ride starts.",
   ["Amplitude = radius = 10, midline = 12", "Period 40 = 2π/b, so b = π/20", "The rider starts at the minimum, so use a reflected cosine: h(t) = -10 cos(πt/20) + 12",
    "Check: t = 0 gives -10 + 12 = 2 m; t = 20 gives 22 m ✓"],
   "h(t) = -10 cos(πt/20) + 12", c_tg2_3)
@@ -1079,7 +1079,7 @@ def c_tg3_8():
     first = next(i / 1000 for i in range(0, 40001) if h(i / 1000) >= 17)
     req(abs(first - t) < 0.01)
     return f"t = 40/3 ≈ {rnd(t, 1)} s"
-P("tg3", "The Ferris wheel height is h(t) = -10 cos(πt/20) + 12 metres. At what time t, 0 ≤ t ≤ 40, is a rider first 17 m up?",
+P("tg3", "The height of a rider on a Ferris wheel is h(t) = -10 cos(πt/20) + 12 metres, where t is in seconds and 0 ≤ t ≤ 40. At what time is the rider first 17 m above the ground?",
   ["-10 cos(πt/20) + 12 = 17", "cos(πt/20) = -1/2", "πt/20 = 2π/3 (first angle in quadrant II)", "t = 20 · 2/3 = 40/3 ≈ 13.3 s"],
   "t = 40/3 ≈ 13.3 s", c_tg3_8)
 
@@ -1129,7 +1129,7 @@ def c_tg4_5():
     req(near((sqrt(3) - 1) / (sqrt(3) + 1), 2 - sqrt(3)))
     return "2 - √3"
 P("tg4", "Use a difference formula to find the exact value of tan 15°.",
-  ["15° = 45° - 30°", "tan(A - B) = (tan A - tan B)/(1 + tan A tan B)", "= (1 - 1/√3)/(1 + 1/√3) = (√3 - 1)/(√3 + 1)",
+  ["15° = 45° - 30°", "tan(A - B) = (tan A - tan B)/(1 + tan A tan B)", "= (1 - 1/√3)/(1 + 1/√3)", "Multiply top and bottom by √3: (√3 - 1)/(√3 + 1)",
    "Multiply by (√3 - 1)/(√3 - 1): (3 - 2√3 + 1)/(3 - 1) = (4 - 2√3)/2", "= 2 - √3"],
   "2 - √3", c_tg4_5)
 

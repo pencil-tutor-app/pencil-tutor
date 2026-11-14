@@ -40,7 +40,9 @@ def rnd(x, n=2):
 
 def M(s):
     """Use the real minus sign."""
-    return s.replace("-", "−")
+    s = s.replace("-", "−")
+    # keep the hyphen in compound words such as Point-slope, Back-substitute
+    return re.sub(r"(?<=[A-Za-z]{2})−(?=[A-Za-z]{2})", "-", s)
 
 
 _FR = re.compile(r"\{([^{}|]*)\|([^{}|]*)\}")
@@ -351,7 +353,7 @@ def c_lm1_1():
     req(vals == [3.9, 3.99, 4.01, 4.1])
     return "4"
 P("lm1", "Use x = 1.9, 1.99, 2.01 and 2.1 to estimate the limit as x → 2 of {x² - 4|x - 2}.",
-  ["x = 1.9: (3.61 - 4)/(-0.1) = 3.9", "x = 1.99: 3.99", "x = 2.01: 4.01", "x = 2.1: 4.1", "Values approach 4 from both sides, so the limit is 4"],
+  ["x = 1.9: (3.61 - 4)/(-0.1) = 3.9", "x = 1.99: (3.9601 - 4)/(-0.01) = 3.99", "x = 2.01: (4.0401 - 4)/(0.01) = 4.01", "x = 2.1: (4.41 - 4)/(0.1) = 4.1", "Values approach 4 from both sides, so the limit is 4"],
   "4", c_lm1_1)
 
 
@@ -436,7 +438,7 @@ def c_lm2_4():
     req(near(f(1e7), 3, 1e-6) and near(f(-1e7), -3, 1e-6))
     return "y = 3 and y = -3"
 P("lm2", "Find the horizontal asymptotes of f(x) = {3x|√(x² + 1)}.",
-  ["For x > 0 large, √(x² + 1) ≈ x, more exactly divide by x: 3 / √(1 + 1/x²) → 3", "For x < 0, √(x²) = |x| = -x, so dividing by x flips the sign: the limit is -3",
+  ["As x → ∞ (x > 0): divide top and bottom by x. Then √(x² + 1)/x = √(1 + 1/x²), so f(x) = 3/√(1 + 1/x²) → 3/1 = 3", "As x → -∞ (x < 0): x = -√(x²), so dividing the root by x gives -√(1 + 1/x²). Then f(x) = 3/(-√(1 + 1/x²)) → -3",
    "Horizontal asymptotes y = 3 (right) and y = -3 (left)"],
   "y = 3 and y = -3", c_lm2_4)
 
@@ -534,7 +536,7 @@ def c_rc_3():
         req(near(float(dq), -1 / float(xq) ** 2, 1e-4))
     return "f'(x) = -1/x², slope at x = 2 is -1/4"
 P("rc", "Use the limit definition to find f'(x) for f(x) = 1/x, then the slope of the tangent at x = 2.",
-  ["[1/(x + h) - 1/x]/h", "Common denominator: [(x - (x + h)) / (x(x + h))]/h = -h / (h x (x + h))", "= -1/(x(x + h))", "As h → 0: f'(x) = -1/x²",
+  ["[1/(x + h) - 1/x]/h", "Common denominator: [(x - (x + h)) / (x(x + h))]/h", "x - (x + h) = -h, so this is -h / (h x (x + h))", "= -1/(x(x + h))", "As h → 0: f'(x) = -1/x²",
    "At x = 2: -1/4"],
   "f'(x) = -1/x², slope at x = 2 is -1/4", c_rc_3)
 
@@ -570,10 +572,10 @@ def c_dr_1():
     f = lambda x: x ** -2 + 4 * sqrt(x)
     g = lambda x: -2 * x ** -3 + 2 * x ** -0.5
     deriv_ok(f, g, [0.5, 1, 2, 5])
-    return "dy/dx = -2x⁻³ + 2x⁻½"
+    return "dy/dx = -2x⁻³ + 2x^(-1/2)"
 P("dr", "Differentiate y = x⁻² + 4√x.",
-  ["Write 4√x as 4x^(1/2)", "Power rule: d/dx x^n = n x^(n-1)", "d/dx x⁻² = -2x⁻³", "d/dx 4x^(1/2) = 2x^(-1/2)", "dy/dx = -2x⁻³ + 2x⁻½"],
-  "dy/dx = -2x⁻³ + 2x⁻½", c_dr_1)
+  ["Write 4√x as 4x^(1/2)", "Power rule: d/dx x^n = n x^(n-1)", "d/dx x⁻² = -2x⁻³", "d/dx 4x^(1/2) = 2x^(-1/2)", "dy/dx = -2x⁻³ + 2x^(-1/2)"],
+  "dy/dx = -2x⁻³ + 2x^(-1/2)", c_dr_1)
 
 
 def c_dr_2():
@@ -731,7 +733,7 @@ def c_hi_4():
     req(near(D2(y, 3), -25 / 64, 1e-4))
     return "d²y/dx² = -25/64 at (3, 4)"
 P("hi", "For x² + y² = 25, find d²y/dx² at (3, 4).",
-  ["First derivative: y' = -x/y", "Differentiate again with the quotient rule: y'' = -(y - x y')/y²", "Substitute y' = -x/y: y'' = -(y + x²/y)/y² = -(y² + x²)/y³",
+  ["First derivative: y' = -x/y", "Differentiate again with the quotient rule: y'' = -(y - x y')/y²", "Substitute y' = -x/y: y'' = -(y + x²/y)/y²", "Multiply top and bottom by y: y'' = -(y² + x²)/y³",
    "x² + y² = 25, so y'' = -25/y³", "At y = 4: -25/64"],
   "d²y/dx² = -25/64 at (3, 4)", c_hi_4)
 

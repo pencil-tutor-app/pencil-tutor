@@ -59,7 +59,7 @@ Request:
 }
 ```
 
-- `problem_id`: exactly one id from `shared/problems.json`. Unknown or a list: 422.
+- `problem_id`: exactly one id from any course bank (`shared/problems.json` or `shared/courses/*/problems.json`). Unknown or a list: 422.
 - `drawing_revision`: required non-negative integer. Echoed back untouched.
 - Image: PNG or JPEG, longest side at most 1024 px, strictly under 400 KB (409,600 bytes). Otherwise 422 `invalid_image` with reason `image_over_400_KB`, `image_longest_side_over_1024_px`, `image_not_png_or_jpeg`. The field is called `image_png_base64` but a JPEG is accepted. The server reads the real size from the bytes, not from `image_width`/`image_height`.
 - `lines`: up to 200. The model may only name a line index that appears here.
@@ -159,8 +159,11 @@ The script, for the iPad UI test:
 Provider and model are environment variables, set per role and per difficulty level. Checked against the vendors' own pages on
 2026-11-13 and against the keys' model lists on 2026-11-14. `ask` is also what `/api/consult` uses.
 
-A problem has a `level` in `shared/problems.json` (`high_school` when missing; every bank problem is `high_school`). The level picks
-which set of variables applies:
+Which row a problem uses is its **tier**: `standard` (the high school row, the cheap model) unless its course's `course.json` says
+`"tier": "advanced"` or the problem's own `level` is `advanced` (`levelOf` in `lib/problems.ts`). The bank's `college` level does not
+escalate: all 15 courses, calculus-1, linear-algebra and discrete-math included, are standard. The advanced model costs about ten times
+more per look, so a course should move only after handwriting results for it are measured. Every request logs `course` and `tier`. The
+level picks which set of variables applies:
 
 | variable (high school) | default (openai) | default (google) | advanced: variable and default (openai) |
 |---|---|---|---|
@@ -169,8 +172,13 @@ which set of variables applies:
 | `STT_MODEL` | `gpt-transcribe` | `gemini-3.5-transcribe` | same for both levels |
 
 `*_EFFORT` is `none`, `low`, `medium` or `high` (OpenAI `reasoningEffort`; Google `thinkingLevel`, `none` meaning `minimal`); a bad value
-is a 503 `bad_config`. `/api/health` shows `models` (high school, with an effort if set) and `models_advanced`. The advanced route has no
-problems on it yet and was not evaluated.
+is a 503 `bad_config`. `/api/health` shows `models` (high school, with an effort if set) and `models_advanced`. The advanced route was
+not evaluated on handwritten calculus or linear algebra pages; only the high school route has an eval.
+
+The course also sets how the tutor talks (`audienceFor` in `lib/policy.ts`): every watch, ask, consult and live prompt starts with
+`Course: <title>. The student is <who>. <vocabulary>` (grade 5 to 7: "a Grade N student ... about N+5 or N+6 years old", short sentences,
+simple everyday words, explain a math word the first time; grade 8 to 12: "a Grade N student in British Columbia", the words of that course;
+college: "a first-year college or university student", the standard terms). A problem with no course keeps the original Grade 9 tutor.
 
 Why `gpt-6-luna` for high school (plan amendment 14): 30 synthetic pages, 2 repetitions, through the real handlers. Luna matched
 `gpt-6.1-sol` on first-wrong-line accuracy (30/30 each, watch and consult), had 0 false alarms and 0 schema failures, and cost about
@@ -217,14 +225,14 @@ Off for everyone. Nothing is remembered about a code until the latest `consent_e
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, `course` (the course slug, or `none`), `tier` (`standard` or `advanced`; watch, ask, consult), effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 
 - `api/*.ts` thin Vercel entry points. `lib/` the logic: `gate.ts` (code check, plan, hours, key, scripted; `meterActivity` counts a request), `students.ts` (code alphabet, the counting rule `chargeFor`, `allowanceOf`, the server's SQL in `PgStudentStore`), `students-memory.ts` (the same rules in memory, for tests), `students-admin.ts` (the admin script's SQL and the migration runner), `db.ts` (the one door to Postgres), `voice.ts` (the ElevenLabs stream; tests pass a fake `VoiceGateway`), `speak.ts`, `me.ts`, `heartbeat.ts`, `watch.ts`, `ask.ts`, `consult.ts`, `live.ts` (the one place that talks to OpenAI's Live endpoint; tests pass a fake `LiveGateway`), `models.ts` (AI SDK calls), `policy.ts`, `decision.ts`, `image.ts`, `config.ts`, `log.ts`, `http.ts`, `health.ts`.
 - `db/migrations/*.sql` additive migrations (`001_students.sql`, `002_last_activity_at.sql`, `004_student_memory.sql`); `scripts/codes migrate` applies them (idempotent). `scripts/` Edward's local tools: `codes` (admin), `clone-voice`, `set-elevenlabs-key`, `live-check`; none run on the server.
 - `test/db.integration.test.ts` runs the real SQL against the real database and is OFF unless `PT_DB_INTEGRATION=1` and `DATABASE_URL` are set (it makes and deletes its own test codes); CI skips it. Run it with `PT_DB_INTEGRATION=1 vercel env run -e production -- npx tsx --test test/db.integration.test.ts`.
-- `data/problems.json` is a copy of `../shared/problems.json` because `vercel deploy` uploads only `server/`. A test fails if they differ. Refresh with `npm run sync-problems`.
+- `data/problems.json` is GENERATED from `../shared/` (the original 12 plus every `shared/courses/<slug>/problems.json`) because `vercel deploy` uploads only `server/`. It holds `courses` (slug, title, group, grade, level) and `problems` (id, course, prompt_plain, worked_solution, final_answer, level), 1,024 problems and about 430 KB at 15 courses. Refresh with `npm run build-courses` (also writes `shared/courses/index.json`, the manifest the iPad reads); `scripts/build-courses.ts` validates every file and fails on a duplicate id across all courses. A test fails when either generated file is stale. A new course folder needs no code change, only that command and a deploy.
 - `lib/pricing.ts` the price table (USD per million tokens, sources and fetch date in the file; dated Google increases switch on their day) and `lib/usage.ts` (counts to a log report). An unknown model logs `cost_basis: "no_price"` and no dollar figure; a model that reports no usage logs `no_usage`.
 - `eval/` the model eval, run by hand (not CI): `make_fixtures.py` (30 synthetic pages into `eval/fixtures/`, committed), `run-eval.ts` (drives the real `handleWatch` and `handleConsult`), `score.ts` (table), `results/` (committed runs). How to run it: `docs/how-to-run.md`.
 - `test/` Node's test runner via `tsx`: `npm test`. Typecheck: `npm run typecheck` (CI runs both, `.github/workflows/server.yml`).
@@ -233,9 +241,16 @@ One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint
 
 Vercel project `pencil-tutor`, scope `edwards-projects-7fd27381`. From `server/`: `vercel deploy --prod --scope edwards-projects-7fd27381`. Set these in the Vercel dashboard or with `vercel env add` (never committed): `DATABASE_URL` (set by the Neon integration; do not edit), `ELEVENLABS_API_KEY` (`scripts/set-elevenlabs-key`), `ELEVENLABS_VOICE_ID`, `OPENAI_API_KEY` and/or `GEMINI_API_KEY`, optionally `ELEVENLABS_MODEL`, `ELEVENLABS_STABILITY`, `ELEVENLABS_SIMILARITY`, `WATCH_PROVIDER`, `WATCH_MODEL`, `ASK_PROVIDER`, `ASK_MODEL`, `STT_MODEL`, `SPEAK_MODEL`, `SPEAK_VOICE`, `SPEAK_INSTRUCTIONS`, `LIVE_MODEL`, `LIVE_VOICE` (Live uses the same `OPENAI_API_KEY`). Do not set `TUTOR_SCRIPTED` on the production environment.
 
-## Problem bank: `shared/problems.json`
+## Problem banks: `shared/problems.json` and `shared/courses/<slug>/`
 
-A JSON array of 12 equation problems from BC Math 9 unit 3, each paired by hand with its worked solution (every pairing re-solved; `test/problems.test.ts` substitutes each final answer back into its prompt). Fields:
+One folder per course under `shared/courses/` holds `problems.json` (same fields as below) and a README. An optional `course.json`
+(`{ "title": "BC Math 5", "group": "elementary", "grade": 5, "tier": "standard" }`; `tier` is `standard` (default, the cheap model) or `advanced` (the frontier model, about ten times the cost; only after handwriting results are measured); `group` is `elementary`, `high_school` or `college`; `grade` is
+`null` for college) sets how the picker shows it. Without one, `build-courses` works the title out from the folder name
+(`bc-fmpc-10` becomes "BC Foundations of Math and Pre-calculus 10"), the grade from the trailing number and the group from the grade
+(7 and below elementary) or a `college` level, and prints a note. The original 12 problems stay in `shared/problems.json` and are
+listed as one more course, `bc-math-9-unit-3`, so older app builds that send `u3-..` ids keep working.
+
+`shared/problems.json` is a JSON array of 12 equation problems from BC Math 9 unit 3, each paired by hand with its worked solution (every pairing re-solved; `test/problems.test.ts` substitutes each final answer back into its prompt). Fields:
 
 | field | meaning |
 |---|---|

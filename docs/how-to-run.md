@@ -18,15 +18,30 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
   (https://github.com/giaphutran12/pencil-tutor, private). CI draws on a
   simulated iPad and saves screenshots of a mistake being circled and of a
   clean problem being left alone (artifact `ios-screenshots`).
-- **Content:** 12 algebra problems from BC Math 9 unit 3, with worked
-  solutions held on the server only (`shared/problems.json`).
+- **Content:** the course banks under `shared/courses/` (BC Math 5 to 9, Foundations of Math and Pre-calculus 10, Pre-calculus and Foundations of Math 11 and 12,
+  Calculus 12, Calculus I, Linear Algebra, Discrete Mathematics; 1,024 problems at 15 courses) plus the
+  original 12 BC Math 9 unit 3 problems (`shared/problems.json`). Worked solutions are held on the server only. The iPad opens on
+  a course picker (Elementary, High school, College), then the course's problem list, then the page; it remembers the last course.
 - **Voice:** ElevenLabs Eleven v4 Turbo, tap-to-talk (see Voice below). GPT-Live is a premium option, off unless a
   code's plan has it. Server endpoints: watch, ask, speak, consult, live-session, me, heartbeat, health.
-- **Models:** high school problems (every problem in the bank) run on OpenAI `gpt-6-luna` for watch and for ask/consult;
-  `advanced` problems (college level and harder; none yet) run on `gpt-6.1-sol` (plan amendment 14, measured). To try
+- **Models:** every course, college ones too, runs on OpenAI `gpt-6-luna` for watch and for ask/consult. A course moves to
+  `gpt-6.1-sol` only with `"tier": "advanced"` in its `course.json`, and only after handwriting results are measured (plan amendment
+  18; amendment 14 measured high school only). To try
   another model, set `WATCH_MODEL` / `ASK_MODEL` (high school) or `WATCH_MODEL_ADVANCED` / `ASK_MODEL_ADVANCED` in Vercel
   and redeploy; for Gemini also set the matching `_PROVIDER` to `google`. Reasoning effort: `WATCH_EFFORT`, `ASK_EFFORT`
   (`none`, `low`, `medium`, `high`; unset means the provider default).
+
+## Adding a course (2026-11-14, amendment 18)
+
+1. Put `problems.json` (and a README) in `shared/courses/<slug>/`. Optionally add `course.json` with `title`, `group`
+   (`elementary`, `high_school`, `college`) and `grade` (`null` for college); without it the title and group come from the folder
+   name and the problems' level, and the build prints a note.
+2. `npm --prefix server run build-courses`. It validates every problem in every course, fails on a duplicate id anywhere, and
+   rewrites `shared/courses/index.json` (the manifest the iPad bundles) and `server/data/problems.json` (what the server loads).
+   Commit both. CI fails (`server/test/courses.test.ts`) when either is stale or a folder is missing from the manifest.
+3. Deploy the server (`vercel deploy --prod`, from `server/`) so the tutor knows the new problems, and rebuild and install the iPad
+   app so the picker lists the course. Both are needed: the app bundles the prompts and the server holds the solutions. An older app
+   keeps working; it just does not list the new course.
 
 ## Voice (the base plan, 2026-11-14)
 
@@ -251,6 +266,19 @@ Model spec is `provider:model[:effort]`. It drives the real `handleWatch` / `han
 `server/eval/results/<run>.jsonl` (a rerun with the same `--run` resumes) and a table prints; `--budget` stops at an estimated
 spend (default $4). Re-print a table with `tsx server/eval/score.ts server/eval/results/<run>.jsonl`. The committed run behind
 the defaults is `server/eval/results/main2.md`.
+
+**The 14 new courses (2026-11-15).** A second page set covers grades 5 to 12 and college: 3 problems per course, a correct page and a
+one-planted-mistake page each (84 pages), plus a "messy" copy of the same pages. Build, run and report (watch role only):
+
+```sh
+python3 server/eval/make_course_fixtures.py            # clean set -> server/eval/fixtures/courses/  (needs Pillow and fonttools; downloads OFL fonts)
+python3 server/eval/make_course_fixtures.py --messy    # harder copy -> server/eval/fixtures/courses-messy/
+server/node_modules/.bin/tsx --env-file=/path/to/.env.local server/eval/run-eval.ts --models openai:gpt-6-luna --roles watch \
+  --fixtures courses --run courses-my-run --max-calls 100 --budget 1
+python3 server/eval/report_courses.py server/eval/results/courses-my-run.jsonl --fixtures courses --examples
+```
+
+`--max-calls` is a hard cap on looks (rows in the results file). The findings are in `docs/evals/2026-11-15-courses-watch-eval.md`.
 
 **Pulling Edward's real handwriting for the next eval.** Debug builds only (same gate as `TutorSession.logsWords`; Release never
 writes them) save each page picture sent to watch or consult in the app's Documents folder, next to the session log, as

@@ -18,8 +18,11 @@ struct ProblemScreen: View {
     @StateObject private var rail = ToolRailModel()
     @EnvironmentObject private var account: StudentAccount
     @Environment(\.dismiss) private var dismiss
+    /// Shown small at the top of the problem card ("BC Math 5"). Nil shows no heading.
+    private let courseTitle: String?
 
-    init(problem: Problem, env: AppEnvironment) {
+    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil) {
+        self.courseTitle = courseTitle
         _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env))
     }
 
@@ -139,8 +142,17 @@ struct ProblemScreen: View {
     }
 
     private var problemCard: some View {
-        ProblemCardView(problem: session.problem) { collapsed in
+        ProblemCardView(problem: session.problem, heading: courseTitle) { collapsed in
             session.noteCanvas("problem_card_toggled", ["collapsed": collapsed])
+        }
+        // How far down the card reaches, so the page starts below it and a mark is never left under it.
+        .background {
+            GeometryReader { geometry in
+                Color.clear.preference(key: CardBottomKey.self, value: geometry.frame(in: .global).maxY)
+            }
+        }
+        .onPreferenceChange(CardBottomKey.self) { bottom in
+            session.cardMeasured(bottomInWindow: bottom)
         }
     }
 
@@ -265,6 +277,12 @@ struct ProblemScreen: View {
         .disabled(off)
         .accessibilityIdentifier("tapToTalkButton")
     }
+}
+
+/// The bottom edge of the problem card (or its folded pill) in window coordinates.
+private struct CardBottomKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
 // MARK: - Sizes shared by the floating chrome

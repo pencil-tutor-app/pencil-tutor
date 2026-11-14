@@ -1,0 +1,3 @@
+# Test pages and results are for local evaluation only; keep them out of deploy uploads.
+eval/
+test/

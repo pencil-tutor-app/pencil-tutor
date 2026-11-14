@@ -1,39 +1,21 @@
 import SwiftUI
 
-/// A stacked fraction drawn natively: numerator, bar, denominator. No web view.
-struct FractionView: View {
-    let numerator: String
-    let denominator: String
-
-    var body: some View {
-        VStack(spacing: 3) {
-            Text(numerator)
-                .padding(.horizontal, 3)
-            Rectangle()
-                .frame(height: 2)
-            Text(denominator)
-                .padding(.horizontal, 3)
-        }
-        .font(.system(size: 30, design: .serif))
-        .fixedSize()
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(numerator) over \(denominator)")
-    }
-}
-
-/// Lays children out left to right and wraps to a new row when the width runs out. Each row is centred vertically,
-/// so the middle of a fraction (its bar) lines up with the middle of the text beside it.
+/// Lays children out left to right and wraps to a new row when the width runs out. Children sit on a shared text baseline in each
+/// row, so a stacked fraction (whose baseline is the middle of its bar), a root, a matrix and plain words all line up as they
+/// would on paper.
 struct FlowLayout: Layout {
     var spacing: CGFloat = 8
     var rowSpacing: CGFloat = 12
 
     private func arrange(width: CGFloat, subviews: Subviews) -> (frames: [CGRect], size: CGSize) {
         let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let baselines = subviews.map { $0.dimensions(in: .unspecified)[.firstTextBaseline] }
         var rows: [[Int]] = [[]]
         var rowWidth: CGFloat = 0
         for (index, size) in sizes.enumerated() {
             let needed = rows[rows.count - 1].isEmpty ? size.width : rowWidth + spacing + size.width
-            if needed > width && !rows[rows.count - 1].isEmpty {
+            // A hair of tolerance: a row that just fits when the height is measured must still fit when it is placed.
+            if needed > width + 0.5 && !rows[rows.count - 1].isEmpty {
                 rows.append([index])
                 rowWidth = size.width
             } else {
@@ -45,21 +27,24 @@ struct FlowLayout: Layout {
         var y: CGFloat = 0
         var widest: CGFloat = 0
         for row in rows where !row.isEmpty {
-            let rowHeight = row.map { sizes[$0].height }.max() ?? 0
+            let above = row.map { baselines[$0] }.max() ?? 0
+            let below = row.map { sizes[$0].height - baselines[$0] }.max() ?? 0
             var x: CGFloat = 0
             for index in row {
-                let size = sizes[index]
-                frames[index] = CGRect(x: x, y: y + (rowHeight - size.height) / 2, width: size.width, height: size.height)
-                x += size.width + spacing
+                frames[index] = CGRect(x: x, y: y + above - baselines[index], width: sizes[index].width, height: sizes[index].height)
+                x += sizes[index].width + spacing
             }
             widest = max(widest, x - spacing)
-            y += rowHeight + rowSpacing
+            y += above + below + rowSpacing
         }
         return (frames, CGSize(width: widest, height: max(0, y - rowSpacing)))
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        arrange(width: proposal.width ?? .infinity, subviews: subviews).size
+        let result = arrange(width: proposal.width ?? .infinity, subviews: subviews)
+        // Report the width that was offered (not just the widest row), so the rows break in the same places when placed.
+        if let offered = proposal.width, offered.isFinite { return CGSize(width: offered, height: result.size.height) }
+        return result.size
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
@@ -74,15 +59,33 @@ struct FlowLayout: Layout {
     }
 }
 
+/// How big the words of a prompt are drawn.
+enum PromptLayout {
+    /// Point size by prompt length: a short equation is big; a 260 character word problem is 18 so it fits in about six lines.
+    static func fontSize(forLength length: Int) -> CGFloat {
+        switch length {
+        case ..<61: return 26
+        case ..<111: return 23
+        case ..<171: return 20
+        default: return 18
+        }
+    }
+}
+
 /// The problem at the top of the screen.
 struct ProblemCardView: View {
     let problem: Problem
+    /// Small line above the problem, the course name ("BC Math 5"). Nil leaves it out.
+    var heading: String? = nil
     /// Told when the student folds or opens the card (for the session log).
     var onToggle: (Bool) -> Void = { _ in }
 
+    private var fontSize: CGFloat { PromptLayout.fontSize(forLength: problem.promptPlain.count) }
+
     private enum Piece: Identifiable {
-        case word(id: Int, text: String)
-        case fraction(id: Int, numerator: String, denominator: String)
+        /// Part of a sentence or equation up to the next space: letters, exponents, a root or a matrix.
+        case word(id: Int, nodes: [MathNode])
+        case fraction(id: Int, numerator: [MathNode], denominator: [MathNode])
 
         var id: Int {
             switch self {
@@ -92,16 +95,18 @@ struct ProblemCardView: View {
         }
     }
 
+    /// The prompt cut into words and stacked fractions. The text of each part is read as math (`MathMarkup`), so `x^(1/3)` is an
+    /// exponent, `√(2x + 1)` a root with its overbar and `[1 2; 3 4]` a matrix.
     private var pieces: [Piece] {
         var result: [Piece] = []
         for part in problem.promptParts {
             switch part {
             case .text(let text):
-                for word in text.split(whereSeparator: { $0 == " " || $0 == "\n" }) {
-                    result.append(.word(id: result.count, text: String(word)))
+                for word in MathMarkup.words(MathMarkup.parse(text)) {
+                    result.append(.word(id: result.count, nodes: word))
                 }
             case .fraction(let numerator, let denominator):
-                result.append(.fraction(id: result.count, numerator: numerator, denominator: denominator))
+                result.append(.fraction(id: result.count, numerator: MathMarkup.parse(numerator), denominator: MathMarkup.parse(denominator)))
             }
         }
         return result
@@ -121,27 +126,30 @@ struct ProblemCardView: View {
         .animation(.easeOut(duration: 0.18), value: collapsed)
     }
 
-    /// The whole problem, set the way it is written (stacked fractions), on a see-through card so ink under it still shows.
+    /// The whole problem, set the way it is written (stacked fractions, raised exponents), on a see-through card so ink under it
+    /// still shows.
     private var expandedCard: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
-                Text("Solve for the letter")
-                    .font(.caption)
-                    .lineLimit(1)
-                    .fixedSize()
-                    .foregroundStyle(.secondary)
+                if let heading {
+                    Text(heading)
+                        .font(.caption)
+                        .fixedSize(horizontal: false, vertical: true)   // wraps to its words, never cut off
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("problemCourseTitle")
+                }
                 Spacer(minLength: 4)
                 Image(systemName: "chevron.up")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            FlowLayout(spacing: 8, rowSpacing: 6) {
+            FlowLayout(spacing: fontSize * 0.3, rowSpacing: fontSize * 0.3) {
                 ForEach(pieces) { piece in
                     switch piece {
-                    case .word(_, let text):
-                        Text(text).font(.system(size: 26, design: .serif))
+                    case .word(_, let nodes):
+                        MathRunView(nodes: nodes, size: fontSize)
                     case .fraction(_, let numerator, let denominator):
-                        FractionView(numerator: numerator, denominator: denominator)
+                        FractionView(numerator: numerator, denominator: denominator, size: fontSize * 1.1)
                     }
                 }
             }
@@ -161,14 +169,13 @@ struct ProblemCardView: View {
         .accessibilityHint("Folds the problem away")
     }
 
-    /// One line, plain text: enough to remember the problem while the page gets all the room. Tap to bring the card back.
+    /// One line, exponents raised: enough to remember the problem while the page gets all the room. Tap to bring the card back.
     /// A prompt too long for the pill is never cut off with an ellipsis: the pill says "Problem" instead, and the tap still
     /// opens the whole card. Same 44 pt height as the Back button.
     private var collapsedPill: some View {
         HStack(spacing: 6) {
             ViewThatFits(in: .horizontal) {
-                Text(problem.promptPlain)
-                    .font(.system(size: 17, design: .serif))
+                MathLine.text(problem.promptPlain, size: 17)
                     .lineLimit(1)
                     .fixedSize()
                 Text("Problem")

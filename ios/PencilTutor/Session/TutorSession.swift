@@ -86,6 +86,13 @@ final class TutorSession: ObservableObject {
     private var pageSize = CGSize.zero
     /// The first screen has been scrolled into place (once per problem; Erase page does it again).
     private var placedHome = false
+    /// How far down the floating problem card reaches (screen points from the top of the page view), plus a margin; 0 until the
+    /// card has been measured. Home is placed this far down so writing starts under the card, and a mark never stays under it.
+    private var cardBottomInWindow: CGFloat?
+    /// The clearance the page was last placed with, to tell whether the card has moved since.
+    private var placedClearance: CGFloat = 0
+    /// The student has scrolled or zoomed since home was placed, so home is no longer moved when the card changes size.
+    private var studentMovedPage = false
     /// True while the drawing is being moved by a re-anchor, so the change callback does not count it as writing.
     private var reanchoring = false
     private let env: AppEnvironment
@@ -193,9 +200,8 @@ final class TutorSession: ObservableObject {
         if !placedHome {
             // First sizing of this page (or a fresh page after Erase page): show the first screen, not the blank reserve.
             placedHome = true
-            canvas.setContentOffset(CGPoint(x: PageGeometry.homeReserve * zoom, y: PageGeometry.homeReserve * zoom), animated: false)
-            env.log.record("page_home_placed", ["offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
-                                                "zoom": String(format: "%.2f", zoom), "problem_id": problem.id])
+            studentMovedPage = false
+            placeHome(zoom: zoom, reason: reason)
         }
         // A shrink (erase, delete, lasso cut) can leave the screen past the new end of the page: pull it back.
         // (A rubber-band overscroll past an edge is left alone; only a screen past the end is pulled back.)
@@ -207,6 +213,43 @@ final class TutorSession: ObservableObject {
                                                    "reason": reason, "problem_id": problem.id])
         }
         viewport.update(offset: canvas.contentOffset, contentSize: canvas.contentSize, zoomScale: zoom)
+    }
+
+    /// How far down the problem card (or its folded pill) reaches from the top of the page view, in screen points, plus a margin.
+    /// 0 while the card has not been measured or the page is not on screen yet.
+    private var topClearance: CGFloat {
+        guard let canvas, canvas.window != nil, let bottom = cardBottomInWindow else { return 0 }
+        // The canvas is a scroll view: its bounds start at the scroll position, so the top of what is on screen is the bounds
+        // origin, not the point (0, 0) of its content.
+        return max(0, bottom - canvas.convert(canvas.bounds.origin, to: nil).y) + PageGeometry.cardMargin
+    }
+
+    /// Scrolls to the first screen, with the page's origin `topClearance` below the top so the first line of work is not under
+    /// the problem card. Logs where it went and why.
+    private func placeHome(zoom: CGFloat, reason: String) {
+        guard let canvas else { return }
+        let clearance = topClearance
+        placedClearance = clearance
+        canvas.setContentOffset(PageGeometry.homeOffset(zoom: zoom, topClearance: clearance), animated: false)
+        env.log.record("page_home_placed", ["offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
+                                            "zoom": String(format: "%.2f", zoom), "card_clearance": Int(clearance),
+                                            "reason": reason, "problem_id": problem.id])
+    }
+
+    /// The screen view measured the bottom edge of the problem card (window coordinates). The card is measured after the page
+    /// first lays out, and again when it folds, unfolds or rewraps. While the page is still blank and the student has not scrolled
+    /// or zoomed, home follows the card; once there is ink or the student has moved the page, nothing is scrolled behind their
+    /// back (a mark that ends up under the card is scrolled clear of it instead, `scrollToShow`).
+    func cardMeasured(bottomInWindow: CGFloat) {
+        guard bottomInWindow > 0 else { return }       // the preference's starting value, not a measurement
+        cardBottomInWindow = bottomInWindow
+        guard let canvas, placedHome, abs(topClearance - placedClearance) >= 1 else { return }
+        let follows = canvas.drawing.strokes.isEmpty && !studentMovedPage && canvas.zoomScale == 1
+        env.log.record("card_measured", ["clearance": Int(topClearance), "was": Int(placedClearance), "moves_home": follows,
+                                         "problem_id": problem.id])
+        guard follows else { return }
+        placeHome(zoom: 1, reason: "card_measured")
+        viewport.update(offset: canvas.contentOffset, contentSize: canvas.contentSize, zoomScale: canvas.zoomScale)
     }
 
     /// Ink is within a margin of the left or top edge of the page, and a scroll view cannot grow leftwards or upwards. So the
@@ -255,6 +298,7 @@ final class TutorSession: ObservableObject {
 
     /// One log line per finished scroll (not per frame), so the log shows where the student has been looking.
     func viewportDidSettle(at offset: CGPoint) {
+        studentMovedPage = true
         viewport.update(offset: offset, contentSize: canvas?.contentSize, zoomScale: canvas?.zoomScale)
         let zoom = canvas?.zoomScale ?? 1
         env.log.record("page_scrolled", [
@@ -267,6 +311,7 @@ final class TutorSession: ObservableObject {
     /// `contentSize` stays what `PageGeometry` says whatever the scroll view does with it while zooming.
     func viewportDidZoomSettle(scale: CGFloat) {
         guard let canvas else { return }
+        studentMovedPage = true
         let reported = canvas.contentSize
         let expected = CGSize(width: pageSize.width * scale, height: pageSize.height * scale)
         env.log.record("zoom_settled", [
@@ -288,14 +333,15 @@ final class TutorSession: ObservableObject {
         guard let canvas else { return }
         let zoom = canvas.zoomScale
         guard let target = PageGeometry.offsetToReveal(box: box, offset: canvas.contentOffset, zoom: zoom,
-                                                       viewport: canvas.bounds.size, contentSize: canvas.contentSize) else {
+                                                       viewport: canvas.bounds.size, contentSize: canvas.contentSize,
+                                                       topClearance: topClearance) else {
             env.log.record("mark_in_view", ["line": lineIndex, "offset": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
                                             "zoom": String(format: "%.2f", zoom), "problem_id": problem.id])
             return
         }
         env.log.record("scrolled_to_mark", [
             "line": lineIndex, "from": "\(Int(canvas.contentOffset.x)),\(Int(canvas.contentOffset.y))",
-            "to": "\(Int(target.x)),\(Int(target.y))", "zoom": String(format: "%.2f", zoom),
+            "to": "\(Int(target.x)),\(Int(target.y))", "zoom": String(format: "%.2f", zoom), "card_clearance": Int(topClearance),
             "mark_box": "\(Int(box.minX)),\(Int(box.minY)),\(Int(box.maxX)),\(Int(box.maxY))", "problem_id": problem.id
         ])
         canvas.setContentOffset(target, animated: true)
@@ -503,6 +549,10 @@ final class TutorSession: ObservableObject {
     private func openLiveVoiceIfThePlanAllows() async {
         await env.account.refresh(reason: "problem_opened")
         guard !stopped else { return }
+        guard !LaunchOptions.silent else {
+            env.log.record("live_skipped", ["reason": "silent_test_launch", "problem_id": problem.id])
+            return
+        }
         guard env.makeLiveTransport != nil else {
             env.log.record("live_skipped", ["reason": env.liveOffReason ?? "unknown", "problem_id": problem.id])
             return

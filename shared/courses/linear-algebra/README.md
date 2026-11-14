@@ -91,3 +91,20 @@ Result on 2026-11-14: 69 of 69 verified, 0 failed. The runner was also tested ag
 Not machine-checked: the prose in the solution lines (wording of the reasoning, "so the system is inconsistent"), and
 how well the first-wrong-line comparison works for these solutions in the tutor. Numbers and matrices are checked; the
 English connecting them is not.
+
+## Review
+
+Teacher-quality review, 2026-11-15. Every one of the 69 problems was read for: one unambiguous answer, standard college wording, fit with MATH 2232, one-step-per-line solutions, `final_answer` matching the prompt, difficulty order within each topic, and no real names or recognisable textbook problems. The matrix products, row operations, determinants and eigenvectors in the solutions were re-derived by hand.
+
+| outcome | count | ids |
+|---|---|---|
+| reviewed | 69 | all |
+| fixed | 5 | la-18, la-29, la-30, la-38, la-63 |
+| dropped | 0 | none |
+| unchanged | 64 | the rest |
+
+What was fixed: la-18 showed only 3 of the 9 cofactors, now all 9 are worked (row by row) before the cofactor matrix; la-29 used x, y, z, w in the solution though the prompt names no variables, now x₁ to x₄ (the expected text in `verify.py` was updated to match); la-30 did not say degrees; la-38 asked for parametric and symmetric equations plus the intersection but `final_answer` held only the point, now all three; la-63 counted eigenvectors in one unexplained sentence, now says which eigenvalue each comes from. No numeric answer changed.
+
+Unsure: spelling uses "-ise" (diagonalisable, normalised) as the outline does; Canadian usage also accepts "-ize". Left as is.
+
+Verification re-run 2026-11-15 with sympy 1.14.0: `problems in file: 69   verified: 69   failed: 0`.

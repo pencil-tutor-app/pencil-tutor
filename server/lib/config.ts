@@ -5,8 +5,9 @@ export type Provider = "openai" | "google";
 export type Role = "watch" | "ask" | "stt" | "speak" | "live";
 type ProviderRole = Exclude<Role, "speak" | "live">;
 
-// How hard a problem is. `high_school` (the default, and what every BC Math 9 problem is) runs on the cheap model;
-// `advanced` (college level and harder) runs on the frontier model. Each level has its own env variables (see roleConfig).
+// How hard a problem is. `high_school` (the default; every course, college ones too) runs on the cheap model; `advanced`
+// runs on the frontier model and is chosen only by a problem's `level: "advanced"` or a course's `tier: "advanced"` in its
+// course.json (see problems.ts levelOf). Each level has its own env variables (see roleConfig).
 export type Level = "high_school" | "advanced";
 export const DEFAULT_LEVEL: Level = "high_school";
 export function parseLevel(value: string | undefined): Level {

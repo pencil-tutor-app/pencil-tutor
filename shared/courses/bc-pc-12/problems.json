@@ -76,11 +76,11 @@
   {
     "id": "pc12-05",
     "source": "BC Pre-calculus 12 content: transformations of functions and relations (parent functions; vertical and horizontal translations, stretches, reflections); original",
-    "prompt_latex": "Using y = 1/x, state the asymptotes of y = 2/(x - 1) + 3 and the image of the point (1, 1).",
-    "prompt_plain": "Using y = 1/x, state the asymptotes of y = 2/(x − 1) + 3 and the image of the point (1, 1).",
+    "prompt_latex": "The point (1, 1) is on y = 1/x. For y = 2/(x - 1) + 3, state the asymptotes and the image of that point.",
+    "prompt_plain": "The point (1, 1) is on y = 1/x. For y = 2/(x − 1) + 3, state the asymptotes and the image of that point.",
     "prompt_parts": [
       {
-        "text": "Using y = 1/x, state the asymptotes of y = 2/(x − 1) + 3 and the image of the point (1, 1)."
+        "text": "The point (1, 1) is on y = 1/x. For y = 2/(x − 1) + 3, state the asymptotes and the image of that point."
       }
     ],
     "worked_solution": [
@@ -279,11 +279,11 @@
   {
     "id": "pc12-15",
     "source": "BC Pre-calculus 12 content: exponential functions and equations (graphing, including transformations); original",
-    "prompt_latex": "Describe the transformations from y = 2^{x} to y = -2^{x + 3} + 1.",
-    "prompt_plain": "Describe the transformations from y = 2^x to y = −2^(x + 3) + 1.",
+    "prompt_latex": "Describe the transformations from y = 2^{x} to y = -(2^{x + 3}) + 1.",
+    "prompt_plain": "Describe the transformations from y = 2^x to y = −(2^(x + 3)) + 1.",
     "prompt_parts": [
       {
-        "text": "Describe the transformations from y = 2^x to y = −2^(x + 3) + 1."
+        "text": "Describe the transformations from y = 2^x to y = −(2^(x + 3)) + 1."
       }
     ],
     "worked_solution": [
@@ -412,11 +412,11 @@
   {
     "id": "pc12-22",
     "source": "BC Pre-calculus 12 content: exponential functions and equations (solving same-base and different-base equations incl. base e; situational problems); original",
-    "prompt_latex": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?",
-    "prompt_plain": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?",
+    "prompt_latex": "A culture of 500 bacteria doubles every 3 hours. After how many hours will it reach 8000 bacteria?",
+    "prompt_plain": "A culture of 500 bacteria doubles every 3 hours. After how many hours will it reach 8000 bacteria?",
     "prompt_parts": [
       {
-        "text": "A culture of 500 bacteria doubles every 3 hours. When will it reach 8000?"
+        "text": "A culture of 500 bacteria doubles every 3 hours. After how many hours will it reach 8000 bacteria?"
       }
     ],
     "worked_solution": [
@@ -797,11 +797,11 @@
   {
     "id": "pc12-42",
     "source": "BC Pre-calculus 12 content: logarithms (graphing, solving equations, situational problems); original",
-    "prompt_latex": "An investment grows as A = 500e^{0.05t}. When does it reach 1000? Answer to 1 decimal place.",
-    "prompt_plain": "An investment grows as A = 500e^(0.05t). When does it reach 1000? Answer to 1 decimal place.",
+    "prompt_latex": "An investment grows as A = 500e^{0.05t}, where A is in dollars and t is in years. After how many years does it reach $1000? Answer to 1 decimal place.",
+    "prompt_plain": "An investment grows as A = 500e^(0.05t), where A is in dollars and t is in years. After how many years does it reach $1000? Answer to 1 decimal place.",
     "prompt_parts": [
       {
-        "text": "An investment grows as A = 500e^(0.05t). When does it reach 1000? Answer to 1 decimal place."
+        "text": "An investment grows as A = 500e^(0.05t), where A is in dollars and t is in years. After how many years does it reach $1000? Answer to 1 decimal place."
       }
     ],
     "worked_solution": [
@@ -862,7 +862,8 @@
     ],
     "worked_solution": [
       "Try factors of 6. P(1) = 1 − 7 + 6 = 0, so x − 1 is a factor",
-      "Divide: x³ − 7x + 6 = (x − 1)(x² + x − 6)",
+      "Synthetic division by 1 on 1, 0, −7, 6 gives 1, 1, −6, remainder 0",
+      "So x³ − 7x + 6 = (x − 1)(x² + x − 6)",
       "x² + x − 6 = (x + 3)(x − 2)",
       "x³ − 7x + 6 = (x − 1)(x − 2)(x + 3)"
     ],
@@ -1156,7 +1157,7 @@
       }
     ],
     "worked_solution": [
-      "Rewrite the numerator using the denominator: 3x + 1 = 3(x − 2) + 7",
+      "Rewrite the numerator using the denominator: 3(x − 2) = 3x − 6, so 3x + 1 = 3(x − 2) + 7",
       "y = (3(x − 2) + 7)/(x − 2) = 3 + 7/(x − 2)",
       "y = 7/(x − 2) + 3",
       "So it is y = 1/x stretched by 7, right 2, up 3"
@@ -1341,18 +1342,18 @@
   {
     "id": "pc12-67",
     "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
-    "prompt_latex": "A cosine curve has maximum 7, minimum -1 and period 6. Write its equation.",
-    "prompt_plain": "A cosine curve has maximum 7, minimum −1 and period 6. Write its equation.",
+    "prompt_latex": "A cosine curve has maximum 7, minimum -1 and period 6, with a maximum at x = 0. Write its equation.",
+    "prompt_plain": "A cosine curve has maximum 7, minimum −1 and period 6, with a maximum at x = 0. Write its equation.",
     "prompt_parts": [
       {
-        "text": "A cosine curve has maximum 7, minimum −1 and period 6. Write its equation."
+        "text": "A cosine curve has maximum 7, minimum −1 and period 6, with a maximum at x = 0. Write its equation."
       }
     ],
     "worked_solution": [
       "Amplitude = (7 − (−1))/2 = 4",
       "Midline = (7 + (−1))/2 = 3",
       "Period 6 = 2π/b, so b = π/3",
-      "Starting at a maximum means a plain cosine: y = 4 cos(πx/3) + 3",
+      "A maximum at x = 0 means a plain cosine: y = 4 cos(πx/3) + 3",
       "Check: x = 0 gives 4 + 3 = 7 ✓"
     ],
     "final_answer": "y = 4 cos(πx/3) + 3",
@@ -1361,11 +1362,11 @@
   {
     "id": "pc12-68",
     "source": "BC Pre-calculus 12 content: trigonometry (graphing primary trigonometric functions, transformations and characteristics); original",
-    "prompt_latex": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres.",
-    "prompt_plain": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres.",
+    "prompt_latex": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres, t seconds after the ride starts.",
+    "prompt_plain": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres, t seconds after the ride starts.",
     "prompt_parts": [
       {
-        "text": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres."
+        "text": "A Ferris wheel has radius 10 m, its centre 12 m above ground, and turns once every 40 s. A rider starts at the bottom. Write the height h(t) in metres, t seconds after the ride starts."
       }
     ],
     "worked_solution": [
@@ -1544,11 +1545,11 @@
   {
     "id": "pc12-78",
     "source": "BC Pre-calculus 12 content: trigonometry (solving first and second degree equations; situational problems); original",
-    "prompt_latex": "The Ferris wheel height is h(t) = -10 \\cos(\\pi t/20) + 12 metres. At what time t, 0 \\le  t \\le  40, is a rider first 17 m up?",
-    "prompt_plain": "The Ferris wheel height is h(t) = −10 cos(πt/20) + 12 metres. At what time t, 0 ≤ t ≤ 40, is a rider first 17 m up?",
+    "prompt_latex": "The height of a rider on a Ferris wheel is h(t) = -10 \\cos(\\pi t/20) + 12 metres, where t is in seconds and 0 \\le  t \\le  40. At what time is the rider first 17 m above the ground?",
+    "prompt_plain": "The height of a rider on a Ferris wheel is h(t) = −10 cos(πt/20) + 12 metres, where t is in seconds and 0 ≤ t ≤ 40. At what time is the rider first 17 m above the ground?",
     "prompt_parts": [
       {
-        "text": "The Ferris wheel height is h(t) = −10 cos(πt/20) + 12 metres. At what time t, 0 ≤ t ≤ 40, is a rider first 17 m up?"
+        "text": "The height of a rider on a Ferris wheel is h(t) = −10 cos(πt/20) + 12 metres, where t is in seconds and 0 ≤ t ≤ 40. At what time is the rider first 17 m above the ground?"
       }
     ],
     "worked_solution": [
@@ -1648,7 +1649,8 @@
     "worked_solution": [
       "15° = 45° − 30°",
       "tan(A − B) = (tan A − tan B)/(1 + tan A tan B)",
-      "= (1 − 1/√3)/(1 + 1/√3) = (√3 − 1)/(√3 + 1)",
+      "= (1 − 1/√3)/(1 + 1/√3)",
+      "Multiply top and bottom by √3: (√3 − 1)/(√3 + 1)",
       "Multiply by (√3 − 1)/(√3 − 1): (3 − 2√3 + 1)/(3 − 1) = (4 − 2√3)/2",
       "= 2 − √3"
     ],
