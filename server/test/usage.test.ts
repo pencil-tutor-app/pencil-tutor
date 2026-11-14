@@ -9,7 +9,8 @@ import { levelOf, findProblem } from "../lib/problems.js";
 import { providerOptionsFor } from "../lib/models.js";
 import { reportUsage } from "../lib/usage.js";
 import { handleWatch } from "../lib/watch.js";
-import { captureLogs, deps, fakeModels, liveEnv, post, reply, watchBody, TOKEN } from "./helpers.js";
+import { EMPTY_USAGE } from "../lib/students.js";
+import { captureLogs, deps, fakeModels, FIXED_NOW, liveEnv, post, reply, testStore, TEST_MONTH, watchBody, TOKEN } from "./helpers.js";
 
 let logs: ReturnType<typeof captureLogs>;
 beforeEach(() => {
@@ -96,7 +97,18 @@ describe("difficulty routing", () => {
 
   it("configForLevel gives the advanced model, and a 503 when the advanced provider has no key", () => {
     const ctx = new RequestCtx("watch", "POST");
-    const opened = { ok: true as const, scripted: false, configs: { watch: roleConfig("watch", {}) }, keys: { watch: "k" } };
+    const student = { id: "1", planLive: false, capSeconds: 28800, disabled: false, usage: EMPTY_USAGE };
+    const opened = {
+      ok: true as const,
+      scripted: false,
+      configs: { watch: roleConfig("watch", {}) },
+      keys: { watch: "k" },
+      student,
+      store: testStore().store,
+      code: TOKEN,
+      month: TEST_MONTH,
+      now: FIXED_NOW,
+    };
     const adv = configForLevel(ctx, opened, { OPENAI_API_KEY: "k" }, "watch", "advanced");
     assert.ok(adv.ok && adv.cfg.model === "gpt-6.1-sol" && adv.cfg.level === "advanced");
     const noKey = configForLevel(ctx, opened, { WATCH_PROVIDER_ADVANCED: "google" }, "watch", "advanced");

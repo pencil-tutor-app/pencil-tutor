@@ -1,0 +1,23 @@
+#!/bin/sh
+# Puts the ElevenLabs API key from your clipboard into Vercel production (as a secret), redeploys, then clears the clipboard.
+# The key is never printed, never written to a file, and never typed into a chat. Steps:
+#   1. ElevenLabs dashboard -> Developers -> API Keys -> Create API Key. Name it pencil-tutor-server, turn on "Restrict key",
+#      set Text to Speech to Access and everything else to No Access (a credit limit such as 150,000 is a good extra guard).
+#   2. Click the copy button on the new key (it is shown once).
+#   3. Run:  scripts/set-elevenlabs-key
+cd "$(dirname "$0")/.." || exit 1
+key="$(pbpaste)"
+case "$key" in
+  sk_*) ;;
+  *)
+    echo "The clipboard does not hold an ElevenLabs key (they start with sk_). Copy the key from the dashboard and run this again."
+    exit 2
+    ;;
+esac
+printf '%s' "$key" | vercel env add ELEVENLABS_API_KEY production --force --sensitive --scope edwards-projects-7fd27381 >/dev/null || {
+  echo "Could not save the key to Vercel."
+  exit 1
+}
+printf '' | pbcopy
+echo "Saved ELEVENLABS_API_KEY to Vercel production and cleared the clipboard. Redeploying..."
+exec vercel deploy --prod --yes --scope edwards-projects-7fd27381
