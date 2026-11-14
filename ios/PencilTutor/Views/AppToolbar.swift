@@ -15,8 +15,12 @@ private struct AppToolbarModifier: ViewModifier {
             .toolbar {
                 if showsAllowance {
                     ToolbarItem(placement: .topBarLeading) {
+                        // One line at its full width: without this the navigation bar squeezes "478 min left" into "4'".
                         AllowanceChip()
+                            .lineLimit(1)
+                            .fixedSize()
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button {
