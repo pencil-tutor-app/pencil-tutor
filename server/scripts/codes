@@ -1,0 +1,6 @@
+#!/bin/sh
+# Edward's student-code tool. Loads the production environment for this one command only (exec-only: the database address
+# is never printed or saved), then runs scripts/admin.ts. Needs the Vercel CLI signed in and this folder linked to the
+# pencil-tutor project (it is, in the main checkout).  Usage: scripts/codes help
+cd "$(dirname "$0")/.." || exit 1
+exec vercel env run -e production --scope edwards-projects-7fd27381 -- npx tsx scripts/admin.ts "$@"

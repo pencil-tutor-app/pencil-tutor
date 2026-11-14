@@ -1,0 +1,9 @@
+#!/bin/sh
+# Makes the "Edward Tutor" instant voice clone from a local recording and prints only the new voice id.
+# Usage: scripts/clone-voice /path/to/recording.m4a   (see scripts/clone-voice.ts for what to do with the id)
+cd "$(dirname "$0")/.." || exit 1
+case "$1" in
+  /*) file="$1" ;;
+  *) file="$OLDPWD/$1" ;;
+esac
+exec npx tsx scripts/clone-voice.ts "$file"

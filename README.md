@@ -44,7 +44,7 @@ Needs: this Mac, the iPad on a cable, Xcode with the licence accepted.
 brew install xcodegen
 cd ios
 cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
-# edit Config/Secrets.xcconfig: set APP_ACCESS_TOKEN (same value as on Vercel) and DEVELOPMENT_TEAM (your team id)
+# edit Config/Secrets.xcconfig: set DEVELOPMENT_TEAM (your team id); students type their own code in the app, there is no shared token
 xcodegen generate
 xcodebuild -project PencilTutor.xcodeproj -scheme PencilTutor -configuration Debug \
   -destination 'generic/platform=iOS' -derivedDataPath build -allowProvisioningUpdates build

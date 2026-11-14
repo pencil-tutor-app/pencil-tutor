@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { liveSettings } from "./config.js";
-import { defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { buildLiveInstructions, LIVE_GREETING } from "./policy.js";
 import { findProblem } from "./problems.js";
@@ -101,7 +101,8 @@ export function buildLiveSession(args: { model: string; voice: string; instructi
 export async function handleLiveSession(request: Request, deps: Deps = defaultDeps()): Promise<Response> {
   const ctx = new RequestCtx("live-session", request.method);
 
-  const opened = gate(ctx, request, deps, ["live"]);
+  // GPT-Live is the premium option: only a student whose plan has live: true gets past the gate (403 live_not_in_plan).
+  const opened = await gate(ctx, request, deps, ["live"], { requireLive: true });
   if (!opened.ok) return opened.response;
 
   const body = await readJson(request);
@@ -114,6 +115,9 @@ export async function handleLiveSession(request: Request, deps: Deps = defaultDe
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+
+  // Opening a live session is activity (the problem is open and the student is about to talk).
+  await meterActivity(ctx, opened, "live_open");
 
   // Scripted mode (tests only) has no network and no key, so there is no real session to hand back.
   if (opened.scripted) return ctx.fail(503, "live_unavailable", "scripted_mode_has_no_live_session", "scripted_no_live");

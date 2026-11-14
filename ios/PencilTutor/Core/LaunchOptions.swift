@@ -16,6 +16,18 @@ enum LaunchOptions {
         return arguments[index + 1]
     }
 
+    /// `--student-code XXXXXXXX`: Debug builds only. Keeps that code in the Keychain so a device smoke test needs no typing.
+    /// In Release builds this is always nil, so a code can never be supplied this way outside a test build.
+    static var seededStudentCode: String? {
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--student-code"), arguments.indices.contains(index + 1) else { return nil }
+        return arguments[index + 1]
+        #else
+        return nil
+        #endif
+    }
+
     /// The small status line UI tests read. Only visible in scripted runs.
     static var showTestStatus: Bool { scriptedClient }
 }

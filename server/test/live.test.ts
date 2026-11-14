@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { handleHealth } from "../lib/health.js";
 import { ALLOWED_CLIENT_EVENTS, handleLiveSession, type LiveCreateResult, type LiveGateway, type LiveSessionConfig } from "../lib/live.js";
-import { captureLogs, deps, liveEnv, post, reply, TOKEN } from "./helpers.js";
+import { captureLogs, deps, liveEnv, post, reply, testStore, TOKEN } from "./helpers.js";
 
 let logs: ReturnType<typeof captureLogs>;
 beforeEach(() => {
@@ -24,7 +24,8 @@ function fakeLive(result: LiveCreateResult = { kind: "created", sessionId: "live
   };
   return { live, calls };
 }
-const withLive = (env: Record<string, string | undefined>, live: LiveGateway) => ({ ...deps(env), live });
+// GPT-Live is the premium option: these tests use a student whose plan has live: true.
+const withLive = (env: Record<string, string | undefined>, live: LiveGateway) => ({ ...deps(env, undefined, { store: testStore({ planLive: true }).store }), live });
 
 describe("live-session auth and validation", () => {
   it("answers 401 with no token and a wrong token, and 405 for an authenticated GET", async () => {
@@ -37,8 +38,17 @@ describe("live-session auth and validation", () => {
     assert.equal(calls.length, 0, "OpenAI is never called without a valid token");
   });
 
+  it("answers 403 live_not_in_plan for a student whose plan does not include the live voice (the default), and never calls OpenAI", async () => {
+    const { live, calls } = fakeLive();
+    const d = { ...deps(liveEnv(), undefined, { store: testStore({ planLive: false }).store }), live };
+    const r = await reply(await handleLiveSession(post("/api/live-session", body()), d));
+    assert.deepEqual([r.status, r.json.error], [403, "live_not_in_plan"]);
+    assert.equal(calls.length, 0);
+    assert.ok(logs.lines.some((l) => l.outcome === "live_not_in_plan"));
+  });
+
   it("answers 503 naming the OpenAI variable when the key is missing, before reading the body", async () => {
-    const r = await reply(await handleLiveSession(post("/api/live-session", {}), deps({ APP_ACCESS_TOKEN: TOKEN })));
+    const r = await reply(await handleLiveSession(post("/api/live-session", {}), deps({}, undefined, { store: testStore({ planLive: true }).store })));
     assert.deepEqual([r.status, r.json.error, r.json.reason], [503, "missing_key", "OPENAI_API_KEY is not set"]);
   });
 

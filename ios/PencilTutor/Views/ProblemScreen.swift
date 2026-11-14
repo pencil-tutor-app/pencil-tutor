@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProblemScreen: View {
     @StateObject private var session: TutorSession
+    @EnvironmentObject private var account: StudentAccount
 
     init(problem: Problem, env: AppEnvironment) {
         _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env))
@@ -13,6 +14,9 @@ struct ProblemScreen: View {
             Divider()
             // Buttons sit above the page: the floating Pencil tool picker covers the bottom of the screen.
             controlBar
+            if let block = account.block {
+                BlockedBanner(message: block.message)
+            }
             Divider()
             // Messages sit at the top of the page: the floating Pencil tool picker covers the bottom.
             ZStack(alignment: .top) {
@@ -37,9 +41,19 @@ struct ProblemScreen: View {
         .onDisappear { session.stop() }
     }
 
-    /// The tutor's voice control. Live voice: a mute toggle. Fallback or a build without live voice: hold to ask, as before.
+    /// The tutor's voice control. The base plan is tap to ask: tap once to talk, tap again to send. Live voice (only when the
+    /// student's plan includes it) has a mute toggle instead. Nothing here once the hours are used up or the code is off.
     @ViewBuilder
     private var voiceControl: some View {
+        if account.isBlocked {
+            tapToAsk
+        } else {
+            voiceControlForPlan
+        }
+    }
+
+    @ViewBuilder
+    private var voiceControlForPlan: some View {
         switch session.voice {
         case .live(let micOn):
             Button {
@@ -75,7 +89,8 @@ struct ProblemScreen: View {
             .buttonStyle(.plain)
             .accessibilityIdentifier("micReopenButton")
         case .fallback:
-            holdToAsk
+            // Only reachable when live voice is in the plan and then dropped.
+            tapToAsk
             Button {
                 session.micTapped()
             } label: {
@@ -84,22 +99,27 @@ struct ProblemScreen: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("reconnectVoiceButton")
         case .notStarted:
-            holdToAsk
+            tapToAsk
         }
     }
 
-    private var holdToAsk: some View {
-        Label(session.isRecording ? "Listening..." : "Hold to ask", systemImage: session.isRecording ? "waveform" : "mic.fill")
-            .font(.body.weight(.semibold))
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Capsule().fill(session.isRecording ? Color.red : Color.blue))
-            .foregroundStyle(Color.white)
-            .onLongPressGesture(minimumDuration: 0, maximumDistance: 80, perform: {}, onPressingChanged: { pressing in
-                session.holdToTalkChanged(pressed: pressing)
-            })
-            .accessibilityAddTraits(.isButton)
-            .accessibilityIdentifier("holdToTalkButton")
+    /// Tap once to start talking, tap again to send. Stops by itself after 30 seconds.
+    private var tapToAsk: some View {
+        let listening = session.isRecording
+        let off = account.isBlocked
+        return Button {
+            session.tapToTalkTapped()
+        } label: {
+            Label(listening ? "Listening... tap to send" : "Tap to ask", systemImage: listening ? "waveform" : "mic.fill")
+                .font(.body.weight(.semibold))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(off ? Color.gray : (listening ? Color.red : Color.blue)))
+                .foregroundStyle(Color.white)
+        }
+        .buttonStyle(.plain)
+        .disabled(off)
+        .accessibilityIdentifier("tapToTalkButton")
     }
 
     private var controlBar: some View {
@@ -110,7 +130,7 @@ struct ProblemScreen: View {
                 Label("Check my work", systemImage: "checkmark.circle")
             }
             .buttonStyle(.borderedProminent)
-            .disabled(session.isBusy)
+            .disabled(session.isBusy || account.isBlocked)
             .accessibilityIdentifier("checkMyWorkButton")
 
             voiceControl
@@ -134,6 +154,7 @@ struct ProblemScreen: View {
 
             Spacer()
 
+            AllowanceChip()
             if session.isBusy {
                 ProgressView()
             }

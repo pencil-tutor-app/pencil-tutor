@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { finalizeDecision, scriptedWatch, type WatchResult } from "./decision.js";
-import { configForLevel, defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runWatchModel } from "./models.js";
@@ -23,7 +23,7 @@ const WatchRequestSchema = z.object({
 export async function handleWatch(request: Request, deps: Deps = defaultDeps()): Promise<Response> {
   const ctx = new RequestCtx("watch", request.method);
 
-  const opened = gate(ctx, request, deps, ["watch"]);
+  const opened = await gate(ctx, request, deps, ["watch"]);
   if (!opened.ok) return opened.response;
 
   const body = await readJson(request);
@@ -43,6 +43,9 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+
+  // A valid look is student activity: ink was drawn, and the tutor is looking at it. This keeps the meter running.
+  await meterActivity(ctx, opened, "look");
 
   // History: last 10 only; entries that do not parse are dropped and counted.
   const recent = req.history.slice(-MAX_HISTORY);

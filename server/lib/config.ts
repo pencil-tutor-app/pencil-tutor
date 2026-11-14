@@ -101,7 +101,7 @@ export function roleConfig(role: Role, env: Env, level: Level = DEFAULT_LEVEL): 
     const sttModel = env.STT_MODEL?.trim();
     if (sttModel) {
       const provider: Provider = sttModel.toLowerCase().startsWith("gemini") ? "google" : "openai";
-      return { role, provider, model: sttModel };
+      return { role, provider, model: sttModel, level };
     }
     // No explicit model: follow the ask provider so one key is enough.
     const provider = parseProvider(env.ASK_PROVIDER, "ASK_PROVIDER");

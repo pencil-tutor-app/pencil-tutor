@@ -67,9 +67,10 @@ struct WatchResponse: Codable, Equatable {
     var requestId: String?
     var model: String?
     var latencyMs: Int?
+    var allowance: Allowance? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case action, line, reason, model
+        case action, line, reason, model, allowance
         case hintSpoken = "hint_spoken"
         case hintWritten = "hint_written"
         case drawingRevision = "drawing_revision"
@@ -101,19 +102,22 @@ struct AskResponse: Codable, Equatable {
     var requestId: String?
     var model: String?
     var latencyMs: Int?
+    var allowance: Allowance? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case transcript, model
+        case transcript, model, allowance
         case answerText = "answer_text"
         case requestId = "request_id"
         case latencyMs = "latency_ms"
     }
 }
 
-/// POST /api/speak: text 1 to 600 characters, `purpose` a short lowercase label. The reply is audio/mpeg bytes, not JSON.
+/// POST /api/speak: text 1 to 600 characters, `purpose` a short lowercase label. The reply is a stream of raw PCM
+/// (signed 16-bit little-endian, 24000 Hz, mono), not JSON. For the two allowance purposes (`allowance_low`,
+/// `allowance_used_up`) the server composes the sentence itself, so `text` is left out.
 struct SpeakRequest: Codable, Equatable {
     var sessionId: String
-    var text: String
+    var text: String?
     var purpose: String
 
     private enum CodingKeys: String, CodingKey {
@@ -152,9 +156,10 @@ struct ConsultResponse: Codable, Equatable {
     var requestId: String?
     var model: String?
     var latencyMs: Int?
+    var allowance: Allowance? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case model
+        case model, allowance
         case answerText = "answer_text"
         case drawingRevision = "drawing_revision"
         case requestId = "request_id"
@@ -182,19 +187,21 @@ struct LiveSessionResponse: Codable, Equatable {
     var voice: String?
     var latencyMs: Int?
     var requestId: String?
+    var allowance: Allowance? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case sdp, model, voice
+        case sdp, model, voice, allowance
         case sessionId = "session_id"
         case latencyMs = "latency_ms"
         case requestId = "request_id"
     }
 }
 
-/// `{error, reason}` body the server sends with a 401, 422 or 503.
+/// `{error, reason, allowance?}` body the server sends with a 401, 403, 422 or 503.
 struct ServerErrorBody: Codable {
     var error: String?
     var reason: String?
+    var allowance: Allowance?
 }
 
 enum TimeText {
