@@ -191,10 +191,11 @@ P("S4", "Is 7/12 closest to 0, to 1/2, or to 1?",
   "1/2", [F(7, 12) - F(1, 2) == F(1, 12), F(1, 2) == F(6, 12)])
 P("S4", "Which number is closer to 1 whole, 0.9 or 7/8?",
   ["Find how far each is from 1.",
-   "1 − 0.9 = 0.1",
-   "1 − 7/8 = 1/8 = 0.125",
-   "0.1 < 0.125, so 0.9 is closer to 1."],
-  "0.9", [D(1) - D("0.9"), F(1) - F(7, 8), D("0.9") > D(7) / D(8)])
+   "1 − 0.9 = 0.1, which is 1/10.",
+   "1 − 7/8 = 1/8",
+   "Eighths are bigger pieces than tenths, so 1/8 > 1/10.",
+   "7/8 is 1/8 away from 1 and 0.9 is only 1/10 away, so 0.9 is closer to 1."],
+  "0.9", [D(1) - D("0.9"), F(1) - F(7, 8), F(1, 8) > F(1, 10), D("0.9") > D(7) / D(8)])
 
 # ---------------------------------------------------------------- S5
 P("S5", "Find 348 765 + 219 487.",
@@ -206,7 +207,7 @@ P("S5", "Find 348 765 + 219 487.",
    f"348 765 + 219 487 = {n(348765+219487)}"],
   n(348765 + 219487), [n(568252)])
 P("S5", "Find 700 000 − 256 389.",
-  ["Subtract in parts. First take away 256 389 from 700 000 by counting up from 256 389.",
+  ["Count up from 256 389 to 700 000 in easy jumps.",
    "256 389 + 11 = 256 400",
    "256 400 + 43 600 = 300 000",
    "300 000 + 400 000 = 700 000",
@@ -233,12 +234,6 @@ P("S5", "500 000 − □ = 174 250. Find the missing number.",
   n(500000 - 174250), [n(325750), 25750 + 300000, 500000 - 325750 == 174250])
 
 # ---------------------------------------------------------------- S6
-P("S6", "Find 36 × 24.",
-  ["Break 24 into 20 + 4.",
-   "36 × 20 = 720",
-   "36 × 4 = 144",
-   "720 + 144 = 864"],
-  n(36 * 24), [720, 144, 864])
 P("S6", "Find 237 × 4.",
   ["Break 237 into 200 + 30 + 7.",
    "200 × 4 = 800",
@@ -246,6 +241,12 @@ P("S6", "Find 237 × 4.",
    "7 × 4 = 28",
    "800 + 120 + 28 = 948"],
   n(237 * 4), [800, 120, 28, 948])
+P("S6", "Find 36 × 24.",
+  ["Break 24 into 20 + 4.",
+   "36 × 20 = 720",
+   "36 × 4 = 144",
+   "720 + 144 = 864"],
+  n(36 * 24), [720, 144, 864])
 P("S6", "Find 156 ÷ 6.",
   ["Think of multiplication: how many 6s make 156?",
    "6 × 20 = 120, and 156 − 120 = 36",
@@ -275,10 +276,10 @@ P("S7", "Find 3.482 + 2.75.",
    f"3.482 + 2.750 = {n(D('3.482') + D('2.75'))}"],
   n(D("3.482") + D("2.75")), [n(D("6.232"))])
 P("S7", "Find 8 − 3.275.",
-  ["Write 8 as 8.000 so the places line up.",
-   "3.275 + 0.725 = 4",
-   "4 + 4 = 8, so the jumps are 0.725 and 4.",
-   "0.725 + 4 = 4.725",
+  ["Count up from 3.275 to 8 in jumps.",
+   "3.275 + 0.725 = 4 (the jump to the next whole number)",
+   "4 + 4 = 8 (the jump from 4 to 8)",
+   "Add the jumps: 0.725 + 4 = 4.725",
    "Check: 4.725 + 3.275 = 8.000"],
   n(D(8) - D("3.275")), [n(D("4.725")), D("0.725") + 4, D("4.725") + D("3.275") == 8, D("3.275") + D("0.725") == 4])
 P("S7", "A jug holds 1.25 L of juice. Another holds 0.875 L. How much juice is there in all?",
@@ -291,9 +292,10 @@ P("S7", "A jug holds 1.25 L of juice. Another holds 0.875 L. How much juice is t
 P("S7", "Estimate 6.89 + 4.12 by rounding each to the nearest whole number. Then find the exact sum.",
   ["6.89 is close to 7 and 4.12 is close to 4.",
    "Estimate: 7 + 4 = 11",
-   "Exact: 6.89 + 4.12 = 11.01",
+   "Exact: 6.89 + 4 = 10.89",
+   "10.89 + 0.12 = 11.01",
    "11.01 is close to the estimate of 11."],
-  f"Estimate 11; exact {n(D('6.89') + D('4.12'))}", [11, n(D("11.01")), round(D("6.89")) + round(D("4.12"))])
+  f"Estimate 11; exact {n(D('6.89') + D('4.12'))}", [11, n(D("10.89")), n(D("11.01")), round(D("6.89")) + round(D("4.12"))])
 P("S7", "12.5 − □ = 7.842. Find the missing number.",
   ["□ = 12.5 − 7.842. Write 12.5 as 12.500.",
    "7.842 + 0.158 = 8",
@@ -528,11 +530,11 @@ P("S15", "A flag points up. It is turned a quarter turn clockwise, three times i
    "Third quarter turn: down → left.",
    "It points left. (Three quarter turns is 270° clockwise.)"],
   _dirs[3 % 4], [_dirs[1], _dirs[2], _dirs[3], 3 * 90])
-P("S15", "A corner of a shape moves from (6, 2) to (2, 2). Which single transformation could this be, and what is the move?",
-  ["The up number stays 2, so the point only moved across.",
-   "Across went from 6 to 2: 6 − 2 = 4 units to the left.",
-   "A movement in a straight line with no turning or flipping is a slide (translation)."],
-  "A slide (translation) 4 units left", [6 - 2])
+P("S15", "A triangle has corners at (6, 2), (8, 2) and (6, 5). After one transformation the corners are at (2, 2), (4, 2) and (2, 5). The triangle was not flipped or turned. Name the transformation and describe the move.",
+  ["Compare each corner before and after: (6, 2) → (2, 2), (8, 2) → (4, 2), (6, 5) → (2, 5).",
+   "The up numbers did not change. Each across number went down by 4: 6 − 2 = 4 and 8 − 4 = 4.",
+   "The whole shape moved the same way with no flip or turn, so it is a slide (translation) 4 units left."],
+  "A slide (translation) 4 units left", [6 - 2, 8 - 4])
 P("S15", "Point C is at (1, 4). It is flipped over the horizontal line that goes through 2 on the up axis. Where does C land?",
   ["C is 4 − 2 = 2 units above the line.",
    "Its image is 2 units below the line: 2 − 2 = 0.",
@@ -550,7 +552,7 @@ P("S16", "A double bar graph shows favourite fruit. Apples: Grade 4 bar is 30, G
   ["Read both bars: Grade 5 is 45 and Grade 4 is 30.",
    "Subtract: 45 − 30 = 15"],
   f"{45-30} more students", [45 - 30])
-P("S16", "In a double bar graph, each square stands for 10 people. At the park on Saturday the bar is 4 squares and on Sunday it is 6 squares. How many people came in all?",
+P("S16", "In a bar graph, each square stands for 10 people. The bar for Saturday at the park is 4 squares tall and the bar for Sunday is 6 squares tall. How many people came in all?",
   ["Saturday: 4 × 10 = 40 people.",
    "Sunday: 6 × 10 = 60 people.",
    "Total: 40 + 60 = 100 people."],
@@ -564,33 +566,34 @@ P("S16", "A double bar graph compares Grade 4 and Grade 5 favourite sports. Socc
    "Swimming: 45 − 20 = 25",
    "The biggest difference is swimming, 25."],
   f"{_big}, {_diffs[_big]}", [_diffs["Soccer"], _diffs["Hockey"], _diffs["Swimming"]])
-P("S16", "In a pictograph one star stands for 4 books. Ella read 9 stars' worth of books. Zoe read 52 books. How many stars should Zoe's row have?",
-  ["Ella's books: 9 × 4 = 36 (a check on how the scale works).",
+P("S16", "In a pictograph one star stands for 4 books. Ella's row has 9 stars. Zoe read 52 books. How many more stars does Zoe's row need than Ella's row?",
+  ["One star stands for 4 books.",
    "Zoe's stars: 52 ÷ 4 = 13",
+   "Ella has 9 stars, so Zoe needs 13 − 9 = 4 more.",
    "Check: 13 × 4 = 52"],
-  f"{52//4} stars", [9 * 4, 52 // 4, 13 * 4])
+  f"{52//4 - 9} more stars", [52 // 4, 13 - 9, 13 * 4])
 
 # ---------------------------------------------------------------- S17
 P("S17", "A spinner has 8 equal sections. 3 are red, 2 are blue and 3 are green. What is the probability of landing on red?",
   ["Probability = favourable outcomes ÷ total outcomes.",
    "3 sections are red out of 8 sections.",
-   "P(red) = 3/8"],
+   "Probability of red = 3/8"],
   "3/8", [F(3, 8), 3 + 2 + 3])
 P("S17", "You roll one fair six-sided die. What is the probability of rolling an even number?",
   ["Even numbers on the die: 2, 4, 6. That is 3 outcomes.",
    "There are 6 outcomes in all.",
-   "P(even) = 3/6 = 1/2"],
+   "Probability of an even number = 3/6 = 1/2"],
   n(F(3, 6)), [len([k for k in range(1, 7) if k % 2 == 0]), F(3, 6)])
 P("S17", "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability it is blue?",
   ["Total marbles: 4 + 5 + 3 = 12.",
    "Blue marbles: 5.",
-   "P(blue) = 5/12"],
+   "Probability of blue = 5/12"],
   "5/12", [4 + 5 + 3, F(5, 12)])
-P("S17", "Using the same bag (4 red, 5 blue, 3 green marbles), what is the probability the marble is NOT green?",
+P("S17", "A bag has 4 red, 5 blue and 3 green marbles. You pick one without looking. What is the probability the marble is NOT green?",
   ["Marbles that are not green: 4 + 5 = 9, out of 12 in all.",
-   "P(not green) = 9/12",
+   "Probability of not green = 9/12",
    "Simplify: divide top and bottom by 3 to get 3/4.",
-   "Check: P(green) = 3/12 = 1/4, and 1/4 + 3/4 = 1."],
+   "Check: probability of green = 3/12 = 1/4, and 1/4 + 3/4 = 1."],
   n(F(9, 12)), [4 + 5, F(9, 12), F(3, 12) + F(9, 12) == 1])
 P("S17", "A spinner has 10 equal sections. You want the probability of landing on yellow to be 1/5. How many sections should be yellow?",
   ["1/5 as tenths: multiply top and bottom by 2 to get 2/10.",
@@ -622,11 +625,12 @@ P("S18", "Ben gets $120 this month. His expenses are $45.50, $28.75 and $19.00. 
    "Money left: $120.00 − $93.25 = $26.75"],
   f"Expenses {money(D('45.50')+D('28.75')+D('19.00'))}, left {money(D(120)-(D('45.50')+D('28.75')+D('19.00')))}",
   [money(D("93.25")), money(D("74.25")), money(D("26.75"))])
-P("S18", "A jacket costs $64.30. You pay with a $100 bill. Count up to make change.",
-  ["From $64.30 to $65 is 70 cents.",
-   "From $65 to $100 is $35.",
-   "$35 + $0.70 = $35.70"],
-  money(D(100) - D("64.30")), [D(65) - D("64.30"), 100 - 65, money(D("35.70"))])
+P("S18", "Lena buys a snack for $4.75 and a juice for $2.60. She pays with a $10 bill. How much change does she get?",
+  ["Total cost: $4.75 + $2.60 = $7.35",
+   "Count up from $7.35 to $8: 65 cents.",
+   "$8 to $10: $2.",
+   "$2 + $0.65 = $2.65"],
+  money(D(10) - D("7.35")), [money(D("7.35")), D(8) - D("7.35"), 10 - 8, money(D("2.65"))])
 
 
 # ---------------------------------------------------------------- build / verify

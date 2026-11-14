@@ -62,9 +62,10 @@ expect("m7-15", [num(D(3) / 8), num(D(3) / 8 * 100) + "%"])
 expect("m7-16", [f"{Fr(64, 100).numerator}/{Fr(64, 100).denominator}", "64%"])
 rep = str(D(5) / D(11))  # 0.4545...
 assert rep.startswith("0.4545"); expect("m7-17", ["Repeating"], [])
-vals = sorted([(Fr(5, 8), "5/8"), (Fr(6, 10), "0.6"), (Fr(59, 100), "59%"), (Fr(3, 5), "3/5")])
-assert [v[1] for v in vals] == ["59%", "0.6", "3/5", "5/8"] or [v[1] for v in vals] == ["59%", "3/5", "0.6", "5/8"]
-expect("m7-18", ["59%", "5/8"], [num(D(5) / 8), "0.59"])
+vals = sorted([(Fr(5, 8), "5/8"), (Fr(6, 10), "0.6"), (Fr(59, 100), "59%"), (Fr(31, 50), "31/50")])
+assert len({v[0] for v in vals}) == 4  # no ties, so the order is unique
+assert [v[1] for v in vals] == ["59%", "0.6", "31/50", "5/8"]
+expect("m7-18", ["59%, 0.6, 31/50, 5/8"], [num(D(5) / 8), "0.59", num(D(31) / 50)])
 expect("m7-19", [num(D(9) / 25 * 100) + "%"], [9 * 4, 25 * 4])
 # S5
 rel = lambda a, b: (lambda n: a * n + b)
@@ -126,7 +127,7 @@ expect("m7-48", [f"({fx}, {fy})".replace("-", "−")], [f"({x1}, {y1})".replace(
 interior = lambda n: Fr((n - 2) * 180, n)
 assert interior(5) == 108 and (360 / 108) != int(360 / 108)
 assert interior(6) == 120 and 360 % 120 == 0  # sanity: hexagons do tessellate
-expect("m7-49", ["No"])
+expect("m7-49", ["No"], [3 * 108, 4 * 108])
 # S11
 expect("m7-50", [D("0.35") * 200 == 70 and 70])
 expect("m7-51", [int(Fr(25, 100) * 360)])
@@ -155,7 +156,7 @@ orig = D(36) / D("0.8"); assert orig * D("0.8") == 36
 expect("m7-63", [num(orig)])
 sale = D("0.75") * 85; tax = D("0.12") * sale
 assert (sale, tax, sale + tax) == (D("63.75"), D("7.65"), D("71.40"))
-expect("m7-64", ["71.40"], ["63.75", "7.65"])
+expect("m7-64", ["71.40"], [num(D(85) / 4), "63.75", "7.65"])
 
 # Structural checks
 for p in probs.values():

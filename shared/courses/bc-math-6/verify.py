@@ -133,7 +133,7 @@ TRUTH = {
     'm6-79': nums(12-3,3,4),
     'm6-80': [Fraction(12-9), 'flat'],
     'm6-81': nums(1,5,2,9,3,13,4,17,6,5+4*5),
-    'm6-82': nums(Fraction(3,8)),
+    'm6-82': nums(Fraction(4,10)),
     'm6-83': nums(Fraction(len([n for n in range(1,7) if n%2==0 and n>2]),6)),
     'm6-84': nums(Fraction(22,40), Fraction(1,2), 20),
     'm6-85': nums(Fraction(5+2,5+3+2)),
