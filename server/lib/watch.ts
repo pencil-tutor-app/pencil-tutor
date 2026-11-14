@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { finalizeDecision, scriptedWatch, type WatchResult } from "./decision.js";
-import { defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { configForLevel, defaultDeps, gate, issueReason, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runWatchModel } from "./models.js";
 import { buildWatchPrompt, HistoryEntrySchema, LineSchema, MAX_HISTORY, MAX_LINES } from "./policy.js";
-import { findProblem } from "./problems.js";
+import { findProblem, levelOf } from "./problems.js";
+import { usageFields } from "./usage.js";
 
 const WatchRequestSchema = z.object({
   session_id: z.string().max(100).optional(),
@@ -56,15 +57,21 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
   if (opened.scripted) {
     result = scriptedWatch(req.problem_id, req.lines, history);
   } else {
-    const cfg = opened.configs.watch!;
+    const picked = configForLevel(ctx, opened, deps.env, "watch", levelOf(problem));
+    if (!picked.ok) return picked.response;
+    const cfg = picked.cfg;
     modelName = cfg.model;
-    const model = deps.models.language(cfg, opened.keys.watch!);
+    if (cfg.effort) ctx.note({ effort: cfg.effort });
+    const model = deps.models.language(cfg, picked.key);
     const out = await runWatchModel({
       model,
+      cfg,
       promptText: buildWatchPrompt({ problem, lines: req.lines, history, clientTime: req.client_time }),
       image: image.image,
     });
     if (out.kind === "failed") return ctx.fail(out.status, out.error, out.label, `${out.error}:${out.label}`);
+    // Tokens, estimated cost and provider time: counts and labels only, never the page or the model's words.
+    ctx.note(usageFields(out.usage));
     result =
       out.kind === "malformed"
         ? {

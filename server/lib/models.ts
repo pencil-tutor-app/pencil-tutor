@@ -15,6 +15,7 @@ import {
 import type { RoleConfig } from "./config.js";
 import type { ImageInfo } from "./image.js";
 import { ASK_POLICY, WATCH_POLICY, WatchDecisionSchema } from "./policy.js";
+import { reportUsage, type UsageReport } from "./usage.js";
 
 // The two seams tests replace: how a provider config becomes an AI SDK model.
 export interface ModelFactory {
@@ -80,14 +81,32 @@ export async function runSpeech(args: {
   }
 }
 
+// Reasoning effort is the one provider-specific knob. OpenAI takes `reasoningEffort`; Google takes `thinkingConfig`
+// (`none` maps to the lowest level, "minimal"). No effort set means the provider's default, so no options are sent.
+export function providerOptionsFor(cfg: RoleConfig): ProviderOptions | undefined {
+  if (!cfg.effort) return undefined;
+  if (cfg.provider === "openai") return { openai: { reasoningEffort: cfg.effort } };
+  return { google: { thinkingConfig: { thinkingLevel: cfg.effort === "none" ? "minimal" : cfg.effort } } };
+}
+
+type ProviderOptions = NonNullable<Parameters<typeof generateText>[0]["providerOptions"]>;
+
+export type WatchModelResult = { usage: UsageReport } & (
+  | { kind: "decision"; raw: unknown }
+  | { kind: "malformed"; label: string }
+);
+
 export async function runWatchModel(args: {
   model: LanguageModel;
+  cfg: RoleConfig;
   promptText: string;
   image: ImageInfo;
-}): Promise<{ kind: "decision"; raw: unknown } | Malformed | ModelFailure> {
+}): Promise<WatchModelResult | ModelFailure> {
+  const startedAt = Date.now();
   try {
     const result = await generateText({
       model: args.model,
+      providerOptions: providerOptionsFor(args.cfg),
       system: WATCH_POLICY,
       messages: [
         {
@@ -102,10 +121,12 @@ export async function runWatchModel(args: {
       abortSignal: AbortSignal.timeout(WATCH_TIMEOUT_MS),
       maxRetries: 1,
     });
-    return { kind: "decision", raw: result.output };
+    return { kind: "decision", raw: result.output, usage: reportUsage(args.cfg.model, result.usage, Date.now() - startedAt) };
   } catch (err) {
     if (NoObjectGeneratedError.isInstance(err) || NoOutputGeneratedError.isInstance(err)) {
-      return { kind: "malformed", label: "model_output_not_valid_json_for_schema" };
+      // The tokens were spent even though the answer was unusable, so the cost still counts.
+      const spent = NoObjectGeneratedError.isInstance(err) ? err.usage : undefined;
+      return { kind: "malformed", label: "model_output_not_valid_json_for_schema", usage: reportUsage(args.cfg.model, spent, Date.now() - startedAt) };
     }
     return classifyFailure(err);
   }
@@ -115,13 +136,16 @@ export async function runWatchModel(args: {
 // target) reuses it with CONSULT_POLICY, so both go through the same image handling, timeout and failure labels.
 export async function runAskModel(args: {
   model: LanguageModel;
+  cfg: RoleConfig;
   promptText: string;
   image: ImageInfo;
   system?: string;
-}): Promise<{ kind: "answer"; text: string } | ModelFailure> {
+}): Promise<{ kind: "answer"; text: string; usage: UsageReport } | ModelFailure> {
+  const startedAt = Date.now();
   try {
     const result = await generateText({
       model: args.model,
+      providerOptions: providerOptionsFor(args.cfg),
       system: args.system ?? ASK_POLICY,
       messages: [
         {
@@ -135,7 +159,7 @@ export async function runAskModel(args: {
       abortSignal: AbortSignal.timeout(ASK_TIMEOUT_MS),
       maxRetries: 1,
     });
-    return { kind: "answer", text: result.text.trim() };
+    return { kind: "answer", text: result.text.trim(), usage: reportUsage(args.cfg.model, result.usage, Date.now() - startedAt) };
   } catch (err) {
     return classifyFailure(err);
   }

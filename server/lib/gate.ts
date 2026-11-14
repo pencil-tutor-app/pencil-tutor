@@ -2,10 +2,12 @@ import { z } from "zod";
 import {
   apiKeyFor,
   ConfigError,
+  DEFAULT_LEVEL,
   missingKeyReason,
   roleConfig,
   scriptedState,
   type Env,
+  type Level,
   type Role,
   type RoleConfig,
 } from "./config.js";
@@ -74,6 +76,32 @@ export function gate(ctx: RequestCtx, request: Request, deps: Deps, roles: Role[
   const primary = configs[roles[0] as Role];
   if (primary) ctx.note({ provider: primary.provider, model: primary.model });
   return { ok: true, scripted: false, configs, keys };
+}
+
+// The gate resolves watch/ask at the default level so the key check can happen before the body is read. Once the problem
+// is known, this picks the model for the problem's level (high_school is already resolved; advanced is resolved here).
+// A missing key or bad setting for the advanced model is a 503, same as at the gate.
+export type LevelPick = { ok: true; cfg: RoleConfig; key: string } | { ok: false; response: Response };
+
+export function configForLevel(ctx: RequestCtx, opened: GateOpen, env: Env, role: "watch" | "ask", level: Level): LevelPick {
+  ctx.note({ level });
+  const ready = opened.configs[role];
+  const readyKey = opened.keys[role];
+  if (level === DEFAULT_LEVEL && ready && readyKey) return { ok: true, cfg: ready, key: readyKey };
+  let cfg: RoleConfig;
+  try {
+    cfg = roleConfig(role, env, level);
+  } catch (err) {
+    const reason = err instanceof ConfigError ? err.message : "bad configuration";
+    return { ok: false, response: ctx.fail(503, "bad_config", reason, "bad_config") };
+  }
+  const key = apiKeyFor(cfg.provider, env);
+  if (!key) {
+    ctx.note({ provider: cfg.provider, model: cfg.model });
+    return { ok: false, response: ctx.fail(503, "missing_key", missingKeyReason(cfg.provider), "missing_key") };
+  }
+  ctx.note({ provider: cfg.provider, model: cfg.model });
+  return { ok: true, cfg, key };
 }
 
 export function issueReason(error: z.ZodError): string {

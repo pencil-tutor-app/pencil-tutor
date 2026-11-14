@@ -5,18 +5,44 @@ export type Provider = "openai" | "google";
 export type Role = "watch" | "ask" | "stt" | "speak" | "live";
 type ProviderRole = Exclude<Role, "speak" | "live">;
 
-// Defaults verified against the vendors' own docs on 2026-11-13. Sources are listed in server/README.md.
-export const DEFAULT_MODELS: Record<Provider, Record<ProviderRole, string>> = {
-  openai: { watch: "gpt-6.1-sol", ask: "gpt-6.1-terra", stt: "gpt-transcribe" },
-  google: { watch: "gemini-4-argon", ask: "gemini-3.8-flash", stt: "gemini-3.5-transcribe" },
+// How hard a problem is. `high_school` (the default, and what every BC Math 9 problem is) runs on the cheap model;
+// `advanced` (college level and harder) runs on the frontier model. Each level has its own env variables (see roleConfig).
+export type Level = "high_school" | "advanced";
+export const DEFAULT_LEVEL: Level = "high_school";
+export function parseLevel(value: string | undefined): Level {
+  return value === "advanced" ? "advanced" : DEFAULT_LEVEL;
+}
+
+// Reasoning effort sent to the model. Unset means the provider's own default.
+export type Effort = "none" | "low" | "medium" | "high";
+function parseEffort(value: string | undefined, varName: string): Effort | undefined {
+  const v = value?.trim().toLowerCase();
+  if (!v) return undefined;
+  if (v === "none" || v === "low" || v === "medium" || v === "high") return v;
+  throw new ConfigError(`${varName} must be none, low, medium or high`);
+}
+
+// Defaults verified against the vendors' own docs on 2026-11-13 (model ids re-checked against the keys on 2026-11-14).
+// Sources are listed in server/README.md.
+export const DEFAULT_MODELS: Record<Level, Record<Provider, Record<ProviderRole, string>>> = {
+  high_school: {
+    openai: { watch: "gpt-6.1-sol", ask: "gpt-6.1-terra", stt: "gpt-transcribe" },
+    google: { watch: "gemini-4-argon", ask: "gemini-3.8-flash", stt: "gemini-3.5-transcribe" },
+  },
+  advanced: {
+    openai: { watch: "gpt-6.1-sol", ask: "gpt-6.1-sol", stt: "gpt-transcribe" },
+    google: { watch: "gemini-4-argon", ask: "gemini-4-argon", stt: "gemini-3.5-transcribe" },
+  },
 };
+// Default reasoning effort per level and role (undefined = the provider's default).
+export const DEFAULT_EFFORT: Record<Level, Partial<Record<ProviderRole, Effort>>> = { high_school: {}, advanced: {} };
 
 // The conversational voice: OpenAI GPT-Live-1 over WebRTC (https://developers.openai.com/api/docs/models/gpt-live-1).
-// `gleam` is the North American, feminine voice OpenAI lists as a natural (recorded, not generated) voice
-// (https://developers.openai.com/api/docs/guides/live-conversations#voice-options). Chosen from the docs, not by ear:
-// change it with LIVE_VOICE in Vercel and redeploy. Live is OpenAI only.
+// `meridian` is the male voice Edward asked for (2026-11-14); production already sets LIVE_VOICE=meridian. The voice table
+// is at https://developers.openai.com/api/docs/guides/live-conversations#voice-options. Change it with LIVE_VOICE in Vercel
+// and redeploy. Live is OpenAI only.
 export const DEFAULT_LIVE_MODEL = "gpt-live-1";
-export const DEFAULT_LIVE_VOICE = "gleam";
+export const DEFAULT_LIVE_VOICE = "meridian";
 
 export type LiveSettings = { voice: string };
 
@@ -47,7 +73,7 @@ export const KEY_NAMES: Record<Provider, string[]> = {
   google: ["GEMINI_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"],
 };
 
-export type RoleConfig = { role: Role; provider: Provider; model: string };
+export type RoleConfig = { role: Role; provider: Provider; model: string; level: Level; effort?: Effort };
 
 export class ConfigError extends Error {
   constructor(message: string) {
@@ -62,12 +88,14 @@ function parseProvider(value: string | undefined, varName: string): Provider {
   throw new ConfigError(`${varName} must be "openai" or "google"`);
 }
 
-export function roleConfig(role: Role, env: Env): RoleConfig {
+// `level` is the problem difficulty. high_school reads WATCH_PROVIDER / WATCH_MODEL / WATCH_EFFORT (and the ASK_ twins);
+// advanced reads the same names with an _ADVANCED suffix. speak, live and stt do not depend on level.
+export function roleConfig(role: Role, env: Env, level: Level = DEFAULT_LEVEL): RoleConfig {
   if (role === "speak") {
-    return { role, provider: "openai", model: env.SPEAK_MODEL?.trim() || DEFAULT_SPEAK_MODEL };
+    return { role, provider: "openai", model: env.SPEAK_MODEL?.trim() || DEFAULT_SPEAK_MODEL, level };
   }
   if (role === "live") {
-    return { role, provider: "openai", model: env.LIVE_MODEL?.trim() || DEFAULT_LIVE_MODEL };
+    return { role, provider: "openai", model: env.LIVE_MODEL?.trim() || DEFAULT_LIVE_MODEL, level };
   }
   if (role === "stt") {
     const sttModel = env.STT_MODEL?.trim();
@@ -77,13 +105,17 @@ export function roleConfig(role: Role, env: Env): RoleConfig {
     }
     // No explicit model: follow the ask provider so one key is enough.
     const provider = parseProvider(env.ASK_PROVIDER, "ASK_PROVIDER");
-    return { role, provider, model: DEFAULT_MODELS[provider].stt };
+    return { role, provider, model: DEFAULT_MODELS[DEFAULT_LEVEL][provider].stt, level };
   }
-  const providerVar = role === "watch" ? "WATCH_PROVIDER" : "ASK_PROVIDER";
-  const modelVar = role === "watch" ? "WATCH_MODEL" : "ASK_MODEL";
+  const suffix = level === "advanced" ? "_ADVANCED" : "";
+  const stem = role === "watch" ? "WATCH" : "ASK";
+  const providerVar = `${stem}_PROVIDER${suffix}`;
+  const modelVar = `${stem}_MODEL${suffix}`;
+  const effortVar = `${stem}_EFFORT${suffix}`;
   const provider = parseProvider(env[providerVar], providerVar);
-  const model = env[modelVar]?.trim() || DEFAULT_MODELS[provider][role];
-  return { role, provider, model };
+  const model = env[modelVar]?.trim() || DEFAULT_MODELS[level][provider][role];
+  const effort = parseEffort(env[effortVar], effortVar) ?? DEFAULT_EFFORT[level][role];
+  return effort ? { role, provider, model, level, effort } : { role, provider, model, level };
 }
 
 export function apiKeyFor(provider: Provider, env: Env): string | undefined {

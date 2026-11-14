@@ -75,13 +75,13 @@ describe("live-session creates the session", () => {
     const res = await handleLiveSession(post("/api/live-session", body()), withLive(liveEnv(), live));
     const r = await reply(res);
     assert.equal(r.status, 200);
-    assert.deepEqual([r.json.session_id, r.json.sdp, r.json.model, r.json.voice], ["live_abc123", "v=0\r\nANSWER", "gpt-live-1", "gleam"]);
+    assert.deepEqual([r.json.session_id, r.json.sdp, r.json.model, r.json.voice], ["live_abc123", "v=0\r\nANSWER", "gpt-live-1", "meridian"]);
     assert.equal(calls.length, 1);
     const call = calls[0]!;
     assert.equal(call.apiKey, "sk-test-not-real");
     assert.equal(call.sdp, OFFER);
     assert.equal(call.session.model, "gpt-live-1");
-    assert.equal(call.session.audio.output.voice, "gleam");
+    assert.equal(call.session.audio.output.voice, "meridian");
     assert.deepEqual(call.session.delegation, { type: "client" });
     assert.deepEqual([...call.session.client.data_channel.allowed_client_events], [...ALLOWED_CLIENT_EVENTS]);
     assert.equal(ALLOWED_CLIENT_EVENTS.length, 5);
@@ -152,13 +152,13 @@ describe("live-session secrets and logging", () => {
 });
 
 describe("health reports the live model and voice", () => {
-  it("defaults to gpt-live-1 and gleam, and shows overrides", async () => {
+  it("defaults to gpt-live-1 and meridian, and shows overrides", async () => {
     const def = await reply(handleHealth(new Request("https://example.test/api/health"), { OPENAI_API_KEY: "sk-test" }));
     assert.deepEqual((def.json.models as Record<string, unknown>).live, { provider: "openai", model: "gpt-live-1" });
-    assert.equal(def.json.live_voice, "gleam");
-    const set = await reply(handleHealth(new Request("https://example.test/api/health"), { LIVE_MODEL: "gpt-live-9", LIVE_VOICE: "meridian" }));
+    assert.equal(def.json.live_voice, "meridian");
+    const set = await reply(handleHealth(new Request("https://example.test/api/health"), { LIVE_MODEL: "gpt-live-9", LIVE_VOICE: "willow" }));
     assert.deepEqual((set.json.models as Record<string, unknown>).live, { provider: "openai", model: "gpt-live-9" });
-    assert.equal(set.json.live_voice, "meridian");
+    assert.equal(set.json.live_voice, "willow");
     assert.equal(JSON.stringify(def.json).includes("sk-test"), false);
   });
 });

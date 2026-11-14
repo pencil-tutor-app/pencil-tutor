@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { configForLevel, defaultDeps, gate, issueReason, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel } from "./models.js";
 import { buildConsultPrompt, CONSULT_POLICY } from "./policy.js";
-import { findProblem } from "./problems.js";
+import { findProblem, levelOf } from "./problems.js";
+import { usageFields } from "./usage.js";
 
 export const SCRIPTED_CONSULT_ANSWER = "This is a scripted page report. Line one is written and the latest line looks unfinished. Ask what they did to both sides.";
 const NO_ANSWER_TEXT = "I couldn't read the page just now. Ask the student to try again in a moment.";
@@ -58,14 +59,19 @@ export async function handleConsult(request: Request, deps: Deps = defaultDeps()
 
   if (opened.scripted) return done(SCRIPTED_CONSULT_ANSWER, "scripted", "scripted_answer");
 
-  const cfg = opened.configs.ask!;
+  const picked = configForLevel(ctx, opened, deps.env, "ask", levelOf(problem));
+  if (!picked.ok) return picked.response;
+  const cfg = picked.cfg;
+  if (cfg.effort) ctx.note({ effort: cfg.effort });
   const answered = await runAskModel({
-    model: deps.models.language(cfg, opened.keys.ask!),
+    model: deps.models.language(cfg, picked.key),
+    cfg,
     promptText: buildConsultPrompt({ problem, question: req.question, recent: req.recent }),
     image: image.image,
     system: CONSULT_POLICY,
   });
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
+  ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(NO_ANSWER_TEXT, cfg.model, "empty_answer");
   return done(answered.text, cfg.model, "answered");
 }

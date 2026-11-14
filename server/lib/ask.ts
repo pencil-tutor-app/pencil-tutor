@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { SCRIPTED_ANSWER, SCRIPTED_TRANSCRIPT } from "./decision.js";
-import { defaultDeps, gate, issueReason, type Deps } from "./gate.js";
+import { configForLevel, defaultDeps, gate, issueReason, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
 import { buildAskPrompt } from "./policy.js";
-import { findProblem } from "./problems.js";
+import { findProblem, levelOf } from "./problems.js";
+import { usageFields } from "./usage.js";
 
 export const MAX_AUDIO_BYTES = 2_500_000;
 const EMPTY_TRANSCRIPT_ANSWER = "I didn't catch that. Please hold the button and ask again.";
@@ -64,8 +65,11 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
 
   if (opened.scripted) return done(SCRIPTED_TRANSCRIPT, SCRIPTED_ANSWER, "scripted", "scripted_answer");
 
-  const askCfg = opened.configs.ask!;
+  const picked = configForLevel(ctx, opened, deps.env, "ask", levelOf(problem));
+  if (!picked.ok) return picked.response;
+  const askCfg = picked.cfg;
   const sttCfg = opened.configs.stt!;
+  if (askCfg.effort) ctx.note({ effort: askCfg.effort });
   ctx.note({ stt_model: sttCfg.model });
 
   const heard = await runTranscription({ model: deps.models.transcription(sttCfg, opened.keys.stt!), audio });
@@ -73,11 +77,13 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
   if (!heard.text) return done("", EMPTY_TRANSCRIPT_ANSWER, askCfg.model, "empty_transcript");
 
   const answered = await runAskModel({
-    model: deps.models.language(askCfg, opened.keys.ask!),
+    model: deps.models.language(askCfg, picked.key),
+    cfg: askCfg,
     promptText: buildAskPrompt({ problem, transcript: heard.text }),
     image: image.image,
   });
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
+  ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(heard.text, NO_ANSWER_TEXT, askCfg.model, "empty_answer");
   return done(heard.text, answered.text, askCfg.model, "answered");
 }

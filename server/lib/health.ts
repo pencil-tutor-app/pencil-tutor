@@ -7,13 +7,24 @@ export function handleHealth(request: Request, env: Env = process.env): Response
   const ctx = new RequestCtx("health", request.method);
   const scripted = scriptedState(env);
 
-  const models: Record<string, { provider: string; model: string } | { error: string }> = {};
+  const models: Record<string, { provider: string; model: string; effort?: string } | { error: string }> = {};
   for (const role of ["watch", "ask", "stt", "speak", "live"] as Role[]) {
     try {
-      const { provider, model } = roleConfig(role, env);
-      models[role] = { provider, model };
+      const { provider, model, effort } = roleConfig(role, env);
+      models[role] = effort ? { provider, model, effort } : { provider, model };
     } catch (err) {
       models[role] = { error: err instanceof ConfigError ? err.message : "bad configuration" };
+    }
+  }
+
+  // The model used for advanced (college level and harder) problems. High school problems use `models`.
+  const modelsAdvanced: Record<string, { provider: string; model: string } | { error: string }> = {};
+  for (const role of ["watch", "ask"] as Role[]) {
+    try {
+      const { provider, model } = roleConfig(role, env, "advanced");
+      modelsAdvanced[role] = { provider, model };
+    } catch (err) {
+      modelsAdvanced[role] = { error: err instanceof ConfigError ? err.message : "bad configuration" };
     }
   }
 
@@ -32,6 +43,7 @@ export function handleHealth(request: Request, env: Env = process.env): Response
       scripted: scripted.on,
       scripted_refused_in_production: scripted.refusedInProduction,
       models,
+      models_advanced: modelsAdvanced,
       live_voice: liveSettings(env).voice,
       problems: problemCount,
     },
