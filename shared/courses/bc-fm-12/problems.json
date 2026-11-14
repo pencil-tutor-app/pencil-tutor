@@ -42,11 +42,11 @@
   {
     "id": "fm12-03",
     "source": "BC Foundations of Mathematics 12 content: geometric explorations, constructions (perpendicular bisector, tangents, polygons, tessellations); original",
-    "prompt_latex": "Find the interior and exterior angle of a regular octagon.",
-    "prompt_plain": "Find the interior and exterior angle of a regular octagon.",
+    "prompt_latex": "Find the size of each interior angle and each exterior angle of a regular octagon.",
+    "prompt_plain": "Find the size of each interior angle and each exterior angle of a regular octagon.",
     "prompt_parts": [
       {
-        "text": "Find the interior and exterior angle of a regular octagon."
+        "text": "Find the size of each interior angle and each exterior angle of a regular octagon."
       }
     ],
     "worked_solution": [
@@ -231,11 +231,11 @@
   {
     "id": "fm12-11",
     "source": "BC Foundations of Mathematics 12 content: geometric explorations, conics (locus definition and constructions, conic sections, applications); original",
-    "prompt_latex": "A satellite dish cross section is the parabola y = x^{2}/16 (metres). Where should the receiver (the focus) go?",
-    "prompt_plain": "A satellite dish cross section is the parabola y = x²/16 (metres). Where should the receiver (the focus) go?",
+    "prompt_latex": "A satellite dish cross section is the parabola y = x^{2}/16 (metres). Find the coordinates of the focus, where the receiver goes.",
+    "prompt_plain": "A satellite dish cross section is the parabola y = x²/16 (metres). Find the coordinates of the focus, where the receiver goes.",
     "prompt_parts": [
       {
-        "text": "A satellite dish cross section is the parabola y = x²/16 (metres). Where should the receiver (the focus) go?"
+        "text": "A satellite dish cross section is the parabola y = x²/16 (metres). Find the coordinates of the focus, where the receiver goes."
       }
     ],
     "worked_solution": [
@@ -437,17 +437,17 @@
   {
     "id": "fm12-22",
     "source": "BC Foundations of Mathematics 12 content: regression analysis (polynomial, exponential, sinusoidal, logarithmic; applying the appropriate model; by hand versions of the model step); original",
-    "prompt_latex": "A day's temperature peaks at 18 ^\\circ C at t = 14 h and bottoms out at 6 ^\\circ C at t = 2 h. Write a model T(t) = a \\cos(b(t - c)) + d.",
-    "prompt_plain": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d.",
+    "prompt_latex": "A day's temperature peaks at 18 ^\\circ C at t = 14 h and bottoms out at 6 ^\\circ C at t = 2 h. Write a model T(t) = a \\cos(b(t - c)) + d with a > 0, b > 0 and c equal to the time of the maximum.",
+    "prompt_plain": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d with a > 0, b > 0 and c equal to the time of the maximum.",
     "prompt_parts": [
       {
-        "text": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d."
+        "text": "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t − c)) + d with a > 0, b > 0 and c equal to the time of the maximum."
       }
     ],
     "worked_solution": [
       "a = (18 − 6)/2 = 6 and d = (18 + 6)/2 = 12",
       "Maximum to minimum is 12 hours, so the period is 24 and b = 2π/24 = π/12",
-      "A cosine starts at its maximum, which is at t = 14, so c = 14",
+      "A plain cosine peaks at its start, so shift the start to the peak time: c = 14",
       "T(t) = 6 cos(π(t − 14)/12) + 12",
       "Check: T(2) = 6 cos(−π) + 12 = 6 ✓"
     ],
@@ -586,15 +586,15 @@
   {
     "id": "fm12-30",
     "source": "BC Foundations of Mathematics 12 content: combinatorics (permutations, combinations, pathways, Pascal's triangle); original",
-    "prompt_latex": "Use row 4 of Pascal's triangle to expand (x + 2)^{4}.",
-    "prompt_plain": "Use row 4 of Pascal's triangle to expand (x + 2)⁴.",
+    "prompt_latex": "Use the row of Pascal's triangle that begins 1, 4 to expand (x + 2)^{4}.",
+    "prompt_plain": "Use the row of Pascal's triangle that begins 1, 4 to expand (x + 2)⁴.",
     "prompt_parts": [
       {
-        "text": "Use row 4 of Pascal's triangle to expand (x + 2)⁴."
+        "text": "Use the row of Pascal's triangle that begins 1, 4 to expand (x + 2)⁴."
       }
     ],
     "worked_solution": [
-      "Row 4 of Pascal's triangle: 1, 4, 6, 4, 1",
+      "The row for exponent 4 is 1, 4, 6, 4, 1",
       "Terms: 1·x⁴ + 4·x³(2) + 6·x²(2²) + 4·x(2³) + 1·(2⁴)",
       "= x⁴ + 8x³ + 24x² + 32x + 16"
     ],
@@ -752,11 +752,11 @@
   {
     "id": "fm12-39",
     "source": "BC Foundations of Mathematics 12 content: odds, probability and expected value (mutually exclusive, non mutually exclusive, conditional, binomial; Venn diagrams); original",
-    "prompt_latex": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
-    "prompt_plain": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
+    "prompt_latex": "A game costs $2 to play. You roll a fair die and are paid $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
+    "prompt_plain": "A game costs $2 to play. You roll a fair die and are paid $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
     "prompt_parts": [
       {
-        "text": "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair."
+        "text": "A game costs $2 to play. You roll a fair die and are paid $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair."
       }
     ],
     "worked_solution": [
@@ -780,8 +780,8 @@
     "worked_solution": [
       "Monthly rate i = 0.036/12 = 0.003; n = 12 × 5 = 60 periods",
       "A = 5000(1.003)^60",
-      "(1.003)^60 ≈ 1.19689",
-      "A ≈ $5984.47"
+      "(1.003)^60 ≈ 1.1968948",
+      "A ≈ 5000(1.1968948) ≈ $5984.47"
     ],
     "final_answer": "$5984.47",
     "level": "high_school"
@@ -821,7 +821,7 @@
       "Interest = total paid − amount borrowed = 526 131 − 300 000",
       "= $226 131 (about 75% of the amount borrowed)"
     ],
-    "final_answer": "about $226131 in interest",
+    "final_answer": "$226 131 in interest",
     "level": "high_school"
   },
   {

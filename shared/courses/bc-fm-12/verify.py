@@ -295,7 +295,7 @@ def c_gc_3():
     exterior = 360 / n
     req(interior + exterior == 180)
     return f"interior {fmt(interior)}°, exterior {fmt(exterior)}°"
-P("gc", "Find the interior and exterior angle of a regular octagon.",
+P("gc", "Find the size of each interior angle and each exterior angle of a regular octagon.",
   ["Interior angle sum of an n sided polygon: (n - 2)(180°) = 6(180°) = 1080°", "Each interior angle: 1080° / 8 = 135°", "Exterior angle: 180° - 135° = 45° (or 360°/8)"],
   "interior 135°, exterior 45°", c_gc_3)
 
@@ -392,7 +392,7 @@ def c_cn_6():
         y = x * x / 16
         req(near(math.dist((x, y), (0, 4)), y + 4))
     return "focus (0, 4), 4 m above the vertex"
-P("cn", "A satellite dish cross section is the parabola y = x²/16 (metres). Where should the receiver (the focus) go?",
+P("cn", "A satellite dish cross section is the parabola y = x²/16 (metres). Find the coordinates of the focus, where the receiver goes.",
   ["Write x² = 16y and compare with x² = 4py", "4p = 16, so p = 4", "The focus is p units above the vertex (0, 0): (0, 4)", "Check: (8, 4) is on the parabola (64/16 = 4). Its distance to (0, 4) is 8 and its distance to the line y = -4 is 4 + 4 = 8 ✓"],
   "focus (0, 4), 4 m above the vertex", c_cn_6)
 
@@ -501,8 +501,8 @@ def c_rg_3():
     T = lambda t: 6 * cos(pi * (t - 14) / 12) + 12
     req(near(T(14), 18) and near(T(2), 6) and near(T(38), 18) and near(T(26), 6))
     return "T(t) = 6 cos(π(t - 14)/12) + 12"
-P("rg", "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t - c)) + d.",
-  ["a = (18 - 6)/2 = 6 and d = (18 + 6)/2 = 12", "Maximum to minimum is 12 hours, so the period is 24 and b = 2π/24 = π/12", "A cosine starts at its maximum, which is at t = 14, so c = 14",
+P("rg", "A day's temperature peaks at 18 °C at t = 14 h and bottoms out at 6 °C at t = 2 h. Write a model T(t) = a cos(b(t - c)) + d with a > 0, b > 0 and c equal to the time of the maximum.",
+  ["a = (18 - 6)/2 = 6 and d = (18 + 6)/2 = 12", "Maximum to minimum is 12 hours, so the period is 24 and b = 2π/24 = π/12", "A plain cosine peaks at its start, so shift the start to the peak time: c = 14",
    "T(t) = 6 cos(π(t - 14)/12) + 12", "Check: T(2) = 6 cos(-π) + 12 = 6 ✓"],
   "T(t) = 6 cos(π(t - 14)/12) + 12", c_rg_3)
 
@@ -586,8 +586,8 @@ def c_cb_7():
     c = polymul(polymul([1, 2], [1, 2]), polymul([1, 2], [1, 2]))
     req(c == [1, 8, 24, 32, 16])
     return "x⁴ + 8x³ + 24x² + 32x + 16"
-P("cb", "Use row 4 of Pascal's triangle to expand (x + 2)⁴.",
-  ["Row 4 of Pascal's triangle: 1, 4, 6, 4, 1", "Terms: 1·x⁴ + 4·x³(2) + 6·x²(2²) + 4·x(2³) + 1·(2⁴)", "= x⁴ + 8x³ + 24x² + 32x + 16"],
+P("cb", "Use the row of Pascal's triangle that begins 1, 4 to expand (x + 2)⁴.",
+  ["The row for exponent 4 is 1, 4, 6, 4, 1", "Terms: 1·x⁴ + 4·x³(2) + 6·x²(2²) + 4·x(2³) + 1·(2⁴)", "= x⁴ + 8x³ + 24x² + 32x + 16"],
   "x⁴ + 8x³ + 24x² + 32x + 16", c_cb_7)
 
 
@@ -677,7 +677,7 @@ def c_pr_9():
     net = ev_payout - 2
     req(net == -1 and ev_payout == 1)
     return "expected net -$1.00; a fair entry fee is $1"
-P("pr", "A game costs $2 to play. You roll a fair die and win $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
+P("pr", "A game costs $2 to play. You roll a fair die and are paid $6 if you roll a 6, otherwise nothing. Find the expected net gain per game and the entry fee that would make the game fair.",
   ["Expected winnings: (1/6)(6) + (5/6)(0) = 1", "Expected net = 1 - 2 = -1, so you lose $1 per game on average", "A fair game has expected net 0, so the fee would be $1"],
   "expected net -$1.00; a fair entry fee is $1", c_pr_9)
 
@@ -687,7 +687,7 @@ def c_fp_1():
     v = 5000 * (1 + 0.036 / 12) ** 60
     return f"${rnd(v)}"
 P("fp", "$5000 is invested at 3.6% per year compounded monthly for 5 years. Find the final amount.",
-  ["Monthly rate i = 0.036/12 = 0.003; n = 12 × 5 = 60 periods", "A = 5000(1.003)^60", "(1.003)^60 ≈ 1.19689", "A ≈ $5984.47"],
+  ["Monthly rate i = 0.036/12 = 0.003; n = 12 × 5 = 60 periods", "A = 5000(1.003)^60", "(1.003)^60 ≈ 1.1968948", "A ≈ 5000(1.1968948) ≈ $5984.47"],
   "$5984.47", c_fp_1)
 
 
@@ -709,10 +709,10 @@ def c_fp_3():
     pm = round(300000 * (0.05 / 12) / (1 - (1 + 0.05 / 12) ** -300), 2)
     total = pm * 300
     interest = total - 300000
-    return f"about ${rnd(interest, 0)} in interest"
+    return f"${interest:,.0f}".replace(",", " ") + " in interest"
 P("fp", "For the $300 000 mortgage with payments of $1753.77 for 300 months, how much interest is paid in total?",
   ["Total paid = 1753.77 × 300 = $526 131", "Interest = total paid - amount borrowed = 526 131 - 300 000", "= $226 131 (about 75% of the amount borrowed)"],
-  "about $226131 in interest", c_fp_3)
+  "$226 131 in interest", c_fp_3)
 
 
 def c_fp_4():
