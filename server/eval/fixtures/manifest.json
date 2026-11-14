@@ -1,0 +1,1732 @@
+[
+ {
+  "id": "01-u3-01-correct_finished",
+  "file": "01-u3-01-correct_finished.png",
+  "problem_id": "u3-01",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 48830,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 42,
+     "w": 382,
+     "h": 48
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 66,
+     "y": 123,
+     "w": 364,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 64,
+     "y": 195,
+     "w": 264,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 266,
+     "w": 282,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 66,
+     "y": 347,
+     "w": 185,
+     "h": 47
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 50,
+     "y": 422,
+     "w": 135,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "7x – 4 = 3x + 16",
+   "7x – 3x – 4 = 16",
+   "4x – 4 = 16",
+   "4x = 16 + 4",
+   "4x = 20",
+   "x = 5"
+  ]
+ },
+ {
+  "id": "02-u3-04-correct_finished",
+  "file": "02-u3-04-correct_finished.png",
+  "problem_id": "u3-04",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 54177,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 60,
+     "y": 27,
+     "w": 322,
+     "h": 69
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 60,
+     "y": 99,
+     "w": 300,
+     "h": 64
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 179,
+     "w": 309,
+     "h": 64
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 53,
+     "y": 261,
+     "w": 199,
+     "h": 64
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 56,
+     "y": 342,
+     "w": 143,
+     "h": 63
+    }
+   }
+  ],
+  "rows": [
+   "–4(2p + 5) = 12",
+   "–8p – 20 = 12",
+   "–8p = 12 + 20",
+   "–8p = 32",
+   "p = –4"
+  ]
+ },
+ {
+  "id": "03-u3-05-correct_finished",
+  "file": "03-u3-05-correct_finished.png",
+  "problem_id": "u3-05",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 23089,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 37,
+     "w": 230,
+     "h": 54
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 114,
+     "w": 208,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 193,
+     "w": 122,
+     "h": 52
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 61,
+     "y": 273,
+     "w": 123,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "–(y – 6) = 10",
+   "–y + 6 = 10",
+   "–y = 4",
+   "y = –4"
+  ]
+ },
+ {
+  "id": "04-u3-07-correct_finished",
+  "file": "04-u3-07-correct_finished.png",
+  "problem_id": "u3-07",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 32627,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 23,
+     "w": 184,
+     "h": 68
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 60,
+     "y": 121,
+     "w": 323,
+     "h": 59
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 205,
+     "w": 143,
+     "h": 53
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 279,
+     "w": 118,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "{2k/5} – 3 = 1",
+   "all ·5:  2k – 15 = 5",
+   "2k = 20",
+   "k = 10"
+  ]
+ },
+ {
+  "id": "05-u3-10-correct_finished",
+  "file": "05-u3-10-correct_finished.png",
+  "problem_id": "u3-10",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 37814,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 33,
+     "w": 361,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 54,
+     "y": 115,
+     "w": 305,
+     "h": 46
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 54,
+     "y": 192,
+     "w": 251,
+     "h": 46
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 55,
+     "y": 267,
+     "w": 178,
+     "h": 38
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 48,
+     "y": 347,
+     "w": 145,
+     "h": 41
+    }
+   }
+  ],
+  "rows": [
+   "8 – 3(x + 2) = 5",
+   "8 – 3x – 6 = 5",
+   "2 – 3x = 5",
+   "–3x = 3",
+   "x = –1"
+  ]
+ },
+ {
+  "id": "06-u3-12-correct_finished",
+  "file": "06-u3-12-correct_finished.png",
+  "problem_id": "u3-12",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 66538,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 54,
+     "y": 26,
+     "w": 513,
+     "h": 58
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 70,
+     "y": 102,
+     "w": 459,
+     "h": 58
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 169,
+     "w": 361,
+     "h": 58
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 62,
+     "y": 243,
+     "w": 344,
+     "h": 59
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 64,
+     "y": 332,
+     "w": 149,
+     "h": 54
+    }
+   },
+   {
+    "index": 6,
+    "box": {
+     "x": 70,
+     "y": 404,
+     "w": 111,
+     "h": 54
+    }
+   }
+  ],
+  "rows": [
+   "3(2r + 5) = –(r – 6) + 23",
+   "6r + 15 = –r + 6 + 23",
+   "6r + 15 = –r + 29",
+   "6r + r = 29 – 15",
+   "7r = 14",
+   "r = 2"
+  ]
+ },
+ {
+  "id": "07-u3-15-correct_finished",
+  "file": "07-u3-15-correct_finished.png",
+  "problem_id": "u3-15",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 45753,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 68,
+     "y": 26,
+     "w": 369,
+     "h": 65
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 65,
+     "y": 140,
+     "w": 329,
+     "h": 54
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 55,
+     "y": 216,
+     "w": 269,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 70,
+     "y": 291,
+     "w": 272,
+     "h": 48
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 68,
+     "y": 382,
+     "w": 125,
+     "h": 41
+    }
+   }
+  ],
+  "rows": [
+   "{2/3}(x – 1) = {1/2}(x + 3)",
+   "4(x – 1) = 3(x + 3)",
+   "4x – 4 = 3x + 9",
+   "4x – 3x = 9 + 4",
+   "x = 13"
+  ]
+ },
+ {
+  "id": "08-u3-19-correct_finished",
+  "file": "08-u3-19-correct_finished.png",
+  "problem_id": "u3-19",
+  "category": "correct_finished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 44198,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 20,
+     "w": 292,
+     "h": 70
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 58,
+     "y": 126,
+     "w": 309,
+     "h": 52
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 53,
+     "y": 206,
+     "w": 298,
+     "h": 52
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 279,
+     "w": 129,
+     "h": 55
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 67,
+     "y": 365,
+     "w": 107,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "{5/6}v + 2 = {1/3}v + 7",
+   "5v + 12 = 2v + 42",
+   "5v – 2v = 42 – 12",
+   "3v = 30",
+   "v = 10"
+  ]
+ },
+ {
+  "id": "09-u3-06-correct_unfinished",
+  "file": "09-u3-06-correct_unfinished.png",
+  "problem_id": "u3-06",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 32533,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 29,
+     "w": 289,
+     "h": 65
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 139,
+     "w": 222,
+     "h": 45
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 64,
+     "y": 229,
+     "w": 473,
+     "h": 65
+    }
+   }
+  ],
+  "rows": [
+   "{a/3} + {a/4} = 14",
+   "LCD = 12",
+   "12·{a/3} + 12·{a/4} = 12·14"
+  ]
+ },
+ {
+  "id": "10-u3-11-correct_unfinished",
+  "file": "10-u3-11-correct_unfinished.png",
+  "problem_id": "u3-11",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 35491,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 58,
+     "y": 22,
+     "w": 484,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 73,
+     "y": 113,
+     "w": 455,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "6(x – 2) – 4(x + 1) = 10",
+   "6x – 12 – 4x – 4 = 10"
+  ]
+ },
+ {
+  "id": "11-u3-13-correct_unfinished",
+  "file": "11-u3-13-correct_unfinished.png",
+  "problem_id": "u3-13",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 31151,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 28,
+     "w": 237,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 135,
+     "w": 335,
+     "h": 56
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 55,
+     "y": 213,
+     "w": 284,
+     "h": 47
+    }
+   }
+  ],
+  "rows": [
+   "{x + 4/3} = {x – 2/2}",
+   "2(x + 4) = 3(x – 2)",
+   "2x + 8 = 3x – 6"
+  ]
+ },
+ {
+  "id": "12-u3-20-correct_unfinished",
+  "file": "12-u3-20-correct_unfinished.png",
+  "problem_id": "u3-20",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": true,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 43286,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 32,
+     "w": 444,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 111,
+     "w": 421,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 57,
+     "y": 197,
+     "w": 190,
+     "h": 50
+    }
+   }
+  ],
+  "rows": [
+   "–2(3 – 4x) + 5 = 3(x + 4) + 2",
+   "–6 + 8x + 5 = 3x + 12 + 2",
+   "8x – 1 = 3x + 14"
+  ]
+ },
+ {
+  "id": "13-u3-01-correct_unfinished",
+  "file": "13-u3-01-correct_unfinished.png",
+  "problem_id": "u3-01",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": true,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 36113,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 69,
+     "y": 38,
+     "w": 369,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 67,
+     "y": 117,
+     "w": 354,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 200,
+     "w": 257,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 56,
+     "y": 275,
+     "w": 182,
+     "h": 44
+    }
+   }
+  ],
+  "rows": [
+   "7x – 4 = 3x + 16",
+   "7x – 3x – 4 = 16",
+   "4x – 4 = 16",
+   "4x = 16 + 4"
+  ]
+ },
+ {
+  "id": "14-u3-10-correct_unfinished",
+  "file": "14-u3-10-correct_unfinished.png",
+  "problem_id": "u3-10",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": true,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 32412,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 65,
+     "y": 22,
+     "w": 335,
+     "h": 64
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 108,
+     "w": 305,
+     "h": 56
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 191,
+     "w": 146,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "8 – 3(x + 2) = 5",
+   "8 – 3x – 6 = 5",
+   "2 – 3x = 5"
+  ]
+ },
+ {
+  "id": "15-u3-04-correct_unfinished",
+  "file": "15-u3-04-correct_unfinished.png",
+  "problem_id": "u3-04",
+  "category": "correct_unfinished",
+  "error_type": null,
+  "wrong_line": null,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": true,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 18037,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 35,
+     "w": 283,
+     "h": 56
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 63,
+     "y": 116,
+     "w": 174,
+     "h": 54
+    }
+   }
+  ],
+  "rows": [
+   "–4(2p + 5) = 12",
+   "–8p – 20 = 12"
+  ]
+ },
+ {
+  "id": "16-u3-04-wrong-w2",
+  "file": "16-u3-04-wrong-w2.png",
+  "problem_id": "u3-04",
+  "category": "wrong",
+  "error_type": "sign",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 30902,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 33,
+     "w": 268,
+     "h": 57
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 55,
+     "y": 108,
+     "w": 242,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 71,
+     "y": 179,
+     "w": 156,
+     "h": 58
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 60,
+     "y": 255,
+     "w": 80,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "–4(2p + 5) = 12",
+   "–8p + 20 = 12",
+   "–8p = –8",
+   "p = 1"
+  ]
+ },
+ {
+  "id": "17-u3-05-wrong-w2",
+  "file": "17-u3-05-wrong-w2.png",
+  "problem_id": "u3-05",
+  "category": "wrong",
+  "error_type": "sign",
+  "wrong_line": 2,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 19972,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 59,
+     "y": 31,
+     "w": 302,
+     "h": 72
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 120,
+     "w": 262,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "–(y – 6) = 10",
+   "–y – 6 = 10"
+  ]
+ },
+ {
+  "id": "18-u3-11-wrong-w2",
+  "file": "18-u3-11-wrong-w2.png",
+  "problem_id": "u3-11",
+  "category": "wrong",
+  "error_type": "sign",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 52667,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 23,
+     "w": 470,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 60,
+     "y": 112,
+     "w": 459,
+     "h": 58
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 60,
+     "y": 186,
+     "w": 245,
+     "h": 56
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 68,
+     "y": 262,
+     "w": 161,
+     "h": 51
+    }
+   }
+  ],
+  "rows": [
+   "6(x – 2) – 4(x + 1) = 10",
+   "6x – 12 – 4x + 4 = 10",
+   "2x – 8 = 10",
+   "2x = 18"
+  ]
+ },
+ {
+  "id": "19-u3-20-wrong-w2",
+  "file": "19-u3-20-wrong-w2.png",
+  "problem_id": "u3-20",
+  "category": "wrong",
+  "error_type": "sign",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 49336,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 70,
+     "y": 33,
+     "w": 525,
+     "h": 59
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 66,
+     "y": 118,
+     "w": 462,
+     "h": 48
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 63,
+     "y": 196,
+     "w": 315,
+     "h": 49
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 60,
+     "y": 281,
+     "w": 328,
+     "h": 46
+    }
+   }
+  ],
+  "rows": [
+   "–2(3 – 4x) + 5 = 3(x + 4) + 2",
+   "–6 – 8x + 5 = 3x + 12 + 2",
+   "–8x – 1 = 3x + 14",
+   "–8x – 3x = 14 + 1"
+  ]
+ },
+ {
+  "id": "20-u3-01-wrong-w3",
+  "file": "20-u3-01-wrong-w3.png",
+  "problem_id": "u3-01",
+  "category": "wrong",
+  "error_type": "combine like terms",
+  "wrong_line": 3,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 31519,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 53,
+     "y": 34,
+     "w": 283,
+     "h": 52
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 100,
+     "w": 275,
+     "h": 53
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 174,
+     "w": 223,
+     "h": 55
+    }
+   }
+  ],
+  "rows": [
+   "7x – 4 = 3x + 16",
+   "7x – 3x – 4 = 16",
+   "10x – 4 = 16"
+  ]
+ },
+ {
+  "id": "21-u3-12-wrong-w3",
+  "file": "21-u3-12-wrong-w3.png",
+  "problem_id": "u3-12",
+  "category": "wrong",
+  "error_type": "combine like terms",
+  "wrong_line": 3,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 41017,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 35,
+     "w": 560,
+     "h": 55
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 66,
+     "y": 108,
+     "w": 488,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 62,
+     "y": 187,
+     "w": 414,
+     "h": 51
+    }
+   }
+  ],
+  "rows": [
+   "3(2r + 5) = –(r – 6) + 23",
+   "6r + 15 = –r + 6 + 23",
+   "6r + 15 = –r + 28"
+  ]
+ },
+ {
+  "id": "22-u3-11-wrong-w3",
+  "file": "22-u3-11-wrong-w3.png",
+  "problem_id": "u3-11",
+  "category": "wrong",
+  "error_type": "combine like terms",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 52118,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 22,
+     "w": 455,
+     "h": 63
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 97,
+     "w": 445,
+     "h": 63
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 54,
+     "y": 173,
+     "w": 272,
+     "h": 58
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 67,
+     "y": 252,
+     "w": 189,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "6(x – 2) – 4(x + 1) = 10",
+   "6x – 12 – 4x – 4 = 10",
+   "10x – 16 = 10",
+   "10x = 26"
+  ]
+ },
+ {
+  "id": "23-u3-20-wrong-w4",
+  "file": "23-u3-20-wrong-w4.png",
+  "problem_id": "u3-20",
+  "category": "wrong",
+  "error_type": "move a term without flipping its sign",
+  "wrong_line": 4,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 51430,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 63,
+     "y": 30,
+     "w": 531,
+     "h": 62
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 59,
+     "y": 117,
+     "w": 460,
+     "h": 49
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 189,
+     "w": 315,
+     "h": 44
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 58,
+     "y": 270,
+     "w": 303,
+     "h": 47
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 72,
+     "y": 354,
+     "w": 134,
+     "h": 42
+    }
+   }
+  ],
+  "rows": [
+   "–2(3 – 4x) + 5 = 3(x + 4) + 2",
+   "–6 + 8x + 5 = 3x + 12 + 2",
+   "8x – 1 = 3x + 14",
+   "8x – 3x = 14 – 1",
+   "5x = 13"
+  ]
+ },
+ {
+  "id": "24-u3-04-wrong-w2",
+  "file": "24-u3-04-wrong-w2.png",
+  "problem_id": "u3-04",
+  "category": "wrong",
+  "error_type": "distribution (second term forgotten)",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 30640,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 71,
+     "y": 30,
+     "w": 267,
+     "h": 59
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 71,
+     "y": 106,
+     "w": 218,
+     "h": 54
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 75,
+     "y": 182,
+     "w": 142,
+     "h": 56
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 68,
+     "y": 276,
+     "w": 125,
+     "h": 66
+    }
+   }
+  ],
+  "rows": [
+   "–4(2p + 5) = 12",
+   "–8p + 5 = 12",
+   "–8p = 7",
+   "p = –{7/8}"
+  ]
+ },
+ {
+  "id": "25-u3-10-wrong-w2",
+  "file": "25-u3-10-wrong-w2.png",
+  "problem_id": "u3-10",
+  "category": "wrong",
+  "error_type": "distribution (second term forgotten)",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 31249,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 34,
+     "w": 360,
+     "h": 55
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 64,
+     "y": 111,
+     "w": 335,
+     "h": 42
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 65,
+     "y": 186,
+     "w": 251,
+     "h": 45
+    }
+   }
+  ],
+  "rows": [
+   "8 – 3(x + 2) = 5",
+   "8 – 3x + 2 = 5",
+   "10 – 3x = 5"
+  ]
+ },
+ {
+  "id": "26-u3-07-wrong-w2",
+  "file": "26-u3-07-wrong-w2.png",
+  "problem_id": "u3-07",
+  "category": "wrong",
+  "error_type": "multiply only some terms by the LCD",
+  "wrong_line": 2,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 35018,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 56,
+     "y": 19,
+     "w": 220,
+     "h": 73
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 62,
+     "y": 122,
+     "w": 341,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 68,
+     "y": 207,
+     "w": 149,
+     "h": 57
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 53,
+     "y": 285,
+     "w": 126,
+     "h": 53
+    }
+   }
+  ],
+  "rows": [
+   "{2k/5} – 3 = 1",
+   "all ·5:  2k – 3 = 5",
+   "2k = 8",
+   "k = 4"
+  ]
+ },
+ {
+  "id": "27-u3-01-wrong-w5",
+  "file": "27-u3-01-wrong-w5.png",
+  "problem_id": "u3-01",
+  "category": "wrong",
+  "error_type": "divide only one side",
+  "wrong_line": 5,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "chalkboard",
+  "width": 1024,
+  "height": 544,
+  "bytes": 35409,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 66,
+     "y": 38,
+     "w": 308,
+     "h": 47
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 119,
+     "w": 299,
+     "h": 47
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 59,
+     "y": 196,
+     "w": 220,
+     "h": 47
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 57,
+     "y": 279,
+     "w": 145,
+     "h": 42
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 71,
+     "y": 347,
+     "w": 122,
+     "h": 46
+    }
+   }
+  ],
+  "rows": [
+   "7x – 4 = 3x + 16",
+   "7x – 3x – 4 = 16",
+   "4x – 4 = 16",
+   "4x = 20",
+   "x = 20"
+  ]
+ },
+ {
+  "id": "28-u3-19-wrong-w5",
+  "file": "28-u3-19-wrong-w5.png",
+  "problem_id": "u3-19",
+  "category": "wrong",
+  "error_type": "divide only one side",
+  "wrong_line": 5,
+  "wrong_line_is_latest": true,
+  "half_written_last_line": false,
+  "font": "marker",
+  "width": 1024,
+  "height": 544,
+  "bytes": 48421,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 73,
+     "y": 24,
+     "w": 286,
+     "h": 67
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 56,
+     "y": 131,
+     "w": 310,
+     "h": 57
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 53,
+     "y": 217,
+     "w": 314,
+     "h": 52
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 54,
+     "y": 287,
+     "w": 138,
+     "h": 53
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 70,
+     "y": 374,
+     "w": 121,
+     "h": 52
+    }
+   }
+  ],
+  "rows": [
+   "{5/6}v + 2 = {1/3}v + 7",
+   "5v + 12 = 2v + 42",
+   "5v – 2v = 42 – 12",
+   "3v = 30",
+   "v = 30"
+  ]
+ },
+ {
+  "id": "29-u3-15-wrong-w3",
+  "file": "29-u3-15-wrong-w3.png",
+  "problem_id": "u3-15",
+  "category": "wrong",
+  "error_type": "distribution (second term forgotten)",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "bradley",
+  "width": 1024,
+  "height": 544,
+  "bytes": 50942,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 67,
+     "y": 26,
+     "w": 451,
+     "h": 68
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 68,
+     "y": 126,
+     "w": 396,
+     "h": 55
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 67,
+     "y": 216,
+     "w": 352,
+     "h": 45
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 71,
+     "y": 279,
+     "w": 345,
+     "h": 52
+    }
+   },
+   {
+    "index": 5,
+    "box": {
+     "x": 69,
+     "y": 364,
+     "w": 131,
+     "h": 48
+    }
+   }
+  ],
+  "rows": [
+   "{2/3}(x – 1) = {1/2}(x + 3)",
+   "4(x – 1) = 3(x + 3)",
+   "4x – 4 = 3x + 3",
+   "4x – 3x = 3 + 4",
+   "x = 7"
+  ]
+ },
+ {
+  "id": "30-u3-13-wrong-w3",
+  "file": "30-u3-13-wrong-w3.png",
+  "problem_id": "u3-13",
+  "category": "wrong",
+  "error_type": "sign",
+  "wrong_line": 3,
+  "wrong_line_is_latest": false,
+  "half_written_last_line": false,
+  "font": "noteworthy",
+  "width": 1024,
+  "height": 544,
+  "bytes": 52096,
+  "lines": [
+   {
+    "index": 1,
+    "box": {
+     "x": 71,
+     "y": 21,
+     "w": 255,
+     "h": 70
+    }
+   },
+   {
+    "index": 2,
+    "box": {
+     "x": 72,
+     "y": 120,
+     "w": 397,
+     "h": 60
+    }
+   },
+   {
+    "index": 3,
+    "box": {
+     "x": 72,
+     "y": 203,
+     "w": 342,
+     "h": 59
+    }
+   },
+   {
+    "index": 4,
+    "box": {
+     "x": 58,
+     "y": 280,
+     "w": 333,
+     "h": 56
+    }
+   }
+  ],
+  "rows": [
+   "{x + 4/3} = {x – 2/2}",
+   "2(x + 4) = 3(x – 2)",
+   "2x + 8 = 3x + 6",
+   "8 – 6 = 3x – 2x"
+  ]
+ }
+]
