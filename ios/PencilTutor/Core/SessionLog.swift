@@ -52,6 +52,31 @@ final class SessionLog {
         }
     }
 
+    /// Debug builds only (the same gate as `TutorSession.logsWords`): keeps a copy of the page picture that was sent to the
+    /// tutor, next to the session log, so Edward's real handwriting can be pulled off the iPad for model evals later.
+    /// Release builds never write it. The file stays on the device: it is not uploaded, not part of the log export, and the
+    /// log line names the file and its size only. Returns the file name, or nil when nothing was written.
+    ///
+    /// Pull with: xcrun devicectl device copy from --device <id> --domain-type appDataContainer
+    ///   --domain-identifier com.edwardtran.penciltutor --source Documents/<file> --destination <folder>
+    @discardableResult
+    func savePageImage(_ png: Data, kind: String, lookID: String) -> String? {
+        guard TutorSession.logsWords else { return nil }
+        let safeKind = kind.filter { $0.isLetter || $0.isNumber }
+        let safeLook = lookID.filter { $0.isLetter || $0.isNumber || $0 == "-" }
+        let name = fileURL.deletingPathExtension().lastPathComponent
+            .replacingOccurrences(of: "session-", with: "page-") + "-\(safeKind)-\(safeLook).png"
+        let url = directory.appendingPathComponent(name)
+        do {
+            try png.write(to: url, options: .atomic)
+            record("page_saved", ["kind": safeKind, "look": safeLook, "file": name, "bytes": png.count])
+            return name
+        } catch {
+            record("page_save_failed", ["kind": safeKind, "look": safeLook, "bytes": png.count, "reason": String(describing: error)])
+            return nil
+        }
+    }
+
     /// Waits for pending writes, then merges every session file into one temporary file for the share sheet.
     func exportURL() -> URL? {
         queue.sync {}

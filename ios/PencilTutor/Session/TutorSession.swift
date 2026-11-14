@@ -374,6 +374,7 @@ final class TutorSession: ObservableObject {
             }
             do {
                 let snapshot = try PageSnapshotter.make(drawing: canvas.drawing, canvasSize: canvas.bounds.size, lines: lines)
+                env.log.savePageImage(snapshot.png, kind: "consult", lookID: "d\(delegation.id)-a\(attempt)-r\(revisionSent)")  // Debug builds only
                 let request = ConsultRequest(
                     sessionId: sessionID, problemId: problem.id, drawingRevision: revisionSent,
                     imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent
@@ -507,13 +508,15 @@ final class TutorSession: ObservableObject {
         ])
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
 
-        Task { await runLook(trigger: trigger, drawing: drawing, size: size, lines: lines, revision: revision) }
+        let lookID = "w\(looksStarted)-r\(revision)"
+        Task { await runLook(trigger: trigger, drawing: drawing, size: size, lines: lines, revision: revision, lookID: lookID) }
     }
 
-    private func runLook(trigger: LookTrigger, drawing: PKDrawing, size: CGSize, lines: [InkLine], revision: Int) async {
+    private func runLook(trigger: LookTrigger, drawing: PKDrawing, size: CGSize, lines: [InkLine], revision: Int, lookID: String) async {
         let started = now()
         do {
             let snapshot = try PageSnapshotter.make(drawing: drawing, canvasSize: size, lines: lines)
+            env.log.savePageImage(snapshot.png, kind: "watch", lookID: lookID)  // Debug builds only
             let request = WatchRequest(
                 sessionId: sessionID,
                 problemId: problem.id,

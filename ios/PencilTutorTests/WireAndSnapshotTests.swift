@@ -130,4 +130,25 @@ final class WireAndSnapshotTests: XCTestCase {
         }
         XCTAssertFalse(text.lowercased().contains("bearer"))
     }
+
+    /// Debug-only page capture: the picture lands next to the session log with the look id in its name, the log names the
+    /// file and its size only, and the share-sheet export never carries the picture. (Tests build Debug, where `logsWords`
+    /// is true; in Release it is false and `savePageImage` writes nothing.)
+    func testDebugBuildKeepsPagePictureNextToTheLogWithTheLookID() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("page-test-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let log = SessionLog(directory: directory)
+        let png = Data([0x89, 0x50, 0x4E, 0x47, 1, 2, 3])
+
+        let name = try XCTUnwrap(log.savePageImage(png, kind: "watch", lookID: "w3-r17"))
+        XCTAssertTrue(name.hasPrefix("page-"))
+        XCTAssertTrue(name.hasSuffix("-watch-w3-r17.png"))
+        XCTAssertEqual(try Data(contentsOf: directory.appendingPathComponent(name)), png)
+
+        let exported = try XCTUnwrap(log.exportURL())
+        let text = try String(contentsOf: exported, encoding: .utf8)
+        XCTAssertTrue(text.contains("\"page_saved\""))
+        XCTAssertTrue(text.contains("\"bytes\":7"))
+        XCTAssertFalse(text.contains("PNG"), "no picture bytes in the log")
+    }
 }
