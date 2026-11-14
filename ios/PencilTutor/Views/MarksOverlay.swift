@@ -7,8 +7,8 @@ import SwiftUI
 /// boxes), so it is multiplied by the zoom and the whole layer is shifted up and left by the canvas's scroll offset
 /// (`screen = page * zoom - offset`), which keeps a circle on its line while the page moves or is pinched. Only the circle
 /// scales; the callout keeps its reading size at any zoom. The overlay's own frame is the visible canvas, so anything scrolled
-/// off screen is clipped. The callout is placed against the whole (zoomed) page, not against the screen, so a mark far out on
-/// the page keeps its callout beside or under it instead of being squeezed back into the first screen.
+/// off screen is clipped. The callout is placed against the part of the page on screen (beside, under or above the circle),
+/// so it never runs off the right or bottom edge; a mark off screen is scrolled into view first (`offsetToReveal`).
 struct MarksOverlay: View {
     let marks: [Mark]
     @ObservedObject var viewport: CanvasViewport
@@ -19,7 +19,8 @@ struct MarksOverlay: View {
                                   height: max(proxy.size.height, viewport.contentSize.height))
             ZStack(alignment: .topLeading) {
                 ForEach(marks) { mark in
-                    MarkView(mark: mark, zoom: viewport.zoomScale, pageSize: pageSize)
+                    MarkView(mark: mark, zoom: viewport.zoomScale, pageSize: pageSize,
+                             visible: CGRect(origin: viewport.offset, size: proxy.size))
                 }
             }
             .frame(width: pageSize.width, height: pageSize.height, alignment: .topLeading)
@@ -36,6 +37,8 @@ private struct MarkView: View {
     let zoom: CGFloat
     /// The whole page in screen points (zoomed).
     let pageSize: CGSize
+    /// The part of the (zoomed) page on screen, in the same points as `pageSize`.
+    let visible: CGRect
 
     private let calloutWidth: CGFloat = 260
     private let calloutHeight: CGFloat = 64
@@ -52,17 +55,10 @@ private struct MarkView: View {
                       width: max(20, clippedMaxX - clippedMinX), height: max(20, clippedMaxY - clippedMinY))
     }
 
+    /// Beside the circle if it fits on screen, else under it, else above it; always kept inside the visible part of the page.
     private var calloutOrigin: CGPoint {
-        let rect = ellipseRect
-        let margin: CGFloat = 8
-        if rect.maxX + margin + calloutWidth <= pageSize.width {
-            return CGPoint(x: rect.maxX + margin, y: max(2, rect.midY - calloutHeight / 2))
-        }
-        if rect.maxY + margin + calloutHeight <= pageSize.height {
-            return CGPoint(x: min(max(2, rect.minX), pageSize.width - calloutWidth - 2), y: rect.maxY + margin)
-        }
-        return CGPoint(x: min(max(2, rect.minX), pageSize.width - calloutWidth - 2),
-                       y: max(2, rect.minY - margin - calloutHeight))
+        CalloutPlacement.origin(circle: ellipseRect, visible: visible.intersection(CGRect(origin: .zero, size: pageSize)),
+                                size: CGSize(width: calloutWidth, height: calloutHeight))
     }
 
     var body: some View {
@@ -87,5 +83,23 @@ private struct MarkView: View {
                 .offset(x: calloutOrigin.x, y: calloutOrigin.y)
                 .accessibilityIdentifier("hintText")
         }
+    }
+}
+
+/// Where a hint callout goes, as plain arithmetic (tested without UI). All rectangles are in zoomed page points.
+enum CalloutPlacement {
+    static func origin(circle: CGRect, visible: CGRect, size: CGSize, margin: CGFloat = 8, inset: CGFloat = 2) -> CGPoint {
+        let area = visible.isNull || visible.isEmpty ? circle.insetBy(dx: -size.width, dy: -size.height) : visible
+        let minX = area.minX + inset, maxX = max(minX, area.maxX - size.width - inset)
+        let minY = area.minY + inset, maxY = max(minY, area.maxY - size.height - inset)
+        func clampX(_ x: CGFloat) -> CGFloat { min(max(x, minX), maxX) }
+        func clampY(_ y: CGFloat) -> CGFloat { min(max(y, minY), maxY) }
+        if circle.maxX + margin + size.width <= area.maxX - inset {
+            return CGPoint(x: circle.maxX + margin, y: clampY(circle.midY - size.height / 2))
+        }
+        if circle.maxY + margin + size.height <= area.maxY - inset {
+            return CGPoint(x: clampX(circle.minX), y: circle.maxY + margin)
+        }
+        return CGPoint(x: clampX(circle.minX), y: clampY(circle.minY - margin - size.height))
     }
 }
