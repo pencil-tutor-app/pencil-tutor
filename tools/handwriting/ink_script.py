@@ -133,7 +133,7 @@ def build_script(lines: list[str], seed: int, meta: dict, expected: dict, cap: f
     for index, (text, box) in enumerate(zip(lines, boxes), start=1):
         x_here = x0 + rng.gauss(0, 5)
         strokes, t_end, bbox = synth.write_line(box, (x_here, baseline), writer, rng, t, tilt=rng.gauss(0, 0.006 * jitter))
-        rows = synth.count_visual_rows(text)
+        rows = 1       # a matrix is one line of work: its rows stay together (the grouper keeps the rows between brackets in one line)
         out_lines.append({
             "index": index, "text": text, "app_line_start": app_line, "app_lines": rows,
             "t_start": strokes[0][0][2] if strokes else t, "t_end": round(t_end, 3),
@@ -245,7 +245,7 @@ def cmd_cases(args):
     manifest = []
     # `--pick course:problem` (repeatable) writes exactly those problems; otherwise one pinned problem per course.
     picks = [p.split(":", 1) for p in (args.pick or [])]
-    for course in ([c for c, _ in picks] if picks else CASE_COURSES):
+    for course in (list(dict.fromkeys(c for c, _ in picks)) if picks else CASE_COURSES):
         picked = 0
         by_id = {p["id"]: p for p in load_problems(course)}
         if picks:
@@ -275,7 +275,7 @@ def cmd_cases(args):
                                  "written": [l["text"] for l in script["lines"]]})
                 print(script["id"], stats(script))
             picked += 1
-            if picked >= args.per_course:
+            if not picks and picked >= args.per_course:
                 break
         if picked == 0:
             print(f"WARNING: no suitable problem in {course}", file=sys.stderr)
