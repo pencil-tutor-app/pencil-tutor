@@ -29,7 +29,7 @@ final class MemoryStoreTests: XCTestCase {
             case "consent":
                 status.consent = MemoryConsent(granted: true, current: true, givenBy: request.givenBy, recordedVia: "app", noticeVersion: request.noticeVersion ?? "?", at: "2026-11-14T18:00:00.000Z")
             case "withdraw":
-                status.consent = MemoryConsent(granted: false, current: false, givenBy: nil, recordedVia: "app", noticeVersion: version, at: "2026-11-14T19:00:00.000Z")
+                status.consent = MemoryConsent(granted: false, current: false, givenBy: nil, recordedVia: "app", noticeVersion: "2026-11-14.1", at: "2026-11-14T19:00:00.000Z")
                 if request.erase == true { status.record = MemoryRecord(notes: 0, recent: []) }
             default:
                 status.record = MemoryRecord(notes: 0, recent: [])
