@@ -3,6 +3,7 @@ import {
   EMPTY_USAGE,
   DEFAULT_MONTHLY_CAP_SECONDS,
   type ActivityKind,
+  type Charge,
   type SpeechProvider,
   type StudentRecord,
   type StudentStore,
@@ -70,15 +71,18 @@ export class MemoryStudentStore implements StudentStore {
     };
   }
 
-  async chargeActivity(studentId: string, month: string, at: Date, kind: ActivityKind): Promise<Usage> {
+  async chargeActivity(studentId: string, month: string, at: Date | null, kind: ActivityKind): Promise<{ usage: Usage; charge: Charge }> {
     this.check();
     const u = this.slot(studentId, month);
-    const charge = chargeFor(u.coveredUntil, at);
-    u.countedSeconds += charge.addedSeconds;
-    u.coveredUntil = charge.coveredUntil;
+    const result = chargeFor(u.lastActivityAt, at);
+    u.countedSeconds += result.seconds;
+    u.lastActivityAt = result.lastActivityAt;
     if (kind === "look") u.looks += 1;
     if (kind === "question") u.questions += 1;
-    return { ...u, lowNoticed: u.lowNotice, usedUpNoticed: u.usedUpNotice };
+    return {
+      usage: { ...u, lowNoticed: u.lowNotice, usedUpNoticed: u.usedUpNotice },
+      charge: { seconds: result.seconds, reason: result.reason, gapSeconds: result.gapSeconds },
+    };
   }
 
   async addSpeech(studentId: string, month: string, chars: number, provider: SpeechProvider): Promise<number> {

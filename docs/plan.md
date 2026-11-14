@@ -212,16 +212,31 @@ one student and was shipped inside every copy of the app, whereas a code can be 
 is the thing the cap is counted against. The server checks the code on every request. `scripts/codes` (run locally by Edward)
 creates, lists, tops up and disables codes (`docs/how-to-run.md`).
 
-**The cap: 8 hours a month per code.** A **counted minute is a minute with a problem open and recent activity: ink, a question or
-a look within the last 2 minutes.** Every activity event keeps the meter running for 120 seconds after it, and counted time is the
-total length of the union of those windows (so activity every minute for an hour counts as an hour plus the final 2 minutes, and
-30 idle minutes count for nothing). The server meters from requests it already receives (a valid `/api/watch` look, `/api/ask` or
-`/api/consult` question) plus a light heartbeat (`POST /api/heartbeat`, every 60 seconds, sent by the app only while a problem is
-open and there was ink, a question or a look in the last 2 minutes). The month is the calendar month in America/Vancouver and resets
-on the 1st. At 80% used, the tutor says how much is left (once a month); at 100% the tutor says the month's hours are used up and to
-ask Edward for more, watching and asking stop (the server refuses with `hours_used_up`), and drawing still works. The app always shows
-the minutes left. A top-up adds time to the current month only. Because requests can overlap, a student can overshoot the cap by one
-window (about 2 minutes).
+**The cap: 8 hours a month per code.** **Counted time is the real time the student is actively working** (rule changed 2026-11-14,
+see the amendment below): the gaps between consecutive activity moments (ink, a question, the tutor looking or answering because
+of the student, the student's live voice talk), where any gap longer than 60 seconds counts as zero (they walked away or sat idle).
+Nothing is charged ahead of time: the first moment of a session charges 0 seconds, and stopping charges nothing after the last
+moment. The server meters from requests it already receives (a valid `/api/watch` look, `/api/ask` or `/api/consult` question) plus
+a heartbeat (`POST /api/heartbeat`, every 30 seconds, sent by the app only while a problem is open and there is student activity
+it has not reported yet). A heartbeat is not activity by itself: it carries `seconds_since_activity`, how long ago the student's
+last real ink or live talk was, and the server charges the gap from that moment. A student who opens a problem and leaves the iPad
+on the table accrues about nothing. The month is the calendar month in America/Vancouver and resets on the 1st. At 80% used, the
+tutor says how much is left (once a month); at 100% the tutor says the month's hours are used up and to ask Edward for more,
+watching and asking stop (the server refuses with `hours_used_up`), and drawing still works. The app always shows the minutes
+left. A top-up adds time to the current month only.
+
+**Amendment, 2026-11-14: the counted minute is now real working time (Edward's decision).** The first rule charged every activity
+event a 2-minute window forward (`ACTIVITY_WINDOW_SECONDS = 120`, `covered_until`) and the app sent a heartbeat every 60 seconds
+while there had been activity in the last 2 minutes. On Edward's own device test (UTC) that over-charged: the problem opened at
+11:00:56 with 480 minutes left; the 11:01:58 heartbeat already showed 477 (3 minutes gone after 1 real minute); he wrote until about
+11:04, then idled, and at 11:06 the meter read 473. He had written for about 3 minutes and paid about 7. Why: every event was
+pre-charged 2 minutes, and the heartbeat kept re-arming the window while he was only thinking. The new rule counts only the gap
+between real moments, capped at 60 seconds, with no pre-charge (`chargeFor` in `server/lib/students.ts`, one atomic SQL statement,
+new column `usage_months.last_activity_at` from `server/db/migrations/002_last_activity_at.sql`; `covered_until` is kept but
+unused). Replayed through the new rule, his session (a stroke about every 10 seconds from 11:01:00 to 11:04:00, heartbeats every 30
+seconds) costs about 160 seconds, not 7 minutes. Trade-offs, on purpose: opening a problem or a live session is not work; two moments
+more than 60 seconds apart do not charge the gap between them even if the student was quietly thinking; a heartbeat can lose up to
+30 seconds of trailing ink if the problem is closed before the next beat.
 
 **Storage.** Neon Postgres on the Vercel Marketplace, Free plan (no payment method; 1 GB, 100 CU-hours of compute a month), provisioned
 into the `pencil-tutor` project in the Vercel team. Two tables (`students`, `usage_months`; `server/db/migrations/001_students.sql`,

@@ -76,28 +76,34 @@ describe("postgres store and admin", { skip: !enabled }, () => {
     const pg = await newStudent();
     const memory = new MemoryStudentStore();
     const memoryId = memory.add("AAAAAAAA");
-    for (const offset of [0, 0, 60, 61, 200, 200, 500, 515, 10_000]) {
-      const fromPg = await store.chargeActivity(pg.id, MONTH, t(offset), "look");
-      const fromMemory = await memory.chargeActivity(memoryId, MONTH, t(offset), "look");
-      assert.equal(fromPg.countedSeconds, fromMemory.countedSeconds, `counted seconds after an event at +${offset}s`);
-      assert.equal(fromPg.coveredUntil?.getTime(), fromMemory.coveredUntil?.getTime(), `covered until after +${offset}s`);
+    // First moment, a repeat, a 60 s gap (counts), 1 s later, an older moment, no activity reported, a 61 s gap (zero), a long gap.
+    const offsets: (number | null)[] = [0, 0, 60, 61, 30, null, 122, 140, 200, 10_000];
+    for (const offset of offsets) {
+      const at = offset === null ? null : t(offset);
+      const fromPg = await store.chargeActivity(pg.id, MONTH, at, "look");
+      const fromMemory = await memory.chargeActivity(memoryId, MONTH, at, "look");
+      assert.equal(fromPg.usage.countedSeconds, fromMemory.usage.countedSeconds, `counted seconds after an event at +${offset}s`);
+      assert.equal(fromPg.usage.lastActivityAt?.getTime(), fromMemory.usage.lastActivityAt?.getTime(), `last activity after +${offset}s`);
+      assert.deepEqual(fromPg.charge, fromMemory.charge, `charge and reason for an event at +${offset}s`);
     }
   });
 
-  it("counts five simultaneous events at the same moment once (the upsert is atomic)", async () => {
+  it("counts five simultaneous events at the same moment once, and gaps exactly (the upsert is atomic)", async () => {
     const { code, id } = await newStudent();
-    const results = await Promise.all([1, 2, 3, 4, 5].map(() => store.chargeActivity(id, MONTH, t(0), "heartbeat")));
+    await store.chargeActivity(id, MONTH, t(0), "look"); // first moment: 0 s
+    const results = await Promise.all([1, 2, 3, 4, 5].map(() => store.chargeActivity(id, MONTH, t(40), "heartbeat")));
     const final = await store.lookup(code, MONTH);
-    assert.equal(final?.usage.countedSeconds, 120);
-    assert.ok(results.every((r) => r.countedSeconds <= 120));
+    assert.equal(final?.usage.countedSeconds, 40, "the 40 s gap is charged once, not five times");
+    assert.ok(results.every((r) => r.usage.countedSeconds <= 40));
   });
 
   it("keeps each month separate", async () => {
     const { code, id } = await newStudent();
     await store.chargeActivity(id, "2030-01-01", t(0), "look");
+    await store.chargeActivity(id, "2030-01-01", t(30), "look");
     await store.chargeActivity(id, "2030-02-01", t(0), "look");
-    assert.equal((await store.lookup(code, "2030-01-01"))?.usage.countedSeconds, 120);
-    assert.equal((await store.lookup(code, "2030-02-01"))?.usage.countedSeconds, 120);
+    assert.equal((await store.lookup(code, "2030-01-01"))?.usage.countedSeconds, 30);
+    assert.equal((await store.lookup(code, "2030-02-01"))?.usage.countedSeconds, 0, "a new month starts with no earlier moment");
     assert.equal((await store.lookup(code, "2030-03-01"))?.usage.countedSeconds, 0);
   });
 
@@ -147,9 +153,10 @@ describe("postgres store and admin", { skip: !enabled }, () => {
   it("lists students with this month's usage and the log hash", async () => {
     const { code, id } = await newStudent();
     await store.chargeActivity(id, MONTH, t(0), "look");
+    await store.chargeActivity(id, MONTH, t(30), "look");
     const listed = (await admin.list(MONTH)).find((s) => s.code === code);
     assert.ok(listed);
-    assert.deepEqual([listed.usedSeconds, listed.remainingMinutes, listed.state, listed.planLive], [120, 478, "ok", false]);
+    assert.deepEqual([listed.usedSeconds, listed.remainingMinutes, listed.state, listed.planLive], [30, 479, "ok", false]);
     assert.match(listed.hash, /^[0-9a-f]{8}$/);
   });
 

@@ -114,10 +114,14 @@ struct MeResponse: Codable, Equatable {
 struct HeartbeatRequest: Codable, Equatable {
     var sessionId: String
     var problemId: String
+    /// How long ago the student's last real activity (ink, a question, a look, live talk) was, by this device's own clock.
+    /// The server counts time only from this; a heartbeat without it counts nothing.
+    var secondsSinceActivity: Int? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
         case problemId = "problem_id"
+        case secondsSinceActivity = "seconds_since_activity"
     }
 }
 
