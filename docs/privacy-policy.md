@@ -17,6 +17,7 @@ Contact for any privacy question or request: [Edward to fill in a contact email 
 - **The voice is an AI voice.** What the student hears is computer-generated speech, not a person talking live. Today it is a stock voice from a speech service; it may later be a synthetic copy of Edward's own voice, and this page will say so first.
 - **Who handles the data on our behalf.** Hosting (Vercel), the database (Neon), the AI that reads pages and writes hints (OpenAI, and Google Gemini if Edward switches to it), and the voice service (ElevenLabs, which receives only the sentence to be spoken). These companies are in the United States or process data there. Region settings are to confirm.
 - **Logs.** The server writes a log line for each request with sizes, counts and short reason labels. It never writes pictures, recordings, what the student said, hints, notes, or codes. A student appears in the logs only as a short scrambled id.
+- **The iPad's own log.** The app keeps a session log on the iPad (timings, counts, and the short written hint, at most 8 words, shown beside a line). It holds no name. The app has a button that shares this log, which is how Edward looks at how a session went when a family sends it.
 
 ## Part B: tutor memory (off unless a parent or guardian agrees)
 
@@ -28,7 +29,7 @@ Only if memory is on:
 - How many times the student asked the tutor a question (a count, not the question).
 - Short notes Edward writes after a lesson, for example how the student likes to be helped.
 
-Never remembered: names, pictures of the page, recordings, what the student said or wrote, the words of any hint.
+Never remembered on our server: names, pictures of the page, recordings, what the student said or wrote, the words of any hint. (The iPad keeps its own session log, see Part A.)
 
 ### Why
 
@@ -36,7 +37,7 @@ So the tutor can word its hints in a way that suits this student, and so Edward 
 
 ### Who sees it
 
-Edward. The AI service that powers the tutor also receives Edward's notes along with the page picture each time it looks, so it can use them to word a hint. That service is OpenAI, or Google if Edward switches to it. OpenAI says information sent through its API is not used to train its models unless a customer opts in (its data controls page, read 2026-11-14). It has also said it can keep API inputs for up to 30 days for abuse monitoring; that figure came from a community post quoting OpenAI and is to confirm. Google's terms for the paid Gemini service are to confirm. The database holding the memory is Neon in the United States (region to confirm).
+Edward. The AI service that powers the tutor also receives Edward's notes, but only at the moment the tutor is about to speak a hint, in a separate text-only request (no picture of the page) that asks it to word that one hint in a way that suits the student. The notes are never part of the request that decides whether the tutor speaks up. That service is OpenAI, or Google if Edward switches to it. OpenAI says information sent through its API is not used to train its models unless a customer opts in (its data controls page, read 2026-11-14). It has also said it can keep API inputs for up to 30 days for abuse monitoring; that figure came from a community post quoting OpenAI and is to confirm. Google's terms for the paid Gemini service are to confirm. The database holding the memory is Neon in the United States (region to confirm).
 
 ### Who can agree
 
@@ -59,7 +60,9 @@ Until you erase it. Edward also deletes the memory of any code that has not been
 ### What could go wrong
 
 - A note could be wrong, or put in a way that is unkind. Notes are written as if the student or parent will read them, because they can ask to. A wrong note can change how a hint is worded; it cannot make the tutor interrupt more or less.
-- The tutor could say something about the past that never happened. It is told not to, and the server blocks the most common phrasings and replaces the hint with a neutral one. This check is not perfect.
+- The tutor could say something about the past that never happened. It is told not to, and the server checks for the most common phrasings and, if it finds one, speaks the ordinary hint instead. That check is not perfect.
+- The reworded spoken hint could say something slightly different from the ordinary one. The written hint on the page, which the tutor also uses to decide later, is never reworded. Edward reviews samples.
+- Withdrawing takes effect on the next request. A request that was already on its way to the AI service at that moment (about two seconds at most) can still carry the notes once.
 - The database could be leaked. It would show which problems a code practised, on which dates, and any notes. It holds no names. The list of who a code belongs to is not on the server.
 - An AI service could handle information differently from what its documents promise.
 
