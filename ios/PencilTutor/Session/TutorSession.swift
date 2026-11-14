@@ -31,8 +31,9 @@ struct Mark: Identifiable, Equatable {
 /// or drops, the session falls back to tap to ask and says why in the log. `voice` says which of those the screen is in.
 ///
 /// Hours: the account tells this session when the month's hours are used up or the code is turned off. Then it stops
-/// looking, asking and talking, and leaves drawing alone. While a problem is open and the student is active it also sends
-/// a heartbeat every minute so the server can count the time (`ActivityMeter`).
+/// looking, asking and talking, and leaves drawing alone. While a problem is open it also sends a heartbeat every 30 seconds
+/// that reports when the student last really did something (ink, live talk), if that is new, so the server counts only real
+/// working time (`ActivityMeter`).
 @MainActor
 final class TutorSession: ObservableObject {
     enum LookTrigger: String {
@@ -315,6 +316,8 @@ final class TutorSession: ObservableObject {
 
     private func heartbeatTick() async {
         let at = now()
+        // Live voice talk is activity too, but it never reaches the server as a request, so the heartbeat carries it.
+        if let spoke = live?.lastStudentSpeechAt { activity.note(.speech, at: spoke) }
         let decision = activity.decide(now: at, problemOpen: !stopped, inForeground: inForeground, blocked: env.account.isBlocked)
         guard case .send(let kind, let secondsAgo) = decision else {
             // Logged when the reason changes, so a quiet student shows one line and not one a minute.
@@ -328,14 +331,15 @@ final class TutorSession: ObservableObject {
         activity.noteHeartbeatSent(at: at)
         env.log.record("heartbeat_sending", ["after": kind.rawValue, "seconds_since_activity": secondsAgo, "problem_id": problem.id])
         do {
-            let reply = try await env.client.heartbeat(HeartbeatRequest(sessionId: sessionID, problemId: problem.id))
+            let reply = try await env.client.heartbeat(HeartbeatRequest(sessionId: sessionID, problemId: problem.id, secondsSinceActivity: secondsAgo))
             env.log.record("heartbeat_ok", [
                 "remaining_minutes": reply.allowance.remainingMinutes, "state": reply.allowance.state.rawValue,
                 "elapsed_ms": Int(now().timeIntervalSince(at) * 1000)
             ])
         } catch {
             let (_, detail) = TutorError.describe(error)
-            env.log.record("heartbeat_failed", ["detail": detail, "next": "try again in a minute"])
+            activity.noteHeartbeatFailed()
+            env.log.record("heartbeat_failed", ["detail": detail, "next": "report the same activity on the next beat"])
         }
     }
 

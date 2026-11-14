@@ -69,6 +69,8 @@ final class LiveVoice {
     private var sawClosedEvent = false
     private var closeReasonFromServer: String?
     private var lastActivityAt: Date
+    /// When the student last spoke (the live session transcribed their voice). Counted as working time via the heartbeat.
+    private(set) var lastStudentSpeechAt: Date?
     private var lastTutorFragmentAt: Date?
     private var lastUsageLoggedAt: Double = -100
     private var connectStartedAt: Date
@@ -258,6 +260,7 @@ final class LiveVoice {
             if let id { liveSessionID = id }
         case .inputTranscript(let fragment):
             noteActivity()
+            lastStudentSpeechAt = now()
             logFinished(transcript.add(.student, fragment: fragment, at: now()))
         case .outputTranscript(let fragment):
             noteActivity()

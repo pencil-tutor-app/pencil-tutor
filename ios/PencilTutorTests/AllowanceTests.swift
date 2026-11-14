@@ -54,6 +54,10 @@ final class AllowanceTests: XCTestCase {
         let request = try JSONEncoder().encode(HeartbeatRequest(sessionId: "s1", problemId: "u3-04"))
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with: request) as? [String: Any])
         XCTAssertEqual(Set(object.keys), ["session_id", "problem_id"])
+
+        let reporting = try JSONEncoder().encode(HeartbeatRequest(sessionId: "s1", problemId: "u3-04", secondsSinceActivity: 12))
+        let reportingObject = try XCTUnwrap(JSONSerialization.jsonObject(with: reporting) as? [String: Any])
+        XCTAssertEqual(reportingObject["seconds_since_activity"] as? Int, 12)
     }
 
     // MARK: - The 80% and 100% rules
