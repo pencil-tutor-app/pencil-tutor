@@ -857,7 +857,9 @@ def _(c):
 # Generic schema checks
 # ---------------------------------------------------------------------------
 FIELDS = {"id", "source", "prompt_latex", "prompt_plain", "prompt_parts", "worked_solution", "final_answer", "level"}
-BLOCKLIST = re.compile(r"\b(Kara|Nghi|Sora|Name:)\b")
+# Real names to block come from the environment (comma-separated), never from the repo: BLOCKED_NAMES="..." python3 verify.py
+_BLOCKED = [re.escape(n.strip()) for n in __import__("os").environ.get("BLOCKED_NAMES", "").split(",") if n.strip()]
+BLOCKLIST = re.compile(r"\b(" + "|".join(_BLOCKED + ["Name:"]) + r")\b")
 
 
 def plain_from_parts(parts):
