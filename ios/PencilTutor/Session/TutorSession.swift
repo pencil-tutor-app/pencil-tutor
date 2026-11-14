@@ -151,6 +151,11 @@ final class TutorSession: ObservableObject {
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
         env.log.record("ink_changed", ["strokes": strokes.count, "lines": lines.count, "revision": drawingRevision])
         live?.noteActivity()
+        // The caption is a backup for the voice; once the student writes again it is in the way, so it goes.
+        if statusMessage != nil {
+            setStatus(nil)
+            env.log.record("caption_hidden", ["why": "student_wrote"])
+        }
         scheduleCheck()
     }
 

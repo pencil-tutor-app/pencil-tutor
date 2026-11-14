@@ -18,22 +18,28 @@ struct ProblemScreen: View {
                 BlockedBanner(message: block.message)
             }
             Divider()
-            // Messages sit at the top of the page: the floating Pencil tool picker covers the bottom.
-            ZStack(alignment: .top) {
+            // The caption is a quiet backup for the voice: small, see-through, tucked in the top-right corner (students start
+            // writing top-left; the floating Pencil tool picker covers the bottom). It goes away on tap or when the student writes.
+            ZStack(alignment: .topTrailing) {
                 InkCanvas(session: session)
                 MarksOverlay(marks: session.marks)
                 if let message = session.statusMessage {
                     Text(message)
-                        .font(.system(size: 20, weight: .medium))
-                        .padding(14)
-                        .frame(maxWidth: 560, alignment: .leading)
-                        .background(RoundedRectangle(cornerRadius: 14).fill(Color(white: 0.12, opacity: 0.92)))
-                        .foregroundStyle(Color.white)
-                        .padding(.top, 12)
+                        .font(.system(size: 15))
+                        .lineLimit(4)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: 340, alignment: .leading)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                        .foregroundStyle(.primary)
+                        .padding(.top, 8)
+                        .padding(.trailing, 12)
+                        .transition(.opacity)
                         .onTapGesture { session.dismissStatus() }
                         .accessibilityIdentifier("statusBanner")
                 }
             }
+            .animation(.easeOut(duration: 0.2), value: session.statusMessage)
         }
         .navigationTitle("Problem")
         .navigationBarTitleDisplayMode(.inline)
