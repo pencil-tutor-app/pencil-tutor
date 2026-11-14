@@ -131,6 +131,38 @@ and the whole-screen screenshots. Both are in `docs/evals/assets/`.
 - A single course sample of one problem each; the planted mistake is a changed number, not a conceptual error such as a sign
   rule, and later lines are carried forward only where the old number appears again.
 
+## Follow-up (2026-11-15, branch `line-grouping-and-card`): the three findings fixed, replayed on the iPad
+
+Changes: `LineGrouper` rewritten (bands, valleys, small-mark attachment, tighter fraction detection), writing starts below the problem
+card and a tutor mark is never left under it, and the card sets real maths (`docs/plan.md`, amendment 19).
+
+**Replay, 38 runs on the iPad** (the original 24 plus 14 new: rational and integer exponents `pc11-13`, `m9-08`, `pc12-22`; stacked
+fractions `m9-45`, `pc12-08`, `c1-60`; three cramped and wobbly pages, `--gap-scale 0.5 --jitter 1.6`, of `m9-07`, `pc11-24`, `c1-54`;
+one matrix problem `la-12`). 38 of 38 passed: 16 correct pages with 0 false alarms, 22 mistake pages each marked on the planted line,
+0 errors, 0 discards, one `ink_changed` per stroke.
+
+| | Before (main) | After |
+|---|---|---|
+| Original 24 runs: app line count equals the lines written | 19 of 24 (device, count only) | 24 of 24 (device) |
+| New 14 pages, strict check (each group holds one written line, count matches) | 1 of 14 (offline, real old `LineGrouper`) | 14 of 14 on device (count) and 14 of 14 offline (strict; a matrix counts as one line) |
+
+"Before" for the 14 new pages could not be run on the device inside the 40 run budget, so it comes from the old `LineGrouper` source
+compiled on the Mac and fed the same ink; the same harness reproduced exactly the five device disagreements listed above for the
+original 24, so it is a faithful stand-in. The offline corpus (`ink_script.py stress`, 2,570 pages, strict check): 985 agree before,
+2,404 after; at normal spacing 265 of 514 before, 505 after.
+
+What the iPad screenshots show (in `assets/`): `c1-54-mistake-screen-after.jpg` (the first line starts below the card, the circle wraps line 3
+only, where before it wrapped lines 3 and 4), `la-12-matrix-mistake-screen-after.jpg` (a matrix page: each equation with its matrix is one line,
+the circle covers the whole matrix row), `m9-07-correct-page-sent-to-model-after.png` (the exponent in `(-2)^3` stays on line 2; before it
+was line 3), `card-calculus-1-after.jpg` and `card-linear-algebra-after.jpg` (the card for sample prompts from the course banks, drawn on a
+simulator by `CardGalleryTests`; the on-device card with `x^(1/3)` raised is in the `c1-54` screenshot).
+
+Things seen and not fixed: in the `la-12` screenshot the tutor's callout text runs past the right edge of the screen ("Check the bott...")
+because the circled line is wide; the marks overlay does not keep a callout inside the screen. A matrix drawn with rows far apart can still
+split into two lines (11 of 19 matrix pages agree offline). Two fraction lines nested inside a fraction (`ca12-12`) can still split.
+Cramped and wobbly pages still disagree sometimes (offline: 478 of 514 at 0.4 of normal spacing, 432 of 514 with twice the wobble too).
+Runs 15 onward used `--silent` (voice path runs, volume 0, logged as `voice_muted_for_test`); the first 14 of the 38 were audible.
+
 ## Licence
 
 The single-stroke font is the Hershey set (JSON from scruss/python-hershey). Its terms allow any use, commercial included, if the
