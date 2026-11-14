@@ -163,14 +163,21 @@ export async function gate(ctx: RequestCtx, request: Request, deps: Deps, roles:
   return { ok: true, scripted: false, configs, keys, ...opened };
 }
 
-// Counts this request as activity (a look, a question or a heartbeat), then settles the allowance the reply will carry,
+// Counts this request's activity moment (see chargeFor in students.ts), then settles the allowance the reply will carry,
 // including the one-time "low" (80%) and "used up" (100%) notices. Called by a handler once the request is known to be valid.
+// `activityAt` is when the activity really happened: a look or a question happened now, so that is the default. A heartbeat
+// passes the time its app reported, or null when it reported none; opening live is not work, so it passes null as well.
 // If the database fails here the student is not locked out of the request they already passed the cap check for; the failure
 // is logged as an error so it is never silent.
-export async function meterActivity(ctx: RequestCtx, opened: GateOpen, kind: ActivityKind): Promise<void> {
-  const { store, student, month, now } = opened;
+export async function meterActivity(
+  ctx: RequestCtx,
+  opened: GateOpen,
+  kind: ActivityKind,
+  activityAt: Date | null = kind === "look" || kind === "question" ? opened.now : null,
+): Promise<void> {
+  const { store, student, month } = opened;
   try {
-    const usage = await timedDb(ctx, () => store.chargeActivity(student.id, month, now, kind));
+    const { usage, charge } = await timedDb(ctx, () => store.chargeActivity(student.id, month, activityAt, kind));
     const settled = allowanceOf(month, usage, student.capSeconds);
     let notice: "low" | "used_up" | null = null;
     if (settled.state === "used_up") {
@@ -182,6 +189,9 @@ export async function meterActivity(ctx: RequestCtx, opened: GateOpen, kind: Act
     ctx.allowance = { ...settled, notice };
     ctx.note({
       counted_kind: kind,
+      charged_seconds: charge.seconds,
+      charge_reason: charge.reason,
+      ...(charge.gapSeconds === null ? {} : { gap_seconds: charge.gapSeconds }),
       allowance_state: settled.state,
       used_seconds: settled.used_seconds,
       cap_seconds: settled.cap_seconds,

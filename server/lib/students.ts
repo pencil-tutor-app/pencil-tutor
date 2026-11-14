@@ -29,10 +29,12 @@ export const codeHash = (code: string): string => createHash("sha256").update(`p
 
 // ----- Counting time -----
 
-// A counted minute is a minute with a problem open and recent activity: ink, a question or a look within the last 2 minutes.
-// Every activity event keeps the meter running for ACTIVITY_WINDOW_SECONDS after it. Counted time is the total length of the
-// union of those windows, and each event is charged the part of its window that no earlier window already covered.
-export const ACTIVITY_WINDOW_SECONDS = 120;
+// Counted time is the real time a student spends working. Activity moments are ink, a question, the tutor looking at the work,
+// and live voice talk. Each moment is charged the gap since the previous one, unless that gap is longer than MAX_GAP_SECONDS:
+// then the student had walked away or was idle, and the gap counts as zero. Nothing is charged ahead of time: the first moment
+// charges 0 s, and when the student stops, nothing is charged after the last moment. A heartbeat is not a moment by itself; it
+// only reports the time of the last real moment (see handleHeartbeat). Replaced the "2-minute window forward" rule on 2026-11-14.
+export const MAX_GAP_SECONDS = 60;
 export const DEFAULT_MONTHLY_CAP_SECONDS = 8 * 3600;
 export const LOW_FRACTION = 0.8;
 export const MONTH_TIME_ZONE = "America/Vancouver";
@@ -42,13 +44,26 @@ export type SpeechProvider = "elevenlabs" | "openai";
 
 export const wholeSeconds = (at: Date): Date => new Date(Math.floor(at.getTime() / 1000) * 1000);
 
-// What an activity event at `at` adds to the month, and where the covered time now ends.
-export function chargeFor(coveredUntil: Date | null, at: Date, windowSeconds = ACTIVITY_WINDOW_SECONDS) {
-  const start = wholeSeconds(at).getTime();
-  const windowEnd = start + windowSeconds * 1000;
-  const alreadyCoveredTo = coveredUntil ? Math.max(start, coveredUntil.getTime()) : start;
-  const addedSeconds = Math.max(0, Math.floor((windowEnd - alreadyCoveredTo) / 1000));
-  return { addedSeconds, coveredUntil: new Date(Math.max(windowEnd, coveredUntil?.getTime() ?? 0)) };
+// Why an event was charged what it was. These labels go into the logs.
+export type ChargeReason =
+  | "counted" // the gap since the last moment was 60 s or less: all of it is charged
+  | "first_activity" // nothing earlier this month to measure from: charged 0
+  | "gap_over_60s" // the gap was longer than 60 s: the student was away or idle, charged 0
+  | "not_newer" // the moment is not later than one already counted (a repeated report): charged 0
+  | "no_activity_reported"; // the request carried no activity (a heartbeat with nothing new, or opening live): charged 0
+export type Charge = { seconds: number; reason: ChargeReason; gapSeconds: number | null };
+
+// What an activity moment at `eventAt` adds to the month, given the time of the last counted moment. `eventAt` null means the
+// request reported no activity. The last-activity time never moves backwards.
+export function chargeFor(lastActivityAt: Date | null, eventAt: Date | null, maxGapSeconds = MAX_GAP_SECONDS): Charge & { lastActivityAt: Date | null } {
+  if (!eventAt) return { seconds: 0, reason: "no_activity_reported", gapSeconds: null, lastActivityAt };
+  const event = wholeSeconds(eventAt);
+  if (!lastActivityAt) return { seconds: 0, reason: "first_activity", gapSeconds: null, lastActivityAt: event };
+  const gap = Math.floor((event.getTime() - lastActivityAt.getTime()) / 1000);
+  const latest = event.getTime() > lastActivityAt.getTime() ? event : lastActivityAt;
+  if (gap <= 0) return { seconds: 0, reason: "not_newer", gapSeconds: gap, lastActivityAt: latest };
+  if (gap > maxGapSeconds) return { seconds: 0, reason: "gap_over_60s", gapSeconds: gap, lastActivityAt: latest };
+  return { seconds: gap, reason: "counted", gapSeconds: gap, lastActivityAt: latest };
 }
 
 // The month a moment belongs to, as the first day in America/Vancouver ("2026-11-01"). It resets on the 1st, Vancouver time.
@@ -77,7 +92,7 @@ export type Usage = {
   countedSeconds: number;
   bonusSeconds: number;
   ttsChars: number;
-  coveredUntil: Date | null;
+  lastActivityAt: Date | null; // the last counted activity moment; the next gap is measured from here
   lowNoticed: boolean;
   usedUpNoticed: boolean;
 };
@@ -109,14 +124,15 @@ export type StudentRecord = {
   usage: Usage;
 };
 
-export const EMPTY_USAGE: Usage = { countedSeconds: 0, bonusSeconds: 0, ttsChars: 0, coveredUntil: null, lowNoticed: false, usedUpNoticed: false };
+export const EMPTY_USAGE: Usage = { countedSeconds: 0, bonusSeconds: 0, ttsChars: 0, lastActivityAt: null, lowNoticed: false, usedUpNoticed: false };
 
 export interface StudentStore {
   readonly kind: "postgres" | "memory";
   // The student with this code and this month's usage, or null when there is no such code.
   lookup(code: string, month: string): Promise<StudentRecord | null>;
-  // Counts an activity event (see chargeFor) and returns the month's usage afterwards.
-  chargeActivity(studentId: string, month: string, at: Date, kind: ActivityKind): Promise<Usage>;
+  // Counts an activity moment (see chargeFor) and returns the month's usage afterwards, with what this event was charged.
+  // `at` is when the activity really happened, or null when the request reported none (then nothing is charged).
+  chargeActivity(studentId: string, month: string, at: Date | null, kind: ActivityKind): Promise<{ usage: Usage; charge: Charge }>;
   // Adds the characters of one spoken utterance (ElevenLabs bills per character, so those are also kept separately);
   // returns the month's running total.
   addSpeech(studentId: string, month: string, chars: number, provider: SpeechProvider): Promise<number>;
@@ -132,7 +148,7 @@ function usageFromRow(row: Record<string, unknown>): Usage {
     countedSeconds: toInt(row.counted_seconds),
     bonusSeconds: toInt(row.bonus_seconds),
     ttsChars: toInt(row.tts_chars),
-    coveredUntil: toDate(row.covered_until),
+    lastActivityAt: toDate(row.last_activity_at),
     lowNoticed: Boolean(row.low_noticed),
     usedUpNoticed: Boolean(row.used_up_noticed),
   };
@@ -141,27 +157,39 @@ function usageFromRow(row: Record<string, unknown>): Usage {
 const LOOKUP_SQL = `
 select s.id, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled,
        coalesce(u.counted_seconds, 0) as counted_seconds, coalesce(u.bonus_seconds, 0) as bonus_seconds,
-       coalesce(u.tts_chars, 0) as tts_chars, u.covered_until,
+       coalesce(u.tts_chars, 0) as tts_chars, u.last_activity_at,
        u.low_notice_at is not null as low_noticed, u.used_up_notice_at is not null as used_up_noticed
 from students s
 left join usage_months u on u.student_id = s.id and u.month = $2::date
 where s.code = $1`;
 
-// One statement, one round trip, atomic. A new month starts a new row at zero. The first event of a month is charged a full
-// window; later events are charged only the part of their window not already covered (the same rule as chargeFor).
+// One statement, one round trip, atomic. A new month starts a new row at zero. The charge is the gap between the new moment ($3)
+// and the month's last counted moment, when that gap is 1 to 60 seconds ($4); a first moment, a longer gap, an older or equal
+// moment, or a null $3 (no activity reported) charges nothing. The last-activity time only moves forward. The `before` CTE
+// reads the row as it was, for the log line (what was charged, and why); the row update itself is the atomic part, so under
+// two simultaneous requests the billed total is exact and only that log line can be off.
 const CHARGE_SQL = `
-insert into usage_months as u (student_id, month, counted_seconds, covered_until, looks, questions)
-values ($1::bigint, $2::date, $4::int, $3::timestamptz + make_interval(secs => $4::int), $5::int, $6::int)
+with before as (
+  select counted_seconds, last_activity_at from usage_months where student_id = $1::bigint and month = $2::date
+)
+insert into usage_months as u (student_id, month, counted_seconds, last_activity_at, looks, questions)
+values ($1::bigint, $2::date, 0, $3::timestamptz, $5::int, $6::int)
 on conflict (student_id, month) do update set
-  counted_seconds = u.counted_seconds + greatest(0, floor(extract(epoch from (
-    $3::timestamptz + make_interval(secs => $4::int) - greatest($3::timestamptz, coalesce(u.covered_until, $3::timestamptz))
-  )))::int),
-  covered_until = greatest(coalesce(u.covered_until, $3::timestamptz), $3::timestamptz + make_interval(secs => $4::int)),
+  counted_seconds = u.counted_seconds + case
+    when $3::timestamptz is not null and u.last_activity_at is not null
+         and $3::timestamptz > u.last_activity_at
+         and $3::timestamptz - u.last_activity_at <= make_interval(secs => $4::int)
+    then floor(extract(epoch from ($3::timestamptz - u.last_activity_at)))::int
+    else 0
+  end,
+  last_activity_at = greatest(u.last_activity_at, $3::timestamptz),
   looks = u.looks + $5::int,
   questions = u.questions + $6::int,
   updated_at = now()
-returning counted_seconds, bonus_seconds, tts_chars, covered_until,
-          low_notice_at is not null as low_noticed, used_up_notice_at is not null as used_up_noticed`;
+returning counted_seconds, bonus_seconds, tts_chars, last_activity_at,
+          low_notice_at is not null as low_noticed, used_up_notice_at is not null as used_up_noticed,
+          (select last_activity_at from before) as before_activity_at,
+          (select counted_seconds from before) as before_counted_seconds`;
 
 const SPEECH_SQL = `
 insert into usage_months as u (student_id, month, tts_chars, tts_chars_eleven, tts_utterances)
@@ -206,11 +234,17 @@ export class PgStudentStore implements StudentStore {
     };
   }
 
-  async chargeActivity(studentId: string, month: string, at: Date, kind: ActivityKind): Promise<Usage> {
+  async chargeActivity(studentId: string, month: string, at: Date | null, kind: ActivityKind): Promise<{ usage: Usage; charge: Charge }> {
     const looks = kind === "look" ? 1 : 0;
     const questions = kind === "question" ? 1 : 0;
-    const rows = await this.db.query(CHARGE_SQL, [studentId, month, wholeSeconds(at).toISOString(), ACTIVITY_WINDOW_SECONDS, looks, questions]);
-    return usageFromRow(rows[0] ?? {});
+    const eventAt = at ? wholeSeconds(at) : null;
+    const rows = await this.db.query(CHARGE_SQL, [studentId, month, eventAt ? eventAt.toISOString() : null, MAX_GAP_SECONDS, looks, questions]);
+    const row = rows[0] ?? {};
+    const usage = usageFromRow(row);
+    // The reason comes from the row as it was before; the seconds are what the total actually grew by.
+    const reason = chargeFor(toDate(row.before_activity_at), eventAt);
+    const grew = usage.countedSeconds - toInt(row.before_counted_seconds);
+    return { usage, charge: { seconds: grew, reason: reason.reason, gapSeconds: reason.gapSeconds } };
   }
 
   async addSpeech(studentId: string, month: string, chars: number, provider: SpeechProvider): Promise<number> {

@@ -82,7 +82,7 @@ export class StudentAdmin {
       countedSeconds: Number(r.counted_seconds),
       bonusSeconds: Number(r.bonus_seconds),
       ttsChars: Number(r.tts_chars),
-      coveredUntil: null,
+      lastActivityAt: null,
       lowNoticed: false,
       usedUpNoticed: false,
     };

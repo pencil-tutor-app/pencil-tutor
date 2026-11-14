@@ -111,9 +111,16 @@ async function main(): Promise<void> {
     say(`heartbeat -> ${beat.status}: used=${String(ba?.used_seconds)} s left=${String(ba?.remaining_minutes)} min`);
 
     say("--- tiny cap (60 s) ---");
-    const first = await call("/api/heartbeat", tiny.code, { body: { problem_id: "u3-04" } });
+    // Only real activity is charged: the first moment (60 s ago) charges 0, the second (now) charges the 60 s gap, which is the cap.
+    const idle = await call("/api/heartbeat", tiny.code, { body: { problem_id: "u3-04" } });
+    const ia = idle.json.allowance as Record<string, unknown>;
+    say(`heartbeat with no activity -> ${idle.status}: used=${String(ia?.used_seconds)} s (a heartbeat alone charges nothing)`);
+    const earlier = await call("/api/heartbeat", tiny.code, { body: { problem_id: "u3-04", seconds_since_activity: 60 } });
+    const ea = earlier.json.allowance as Record<string, unknown>;
+    say(`first activity (60 s ago) -> ${earlier.status}: used=${String(ea?.used_seconds)} s of ${String(ea?.cap_seconds)} s state=${String(ea?.state)}`);
+    const first = await call("/api/heartbeat", tiny.code, { body: { problem_id: "u3-04", seconds_since_activity: 0 } });
     const fa = first.json.allowance as Record<string, unknown>;
-    say(`first activity -> ${first.status}: used=${String(fa?.used_seconds)} s of ${String(fa?.cap_seconds)} s state=${String(fa?.state)} notice=${String(fa?.notice)}`);
+    say(`second activity (now) -> ${first.status}: used=${String(fa?.used_seconds)} s of ${String(fa?.cap_seconds)} s state=${String(fa?.state)} notice=${String(fa?.notice)}`);
     const second = await call("/api/heartbeat", tiny.code, { body: { problem_id: "u3-04" } });
     say(`next request -> ${second.status} ${String(second.json.error)} (${String(second.json.reason)})`);
     const refusedSpeak = await timedSpeak(tiny.code, { text: SENTENCE, purpose: "hint" });

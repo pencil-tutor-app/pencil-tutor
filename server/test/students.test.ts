@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { splitStatements } from "../lib/students-admin.js";
 import {
-  ACTIVITY_WINDOW_SECONDS,
   allowanceOf,
   chargeFor,
   CODE_ALPHABET,
@@ -60,48 +59,90 @@ describe("student codes", () => {
   });
 });
 
-describe("counting time: the union of recent-activity windows", () => {
-  it("charges a full window for the first event of a month", () => {
-    const r = chargeFor(null, at("2026-11-14T18:00:00Z"));
-    assert.equal(r.addedSeconds, ACTIVITY_WINDOW_SECONDS);
-    assert.equal(r.coveredUntil.toISOString(), "2026-11-14T18:02:00.000Z");
-  });
-
-  it("charges only the new part when the next event arrives inside the covered time", () => {
-    const first = chargeFor(null, at("2026-11-14T18:00:00Z"));
-    const second = chargeFor(first.coveredUntil, at("2026-11-14T18:01:00Z"));
-    assert.equal(second.addedSeconds, 60, "60 s of new time, not another 120");
-    assert.equal(second.coveredUntil.toISOString(), "2026-11-14T18:03:00.000Z");
-  });
-
-  it("charges nothing for a second event in the same second", () => {
-    const first = chargeFor(null, at("2026-11-14T18:00:00.200Z"));
-    const again = chargeFor(first.coveredUntil, at("2026-11-14T18:00:00.900Z"));
-    assert.equal(again.addedSeconds, 0);
-  });
-
-  it("charges a full window again after a gap longer than the window (the idle time is not counted)", () => {
-    const first = chargeFor(null, at("2026-11-14T18:00:00Z"));
-    const later = chargeFor(first.coveredUntil, at("2026-11-14T18:30:00Z"));
-    assert.equal(later.addedSeconds, 120);
-  });
-
-  it("one hour of activity every 60 seconds counts as one hour plus the final window", () => {
-    let covered: Date | null = null;
+describe("counting time: the gaps between real activity moments", () => {
+  // Feeds moments (seconds from a start) through chargeFor and returns the total counted.
+  function replay(momentsInSeconds: number[]) {
+    const start = at("2026-11-14T18:00:00Z").getTime();
+    let last: Date | null = null;
     let total = 0;
-    for (let minute = 0; minute <= 60; minute += 1) {
-      const charge = chargeFor(covered, new Date(at("2026-11-14T18:00:00Z").getTime() + minute * 60_000));
-      total += charge.addedSeconds;
-      covered = charge.coveredUntil;
+    const reasons: string[] = [];
+    for (const s of momentsInSeconds) {
+      const r = chargeFor(last, new Date(start + s * 1000));
+      total += r.seconds;
+      last = r.lastActivityAt;
+      reasons.push(r.reason);
     }
-    assert.equal(total, 60 * 60 + 120);
+    return { total, reasons };
+  }
+
+  it("charges nothing for the first moment: no time is charged ahead", () => {
+    const r = chargeFor(null, at("2026-11-14T18:00:00Z"));
+    assert.deepEqual([r.seconds, r.reason], [0, "first_activity"]);
+    assert.equal(r.lastActivityAt?.toISOString(), "2026-11-14T18:00:00.000Z");
   });
 
-  it("never goes negative when the clock steps back", () => {
-    const first = chargeFor(null, at("2026-11-14T18:05:00Z"));
-    const back = chargeFor(first.coveredUntil, at("2026-11-14T18:00:00Z"));
-    assert.equal(back.addedSeconds, 0);
-    assert.equal(back.coveredUntil.getTime(), first.coveredUntil.getTime(), "coverage never shrinks");
+  it("charges the whole gap when the next moment comes within 60 seconds", () => {
+    const first = chargeFor(null, at("2026-11-14T18:00:00Z"));
+    const second = chargeFor(first.lastActivityAt, at("2026-11-14T18:00:45Z"));
+    assert.deepEqual([second.seconds, second.reason, second.gapSeconds], [45, "counted", 45]);
+    assert.equal(chargeFor(first.lastActivityAt, at("2026-11-14T18:01:00Z")).seconds, 60, "exactly 60 s still counts");
+  });
+
+  it("charges nothing for a gap longer than 60 seconds (the student was away or idle), and starts over from there", () => {
+    const first = chargeFor(null, at("2026-11-14T18:00:00Z"));
+    const later = chargeFor(first.lastActivityAt, at("2026-11-14T18:01:01Z"));
+    assert.deepEqual([later.seconds, later.reason, later.gapSeconds], [0, "gap_over_60s", 61]);
+    const next = chargeFor(later.lastActivityAt, at("2026-11-14T18:01:11Z"));
+    assert.equal(next.seconds, 10, "the next gap is measured from the late moment");
+  });
+
+  it("charges nothing for a second moment in the same second, or for one older than what was counted", () => {
+    const first = chargeFor(null, at("2026-11-14T18:00:00.200Z"));
+    const again = chargeFor(first.lastActivityAt, at("2026-11-14T18:00:00.900Z"));
+    assert.deepEqual([again.seconds, again.reason], [0, "not_newer"]);
+    const ahead = chargeFor(first.lastActivityAt, at("2026-11-14T18:00:30Z"));
+    const stale = chargeFor(ahead.lastActivityAt, at("2026-11-14T18:00:10Z"));
+    assert.deepEqual([stale.seconds, stale.reason], [0, "not_newer"]);
+    assert.equal(stale.lastActivityAt?.getTime(), ahead.lastActivityAt?.getTime(), "the last-activity time never moves back");
+  });
+
+  it("charges nothing when the request reported no activity, and keeps the last-activity time", () => {
+    const first = chargeFor(null, at("2026-11-14T18:00:00Z"));
+    const none = chargeFor(first.lastActivityAt, null);
+    assert.deepEqual([none.seconds, none.reason], [0, "no_activity_reported"]);
+    assert.equal(none.lastActivityAt?.getTime(), first.lastActivityAt?.getTime());
+  });
+
+  it("an hour of steady activity every 30 seconds counts as exactly an hour, with nothing added at either end", () => {
+    const moments = Array.from({ length: 121 }, (_, i) => i * 30);
+    assert.equal(replay(moments).total, 3600);
+  });
+
+  it("a student who opens a problem and leaves the iPad on the table accrues nothing", () => {
+    // One moment (they touched it), then silence: no more moments, so nothing is ever charged.
+    assert.equal(replay([0]).total, 0);
+    // Even if reports kept arriving, they would all repeat that one moment.
+    assert.equal(replay([0, 0, 0, 0]).total, 0);
+  });
+
+  it("Edward's device log of 2026-11-14: about 3 minutes of writing now costs under 3 minutes, not 7", () => {
+    // Problem opened 11:00:56. He wrote from about 11:01:00 to 11:04:00, one pen stroke about every 10 seconds, then stopped
+    // and left it until 11:06. The app sends a heartbeat every 30 s (11:01:26, 11:01:56, ...) carrying the time of the last
+    // stroke it has not reported yet. The old rule charged 7 minutes (480 -> 473 minutes left in his log).
+    const OPEN = 56; // seconds after 11:00:00
+    const strokes: number[] = [];
+    for (let s = 60; s <= 240; s += 10) strokes.push(s); // 11:01:00 ... 11:04:00
+    const reports: number[] = [];
+    let reported = -1;
+    for (let tick = OPEN + 30; tick <= 6 * 60 + 30; tick += 30) {
+      const latest = strokes.filter((s) => s <= tick).pop();
+      if (latest !== undefined && latest > reported) {
+        reports.push(latest);
+        reported = latest;
+      }
+    }
+    const result = replay(reports);
+    assert.equal(result.total, 160, "from the first reported stroke (11:01:20) to the last (11:04:00)");
   });
 });
 

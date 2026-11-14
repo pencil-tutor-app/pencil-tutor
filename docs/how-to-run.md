@@ -81,9 +81,11 @@ server/scripts/codes migrate                                                 # c
 
 `list` prints the code and its **log id** (an 8-character hash): server and app logs carry only the log id, never the code.
 
-**What counts as an hour.** A counted minute is a minute with a problem open and recent activity (ink, a question or a look within
-the last 2 minutes). The app sends a heartbeat every 60 seconds while that is true; a look, a question or a heartbeat keeps the meter
-running for 2 minutes after it; time with no activity is not counted. The month is the calendar month in America/Vancouver and resets
+**What counts as an hour.** Only real working time. The meter adds up the gaps between the student's activity moments (ink, a
+question, the tutor looking, live voice talk); a gap longer than 60 seconds counts as zero, and nothing is charged ahead of time or
+after the last moment. The app sends a heartbeat every 30 seconds only when there is student activity it has not reported yet, so an
+iPad left on the table counts nothing. (This replaced the earlier "2 minutes forward" rule on 2026-11-14; see `docs/plan.md`.) After
+pulling this change, run `server/scripts/codes migrate` once to add the `last_activity_at` column before deploying the server. The month is the calendar month in America/Vancouver and resets
 on the 1st. At 80% the tutor says how much is left; at 100% the tutor says the hours are used up and to ask Edward, watching and
 asking stop, drawing still works. The student sees "N min left" on the problem list and the problem screen.
 

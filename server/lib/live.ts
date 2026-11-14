@@ -116,7 +116,8 @@ export async function handleLiveSession(request: Request, deps: Deps = defaultDe
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
 
-  // Opening a live session is activity (the problem is open and the student is about to talk).
+  // Opening a live session is not work by itself, so it charges nothing (reason no_activity_reported); the student's talk is
+  // reported later by the app's heartbeat. This still settles the allowance and its notices for the reply.
   await meterActivity(ctx, opened, "live_open");
 
   // Scripted mode (tests only) has no network and no key, so there is no real session to hand back.
