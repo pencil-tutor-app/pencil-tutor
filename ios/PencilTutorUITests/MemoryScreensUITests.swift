@@ -46,11 +46,27 @@ final class MemoryScreensUITests: XCTestCase {
         XCTAssertTrue(target.isHittable, "\(target.identifier) can be reached by scrolling")
     }
 
+    /// A list only builds the rows that are on screen, so a row below the fold does not exist yet (CI run 43730059715: the record
+    /// screen's "Erase" row in portrait). Scrolls down, then back up, until the element exists.
+    private func reveal(_ target: XCUIElement, in app: XCUIApplication) {
+        var tries = 0
+        while !target.exists && tries < 6 {
+            app.swipeUp()
+            tries += 1
+        }
+        tries = 0
+        while !target.exists && tries < 6 {
+            app.swipeDown()
+            tries += 1
+        }
+    }
+
     /// Nothing leaves the screen sideways, and every named control is at least 44 pt tall.
     private func checkLayout(_ app: XCUIApplication, ids: [String], label: String) {
         let window = app.windows.firstMatch.frame
         for id in ids {
             let control = element(app, id)
+            reveal(control, in: app)
             XCTAssertTrue(control.exists, "\(label): \(id) exists")
             let frame = control.frame
             XCTAssertGreaterThanOrEqual(frame.minX, 0, "\(label): \(id) starts on screen, was \(frame)")
