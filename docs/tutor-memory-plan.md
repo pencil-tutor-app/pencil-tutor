@@ -187,6 +187,8 @@ New files under `ios/PencilTutor/Memory/` (`MemoryStore`, `MemoryConsentView`, `
 - Consent screen: scrollable, headings and short paragraphs from the server's notice, the two-choice attestation, two equal buttons, "Read the full policy" link. Record screen: status, counts, up to 10 recent problems (prompt text from the bundled bank, id otherwise), "Turn off memory" and "Erase what the tutor remembers" with confirmation dialogs.
 - Calm UI: system type scaling, nothing in `lineLimit(1)`, every control at least 44 pt, text wraps rather than truncates, usable portrait and landscape. No streaks, points, or nudges to opt in.
 - Scripted launch: `--scripted-client` keeps today's behaviour (feature off, no offer) unless `--memory-on` is added; `--offer-memory` also allows the once-only sheet. Existing UI tests are unaffected.
+- Scripted runs have no student code, so the "offered once" key uses the stand-in name `scripted` and a throwaway UserDefaults domain (`com.edwardtran.penciltutor.scripted`) emptied at every launch. Before this, the key was nil in a scripted run and the sheet never appeared (the CI failure at `MemoryScreensUITests.swift:67`, 2026-11-14). A rerun on the iPad therefore sees the offer again.
+- Debug builds only (Release builds read them as false): `--memory-agreed` starts the scripted tutor with an agreement on record, and `--show-memory-record` opens "What the tutor remembers" by itself once the list appears. Both are for screenshots on the iPad; `--ui-snapshots "portrait@6,landscape@12"` (see `UISnapshot.swift`) takes the pictures.
 - No change to StoreKit or code-entry files.
 
 ## 8. Tests

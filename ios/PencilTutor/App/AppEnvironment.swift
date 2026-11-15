@@ -74,12 +74,23 @@ final class AppEnvironment: ObservableObject {
         }
         self.account = account
         self.speech = speech
-        self.memory = MemoryStore(api: self.client, log: log, codeHash: { holder.current.map(StudentCode.shortHash) })
+        // A scripted run has no student code, so the "offered once" rule needs a stand-in name; without one the offer key is nil and
+        // the consent screen is never shown (the CI failure at MemoryScreensUITests:67). Its "already offered" note lives in a
+        // throwaway defaults domain emptied at every launch, so a rerun sees the offer again.
+        let scripted = LaunchOptions.scriptedClient
+        self.memory = MemoryStore(
+            api: self.client, log: log,
+            codeHash: { holder.current.map(StudentCode.shortHash) ?? (scripted ? "scripted" : nil) },
+            defaults: scripted ? Self.freshScriptedDefaults() : .standard
+        )
 
         // The allowance lines ("you have about 40 minutes left") are said by the tutor's voice; a refusal that comes back
         // from the speech request goes to the account like any other.
         account.announce = { [weak speech] notice in speech?.speakNotice(notice) }
         speech.onServerError = { [weak account] error in account?.handle(serverError: error) }
+        #if DEBUG
+        UISnapshot.scheduleIfRequested(log: log)
+        #endif
 
         // Scripted runs use the same real, bundled problem bank; the UI tests open u3-04 (planted) and u3-01 (clean).
         var loadedProblems: [Problem] = []
@@ -99,6 +110,13 @@ final class AppEnvironment: ObservableObject {
         if launchesWithCode {
             Task { @MainActor in await account.refresh(reason: "launch") }
         }
+    }
+
+    /// Scripted runs only: a UserDefaults domain emptied at launch, so nothing a scripted run remembers outlives it.
+    private static func freshScriptedDefaults() -> UserDefaults {
+        let name = "com.edwardtran.penciltutor.scripted"
+        UserDefaults.standard.removePersistentDomain(forName: name)
+        return UserDefaults(suiteName: name) ?? .standard
     }
 
     #if DEBUG

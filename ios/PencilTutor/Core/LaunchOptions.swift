@@ -8,6 +8,26 @@ enum LaunchOptions {
     /// `--memory-on`: the scripted tutor offers the opt-in memory (otherwise it says nothing about it, like an older server).
     static var memoryOn: Bool { ProcessInfo.processInfo.arguments.contains("--memory-on") }
 
+    /// `--memory-agreed`: Debug builds only. The scripted tutor starts with an agreement already on record (for screenshots of
+    /// the record screen). In Release builds this is always false.
+    static var memoryAgreed: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--memory-agreed")
+        #else
+        return false
+        #endif
+    }
+
+    /// `--show-memory-record`: Debug builds only. In a scripted run, open "What the tutor remembers" by itself once the list
+    /// appears (for screenshots). In Release builds this is always false.
+    static var showMemoryRecord: Bool {
+        #if DEBUG
+        return scriptedClient && ProcessInfo.processInfo.arguments.contains("--show-memory-record")
+        #else
+        return false
+        #endif
+    }
+
     /// `--offer-memory`: in a scripted run, let the consent screen appear by itself once (it never does otherwise).
     static var offerMemory: Bool { ProcessInfo.processInfo.arguments.contains("--offer-memory") }
 

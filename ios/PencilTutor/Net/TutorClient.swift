@@ -127,6 +127,13 @@ struct ScriptedTutorClient: TutorClient {
         var withdrawn = false
         var erased = false
         var consentAt = ""
+
+        init() {
+            if LaunchOptions.memoryAgreed {
+                givenBy = "parent_guardian"
+                consentAt = TimeText.iso(Date())
+            }
+        }
     }
     let memory = ScriptedMemory()
 

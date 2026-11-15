@@ -4,7 +4,9 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject private var account: StudentAccount
     @EnvironmentObject private var memory: MemoryStore
+    @EnvironmentObject private var env: AppEnvironment
     @State private var offerMemory = false
+    @State private var showMemoryRecord = false
 
     var body: some View {
         switch account.phase {
@@ -16,6 +18,10 @@ struct RootView: View {
                 .task {
                     await memory.refresh(reason: "ready")
                     if memory.shouldOffer { offerMemory = true }
+                    if LaunchOptions.showMemoryRecord && memory.isAvailable { showMemoryRecord = true }
+                }
+                .sheet(isPresented: $showMemoryRecord) {
+                    MemoryRecordView(memory: memory, problems: env.problems)
                 }
                 .sheet(isPresented: $offerMemory, onDismiss: { memory.markOffered() }) {
                     MemoryConsentView(memory: memory)
