@@ -106,9 +106,12 @@ struct MemoryRecordView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                        .frame(minHeight: 44)
-                        .accessibilityIdentifier("memoryRecordDone")
+                    // The 44 pt is on the label, inside the button, so the tappable area (and the frame VoiceOver and UI tests read) is 44 pt tall.
+                    Button { dismiss() } label: {
+                        Text("Done").frame(minWidth: 44, minHeight: 44)
+                    }
+                    .contentShape(Rectangle())
+                    .accessibilityIdentifier("memoryRecordDone")
                 }
             }
             .confirmationDialog("Turn off memory?", isPresented: $confirmingTurnOff, titleVisibility: .visible) {
