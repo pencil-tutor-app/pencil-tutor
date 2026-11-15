@@ -610,4 +610,27 @@ final class WireAndSnapshotTests: XCTestCase {
         XCTAssertTrue(text.contains("\"bytes\":7"))
         XCTAssertFalse(text.contains("PNG"), "no picture bytes in the log")
     }
+
+    func testHintCalloutStaysInsideTheVisibleScreen() {
+        let size = CGSize(width: 260, height: 64)
+        let screen = CGRect(x: 0, y: 0, width: 1080, height: 810)
+        // Room on the right: beside the circle.
+        let beside = CalloutPlacement.origin(circle: CGRect(x: 100, y: 300, width: 400, height: 80), visible: screen, size: size)
+        XCTAssertEqual(beside.x, 508)
+        // A wide circle near the right edge (the la-12 matrix case): no room beside, so under it and fully on screen.
+        let under = CalloutPlacement.origin(circle: CGRect(x: 300, y: 300, width: 760, height: 120), visible: screen, size: size)
+        XCTAssertEqual(under.y, 428)
+        XCTAssertLessThanOrEqual(under.x + size.width, screen.maxX - 2)
+        // Near the bottom too: above it, still on screen.
+        let above = CalloutPlacement.origin(circle: CGRect(x: 300, y: 700, width: 760, height: 100), visible: screen, size: size)
+        XCTAssertLessThan(above.y, 700)
+        XCTAssertGreaterThanOrEqual(above.y, 2)
+        // Scrolled page: placed against what is on screen, not against the page's origin.
+        let scrolled = CGRect(x: 3000, y: 3000, width: 1080, height: 810)
+        let far = CalloutPlacement.origin(circle: CGRect(x: 3700, y: 3300, width: 370, height: 80), visible: scrolled, size: size)
+        XCTAssertGreaterThanOrEqual(far.x, scrolled.minX + 2)
+        XCTAssertLessThanOrEqual(far.x + size.width, scrolled.maxX - 2)
+        XCTAssertGreaterThanOrEqual(far.y, scrolled.minY + 2)
+        XCTAssertLessThanOrEqual(far.y + size.height, scrolled.maxY - 2)
+    }
 }
