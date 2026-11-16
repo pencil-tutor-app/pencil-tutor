@@ -16,7 +16,7 @@ final class MemoryScreensUITests: XCTestCase {
 
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--scripted-client", "--any-input", "--memory-on", "--offer-memory"]
+        app.launchArguments = ["--scripted-client", "--any-input", "--silent", "--memory-on", "--offer-memory"]
         app.launch()
         return app
     }
@@ -156,7 +156,11 @@ final class MemoryScreensUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Turn off, keep what is stored"].exists)
         screenshot("memory-12-turn-off-choices-landscape")
         eraseChoice.tap()
+        // On the 10.2-inch iPad in landscape the Turn off row is far enough down that the status line row has scrolled away and
+        // is no longer built (device run 2026-11-16), so scroll back to it before reading it.
+        reveal(line, in: app)
         XCTAssertEqual(waitLabel(line, equalTo: "Off"), "Off", "memory is off")
+        reveal(element(app, "memoryNoPractice"), in: app)
         XCTAssertTrue(element(app, "memoryNoPractice").waitForExistence(timeout: 10), "the record is empty after the erase")
         screenshot("memory-13-record-after-erase-landscape")
         rotate(to: .portrait)
@@ -179,7 +183,7 @@ final class MemoryScreensUITests: XCTestCase {
     /// With no `--memory-on` the scripted tutor says nothing about memory, like a server without it: no section, no offer.
     func testNothingAppearsWhenTheServerDoesNotOfferMemory() throws {
         let app = XCUIApplication()
-        app.launchArguments = ["--scripted-client", "--any-input", "--offer-memory"]
+        app.launchArguments = ["--scripted-client", "--any-input", "--silent", "--offer-memory"]
         app.launch()
         XCTAssertTrue(element(app, "settingsButton").waitForExistence(timeout: 20))
         Thread.sleep(forTimeInterval: 2)
