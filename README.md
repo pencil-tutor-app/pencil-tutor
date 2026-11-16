@@ -15,7 +15,7 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
 | `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |
 | `shared/problems.json` | the 12 curated problems. The build copies it into the app **without** `worked_solution` and `final_answer` (`ios/Scripts/bundle_problems.py`) |
-| `.github/workflows/ios.yml` | builds, runs unit tests and UI tests on a GitHub macOS runner, uploads screenshots |
+| `.github/workflows/ios.yml` | builds, runs unit tests and UI tests on a Blacksmith macOS runner (manual trigger only), uploads screenshots |
 
 ## How the app decides when to look
 
@@ -30,7 +30,7 @@ Every launch writes `session-*.jsonl` in the app's Documents folder: looks, line
 
 ## CI
 
-`ios.yml` runs on `macos-26` with Xcode 26.6 (the default there, SDK iOS 26.5) on an iPad simulator. Steps: generate the project, build, unit tests, UI tests, export the UI test screenshots as PNG files. Artifacts: `ios-screenshots` (PNGs) and `ios-results-and-logs` (xcresult bundles, build logs, the app's session log). CI uses `Secrets.example.xcconfig` as it is; the UI tests launch with `--scripted-client --any-input`, which swaps in a scripted tutor that mirrors the server's scripted mode (interrupt on line 2 of `u3-04`, wait on everything else).
+`ios.yml` runs on Blacksmith's `blacksmith-6vcpu-macos-26` (Apple M4, same image as GitHub's `macos-26`) with Xcode 26.6 (SDK iOS 26.5) on an iPad simulator. It is manual only, to stay inside the free Mac minutes (Blacksmith gives 3,000 free minutes a month, and one Mac minute counts as 20, so about 150 Mac minutes). Run it once when a branch is ready to merge: `gh workflow run ios.yml --ref <branch>`. Merge to main only after a green run on that exact commit. While fixing a failure, run only that one test locally, never the whole suite. `server.yml` stays on GitHub's free Linux minutes. Steps: generate the project, build, unit tests, UI tests, export the UI test screenshots as PNG files. Artifacts: `ios-screenshots` (PNGs) and `ios-results-and-logs` (xcresult bundles, build logs, the app's session log). CI uses `Secrets.example.xcconfig` as it is; the UI tests launch with `--scripted-client --any-input`, which swaps in a scripted tutor that mirrors the server's scripted mode (interrupt on line 2 of `u3-04`, wait on everything else).
 
 ## Install on the iPad (free Apple ID)
 

@@ -11,18 +11,10 @@ name: ios
 # Fallback: if Blacksmith is unavailable, set runs-on back to macos-26.
 # Xcode 27 is only a public preview on the runner image, so 26.6 is pinned.
 
+# Manual only, to stay inside the free Mac minutes (about 150 a month on Blacksmith). Run it once when a
+# branch is ready to merge, not on every push:  gh workflow run ios.yml --ref <branch>
+# Merge to main only after a green run on that exact commit, so main needs no second run.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "ios/**"
-      - "shared/**"
-      - ".github/workflows/ios.yml"
-  pull_request:
-    paths:
-      - "ios/**"
-      - "shared/**"
-      - ".github/workflows/ios.yml"
   workflow_dispatch:
 
 concurrency:
@@ -46,8 +38,13 @@ jobs:
           echo "iphonesimulator SDK: $(xcrun --sdk iphonesimulator --show-sdk-version)"
           xcrun simctl list runtimes
 
+      # Direct download of a pinned release: `brew install` refreshes Homebrew first, which costs paid minutes.
       - name: Install xcodegen
-        run: brew install xcodegen
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/xcodegen.zip" \
+            https://github.com/yonaskolb/XcodeGen/releases/download/2.46.0/xcodegen.zip
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/xcodegen/bin" >> "$GITHUB_PATH"
 
       - name: Generate the Xcode project
         working-directory: ios
@@ -78,6 +75,8 @@ jobs:
           echo "build ok"
           grep -E "bundle_problems:" ios/artifacts/logs/build.log || echo "note: bundle_problems output not found in log"
 
+      # -collect-test-diagnostics never: on a failure xcodebuild otherwise spends ~10 minutes trying to pull a
+      # sysdiagnose from the simulator and then times out (run 43849954749). The xcresult and logs still upload.
       - name: Unit tests
         run: |
           if ! xcodebuild test-without-building \
@@ -85,6 +84,7 @@ jobs:
               -destination "id=$UDID" -derivedDataPath ios/build \
               -only-testing:PencilTutorTests \
               -resultBundlePath ios/results/unit.xcresult \
+              -collect-test-diagnostics never \
               CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/unit-tests.log 2>&1; then
             echo "UNIT TESTS FAILED. Failures:"
             grep -E "error:|failed|Test Case .* failed" ios/artifacts/logs/unit-tests.log | head -n 60 || true
@@ -101,6 +101,7 @@ jobs:
               -destination "id=$UDID" -derivedDataPath ios/build \
               -only-testing:PencilTutorUITests \
               -resultBundlePath ios/results/ui.xcresult \
+              -collect-test-diagnostics never \
               CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/ui-tests.log 2>&1; then
             echo "UI TESTS FAILED. Failures:"
             grep -E "error:|failed|Test Case .* failed" ios/artifacts/logs/ui-tests.log | head -n 60 || true

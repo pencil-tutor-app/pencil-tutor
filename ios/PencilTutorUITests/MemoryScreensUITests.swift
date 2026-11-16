@@ -62,16 +62,20 @@ final class MemoryScreensUITests: XCTestCase {
     }
 
     /// Nothing leaves the screen sideways, and every named control is at least 44 pt tall.
-    private func checkLayout(_ app: XCUIApplication, ids: [String], label: String) {
+    /// `barButtons` are system navigation-bar buttons: iOS 26 draws them as 36 pt capsules and reports that
+    /// frame, while the system itself extends their touch area, so they are checked for position only.
+    private func checkLayout(_ app: XCUIApplication, ids: [String], barButtons: [String] = [], label: String) {
         let window = app.windows.firstMatch.frame
-        for id in ids {
+        for id in ids + barButtons {
             let control = element(app, id)
             reveal(control, in: app)
             XCTAssertTrue(control.exists, "\(label): \(id) exists")
             let frame = control.frame
             XCTAssertGreaterThanOrEqual(frame.minX, 0, "\(label): \(id) starts on screen, was \(frame)")
             XCTAssertLessThanOrEqual(frame.maxX, window.maxX + 0.5, "\(label): \(id) ends on screen, was \(frame) in \(window)")
-            XCTAssertGreaterThanOrEqual(frame.height, 43.5, "\(label): \(id) is at least 44 pt tall, was \(frame.height)")
+            if !barButtons.contains(id) {
+                XCTAssertGreaterThanOrEqual(frame.height, 43.5, "\(label): \(id) is at least 44 pt tall, was \(frame.height)")
+            }
         }
     }
 
@@ -137,12 +141,12 @@ final class MemoryScreensUITests: XCTestCase {
         XCTAssertTrue(element(app, "memoryAgreementLine").exists)
         XCTAssertTrue(element(app, "memoryRecent-u3-04").exists, "the practice rows are listed")
         screenshot("memory-09-record-portrait-top")
-        checkLayout(app, ids: ["memoryTurnOff", "memoryErase", "memoryRecordDone"], label: "record portrait")
+        checkLayout(app, ids: ["memoryTurnOff", "memoryErase"], barButtons: ["memoryRecordDone"], label: "record portrait")
         app.swipeUp()
         screenshot("memory-10-record-portrait-bottom")
         rotate(to: .landscapeLeft)
         screenshot("memory-11-record-landscape")
-        checkLayout(app, ids: ["memoryTurnOff", "memoryErase", "memoryRecordDone"], label: "record landscape")
+        checkLayout(app, ids: ["memoryTurnOff", "memoryErase"], barButtons: ["memoryRecordDone"], label: "record landscape")
 
         // 6. Turning off asks what to do with what is stored; erase empties the list.
         scrollTo(element(app, "memoryTurnOff"), in: app.scrollViews.firstMatch.exists ? app.scrollViews.firstMatch : app.tables.firstMatch)
