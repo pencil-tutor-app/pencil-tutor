@@ -3,8 +3,12 @@ name: ios
 # Builds the iPad app for iPadOS 26, runs the unit tests and the UI tests on an iPad simulator, and saves the
 # UI test screenshots as PNG files in the "ios-screenshots" artifact. Nothing here runs on a laptop.
 #
-# Runner: macos-26 has Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
-# Source: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+# Runner: Blacksmith's 6 vCPU Apple M4 macOS 26 machine (blacksmith-6vcpu-macos-26), which follows GitHub's
+# macos-26 image: Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
+# Blacksmith is cheaper per run than GitHub's macos-26 and has a free monthly allowance (2026-11-16).
+# Sources: https://docs.blacksmith.sh/blacksmith-runners/overview
+#          https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+# Fallback: if Blacksmith is unavailable, set runs-on back to macos-26.
 # Xcode 27 is only a public preview on the runner image, so 26.6 is pinned.
 
 on:
@@ -27,7 +31,7 @@ concurrency:
 
 jobs:
   build-and-test:
-    runs-on: macos-26
+    runs-on: blacksmith-6vcpu-macos-26
     timeout-minutes: 60
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
