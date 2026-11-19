@@ -137,6 +137,10 @@ final class AllowanceTests: XCTestCase {
         XCTAssertEqual(detail(403, "code_disabled"), "code_disabled (HTTP 403)")
         XCTAssertEqual(detail(403, "hours_used_up", allowance: allowance(state: .usedUp, minutes: 0)), "hours_used_up (HTTP 403)")
         XCTAssertEqual(detail(403, "live_not_in_plan"), "live_not_in_plan (HTTP 403)")
+        XCTAssertEqual(detail(403, "free_tutoring_full", "free tutoring is full this month, it comes back on the 1st"), "free_tutoring_full (HTTP 403)")
+        XCTAssertEqual(detail(429, "rate_limited", "ip_limit_reached"), "free_code_limit (HTTP 429)")
+        XCTAssertEqual(detail(429, "something_else", "slow down"), "rejected HTTP 429: slow down")
+        XCTAssertEqual(detail(503, "free_codes_unavailable", "ip_salt_not_set"), "server_unavailable HTTP 503: ip_salt_not_set")
         XCTAssertEqual(detail(403, "something_else", "why"), "rejected HTTP 403: why")
         XCTAssertEqual(detail(503, "database_unavailable", "db"), "server_unavailable HTTP 503: db")
         XCTAssertEqual(detail(502, "model_error", "provider_http_500"), "server_unavailable HTTP 502: provider_http_500")
@@ -155,7 +159,8 @@ final class AllowanceTests: XCTestCase {
         XCTAssertEqual(TutorError.unauthorized(reason: "unknown_code").studentMessage, "That code did not work. Check it and try again.")
         XCTAssertEqual(TutorError.codeTurnedOff.studentMessage, "This code has been turned off. Ask Edward.")
         XCTAssertEqual(TutorError.hoursUsedUp(allowance: nil).studentMessage, "This month's tutoring hours are used up. Ask Edward for more time.")
-        for error in [TutorError.unauthorized(reason: "x"), .codeTurnedOff, .hoursUsedUp(allowance: nil), .liveNotInPlan, .recordingTooShort] {
+        XCTAssertEqual(TutorError.freeTutoringFull.studentMessage, "Free tutoring is full this month, it comes back on the 1st.")
+        for error in [TutorError.unauthorized(reason: "x"), .codeTurnedOff, .hoursUsedUp(allowance: nil), .liveNotInPlan, .recordingTooShort, .freeTutoringFull, .freeCodeLimit] {
             let text = error.studentMessage.lowercased()
             XCTAssertFalse(text.contains("http"), text)
             XCTAssertFalse(text.contains("401") || text.contains("403"), text)

@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Db, Row } from "./db.js";
+import { STALE_IP_ROW_MS, type StudentOrigin } from "./free-config.js";
 import { allowanceOf, codeHash, generateCode, DEFAULT_MONTHLY_CAP_SECONDS, type Usage } from "./students.js";
 
 // What Edward's local admin script (scripts/admin.ts) does to the database: create, list, top up, disable, enable, set the
@@ -10,6 +11,7 @@ import { allowanceOf, codeHash, generateCode, DEFAULT_MONTHLY_CAP_SECONDS, type 
 export type AdminStudent = {
   code: string;
   hash: string;
+  origin: StudentOrigin;
   planLive: boolean;
   capSeconds: number;
   disabled: boolean;
@@ -64,17 +66,43 @@ export class StudentAdmin {
     throw new Error("could not find an unused code after 8 tries");
   }
 
-  async list(month: string): Promise<AdminStudent[]> {
+  // `origin` null lists every code; "admin" the ones made with this tool; "free" the ones the app asked for.
+  async list(month: string, origin: StudentOrigin | null = null): Promise<AdminStudent[]> {
     const rows = await this.db.query(
-      `select s.code, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled, s.created_at,
+      `select s.code, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled, s.created_at, s.origin,
               coalesce(u.counted_seconds, 0) as counted_seconds, coalesce(u.bonus_seconds, 0) as bonus_seconds,
               coalesce(u.tts_chars, 0) as tts_chars
        from students s
        left join usage_months u on u.student_id = s.id and u.month = $1::date
+       where ($2::text is null or s.origin = $2::text)
        order by s.id`,
-      [month],
+      [month, origin],
     );
     return rows.map((r) => this.shape(r, month));
+  }
+
+  // The free codes' month so far (the stored running total, not a recount) and how many free codes exist. Admin tool only.
+  async freeStatus(month: string): Promise<{ codes: number; spentMicros: number; elevenChars: number; calls: number }> {
+    const spend = (await this.db.query("select spent_micros, eleven_chars, calls from free_spend_months where month = $1::date", [month]))[0];
+    const codes = (await this.db.query("select count(*) as n from students where origin = 'free'"))[0];
+    return { codes: Number(codes?.n ?? 0), spentMicros: Number(spend?.spent_micros ?? 0), elevenChars: Number(spend?.eleven_chars ?? 0), calls: Number(spend?.calls ?? 0) };
+  }
+
+  // Sets the month's running total (a correction, for example after a provider outage that was counted as spent). Returns the new total.
+  async setFreeSpend(month: string, micros: number): Promise<number> {
+    const rows = await this.db.query(
+      `insert into free_spend_months as f (month, spent_micros) values ($1::date, $2::bigint)
+       on conflict (month) do update set spent_micros = $2::bigint, updated_at = now()
+       returning spent_micros`,
+      [month, micros],
+    );
+    return Number(rows[0]?.spent_micros ?? micros);
+  }
+
+  // Deletes address hashes nobody has touched for 2 days (the limit window is 24 hours). Returns how many.
+  async purgeStaleAddresses(now: Date): Promise<number> {
+    const rows = await this.db.query("delete from free_code_ip_limits where updated_at < $1::timestamptz returning ip_hash", [new Date(now.getTime() - STALE_IP_ROW_MS).toISOString()]);
+    return rows.length;
   }
 
   private shape(r: Row, month: string): AdminStudent {
@@ -90,6 +118,7 @@ export class StudentAdmin {
     return {
       code: String(r.code),
       hash: codeHash(String(r.code)),
+      origin: r.origin === "free" ? "free" : "admin",
       planLive: Boolean(r.plan_live),
       capSeconds: Number(r.monthly_cap_seconds),
       disabled: Boolean(r.disabled),
@@ -132,9 +161,13 @@ export class StudentAdmin {
     return rows.length > 0;
   }
 
-  async setLive(code: string, live: boolean): Promise<boolean> {
-    const rows = await this.db.query("update students set plan_live = $2::boolean where code = $1 returning id", [code, live]);
-    return rows.length > 0;
+  // "free": a free code never gets live voice (the server ignores plan_live for it), so the tool refuses to say it does.
+  async setLive(code: string, live: boolean): Promise<"ok" | "missing" | "free"> {
+    const found = await this.db.query("select origin from students where code = $1", [code]);
+    if (found.length === 0) return "missing";
+    if (found[0]?.origin === "free") return "free";
+    await this.db.query("update students set plan_live = $2::boolean where code = $1", [code, live]);
+    return "ok";
   }
 
   // Removes a code and its usage rows. For test codes; real students are disabled, not deleted.

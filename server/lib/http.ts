@@ -11,7 +11,7 @@ export class RequestCtx {
   allowance: Allowance | null = null;
 
   constructor(
-    readonly endpoint: "watch" | "ask" | "speak" | "health" | "live-session" | "consult" | "me" | "heartbeat" | "memory" | "privacy",
+    readonly endpoint: "watch" | "ask" | "speak" | "health" | "live-session" | "consult" | "me" | "heartbeat" | "memory" | "privacy" | "free-code",
     readonly method: string,
   ) {
     this.fields = { request_id: this.id, endpoint, method };
@@ -28,14 +28,14 @@ export class RequestCtx {
   }
 
   // Builds the response and writes the one log line. `outcome` is a short label, `reason` a label (never content).
-  respond(status: number, body: Record<string, unknown>, outcome: string, reason?: string): Response {
+  respond(status: number, body: Record<string, unknown>, outcome: string, reason?: string, headers: Record<string, string> = {}): Response {
     const latency_ms = Date.now() - this.startedAt;
     const level = status >= 500 ? "error" : status >= 400 ? "warn" : "info";
     logLine(level, { ...this.fields, status, outcome, reason, latency_ms });
     const withAllowance = this.allowance && body.allowance === undefined ? { ...body, allowance: this.allowance } : body;
     return new Response(JSON.stringify({ ...withAllowance, request_id: this.id }), {
       status,
-      headers: { "content-type": "application/json", "cache-control": "no-store", "x-request-id": this.id },
+      headers: { "content-type": "application/json", "cache-control": "no-store", "x-request-id": this.id, ...headers },
     });
   }
 
@@ -83,8 +83,8 @@ export class RequestCtx {
     });
   }
 
-  fail(status: number, error: string, reason: string, outcome = error): Response {
-    return this.respond(status, { error, reason }, outcome, reason);
+  fail(status: number, error: string, reason: string, outcome = error, headers: Record<string, string> = {}): Response {
+    return this.respond(status, { error, reason }, outcome, reason, headers);
   }
 }
 

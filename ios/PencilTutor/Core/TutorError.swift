@@ -14,6 +14,10 @@ enum TutorError: Error {
     case hoursUsedUp(allowance: Allowance?)
     /// HTTP 403 `live_not_in_plan` (from /api/live-session only).
     case liveNotInPlan
+    /// HTTP 403 `free_tutoring_full`: all free codes together have used this month's money. Also the refusal of "Start free".
+    case freeTutoringFull
+    /// HTTP 429 `rate_limited`: this network has made its free codes for the day ("Start free" only).
+    case freeCodeLimit
     case rejected(status: Int, reason: String)
     case serverUnavailable(status: Int, reason: String)
     case badResponse(detail: String)
@@ -39,6 +43,10 @@ enum TutorError: Error {
             return AllowanceText.usedUp
         case .liveNotInPlan:
             return "Voice chat isn't part of this plan. You can still tap the microphone to ask a question."
+        case .freeTutoringFull:
+            return AllowanceText.freeTutoringFull
+        case .freeCodeLimit:
+            return AllowanceText.freeCodeLimit
         case .rejected:
             return "The tutor couldn't read that. Try again."
         case .serverUnavailable:
@@ -68,6 +76,8 @@ enum TutorError: Error {
         case .codeTurnedOff: return "code_disabled (HTTP 403)"
         case .hoursUsedUp: return "hours_used_up (HTTP 403)"
         case .liveNotInPlan: return "live_not_in_plan (HTTP 403)"
+        case .freeTutoringFull: return "free_tutoring_full (HTTP 403)"
+        case .freeCodeLimit: return "free_code_limit (HTTP 429)"
         case .rejected(let status, let reason): return "rejected HTTP \(status): \(reason)"
         case .serverUnavailable(let status, let reason): return "server_unavailable HTTP \(status): \(reason)"
         case .badResponse(let detail): return "bad_response: \(detail)"

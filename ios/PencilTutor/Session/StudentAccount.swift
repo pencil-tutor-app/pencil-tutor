@@ -19,11 +19,14 @@ final class StudentAccount: ObservableObject {
     enum Block: Equatable {
         case hoursUsedUp
         case codeTurnedOff
+        /// A free code while all free codes together have used this month's money. Clears when the server says it is open again.
+        case freeTutoringFull
 
         var message: String {
             switch self {
             case .hoursUsedUp: return AllowanceText.usedUp
             case .codeTurnedOff: return AllowanceText.codeTurnedOff
+            case .freeTutoringFull: return AllowanceText.freeTutoringFull
             }
         }
 
@@ -31,6 +34,7 @@ final class StudentAccount: ObservableObject {
             switch self {
             case .hoursUsedUp: return "hours_used_up"
             case .codeTurnedOff: return "code_turned_off"
+            case .freeTutoringFull: return "free_tutoring_full"
             }
         }
     }
@@ -47,6 +51,8 @@ final class StudentAccount: ObservableObject {
     private let store: StudentCodeStoring
     private let holder: StudentCodeHolder
     private let fetchMe: () async throws -> MeResponse
+    /// Asks the server for a new free code ("Start free"). Nil when this build has no server to ask (then the button is not shown).
+    private let createFreeCode: (() async throws -> FreeCodeResponse)?
     private let log: SessionLog
 
     /// Called to say an allowance line out loud. Wired to the speech player by `AppEnvironment`.
@@ -57,11 +63,18 @@ final class StudentAccount: ObservableObject {
     private var problemsOpen = 0
     private var refreshTask: Task<Void, Never>?
 
-    init(store: StudentCodeStoring, holder: StudentCodeHolder, log: SessionLog, fetchMe: @escaping () async throws -> MeResponse) {
+    init(
+        store: StudentCodeStoring,
+        holder: StudentCodeHolder,
+        log: SessionLog,
+        fetchMe: @escaping () async throws -> MeResponse,
+        createFreeCode: (() async throws -> FreeCodeResponse)? = nil
+    ) {
         self.store = store
         self.holder = holder
         self.log = log
         self.fetchMe = fetchMe
+        self.createFreeCode = createFreeCode
         if let stored = store.load(), StudentCode.isValid(stored) {
             holder.current = stored
             phase = .ready
@@ -142,6 +155,52 @@ final class StudentAccount: ObservableObject {
         isChecking = false
     }
 
+    /// True when the code screen can offer "Start free" (this build can reach a server).
+    var canStartFree: Bool { createFreeCode != nil }
+
+    /// "Start free": asks the server for a new code, keeps it in the Keychain exactly as a typed code is kept, and signs in.
+    /// The code is saved and the app opened BEFORE the usual check with the server (`refresh`), so a lost connection right after the
+    /// code was made cannot lose it: it behaves like a launch with a stored code. Failures are shown in plain words (the server's
+    /// per-address limit and a full month each have their own kind message); nothing technical reaches the student.
+    func startFree() async {
+        guard let createFreeCode, !isChecking else { return }
+        isChecking = true
+        codeMessage = nil
+        let started = Date()
+        log.record("free_code_requested", ["next": "server_makes_a_code"])
+        do {
+            let made = try await createFreeCode()
+            let code = StudentCode.normalize(made.code)
+            guard StudentCode.isValid(code) else {
+                codeMessage = "Something went wrong. Try again."
+                log.record("free_code_bad_shape", ["problem": StudentCode.problem(with: code) ?? "invalid"])
+                isChecking = false
+                return
+            }
+            let hash = StudentCode.shortHash(code)
+            holder.current = code
+            do {
+                try store.save(code)
+                log.record("student_code_saved", ["code_hash": hash, "origin": "free"])
+            } catch {
+                // The code works for this launch; the student would have to Start free again next time.
+                log.record("student_code_save_failed", ["code_hash": hash, "origin": "free", "detail": String(describing: error)])
+            }
+            phase = .ready
+            log.record("free_code_started", [
+                "code_hash": hash, "cap_minutes": made.capMinutes ?? -1,
+                "elapsed_ms": Int(Date().timeIntervalSince(started) * 1000)
+            ])
+            isChecking = false
+            await refresh(reason: "free_code_created")
+        } catch {
+            let (student, detail) = TutorError.describe(error)
+            codeMessage = student
+            isChecking = false
+            log.record("free_code_failed", ["detail": detail, "elapsed_ms": Int(Date().timeIntervalSince(started) * 1000)])
+        }
+    }
+
     /// "Use a different code": forgets the code and shows the code screen.
     func signOut(reason: String) {
         let hash = holder.current.map(StudentCode.shortHash) ?? "none"
@@ -199,7 +258,22 @@ final class StudentAccount: ObservableObject {
 
     private func apply(me: MeResponse, reason: String) {
         plan = me.plan
+        applyFree(me.free)
         apply(allowance: me.allowance, source: "me:\(reason)")
+    }
+
+    /// For a free code, `me` says whether free tutoring is full this month. It is how the "full" banner clears on the 1st.
+    private func applyFree(_ free: FreeInfo?) {
+        guard let free else { return }
+        if free.full {
+            if block != .freeTutoringFull {
+                block = .freeTutoringFull
+                log.record("block_entered", ["reason": Block.freeTutoringFull.logLabel, "source": "me"])
+            }
+        } else if block == .freeTutoringFull {
+            block = nil
+            log.record("block_cleared", ["was": Block.freeTutoringFull.logLabel, "why": "server says free tutoring is open again"])
+        }
     }
 
     /// A fresh allowance from any reply. Decides about the 80% line and the 100% line (`AllowanceDecision`).
@@ -251,6 +325,11 @@ final class StudentAccount: ObservableObject {
                 apply(allowance: seen, source: "refusal")
             } else {
                 enterUsedUp()
+            }
+        case .freeTutoringFull:
+            if block != .freeTutoringFull {
+                block = .freeTutoringFull
+                log.record("block_entered", ["reason": Block.freeTutoringFull.logLabel, "source": "refusal"])
             }
         default:
             break

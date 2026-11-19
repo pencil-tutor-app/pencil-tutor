@@ -145,7 +145,7 @@ describe("postgres store and admin", { skip: !enabled }, () => {
     assert.equal((await store.lookup(code, MONTH))?.disabled, true);
     assert.equal(await admin.setDisabled(code, false), true);
     assert.equal((await store.lookup(code, MONTH))?.disabled, false);
-    assert.equal(await admin.setLive(code, true), true);
+    assert.equal(await admin.setLive(code, true), "ok");
     assert.equal((await store.lookup(code, MONTH))?.planLive, true);
     assert.equal(await admin.setDisabled("ZZZZZZZZ", true), false);
   });
@@ -168,6 +168,51 @@ describe("postgres store and admin", { skip: !enabled }, () => {
     const rows = await db.query("select 1 from usage_months where student_id = $1::bigint", [id]);
     assert.equal(rows.length, 0);
     assert.equal(await store.lookup(code, MONTH), null);
+  });
+
+  // ----- Free codes (docs/free-launch-plan.md). These are the cases PGlite cannot prove: separate HTTP requests racing on the real
+  // database. They need migration 005 applied (the first test above does that). WRITTEN FOR THE ROLLOUT CHECK, NOT RUN BY THE AUTHOR:
+  // running them needs the production database address, which the task that wrote them could not use.
+
+  it("free codes: 20 simultaneous requests for one address's slots let exactly the limit through", async () => {
+    const hash = `integration-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    try {
+      const now = new Date();
+      const results = await Promise.all(Array.from({ length: 20 }, (_, i) => store.claimFreeCodeSlot(hash, new Date(now.getTime() + i), 3)));
+      assert.equal(results.filter((r) => r.allowed).length, 3, "at most 3 of 20 racing claims may win");
+      const row = await db.query("select array_length(stamps, 1) as n from free_code_ip_limits where ip_hash = $1", [hash]);
+      assert.equal(Number(row[0]?.n), 3);
+    } finally {
+      await db.query("delete from free_code_ip_limits where ip_hash = $1", [hash]);
+    }
+  });
+
+  it("free codes: 30 simultaneous reservations against a ceiling of 1,000 never pass it", async () => {
+    const month = "2030-06-01";
+    try {
+      const results = await Promise.all(Array.from({ length: 30 }, () => store.reserveFreeSpend(month, 100, 1000)));
+      assert.equal(results.filter((r) => r !== null).length, 10, "exactly 10 reservations of 100 fit under 1,000");
+      assert.equal(await store.freeSpentMicros(month), 1000);
+      // Settling every winner down to a real cost of 6 frees the room again.
+      await Promise.all(Array.from({ length: 10 }, () => store.settleFreeSpend(month, -94, 0)));
+      assert.equal(await store.freeSpentMicros(month), 60);
+    } finally {
+      await db.query("delete from free_spend_months where month = $1::date", [month]);
+    }
+  });
+
+  it("free codes: a free student is read with the month's free total in the one lookup query, and never as live", async () => {
+    const month = "2030-07-01";
+    const code = `FRE${Math.random().toString(36).slice(2, 7).toUpperCase().padEnd(5, "X")}`;
+    try {
+      assert.equal(await store.createFreeStudent(code, 28_800), true);
+      created.push(code);
+      await store.reserveFreeSpend(month, 250, 1_000_000);
+      const found = await store.lookup(code, month);
+      assert.deepEqual([found?.origin, found?.freeSpentMicros, found?.planLive], ["free", 250, false]);
+    } finally {
+      await db.query("delete from free_spend_months where month = $1::date", [month]);
+    }
   });
 
   // The timings printed above include this laptop's network to Neon, so they are only a sanity check here. The server-side

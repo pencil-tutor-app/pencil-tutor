@@ -43,7 +43,7 @@ const labelOf = (err: unknown) => (err instanceof DatabaseError ? err.label : "d
 
 export async function handleMemoryStatus(request: Request, deps: Deps = defaultDeps()): Promise<Response> {
   const ctx = new RequestCtx("memory", request.method);
-  const opened = await gate(ctx, request, deps, [], { method: "GET", allowOverCap: true });
+  const opened = await gate(ctx, request, deps, [], { method: "GET", allowOverCap: true, skipFreeCeiling: true });
   if (!opened.ok) return opened.response;
   const store = managementStore(deps);
   if (!store) return unavailable(ctx, "DATABASE_URL is not set");
@@ -77,7 +77,7 @@ export async function handleMemoryStatus(request: Request, deps: Deps = defaultD
 
 export async function handleMemoryAction(request: Request, deps: Deps = defaultDeps()): Promise<Response> {
   const ctx = new RequestCtx("memory", request.method);
-  const opened = await gate(ctx, request, deps, [], { method: "POST", allowOverCap: true });
+  const opened = await gate(ctx, request, deps, [], { method: "POST", allowOverCap: true, skipFreeCeiling: true });
   if (!opened.ok) return opened.response;
   const body = await readJson(request);
   if (!body.ok) return ctx.fail(body.status, body.error, body.reason);

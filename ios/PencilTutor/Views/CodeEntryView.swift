@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Shown until the app has a working code. The student types the 8-character code once; it is kept in the Keychain.
-/// Everything on this screen is plain words: a wrong code never shows a technical message.
+/// Shown until the app has a working code. The student types the 8-character code once, or taps "Start free" and the server makes
+/// one; either way it is kept in the Keychain. Everything on this screen is plain words: a wrong code never shows a technical message.
 struct CodeEntryView: View {
     @EnvironmentObject private var account: StudentAccount
     @State private var typed = ""
@@ -65,6 +65,27 @@ struct CodeEntryView: View {
             .controlSize(.large)
             .disabled(!canContinue)
             .accessibilityIdentifier("codeContinueButton")
+
+            // "Start free": the server makes a code and the student is signed in, with nothing to type. Hidden in a build with no server.
+            if account.canStartFree {
+                Text("or")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                Button {
+                    Task { await account.startFree() }
+                } label: {
+                    Text("Start free")
+                        .font(.title2.weight(.semibold))
+                        .frame(minWidth: 220, minHeight: 36)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .disabled(account.isChecking)
+                .accessibilityIdentifier("startFreeButton")
+                Text("8 hours of tutoring a month. No sign-up.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
             Spacer()
             Spacer()
         }

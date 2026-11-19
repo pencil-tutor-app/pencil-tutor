@@ -36,6 +36,18 @@ export function rateFor(model: string, at: Date = new Date()): Rate | undefined 
   return current;
 }
 
+// The two audio models are billed by the minute of audio, not by token. Estimates only, read 2026-11-19:
+//   gpt-transcribe  $0.0045 a minute   https://platform.openai.com/docs/models/gpt-transcribe ("Transcription audio duration")
+//   gpt-4o-mini-tts about $0.015 a minute   OpenAI's own "estimated cost" for the model (text input $0.60 and audio output $12
+//                   per million tokens), https://developers.openai.com/api/docs/models/gpt-4o-mini-tts
+// A model not listed here has no estimate: the free-code spending meter then refuses to call it (lib/free-spend.ts).
+export const AUDIO_USD_PER_MINUTE: Record<string, number> = {
+  "gpt-transcribe": 0.0045,
+  "gpt-4o-mini-tts": 0.015,
+};
+
+export const audioRateFor = (model: string): number | undefined => AUDIO_USD_PER_MINUTE[model];
+
 export type TokenCounts = { input: number; cachedInput: number; output: number };
 
 // Cached input is billed at the cached rate, the rest of the input at the input rate. `output` already includes

@@ -1,6 +1,8 @@
 import type { Env } from "../config.js";
 import { DatabaseError, openDb } from "../db.js";
 import type { WatchResult } from "../decision.js";
+import { countText, maxOutputTokensOf, textReserve } from "../free-config.js";
+import { paidCall } from "../free-spend.js";
 import { configForLevel, type Deps, type GateOpen } from "../gate.js";
 import type { RequestCtx } from "../http.js";
 import { logLine } from "../log.js";
@@ -69,14 +71,29 @@ export async function afterLook(
     ctx.note({ reword: "fallback:no_model_config" });
     return result;
   }
-  const out = await rewordSpoken({
-    model: deps.models.language(picked.cfg, picked.key),
-    cfg: picked.cfg,
-    problem: args.problem,
-    line: result.line as number,
-    spoken: result.hint_spoken,
-    notes,
+  // For a free code this second model call is bounded and metered like the first (lib/free-spend.ts); one attempt, no retry.
+  const cap = maxOutputTokensOf(deps.env);
+  const paid = await paidCall(ctx, deps.env, opened, {
+    kind: "reword",
+    reserve: () => textReserve(picked.cfg.model, opened.now, cap, 1),
+    run: () =>
+      rewordSpoken({
+        model: deps.models.language(picked.cfg, picked.key),
+        cfg: picked.cfg,
+        problem: args.problem,
+        line: result.line as number,
+        spoken: result.hint_spoken as string,
+        notes,
+        maxOutputTokens: opened.student.origin === "free" ? cap : undefined,
+      }),
+    count: (done, reserve) => (done.usage ? countText(done.usage, null, reserve) : countText(undefined, done.ok ? null : done.reason, reserve)),
   });
+  if (!paid.ok) {
+    // The ordinary hint is spoken instead; the request carries on, so this is a label, not an error reply.
+    ctx.note({ reword: `fallback:${paid.refusal.outcome}` });
+    return result;
+  }
+  const out = paid.value;
   // The second call's tokens and cost, kept apart from the watch call's fields on the same log line.
   const second = usageFields(out.usage);
   ctx.note({ reword_model_ms: second.model_ms, reword_input_tokens: second.input_tokens, reword_output_tokens: second.output_tokens, reword_est_cost_usd: second.est_cost_usd });

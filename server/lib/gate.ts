@@ -12,6 +12,7 @@ import {
   type RoleConfig,
 } from "./config.js";
 import { DatabaseError, openDb } from "./db.js";
+import { ceilingOf, freeIsFull, microsToUsd } from "./free-config.js";
 import { RequestCtx, readBearerCode } from "./http.js";
 import { logLine } from "./log.js";
 import type { LiveGateway } from "./live.js";
@@ -48,6 +49,10 @@ export type GateOptions = {
   requireLive?: boolean;
   // Out-of-hours students are refused unless the endpoint is one of the fixed allowance notices.
   allowOverCap?: boolean;
+  // A free code is refused everywhere that costs money once all free codes together have reached the monthly ceiling, the fixed
+  // allowance notices included (the app then speaks on the device voice). Only /api/me (so the banner can clear on the 1st) and
+  // /api/memory (a family can always withdraw or erase) set this.
+  skipFreeCeiling?: boolean;
 };
 
 export type GateOpen = {
@@ -60,10 +65,12 @@ export type GateOpen = {
   code: string;
   month: string;
   now: Date;
+  // True for a free code while all free codes together have reached this month's ceiling. Always false for any other code.
+  freeFull: boolean;
 };
 export type GateResult = GateOpen | { ok: false; response: Response };
 
-function resolveStore(deps: Deps): StudentStore | undefined {
+export function resolveStore(deps: Deps): StudentStore | undefined {
   if (deps.students) return deps.students;
   const db = openDb(deps.env);
   return db ? new PgStudentStore(db) : undefined;
@@ -117,6 +124,24 @@ export async function gate(ctx: RequestCtx, request: Request, deps: Deps, roles:
   if (student.disabled) {
     return { ok: false, response: ctx.fail(403, "code_disabled", "this code has been turned off", "code_disabled") };
   }
+
+  // Free codes: never live voice (it is billed by the minute, which the server cannot see, so it could not count toward the
+  // ceiling), and refused once the month's ceiling is reached. Every other code is untouched by anything in this block.
+  let freeFull = false;
+  if (student.origin === "free") {
+    student = { ...student, planLive: false };
+    const ceiling = ceilingOf(env);
+    const spent = student.freeSpentMicros ?? 0;
+    freeFull = freeIsFull(spent, ceiling.micros);
+    ctx.note({ origin: "free", free_spent_usd: microsToUsd(spent), free_ceiling_usd: ceiling.usd, free_full: freeFull });
+    if (freeFull && !options.skipFreeCeiling) {
+      return {
+        ok: false,
+        response: ctx.fail(403, "free_tutoring_full", "free tutoring is full this month, it comes back on the 1st", "free_tutoring_full"),
+      };
+    }
+  }
+
   const allowance = allowanceOf(month, student.usage, student.capSeconds);
   ctx.allowance = allowance;
   ctx.note({ allowance_state: allowance.state, used_seconds: allowance.used_seconds, cap_seconds: allowance.cap_seconds });
@@ -137,7 +162,7 @@ export async function gate(ctx: RequestCtx, request: Request, deps: Deps, roles:
       reason: "TUTOR_SCRIPTED=1 ignored because VERCEL_ENV is production",
     });
   }
-  const opened = { student, store, code: bearer.code, month, now };
+  const opened = { student, store, code: bearer.code, month, now, freeFull };
   if (scripted.on) {
     ctx.note({ provider: "scripted", model: "scripted" });
     return { ok: true, scripted: true, configs: {}, keys: {}, ...opened };

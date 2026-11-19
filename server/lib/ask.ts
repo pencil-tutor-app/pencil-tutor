@@ -1,5 +1,18 @@
 import { z } from "zod";
 import { SCRIPTED_ANSWER, SCRIPTED_TRANSCRIPT } from "./decision.js";
+import {
+  addCounted,
+  addReserve,
+  countText,
+  FREE_MAX_AUDIO_BYTES,
+  maxOutputTokensOf,
+  notCalled,
+  sttActualMicros,
+  sttReserve,
+  textReserve,
+  type Counted,
+} from "./free-config.js";
+import { countModelResult, paidCall, refuse } from "./free-spend.js";
 import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
@@ -49,6 +62,10 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
   if (audio.length > MAX_AUDIO_BYTES) {
     return ctx.fail(422, "invalid_audio", "audio_over_2_5_MB", "invalid_audio:audio_over_2_5_MB");
   }
+  // A free code's question may be at most 300 KB (the app's 30-second limit is 26 to 114 KB), which bounds what speech-to-text can cost.
+  if (opened.student.origin === "free" && audio.length > FREE_MAX_AUDIO_BYTES) {
+    return ctx.fail(422, "invalid_audio", "audio_over_300_KB_for_free_code", "invalid_audio:audio_over_300_KB_for_free_code");
+  }
 
   const problem = findProblem(req.problem_id);
   if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
@@ -78,16 +95,50 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
   if (askCfg.effort) ctx.note({ effort: askCfg.effort });
   ctx.note({ stt_model: sttCfg.model });
 
-  const heard = await runTranscription({ model: deps.models.transcription(sttCfg, opened.keys.stt!), audio });
-  if (heard.kind === "failed") return ctx.fail(heard.status, heard.error, `stt_${heard.label}`, `${heard.error}:stt_${heard.label}`);
-  if (!heard.text) return done("", EMPTY_TRANSCRIPT_ANSWER, askCfg.model, "empty_transcript");
-
-  const answered = await runAskModel({
-    model: deps.models.language(askCfg, picked.key),
-    cfg: askCfg,
-    promptText: buildAskPrompt({ problem, transcript: heard.text }),
-    image: image.image,
+  // Speech to text, then the answer, as one metered unit for a free code (lib/free-spend.ts): the worst case of both is reserved first
+  // and the pair is settled afterwards. The answer step is skipped (and its share given back) when there is no transcript.
+  const free = opened.student.origin === "free";
+  const cap = maxOutputTokensOf(deps.env);
+  const parts = () => {
+    const stt = sttReserve(sttCfg.model, audio.length);
+    const text = textReserve(askCfg.model, opened.now, cap);
+    return stt && text ? { stt, text } : undefined;
+  };
+  type Heard = Awaited<ReturnType<typeof runTranscription>>;
+  type Answered = Awaited<ReturnType<typeof runAskModel>>;
+  const paid = await paidCall<{ heard: Heard; answered?: Answered }>(ctx, deps.env, opened, {
+    kind: "ask",
+    reserve: () => {
+      const p = parts();
+      return p ? addReserve(p.stt, p.text) : undefined;
+    },
+    run: async () => {
+      const heard = await runTranscription({ model: deps.models.transcription(sttCfg, opened.keys.stt!), audio });
+      if (heard.kind === "failed" || !heard.text) return { heard };
+      const answered = await runAskModel({
+        model: deps.models.language(askCfg, picked.key),
+        cfg: askCfg,
+        promptText: buildAskPrompt({ problem, transcript: heard.text }),
+        image: image.image,
+        maxOutputTokens: free ? cap : undefined,
+      });
+      return { heard, answered };
+    },
+    count: ({ heard, answered }) => {
+      const p = parts()!;
+      if (heard.kind === "failed") return countText(undefined, `stt_${heard.label}`, p.stt);
+      const seconds = heard.durationSeconds;
+      const speech: Counted =
+        seconds === null
+          ? { micros: p.stt.perAttempt, basis: "reserve_kept_no_usage", detail: "stt_no_duration" }
+          : { micros: sttActualMicros(sttCfg.model, seconds) ?? p.stt.perAttempt, basis: "estimated" };
+      return addCounted(speech, answered ? countModelResult(answered, p.text) : notCalled);
+    },
   });
+  if (!paid.ok) return refuse(ctx, paid.refusal);
+  const { heard, answered } = paid.value;
+  if (heard.kind === "failed") return ctx.fail(heard.status, heard.error, `stt_${heard.label}`, `${heard.error}:stt_${heard.label}`);
+  if (!heard.text || !answered) return done("", EMPTY_TRANSCRIPT_ANSWER, askCfg.model, "empty_transcript");
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
   ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(heard.text, NO_ANSWER_TEXT, askCfg.model, "empty_answer");

@@ -112,7 +112,18 @@ struct ScriptedTutorClient: TutorClient {
     )
 
     func me() async throws -> MeResponse {
-        MeResponse(plan: PlanInfo(live: false, capMinutes: 480), allowance: Self.allowance, requestId: "scripted-me")
+        // In a run that starts on the code screen (`--scripted-needs-code`) the student holds a free code, so the reply says so.
+        MeResponse(plan: PlanInfo(live: false, capMinutes: 480), allowance: Self.allowance, requestId: "scripted-me",
+                   free: LaunchOptions.scriptedNeedsCode ? FreeInfo(full: false) : nil)
+    }
+
+    /// The code the scripted server hands out for "Start free" (`--scripted-needs-code`). A real code has the same shape.
+    static let freeCode = "FREE5ABC"
+
+    /// What POST /api/free-code does, in the small: a short wait, then a code. Used by the Start free UI test.
+    func createFreeCode() async throws -> FreeCodeResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        return FreeCodeResponse(code: Self.freeCode, capMinutes: 480, requestId: "scripted-free-code")
     }
 
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {

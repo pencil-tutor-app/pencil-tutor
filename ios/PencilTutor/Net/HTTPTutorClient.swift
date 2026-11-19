@@ -69,18 +69,26 @@ final class HTTPTutorClient: TutorClient {
         try await post(path: "api/memory", body: request, timeout: 20)
     }
 
+    /// POST /api/free-code ("Start free"): asks the server for a new code. There is no code yet, so no bearer is sent.
+    func createFreeCode() async throws -> FreeCodeResponse {
+        try await send(path: "api/free-code", method: "POST", payload: Data("{}".utf8), timeout: 20, bearer: false)
+    }
+
     private func post<Body: Encodable, Reply: Decodable>(path: String, body: Body, timeout: TimeInterval) async throws -> Reply {
         try await send(path: path, method: "POST", payload: try JSONEncoder().encode(body), timeout: timeout)
     }
 
-    private func send<Reply: Decodable>(path: String, method: String, payload: Data?, timeout: TimeInterval) async throws -> Reply {
-        guard let code = codeHolder.current else {
-            log.record("http_not_sent", ["path": path, "reason": "no_student_code"])
-            throw TutorError.unauthorized(reason: "no_code")
-        }
+    /// `bearer: false` is for the one call made before there is a code (`createFreeCode`); everything else sends the student's code.
+    private func send<Reply: Decodable>(path: String, method: String, payload: Data?, timeout: TimeInterval, bearer: Bool = true) async throws -> Reply {
         var urlRequest = URLRequest(url: baseURL.appendingPathComponent(path), timeoutInterval: timeout)
         urlRequest.httpMethod = method
-        urlRequest.setValue("Bearer \(code)", forHTTPHeaderField: "Authorization")
+        if bearer {
+            guard let code = codeHolder.current else {
+                log.record("http_not_sent", ["path": path, "reason": "no_student_code"])
+                throw TutorError.unauthorized(reason: "no_code")
+            }
+            urlRequest.setValue("Bearer \(code)", forHTTPHeaderField: "Authorization")
+        }
         if let payload {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = payload
@@ -131,8 +139,12 @@ final class HTTPTutorClient: TutorClient {
             case "code_disabled": return .codeTurnedOff
             case "hours_used_up": return .hoursUsedUp(allowance: body?.allowance)
             case "live_not_in_plan": return .liveNotInPlan
+            case "free_tutoring_full": return .freeTutoringFull
             default: return .rejected(status: status, reason: reason)
             }
+        case 429:
+            // The server's per-address limit on "Start free". Any other 429 is just a rejection.
+            return body?.error == "rate_limited" ? .freeCodeLimit : .rejected(status: status, reason: reason)
         case 503:
             return .serverUnavailable(status: 503, reason: reason)
         case 500...599:

@@ -1,4 +1,5 @@
 import { openDb } from "../lib/db.js";
+import { ceilingOf, microsToUsd, usdToMicros } from "../lib/free-config.js";
 import { NOTICE_VERSION } from "../lib/record/notice.js";
 import { RecordAdmin } from "../lib/record/admin.js";
 import { StudentAdmin, type AdminStudent } from "../lib/students-admin.js";
@@ -13,7 +14,9 @@ const USAGE = `Pencil Tutor student codes
   scripts/codes migrate                         create or update the tables (safe to repeat)
   scripts/codes create [--count N] [--hours H | --minutes M] [--live]
                                                 make new codes (default 8 hours a month, live voice off)
-  scripts/codes list                            every code, this month's use, minutes left
+  scripts/codes list [--free | --all]           the codes you made, this month's use, minutes left (--free: only free codes, --all: both)
+  scripts/codes free-spend [--set USD]          this month's estimated cost of all free codes against the ceiling; --set corrects it
+                                                (for example after an outage was counted as spend). Also deletes stale address hashes
   scripts/codes topup CODE --hours H | --minutes M
                                                 add time to this month only
   scripts/codes disable CODE                    turn a code off (the student sees "turned off")
@@ -55,6 +58,16 @@ function secondsFrom(args: string[]): number | undefined {
   return Math.round(value);
 }
 
+// One line about the free codes: how many exist, and this month's estimated cost against the ceiling (the stored running total).
+async function freeLine(admin: StudentAdmin, month: string): Promise<string> {
+  const status = await admin.freeStatus(month);
+  const ceiling = ceilingOf(process.env);
+  const spent = microsToUsd(status.spentMicros);
+  const percent = ceiling.usd > 0 ? Math.round((spent / ceiling.usd) * 1000) / 10 : 100;
+  const note = ceiling.source === "invalid_env_using_default" ? " (FREE_MONTHLY_CEILING_USD is not a number: default used)" : "";
+  return `free codes: ${status.codes}   free spend this month: $${spent.toFixed(4)} of $${ceiling.usd.toFixed(2)} (${percent}%)   paid calls reserved: ${status.calls}   ElevenLabs characters (not dollars): ${status.elevenChars}${note}`;
+}
+
 function codeArg(args: string[]): string {
   const raw = args[0];
   if (!raw || raw.startsWith("--")) throw new Error("give a CODE");
@@ -65,10 +78,11 @@ function codeArg(args: string[]): string {
 
 function table(rows: AdminStudent[]): string {
   if (rows.length === 0) return "no codes yet";
-  const header = ["code", "log id", "state", "used", "left", "cap/mo", "live", "on", "voice chars"];
+  const header = ["code", "log id", "origin", "state", "used", "left", "cap/mo", "live", "on", "voice chars"];
   const body = rows.map((s) => [
     show(s.code),
     s.hash,
+    s.origin === "free" ? "free" : "hand",
     s.state,
     `${Math.round(s.usedSeconds / 60)} min`,
     `${s.remainingMinutes} min`,
@@ -115,7 +129,23 @@ async function main(argv: string[]): Promise<number> {
     }
     case "list": {
       console.log(`month ${month.slice(0, 7)} (America/Vancouver)`);
-      console.log(table(await admin.list(month)));
+      // Free codes can number in the thousands, so by default only the codes made by hand are listed.
+      const which = args.includes("--all") ? null : args.includes("--free") ? "free" : "admin";
+      console.log(table(await admin.list(month, which)));
+      console.log(await freeLine(admin, month));
+      return 0;
+    }
+    case "free-spend": {
+      const set = option(args, "--set");
+      if (set !== undefined) {
+        const usd = Number(set);
+        if (!Number.isFinite(usd) || usd < 0) throw new Error("--set must be a number of dollars, 0 or more");
+        await admin.setFreeSpend(month, usdToMicros(usd));
+        console.log(`free spend for ${month.slice(0, 7)} set to ${usd.toFixed(2)} dollars`);
+      }
+      console.log(await freeLine(admin, month));
+      const purged = await admin.purgeStaleAddresses(new Date());
+      console.log(`address hashes deleted (untouched for 2 days): ${purged}`);
       return 0;
     }
     case "topup": {
@@ -144,7 +174,12 @@ async function main(argv: string[]): Promise<number> {
       const code = codeArg(args);
       const setting = args[1];
       if (setting !== "on" && setting !== "off") throw new Error("say on or off");
-      if (!(await admin.setLive(code, setting === "on"))) {
+      const done = await admin.setLive(code, setting === "on");
+      if (done === "free") {
+        console.error(`${show(code)} is a free code: free codes never get the live voice`);
+        return 1;
+      }
+      if (done === "missing") {
         console.error(`no such code: ${show(code)}`);
         return 1;
       }

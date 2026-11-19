@@ -13,7 +13,7 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 | `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and 2D region, page size and re-anchor, zoom-aware scroll-to-mark, tool rail choices, finger-tap gesture rules and Pencil rules |
 | `ios/PencilTutorUITests/` | simulator UI tests against the in-process scripted tutor; they attach the screenshots |
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
-| `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |
+| `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/free-code`, `/api/health` |
 | `shared/problems.json` | the 12 curated problems. The build copies it into the app **without** `worked_solution` and `final_answer` (`ios/Scripts/bundle_problems.py`) |
 | `.github/workflows/ios.yml` | builds, runs unit tests and UI tests on a Blacksmith macOS runner (manual trigger only), uploads screenshots |
 

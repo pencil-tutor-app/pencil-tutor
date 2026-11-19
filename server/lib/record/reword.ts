@@ -83,12 +83,15 @@ export async function rewordSpoken(args: {
   line: number;
   spoken: string;
   notes: Note[];
+  // Set for a free code only: the most the model may generate, reasoning included (see runWatchModel).
+  maxOutputTokens?: number;
 }): Promise<RewordResult> {
   const startedAt = Date.now();
   try {
     const result = await generateText({
       model: args.model,
       providerOptions: providerOptionsFor(args.cfg),
+      maxOutputTokens: args.maxOutputTokens,
       system: REWORD_SYSTEM,
       prompt: buildRewordPrompt(args),
       output: Output.object({ schema: RewordSchema }),

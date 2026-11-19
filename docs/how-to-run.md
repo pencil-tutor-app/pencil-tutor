@@ -88,7 +88,8 @@ only and never prints it):
 
 ```
 server/scripts/codes create [--count N] [--hours H | --minutes M] [--live]   # new codes (default 8 hours a month, live voice off)
-server/scripts/codes list                                                    # every code, this month's use, minutes left, log id
+server/scripts/codes list [--free | --all]                                   # the codes you made (--free: only free codes, --all: both), this month's use, minutes left, log id, origin; ends with a free-spend line
+server/scripts/codes free-spend [--set USD]                                  # this month's estimated cost of all free codes against the ceiling; --set corrects it; also deletes stale address hashes
 server/scripts/codes topup CODE --hours 2                                    # add time to this month only
 server/scripts/codes disable CODE      /  enable CODE                        # turn a code off or back on
 server/scripts/codes live CODE on|off                                        # allow the premium live voice
@@ -105,6 +106,21 @@ iPad left on the table counts nothing. (This replaced the earlier "2 minutes for
 pulling this change, run `server/scripts/codes migrate` once to add the `last_activity_at` column before deploying the server. The month is the calendar month in America/Vancouver and resets
 on the 1st. At 80% the tutor says how much is left; at 100% the tutor says the hours are used up and to ask Edward, watching and
 asking stop, drawing still works. The student sees "N min left" on the problem list and the problem screen.
+
+**Free codes ("Start free", 2026-11-19).** The app is free on the App Store. The code screen has a "Start free" button: the server makes a code (8 hours a month, live voice off, same meter and caps, kept in the Keychain like a typed one) and the student is in. You make nothing by hand and know nobody's code. Codes you make with `codes create` keep working unchanged and are never affected by anything here; `codes list` shows hand-made ones, `codes list --free` the free ones. Plan, review and reasons: `docs/free-launch-plan.md`. Settings (Vercel production; the server needs a redeploy to read a change):
+
+| setting | default | what it does |
+|---|---|---|
+| `FREE_CODE_IP_SALT` | none | **required**, a random secret of 16+ characters (for example `openssl rand -hex 32`, never printed or committed). Keys the one-way scramble of the network address. Without it `POST /api/free-code` answers 503 and no free code is made |
+| `FREE_MONTHLY_CEILING_USD` | 50 | the most all free codes together may cost in a Vancouver calendar month, as an ESTIMATE (prices and request sizes, not the invoice). Reached: no new free codes, and free codes get "Free tutoring is full this month, it comes back on the 1st"; your hand-made codes are never affected. `0` closes free tutoring (the kill switch) |
+| `FREE_CODE_PER_IP_PER_DAY` | 3 | free codes one network address may make in any 24 hours. A school or a family on one Wi-Fi shares an address, so raise it if a classroom is turned away |
+| `FREE_MAX_OUTPUT_TOKENS` | 3000 | the most a free code's model call may write; it is part of what makes a call's worst-case cost a bound |
+
+**Rollout order, which matters.** (1) Merge. (2) `server/scripts/codes migrate` (applies `005`, additive; the server reads `students.origin` on every request, so migrate BEFORE deploying). (3) Set `FREE_CODE_IP_SALT` (and anything else above). (4) Deploy the server; hand-made codes are unchanged. (5) `GET /api/health` shows `free_codes.creation: "on"` (settings only; it cannot show the budget left). (6) Make four codes with curl from one network, each with a made-up value in `X-Forwarded-For`, then in `X-Real-IP`, then in `X-Vercel-Forwarded-For`: the 4th must be refused 429 every time (the headers cannot be spoofed), and one request from a different network must succeed; then `codes delete CODE --yes` each test code. (7) With `PT_DB_INTEGRATION=1`, run the three free-code cases in `test/db.integration.test.ts` (real contention). (8) Run the iOS workflow (manual), then on an iPad against the server: tap Start free, quit, relaunch (the same code stays); on a preview deployment with `FREE_MONTHLY_CEILING_USD=0` check the kind banner, the device-voice notice, and that Settings, "What the tutor remembers", still withdraws. (9) Ship the app build.
+
+**Watching it.** `codes free-spend` prints the month's estimated spend, the number of paid calls, and the ElevenLabs characters free codes used (a count of the shared 157,028-credit pool, not dollars). A provider outage counts each failed call at its full reserve (it may have been billed), so after one, `codes free-spend --set USD` puts the total back. The estimate is not the provider's invoice: the only hard cap is a spend limit on the OpenAI project in OpenAI's dashboard.
+
+**App Attest (phase 2, not built).** After you buy the Apple Developer account the app should prove it is the real app on a real Apple device before the server makes a code. The place is the `APP_ATTEST_SEAM` comment in `server/lib/free-code.ts`; the plan is at the end of `docs/free-launch-plan.md`.
 
 **Live check with receipts.** `server/scripts/live-check` makes two throwaway codes (normal and a 1-minute cap), checks a valid and an
 unknown code, times three spoken sentences (headers, first audio byte, total, bytes, which voice spoke), exercises the cap and the

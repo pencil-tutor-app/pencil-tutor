@@ -1,5 +1,6 @@
 import { createHash, randomInt } from "node:crypto";
 import type { Db } from "./db.js";
+import { IP_WINDOW_MS, type StudentOrigin } from "./free-config.js";
 
 // Student codes, the monthly hours cap and the rules that count time. Pure functions first (tested without a database),
 // then the store interface the server uses, then its Postgres implementation. All SQL for the server path is in this file;
@@ -118,6 +119,10 @@ export function allowanceOf(month: string, usage: Usage, baseCapSeconds: number,
 
 export type StudentRecord = {
   id: string;
+  origin: StudentOrigin; // "admin": made with scripts/codes. "free": the app asked for it (docs/free-launch-plan.md).
+  // For a free code: the estimated cost of ALL free codes this month so far, in millionths of a dollar (0 when nothing is spent yet).
+  // Null for every other code. Read in the same query as the student, so checking the ceiling costs no extra round trip.
+  freeSpentMicros: number | null;
   planLive: boolean;
   capSeconds: number; // the base monthly cap; top-ups for the month are in usage.bonusSeconds
   disabled: boolean;
@@ -138,10 +143,42 @@ export interface StudentStore {
   addSpeech(studentId: string, month: string, chars: number, provider: SpeechProvider): Promise<number>;
   // True for exactly one caller per student, month and threshold.
   claimNotice(studentId: string, month: string, which: "low" | "used_up"): Promise<boolean>;
+
+  // ----- Free codes (docs/free-launch-plan.md) -----
+  // Makes a free student (origin "free", live voice off). False when that code already exists (the caller draws another).
+  createFreeStudent(code: string, capSeconds: number): Promise<boolean>;
+  // Takes one of the address's creations in the last 24 hours, atomically. The address is only ever a keyed hash.
+  claimFreeCodeSlot(ipHash: string, at: Date, limit: number): Promise<SlotClaim>;
+  // Gives back the slot claimed at the time `at`, after a creation that is known to have failed.
+  releaseFreeCodeSlot(ipHash: string, at: Date): Promise<void>;
+  // Deletes address rows nobody has touched since `before`. Returns how many.
+  purgeStaleFreeCodeSlots(before: Date): Promise<number>;
+  // This month's running estimated cost of all free codes, in millionths of a dollar.
+  freeSpentMicros(month: string): Promise<number>;
+  // Adds `micros` to the month's total unless that would pass `ceilingMicros`. Returns the new total, or null when refused.
+  reserveFreeSpend(month: string, micros: number, ceilingMicros: number): Promise<number | null>;
+  // Adds a correction (may be negative) and ElevenLabs characters to the month's total. Returns the new total.
+  settleFreeSpend(month: string, deltaMicros: number, elevenChars: number): Promise<number>;
+}
+
+export type SlotClaim = { allowed: true; used: number } | { allowed: false; retryAfterSeconds: number };
+
+// The rolling window, as a pure function. The in-memory store uses it; the SQL below does the same thing in one statement and
+// test/free.pglite.test.ts checks that the two agree. `stamps` are creation times (ms since 1970).
+export function claimFromStamps(stamps: number[], nowMs: number, limit: number): { stamps: number[]; claim: SlotClaim } {
+  const recent = stamps.filter((t) => t > nowMs - IP_WINDOW_MS).sort((a, b) => a - b);
+  if (recent.length >= limit) {
+    const oldest = recent[0] as number;
+    return { stamps: recent, claim: { allowed: false, retryAfterSeconds: Math.max(1, Math.ceil((oldest + IP_WINDOW_MS - nowMs) / 1000)) } };
+  }
+  const next = [...recent, nowMs];
+  return { stamps: next, claim: { allowed: true, used: next.length } };
 }
 
 const toDate = (value: unknown): Date | null => (value ? new Date(String(value)) : null);
 const toInt = (value: unknown): number => Number(value ?? 0);
+
+const originOf = (value: unknown): StudentOrigin => (value === "free" ? "free" : "admin");
 
 function usageFromRow(row: Record<string, unknown>): Usage {
   return {
@@ -155,12 +192,14 @@ function usageFromRow(row: Record<string, unknown>): Usage {
 }
 
 const LOOKUP_SQL = `
-select s.id, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled,
+select s.id, s.plan_live, s.monthly_cap_seconds, s.disabled_at is not null as disabled, s.origin,
        coalesce(u.counted_seconds, 0) as counted_seconds, coalesce(u.bonus_seconds, 0) as bonus_seconds,
        coalesce(u.tts_chars, 0) as tts_chars, u.last_activity_at,
-       u.low_notice_at is not null as low_noticed, u.used_up_notice_at is not null as used_up_noticed
+       u.low_notice_at is not null as low_noticed, u.used_up_notice_at is not null as used_up_noticed,
+       f.spent_micros as free_spent_micros
 from students s
 left join usage_months u on u.student_id = s.id and u.month = $2::date
+left join free_spend_months f on f.month = $2::date and s.origin = 'free'
 where s.code = $1`;
 
 // One statement, one round trip, atomic. A new month starts a new row at zero. The charge is the gap between the new moment ($3)
@@ -211,6 +250,58 @@ update usage_months set used_up_notice_at = now()
 where student_id = $1::bigint and month = $2::date and used_up_notice_at is null
 returning student_id`;
 
+// ----- Free codes -----
+
+const CREATE_FREE_SQL = `
+insert into students (code, monthly_cap_seconds, plan_live, origin)
+values ($1, $2::int, false, 'free')
+on conflict (code) do nothing
+returning id`;
+
+// The per-address limit, one atomic statement. The row holds the times of the address's recent creations (at most `limit` of
+// them). A new creation first drops times older than 24 hours, then is added only if fewer than `limit` remain. When the row is
+// locked by a simultaneous request, the WHERE is evaluated again on the row that request wrote, so parallel requests cannot both
+// take the last slot. No row comes back when the address is at its limit, and then nothing was written.
+const CLAIM_SLOT_SQL = `
+insert into free_code_ip_limits as l (ip_hash, stamps, updated_at)
+values ($1::text, array[$2::timestamptz], $2::timestamptz)
+on conflict (ip_hash) do update set
+  stamps = array(select t from unnest(l.stamps) as t where t > $2::timestamptz - interval '24 hours' order by t) || $2::timestamptz,
+  updated_at = $2::timestamptz
+where (select count(*) from unnest(l.stamps) as t where t > $2::timestamptz - interval '24 hours') < $3::int
+returning array_length(stamps, 1) as used`;
+
+const SLOT_OLDEST_SQL = `select stamps from free_code_ip_limits where ip_hash = $1::text`;
+
+const RELEASE_SLOT_SQL = `update free_code_ip_limits set stamps = array_remove(stamps, $2::timestamptz) where ip_hash = $1::text`;
+
+const PURGE_SLOTS_SQL = `delete from free_code_ip_limits where updated_at < $1::timestamptz returning ip_hash`;
+
+const FREE_SPENT_SQL = `select spent_micros from free_spend_months where month = $1::date`;
+
+// Reserve: add the worst case to the month's total, but only if the total stays at or under the ceiling. The INSERT ... SELECT
+// form makes the first reservation of a month obey the ceiling too. No row back means refused, and nothing was written.
+const RESERVE_SPEND_SQL = `
+insert into free_spend_months as f (month, spent_micros, calls)
+select $1::date, $2::bigint, 1 where $2::bigint <= $3::bigint
+on conflict (month) do update set
+  spent_micros = f.spent_micros + $2::bigint,
+  calls = f.calls + 1,
+  updated_at = now()
+where f.spent_micros + $2::bigint <= $3::bigint
+returning spent_micros`;
+
+// Settle: replace a reservation with what the call is counted at (the difference, which may be negative), and add ElevenLabs
+// characters. An upsert, so the ElevenLabs path (which reserves nothing) can use it too; a negative first value is clamped at zero.
+const SETTLE_SPEND_SQL = `
+insert into free_spend_months as f (month, spent_micros, eleven_chars)
+values ($1::date, greatest($2::bigint, 0), $3::bigint)
+on conflict (month) do update set
+  spent_micros = greatest(f.spent_micros + $2::bigint, 0),
+  eleven_chars = f.eleven_chars + $3::bigint,
+  updated_at = now()
+returning spent_micros`;
+
 export class PgStudentStore implements StudentStore {
   readonly kind = "postgres" as const;
   constructor(private readonly db: Db) {}
@@ -225,8 +316,11 @@ export class PgStudentStore implements StudentStore {
     }
     const row = rows[0];
     if (!row) return null;
+    const origin = originOf(row.origin);
     return {
       id: String(row.id),
+      origin,
+      freeSpentMicros: origin === "free" ? toInt(row.free_spent_micros) : null,
       planLive: Boolean(row.plan_live),
       capSeconds: toInt(row.monthly_cap_seconds),
       disabled: Boolean(row.disabled),
@@ -255,5 +349,42 @@ export class PgStudentStore implements StudentStore {
   async claimNotice(studentId: string, month: string, which: "low" | "used_up"): Promise<boolean> {
     const rows = await this.db.query(which === "low" ? CLAIM_LOW_SQL : CLAIM_USED_UP_SQL, [studentId, month]);
     return rows.length > 0;
+  }
+
+  async createFreeStudent(code: string, capSeconds: number): Promise<boolean> {
+    const rows = await this.db.query(CREATE_FREE_SQL, [code, capSeconds]);
+    return rows.length > 0;
+  }
+
+  async claimFreeCodeSlot(ipHash: string, at: Date, limit: number): Promise<SlotClaim> {
+    const rows = await this.db.query(CLAIM_SLOT_SQL, [ipHash, at.toISOString(), limit]);
+    if (rows.length > 0) return { allowed: true, used: toInt(rows[0]?.used) };
+    // Refused, and nothing was written. A second read says when the oldest creation in the window ages out.
+    const row = (await this.db.query(SLOT_OLDEST_SQL, [ipHash]))[0];
+    const stamps = Array.isArray(row?.stamps) ? (row?.stamps as unknown[]).map((v) => (v instanceof Date ? v.getTime() : new Date(String(v)).getTime())) : [];
+    const claim = claimFromStamps(stamps, at.getTime(), limit).claim;
+    // If the row aged out or was purged between the two statements the window is open again: tell the caller to try in a second.
+    return claim.allowed ? { allowed: false, retryAfterSeconds: 1 } : claim;
+  }
+
+  async releaseFreeCodeSlot(ipHash: string, at: Date): Promise<void> {
+    await this.db.query(RELEASE_SLOT_SQL, [ipHash, at.toISOString()]);
+  }
+
+  async purgeStaleFreeCodeSlots(before: Date): Promise<number> {
+    return (await this.db.query(PURGE_SLOTS_SQL, [before.toISOString()])).length;
+  }
+
+  async freeSpentMicros(month: string): Promise<number> {
+    return toInt((await this.db.query(FREE_SPENT_SQL, [month]))[0]?.spent_micros);
+  }
+
+  async reserveFreeSpend(month: string, micros: number, ceilingMicros: number): Promise<number | null> {
+    const rows = await this.db.query(RESERVE_SPEND_SQL, [month, micros, ceilingMicros]);
+    return rows.length > 0 ? toInt(rows[0]?.spent_micros) : null;
+  }
+
+  async settleFreeSpend(month: string, deltaMicros: number, elevenChars: number): Promise<number> {
+    return toInt((await this.db.query(SETTLE_SPEND_SQL, [month, deltaMicros, elevenChars]))[0]?.spent_micros);
   }
 }

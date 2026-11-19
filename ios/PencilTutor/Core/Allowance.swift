@@ -103,9 +103,29 @@ struct MeResponse: Codable, Equatable {
     var plan: PlanInfo
     var allowance: Allowance
     var requestId: String?
+    /// Present only for a free code ("Start free"): whether all free codes together have used this month's allowance of money.
+    /// Absent for a code Edward made by hand, and from an older server.
+    var free: FreeInfo? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case plan, allowance
+        case plan, allowance, free
+        case requestId = "request_id"
+    }
+}
+
+struct FreeInfo: Codable, Equatable {
+    var full: Bool
+}
+
+/// POST /api/free-code ("Start free"): the server makes a new code. The request carries no bearer, because there is no code yet.
+struct FreeCodeResponse: Codable, Equatable {
+    var code: String
+    var capMinutes: Int?
+    var requestId: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case code
+        case capMinutes = "cap_minutes"
         case requestId = "request_id"
     }
 }
@@ -163,6 +183,10 @@ enum AllowanceText {
     static let usedUp = "This month's tutoring hours are used up. Ask Edward for more time."
     static let codeTurnedOff = "This code has been turned off. Ask Edward."
     static let wrongCode = "That code did not work. Check it and try again."
+    /// All free codes together have used this month's money. Shown kindly; it comes back on the 1st (Vancouver time).
+    static let freeTutoringFull = "Free tutoring is full this month, it comes back on the 1st."
+    /// Too many free codes were made from this network today (the server's per-address limit).
+    static let freeCodeLimit = "A few free codes have already been made on this network today. Try again tomorrow, or type a code if you have one."
 }
 
 /// What the app should do about a newly arrived allowance. Pure, so the 80% and 100% rules are tested without a screen.

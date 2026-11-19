@@ -1,5 +1,6 @@
 import { apiKeyFor, appVersion, ConfigError, liveSettings, roleConfig, scriptedState, type Env, type Role } from "./config.js";
 import { databaseUrl } from "./db.js";
+import { freeSummary } from "./free-config.js";
 import { voiceSummary } from "./voice.js";
 import { RequestCtx } from "./http.js";
 import { problemCount } from "./problems.js";
@@ -42,6 +43,8 @@ export function handleHealth(request: Request, env: Env = process.env): Response
       openai_key_present: openai,
       gemini_key_present: google,
       database_configured: Boolean(databaseUrl(env)),
+      // Settings only, no secret and no database read: it shows whether free codes are switched on, not how much budget is left.
+      free_codes: freeSummary(env),
       voice_provider: voiceSummary(env).provider,
       voice: voiceSummary(env),
       scripted: scripted.on,

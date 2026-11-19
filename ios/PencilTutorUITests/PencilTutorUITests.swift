@@ -106,6 +106,30 @@ final class PencilTutorUITests: XCTestCase {
         screenshot(app, named: "05-clean-looked-and-left-alone")
     }
 
+    /// "Start free": a new student sees the code screen, taps one button and is in, with nothing typed. The scripted server stands in
+    /// for POST /api/free-code (`--scripted-needs-code` starts on the code screen instead of signed in), so this proves the button, the
+    /// sign-in transition, the first check with the server and the course picker. It does not prove HTTP, the Keychain or the real server.
+    func testStartFreeSignsInWithoutTypingACode() throws {
+        let app = launchApp(extra: ["--scripted-needs-code"])
+
+        let startFree = element(app, "startFreeButton")
+        XCTAssertTrue(startFree.waitForExistence(timeout: 15), "the code screen should offer Start free")
+        XCTAssertTrue(element(app, "codeField").exists, "typing a code still works: Start free is an addition")
+        XCTAssertTrue(element(app, "codeContinueButton").exists)
+        XCTAssertFalse(element(app, "course-bc-math-9-unit-3").exists, "nobody is signed in yet")
+        screenshot(app, named: "20-code-screen-with-start-free")
+
+        startFree.tap()
+
+        let courseRow = element(app, "course-bc-math-9-unit-3")
+        XCTAssertTrue(courseRow.waitForExistence(timeout: 15), "after Start free the course picker should open, with no code typed")
+        XCTAssertFalse(startFree.exists, "the code screen is gone")
+        let chip = element(app, "allowanceChip")
+        XCTAssertTrue(chip.waitForExistence(timeout: 10), "the first check with the server should show the hours left")
+        XCTAssertTrue(chip.label.contains("min left"), "the chip was: \(chip.label)")
+        screenshot(app, named: "21-signed-in-by-start-free")
+    }
+
     /// The tool rail is on screen the moment the problem opens, with no tap. Choosing the eraser and then a colour returns to the
     /// pen and the rail is still there the whole time. Also checks the real frames: the rail sits under the Back button, left of
     /// the problem card, inside the screen, and every control is at least 44 x 44 pt.

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { maxOutputTokensOf, textReserve } from "./free-config.js";
+import { countModelResult, paidCall, refuse } from "./free-spend.js";
 import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
@@ -69,13 +71,24 @@ export async function handleConsult(request: Request, deps: Deps = defaultDeps()
   if (!picked.ok) return picked.response;
   const cfg = picked.cfg;
   if (cfg.effort) ctx.note({ effort: cfg.effort });
-  const answered = await runAskModel({
-    model: deps.models.language(cfg, picked.key),
-    cfg,
-    promptText: buildConsultPrompt({ problem, question: req.question, recent: req.recent }),
-    image: image.image,
-    system: CONSULT_POLICY,
+  // For a free code the call is bounded (an output-token cap) and metered (reserve before, settle after): lib/free-spend.ts.
+  const cap = maxOutputTokensOf(deps.env);
+  const paid = await paidCall(ctx, deps.env, opened, {
+    kind: "consult",
+    reserve: () => textReserve(cfg.model, opened.now, cap),
+    run: () =>
+      runAskModel({
+        model: deps.models.language(cfg, picked.key),
+        cfg,
+        promptText: buildConsultPrompt({ problem, question: req.question, recent: req.recent }),
+        image: image.image,
+        system: CONSULT_POLICY,
+        maxOutputTokens: opened.student.origin === "free" ? cap : undefined,
+      }),
+    count: countModelResult,
   });
+  if (!paid.ok) return refuse(ctx, paid.refusal);
+  const answered = paid.value;
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
   ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(NO_ANSWER_TEXT, cfg.model, "empty_answer");

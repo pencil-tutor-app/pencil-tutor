@@ -15,10 +15,20 @@ export const FIXED_NOW = new Date("2026-11-14T18:00:00Z");
 export const TEST_MONTH = "2026-11-01";
 
 // A store holding one student, TOKEN, with the default 8-hour cap and the live plan off.
-export function testStore(options: { capSeconds?: number; planLive?: boolean; disabled?: boolean } = {}) {
+export function testStore(options: { capSeconds?: number; planLive?: boolean; disabled?: boolean; origin?: "admin" | "free" } = {}) {
   const store = new MemoryStudentStore();
   const id = store.add(TOKEN, options);
   return { store, id };
+}
+
+// A store holding one FREE student (code TOKEN) and one hand-made student (code HAND_TOKEN), so a test can show that the two are
+// treated differently and that the hand-made one never is.
+export const HAND_TOKEN = "M4NWH2AB";
+export function freeAndHandStore(options: { planLive?: boolean } = {}) {
+  const store = new MemoryStudentStore();
+  const freeId = store.add(TOKEN, { origin: "free", planLive: options.planLive });
+  const handId = store.add(HAND_TOKEN);
+  return { store, freeId, handId };
 }
 
 // A header-only PNG: the server reads signature and IHDR only; the model is mocked in tests.

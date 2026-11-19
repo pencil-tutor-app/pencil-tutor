@@ -5,6 +5,10 @@ enum LaunchOptions {
     /// `--scripted-client`: use the in-process scripted tutor and the two fixed test problems.
     static var scriptedClient: Bool { ProcessInfo.processInfo.arguments.contains("--scripted-client") }
 
+    /// `--scripted-needs-code`: with `--scripted-client`, start on the code screen instead of signed in, and let "Start free" work
+    /// against the scripted server (it hands out a fixed code). Without it a scripted run never shows the code screen.
+    static var scriptedNeedsCode: Bool { scriptedClient && ProcessInfo.processInfo.arguments.contains("--scripted-needs-code") }
+
     /// `--memory-on`: the scripted tutor offers the opt-in memory (otherwise it says nothing about it, like an older server).
     static var memoryOn: Bool { ProcessInfo.processInfo.arguments.contains("--memory-on") }
 

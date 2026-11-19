@@ -101,7 +101,7 @@ describe("difficulty routing", () => {
 
   it("configForLevel gives the advanced model, and a 503 when the advanced provider has no key", () => {
     const ctx = new RequestCtx("watch", "POST");
-    const student = { id: "1", planLive: false, capSeconds: 28800, disabled: false, usage: EMPTY_USAGE };
+    const student = { id: "1", origin: "admin" as const, freeSpentMicros: null, planLive: false, capSeconds: 28800, disabled: false, usage: EMPTY_USAGE };
     const opened = {
       ok: true as const,
       scripted: false,
@@ -112,6 +112,7 @@ describe("difficulty routing", () => {
       code: TOKEN,
       month: TEST_MONTH,
       now: FIXED_NOW,
+      freeFull: false,
     };
     const adv = configForLevel(ctx, opened, { OPENAI_API_KEY: "k" }, "watch", "advanced");
     assert.ok(adv.ok && adv.cfg.model === "gpt-6.1-sol" && adv.cfg.level === "advanced");

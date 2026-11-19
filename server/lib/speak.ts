@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { apiKeyFor, roleConfig, speakSettings } from "./config.js";
+import { countText, speechActualMicros, speechReserve } from "./free-config.js";
+import { paidCall, recordElevenChars, refuse } from "./free-spend.js";
 import { defaultDeps, gate, issueReason, timedDb, type Deps, type GateOpen } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { logLine } from "./log.js";
@@ -104,8 +106,19 @@ export async function handleSpeak(request: Request, deps: Deps = defaultDeps()):
   const { voice, instructions } = speakSettings(deps.env);
   ctx.note({ provider: "openai", model: cfg.model, voice, voice_fallback: fallbackReason });
   const counted = countCharacters(ctx, opened, text.length, "openai");
-  const spoken = await runSpeech({ model: deps.models.speech(cfg, openaiKey), text, voice, instructions });
+  // For a free code this OpenAI call costs money, so it is metered (reserve before, settle after): lib/free-spend.ts.
+  const paid = await paidCall(ctx, deps.env, opened, {
+    kind: "speech_fallback",
+    reserve: () => speechReserve(cfg.model, text.length),
+    run: () => runSpeech({ model: deps.models.speech(cfg, openaiKey), text, voice, instructions }),
+    count: (out, reserve) =>
+      out.kind === "failed"
+        ? countText(undefined, out.label, reserve)
+        : { micros: speechActualMicros(cfg.model, out.bytes.length) ?? reserve.perAttempt, basis: "estimated" },
+  });
   const monthTotal = await counted;
+  if (!paid.ok) return refuse(ctx, paid.refusal);
+  const spoken = paid.value;
   if (monthTotal !== null) ctx.note({ tts_chars_month: monthTotal });
   if (spoken.kind === "failed") return ctx.fail(spoken.status, spoken.error, spoken.label, `${spoken.error}:${spoken.label}`);
   if (spoken.bytes.length === 0) return ctx.fail(502, "model_error", "empty_audio", "model_error:empty_audio");
@@ -122,7 +135,12 @@ export async function handleSpeak(request: Request, deps: Deps = defaultDeps()):
 // Resolves to the month's running total, or null when it could not be recorded.
 async function countCharacters(ctx: RequestCtx, opened: GateOpen, chars: number, provider: "elevenlabs" | "openai"): Promise<number | null> {
   try {
-    return await timedDb(ctx, () => opened.store.addSpeech(opened.student.id, opened.month, chars, provider));
+    // ElevenLabs is a flat plan: for a free code its characters are only added to the month's information-only counter (0 dollars).
+    const [total] = await Promise.all([
+      timedDb(ctx, () => opened.store.addSpeech(opened.student.id, opened.month, chars, provider)),
+      provider === "elevenlabs" ? recordElevenChars(ctx, opened, chars) : Promise.resolve(),
+    ]);
+    return total;
   } catch (err) {
     logLine("error", {
       request_id: ctx.id,

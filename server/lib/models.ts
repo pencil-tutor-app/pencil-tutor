@@ -103,12 +103,15 @@ export async function runWatchModel(args: {
   cfg: RoleConfig;
   promptText: string;
   image: ImageInfo;
+  // Set for a free code only: the most the model may generate, reasoning included. It makes the cost of the call bounded.
+  maxOutputTokens?: number;
 }): Promise<WatchModelResult | ModelFailure> {
   const startedAt = Date.now();
   try {
     const result = await generateText({
       model: args.model,
       providerOptions: providerOptionsFor(args.cfg),
+      maxOutputTokens: args.maxOutputTokens,
       system: WATCH_POLICY,
       messages: [
         {
@@ -142,12 +145,15 @@ export async function runAskModel(args: {
   promptText: string;
   image: ImageInfo;
   system?: string;
+  // Set for a free code only (see runWatchModel).
+  maxOutputTokens?: number;
 }): Promise<{ kind: "answer"; text: string; usage: UsageReport } | ModelFailure> {
   const startedAt = Date.now();
   try {
     const result = await generateText({
       model: args.model,
       providerOptions: providerOptionsFor(args.cfg),
+      maxOutputTokens: args.maxOutputTokens,
       system: args.system ?? ASK_POLICY,
       messages: [
         {
@@ -170,7 +176,7 @@ export async function runAskModel(args: {
 export async function runTranscription(args: {
   model: TranscriptionModel;
   audio: Buffer;
-}): Promise<{ kind: "transcript"; text: string } | ModelFailure> {
+}): Promise<{ kind: "transcript"; text: string; durationSeconds: number | null } | ModelFailure> {
   try {
     const result = await transcribe({
       model: args.model,
@@ -178,7 +184,10 @@ export async function runTranscription(args: {
       abortSignal: AbortSignal.timeout(STT_TIMEOUT_MS),
       maxRetries: 1,
     });
-    return { kind: "transcript", text: result.text.trim() };
+    // The audio length as the provider reports it (the OpenAI provider reads it from the reply's duration or duration usage).
+    // Null when it reports none; the free-code meter then keeps its reserve instead of guessing.
+    const seconds = result.durationInSeconds;
+    return { kind: "transcript", text: result.text.trim(), durationSeconds: typeof seconds === "number" && Number.isFinite(seconds) && seconds >= 0 ? seconds : null };
   } catch (err) {
     return classifyFailure(err);
   }

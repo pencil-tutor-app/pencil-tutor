@@ -580,6 +580,27 @@ Three faults the self-driving handwriting replay found (`docs/evals/2026-11-15-h
 - **Replay tooling.** `ink_script.py` gains `--gap-scale` (cramped lines) and `--jitter` (rushed hand), `cases --pick COURSE:PROBLEM
   --matrix --mistake-only`, and `stress`. A matrix written in one equation line counts as one line (`app_lines` 1).
 
+### Amendment 20 (2026-11-19): the app is free; "Start free" makes a code on the spot, behind an address limit and a monthly spending ceiling
+
+Owner decision. This amends amendment 13's "one code per student, made by Edward": a code still is the only credential and still carries the
+meter, the 8-hour cap and the notices, but there are now two origins (`students.origin`): `admin` (made with `scripts/codes`, unchanged) and
+`free` (the app asked for it). The full plan, the two Astra reviews and every number are in `docs/free-launch-plan.md`; the server side is in
+`server/README.md`, "Free codes". In short:
+
+- **Start free.** `POST /api/free-code` (no auth) makes a free code: 8 hours a month, live voice off (a free code never gets live voice, because
+  it is billed by the minute and the server cannot see the minutes). The code screen's "Start free" button stores it in the Keychain exactly like
+  a typed code. Migration `005_free_codes.sql` (additive) adds `students.origin` and two tables.
+- **Abuse guard, phase 1.** At most 3 free codes per network address per rolling 24 hours, counted on a keyed hash of the address (`FREE_CODE_IP_SALT`;
+  no salt, no free codes). **App Attest is phase 2**, after the paid Apple Developer account, and is not built: only a marked seam
+  (`APP_ATTEST_SEAM`, `server/lib/free-code.ts`) and the note at the end of the plan.
+- **Spending ceiling.** US$50 a Vancouver month for all free codes together (`FREE_MONTHLY_CEILING_USD`), kept as one stored estimate. Each
+  paid call for a free code reserves its worst case atomically, runs, then settles to its estimated cost; at the ceiling the server refuses new free
+  codes and every paid call for a free code with `403 free_tutoring_full`, and the app says "Free tutoring is full this month, it comes back on the
+  1st." Hand-made codes are never checked. ElevenLabs counts as 0 dollars (flat plan) but its characters are recorded: the shared 157,028-credit
+  pool is not protected by a dollar ceiling, and that is an open decision for Edward. The estimate is not the provider's invoice; the only hard cap is
+  the provider's own spend limit.
+- **Privacy.** A keyed hash of a network address is now stored for up to 2 days (and longer while nobody asks for free codes); `docs/privacy-policy.md` says so.
+
 ## Risks
 - Model judgment on real handwriting is unmeasured; the synthetic set is a
   floor check only. Mitigation: session log turns real use into the test.

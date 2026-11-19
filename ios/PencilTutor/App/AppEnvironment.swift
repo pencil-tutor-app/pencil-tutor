@@ -34,8 +34,15 @@ final class AppEnvironment: ObservableObject {
         if LaunchOptions.scriptedClient {
             // UI tests: no network and no code screen; speech uses the device voice only.
             let scripted = ScriptedTutorClient()
-            account = StudentAccount(store: InMemoryStudentCodeStore(), holder: holder, log: log, fetchMe: { try await scripted.me() })
-            account.startScripted(allowance: ScriptedTutorClient.allowance, plan: PlanInfo(live: false, capMinutes: 480))
+            account = StudentAccount(
+                store: InMemoryStudentCodeStore(), holder: holder, log: log,
+                fetchMe: { try await scripted.me() },
+                createFreeCode: { try await scripted.createFreeCode() }
+            )
+            // `--scripted-needs-code` starts on the code screen (the Start free UI test); every other scripted run starts signed in.
+            if !LaunchOptions.scriptedNeedsCode {
+                account.startScripted(allowance: ScriptedTutorClient.allowance, plan: PlanInfo(live: false, capMinutes: 480))
+            }
             self.client = MeteredTutorClient(inner: scripted, account: account)
             self.makeLiveTransport = nil
             self.liveOffReason = "scripted_client"
@@ -49,7 +56,11 @@ final class AppEnvironment: ObservableObject {
             #endif
             if let url = config.serverURL {
                 let http = HTTPTutorClient(baseURL: url, codeHolder: holder, log: log)
-                account = StudentAccount(store: store, holder: holder, log: log, fetchMe: { try await http.me() })
+                account = StudentAccount(
+                    store: store, holder: holder, log: log,
+                    fetchMe: { try await http.me() },
+                    createFreeCode: { try await http.createFreeCode() }
+                )
                 self.client = MeteredTutorClient(inner: http, account: account)
                 self.makeLiveTransport = { LiveWebRTCTransport() }
                 self.liveOffReason = nil

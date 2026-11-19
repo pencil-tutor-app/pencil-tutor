@@ -251,6 +251,145 @@ final class StudentAccountTests: XCTestCase {
         XCTAssertNil(store.load())
     }
 
+    // MARK: - Start free
+
+    private let freeCode = "FREE5ABC"
+
+    private func makeFreeAccount(
+        fetch: @escaping () async throws -> MeResponse,
+        create: @escaping () async throws -> FreeCodeResponse
+    ) -> StudentAccount {
+        let account = StudentAccount(store: store, holder: holder, log: log, fetchMe: { [unowned self] in
+            self.meCalls += 1
+            return try await fetch()
+        }, createFreeCode: create)
+        account.announce = { [unowned self] notice in self.announced.append(notice) }
+        return account
+    }
+
+    private func freeMe(full: Bool) -> MeResponse {
+        MeResponse(plan: PlanInfo(live: false, capMinutes: 480), allowance: allowance(), requestId: "r", free: FreeInfo(full: full))
+    }
+
+    func testStartFreeIsOfferedOnlyWhenThereIsAServerToAsk() {
+        XCTAssertFalse(makeAccount(fetch: { self.me() }).canStartFree)
+        XCTAssertTrue(makeFreeAccount(fetch: { self.me() }, create: { FreeCodeResponse(code: "x", capMinutes: nil, requestId: nil) }).canStartFree)
+    }
+
+    func testStartFreeKeepsTheServersCodeInTheKeychainAndOpensTheApp() async {
+        let account = makeFreeAccount(fetch: { self.freeMe(full: false) }, create: {
+            FreeCodeResponse(code: "free5-abc", capMinutes: 480, requestId: "r")
+        })
+        await account.startFree()
+        XCTAssertEqual(account.phase, .ready)
+        XCTAssertEqual(store.load(), freeCode, "stored the same way a typed code is stored, normalized")
+        XCTAssertEqual(holder.current, freeCode)
+        XCTAssertEqual(meCalls, 1, "then the usual check with the server")
+        XCTAssertNil(account.codeMessage)
+        XCTAssertFalse(account.isChecking)
+        XCTAssertNil(account.block)
+        XCTAssertEqual(account.allowance?.remainingMinutes, 478)
+    }
+
+    func testStartFreeStillOpensTheAppWhenTheCheckAfterwardsCannotReachTheServer() async {
+        let account = makeFreeAccount(fetch: { throw TutorError.offline(detail: "x") }, create: {
+            FreeCodeResponse(code: self.freeCode, capMinutes: 480, requestId: nil)
+        })
+        await account.startFree()
+        XCTAssertEqual(account.phase, .ready, "the code was made and is saved; the check can happen later, like at any launch")
+        XCTAssertEqual(store.load(), freeCode)
+    }
+
+    func testStartFreeSaysKindlyWhenThisNetworkHasMadeItsFreeCodes() async {
+        let account = makeFreeAccount(fetch: { self.me() }, create: { throw TutorError.freeCodeLimit })
+        await account.startFree()
+        XCTAssertEqual(account.codeMessage, AllowanceText.freeCodeLimit)
+        XCTAssertEqual(account.phase, .needsCode)
+        XCTAssertNil(store.load())
+        XCTAssertNil(holder.current)
+        XCTAssertEqual(meCalls, 0)
+        XCTAssertFalse(account.isChecking)
+    }
+
+    func testStartFreeSaysKindlyWhenFreeTutoringIsFull() async {
+        let account = makeFreeAccount(fetch: { self.me() }, create: { throw TutorError.freeTutoringFull })
+        await account.startFree()
+        XCTAssertEqual(account.codeMessage, "Free tutoring is full this month, it comes back on the 1st.")
+        XCTAssertEqual(account.phase, .needsCode)
+    }
+
+    func testStartFreeWithNoInternetOrAServerOutageSaysSoInPlainWords() async {
+        let offline = makeFreeAccount(fetch: { self.me() }, create: { throw TutorError.offline(detail: "x") })
+        await offline.startFree()
+        XCTAssertEqual(offline.codeMessage, "I can't reach the tutor. Check the internet and try again.")
+        let down = makeFreeAccount(fetch: { self.me() }, create: { throw TutorError.serverUnavailable(status: 503, reason: "free_codes_unavailable") })
+        await down.startFree()
+        XCTAssertEqual(down.codeMessage, "The tutor is resting right now. Try again in a little while.")
+        XCTAssertNil(store.load())
+    }
+
+    func testStartFreeRefusesACodeThatIsNotInTheRightShape() async {
+        let account = makeFreeAccount(fetch: { self.me() }, create: { FreeCodeResponse(code: "NOPE", capMinutes: nil, requestId: nil) })
+        await account.startFree()
+        XCTAssertEqual(account.phase, .needsCode)
+        XCTAssertNil(store.load())
+        XCTAssertEqual(account.codeMessage, "Something went wrong. Try again.")
+    }
+
+    func testStartFreeNeverLogsTheCodeOnlyItsShortHash() async throws {
+        let account = makeFreeAccount(fetch: { self.freeMe(full: false) }, create: {
+            FreeCodeResponse(code: self.freeCode, capMinutes: 480, requestId: nil)
+        })
+        await account.startFree()
+        let exported = try XCTUnwrap(log.exportURL())
+        let text = try String(contentsOf: exported, encoding: .utf8)
+        XCTAssertFalse(text.contains(freeCode), "the code itself must never be logged")
+        XCTAssertTrue(text.contains(StudentCode.shortHash(freeCode)))
+        XCTAssertTrue(text.contains("free_code_started"))
+    }
+
+    // MARK: - Free tutoring full
+
+    func testFreeTutoringFullBlocksKindlyAndClearsWhenTheServerSaysItIsOpen() async {
+        try? store.save(freeCode)
+        var full = true
+        let account = makeFreeAccount(fetch: { self.freeMe(full: full) }, create: { throw TutorError.freeCodeLimit })
+        await account.refresh(reason: "launch")
+        XCTAssertEqual(account.block, .freeTutoringFull)
+        XCTAssertEqual(account.block?.message, "Free tutoring is full this month, it comes back on the 1st.")
+        XCTAssertTrue(account.isBlocked)
+        full = false
+        await account.refresh(reason: "problem_opened")
+        XCTAssertNil(account.block, "the 1st came: the notice goes away without the student doing anything")
+    }
+
+    func testAFreeTutoringFullRefusalFromAnyCallBlocksToo() async {
+        try? store.save(freeCode)
+        let account = makeFreeAccount(fetch: { self.freeMe(full: false) }, create: { throw TutorError.freeCodeLimit })
+        account.handle(serverError: .freeTutoringFull)
+        XCTAssertEqual(account.block, .freeTutoringFull)
+        XCTAssertEqual(account.phase, .ready, "the code is still good, nothing is signed out")
+        XCTAssertEqual(store.load(), freeCode)
+    }
+
+    func testAHandMadeCodeNeverSeesTheFreeNotice() async {
+        try? store.save(code)
+        let account = makeAccount(fetch: { self.me() })
+        await account.refresh(reason: "launch")
+        XCTAssertNil(account.block)
+    }
+
+    // MARK: - What the server sends
+
+    func testTheFreeCodeReplyAndTheFreeFlagOnMeDecode() throws {
+        let made = try JSONDecoder().decode(FreeCodeResponse.self, from: Data(#"{"code":"ABCDEFGH","cap_minutes":480,"request_id":"r1"}"#.utf8))
+        XCTAssertEqual(made, FreeCodeResponse(code: "ABCDEFGH", capMinutes: 480, requestId: "r1"))
+        let plain = #"{"plan":{"live":false,"cap_minutes":480},"allowance":{"month":"2026-11","used_seconds":0,"cap_seconds":28800,"remaining_seconds":28800,"remaining_minutes":480,"percent_used":0,"state":"ok","notice":null},"request_id":"r"}"#
+        XCTAssertNil(try JSONDecoder().decode(MeResponse.self, from: Data(plain.utf8)).free, "an older server or a hand-made code sends no free flag")
+        let withFree = plain.replacingOccurrences(of: #""request_id":"r"}"#, with: #""free":{"full":true},"request_id":"r"}"#)
+        XCTAssertEqual(try JSONDecoder().decode(MeResponse.self, from: Data(withFree.utf8)).free, FreeInfo(full: true))
+    }
+
     // MARK: - Logging
 
     func testTheLogNeverHoldsTheCodeOnlyItsShortHash() async throws {

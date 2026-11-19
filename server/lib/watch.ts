@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { finalizeDecision, scriptedWatch, type WatchResult } from "./decision.js";
+import { maxOutputTokensOf, textReserve } from "./free-config.js";
+import { countModelResult, paidCall, refuse } from "./free-spend.js";
 import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
@@ -68,12 +70,24 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
     modelName = cfg.model;
     if (cfg.effort) ctx.note({ effort: cfg.effort });
     const model = deps.models.language(cfg, picked.key);
-    const out = await runWatchModel({
-      model,
-      cfg,
-      promptText: buildWatchPrompt({ problem, lines: req.lines, history, clientTime: req.client_time }),
-      image: image.image,
+    // For a free code the call is bounded (an output-token cap) and metered (reserve before, settle after): lib/free-spend.ts.
+    const cap = maxOutputTokensOf(deps.env);
+    const free = opened.student.origin === "free";
+    const paid = await paidCall(ctx, deps.env, opened, {
+      kind: "watch",
+      reserve: () => textReserve(cfg.model, opened.now, cap),
+      run: () =>
+        runWatchModel({
+          model,
+          cfg,
+          promptText: buildWatchPrompt({ problem, lines: req.lines, history, clientTime: req.client_time }),
+          image: image.image,
+          maxOutputTokens: free ? cap : undefined,
+        }),
+      count: countModelResult,
     });
+    if (!paid.ok) return refuse(ctx, paid.refusal);
+    const out = paid.value;
     if (out.kind === "failed") return ctx.fail(out.status, out.error, out.label, `${out.error}:${out.label}`);
     // Tokens, estimated cost and provider time: counts and labels only, never the page or the model's words.
     ctx.note(usageFields(out.usage));
