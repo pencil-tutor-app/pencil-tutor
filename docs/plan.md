@@ -199,9 +199,9 @@ stays in the code as a **premium option, off by default**.
 
 **What the student gets.** The tutor speaks in one voice for every utterance (answers, hints, check verdicts): ElevenLabs
 **Eleven v4 Turbo** (`eleven_v4_turbo`), streamed so the first audio plays before the sentence is finished. The mic button is
-tap-to-talk: tap to start, tap again to send (auto-stop at 30 seconds). Until Edward's voice clone exists the voice is the premade
-American male voice **Eric** (`cjVigY5qzO86Huf0OWal`, labelled "Smooth, Trustworthy", conversational); the clone is one setting
-away (`ELEVENLABS_VOICE_ID`). Fallback order: ElevenLabs, then OpenAI text-to-speech (`gpt-4o-mini-tts`, deprecated 2027-01-06), then
+tap-to-talk: tap to start, tap again to send (auto-stop at 30 seconds). The voice is Edward's own
+clone, "Edward Tutor" (`9fNlRrOOvKvNtWqijXab`, made 2026-11-14, live in production via `ELEVENLABS_VOICE_ID`). The code default,
+used when that setting is absent, is the premade American male voice **Eric** (`cjVigY5qzO86Huf0OWal`). Fallback order: ElevenLabs, then OpenAI text-to-speech (`gpt-4o-mini-tts`, deprecated 2027-01-06), then
 the device voice. Each fallback is logged with its reason. Both servers' audio arrives in one wire format (16-bit little-endian
 mono PCM, 24 kHz), which the iPad plays as it arrives.
 

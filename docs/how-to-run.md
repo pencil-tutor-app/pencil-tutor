@@ -48,8 +48,8 @@ State as of 2026-11-13 morning. The plan is in `docs/plan.md`, its review in
 **Tap-to-talk, every utterance in ElevenLabs Eleven v4 Turbo.** The mic button records a question (tap to start, tap again to
 send, auto-stop at 30 seconds); `POST /api/ask` answers with the page in view; `POST /api/speak` speaks the answer, every hint
 and every check verdict. The audio streams as 24 kHz 16-bit PCM and the iPad starts playing after about 150 ms of it. Settings
-(Vercel env, all optional except the key): `ELEVENLABS_API_KEY` (secret), `ELEVENLABS_VOICE_ID` (now Eric, the premade American
-male voice `cjVigY5qzO86Huf0OWal`; set to the clone's id later), `ELEVENLABS_MODEL` (default `eleven_v4_turbo`),
+(Vercel env, all optional except the key): `ELEVENLABS_API_KEY` (secret), `ELEVENLABS_VOICE_ID` (in production: "Edward
+Tutor", Edward's own cloned voice `9fNlRrOOvKvNtWqijXab`, made 2026-11-14; the code default is the premade voice Eric), `ELEVENLABS_MODEL` (default `eleven_v4_turbo`),
 `ELEVENLABS_STABILITY` (0.5) and `ELEVENLABS_SIMILARITY` (0.75). Fallback chain: ElevenLabs, then OpenAI text-to-speech (same
 text, same PCM format, `SPEAK_*` settings), then the device voice. Every fallback is logged with its reason on the server
 (`voice_fallback`) and in the app's session log (`speech_fallback`); the response header `x-voice-provider` says which voice spoke.
@@ -72,7 +72,9 @@ Until that is done the server speaks through the OpenAI fallback and says so (`x
 Voice Clone named "Edward Tutor" and prints only the new voice id (it uses the ElevenLabs CLI's sign-in, or
 `ELEVENLABS_API_KEY` if set). Then `printf '<that id>' | vercel env add ELEVENLABS_VOICE_ID production --force` and
 `vercel deploy --prod` from `server/`. ElevenLabs advises a clean recording in one speaking style: Eleven v4 copies the source
-faithfully, flaws included. Not done yet.
+faithfully, flaws included. Done 2026-11-14 from a 3-minute Voice Memo: voice id `9fNlRrOOvKvNtWqijXab`, set in Vercel
+production; `server/scripts/live-check` on 2026-11-19 heard it on all three sentences (provider elevenlabs, no fallback, first audio
+in 539 to 788 ms).
 
 **ElevenLabs capacity.** The Creator plan gives this account 157,028 credits a month (1 character = 1 credit on v4 Turbo,
 measured) and cannot be extended; when it runs out the voice falls back to OpenAI. See plan amendment 13.
