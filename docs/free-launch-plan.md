@@ -138,7 +138,7 @@ banner, the device-voice notice and that Settings, "What the tutor remembers", s
   can drain it long before US$50 is spent, after which paying students' voice falls back to OpenAI. Counted as 0 on the owner's instruction;
   `eleven_chars` gives the numbers. Edward's call.
 - Schools and families share one address: 3 codes per address a day can lock a classroom out. Kind message; the limit is an env var.
-- Free students see "Ask Edward for more time" when their 8 hours run out; wording unchanged, Edward's call.
+- When the 8 hours run out every student (free or not) hears "They start fresh on the 1st." (changed 2026-11-19; "Ask Edward" did not fit a free student).
 
 ## Phase 2: App Attest (not built)
 

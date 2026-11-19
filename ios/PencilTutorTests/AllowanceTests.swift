@@ -123,7 +123,7 @@ final class AllowanceTests: XCTestCase {
         XCTAssertEqual(SpokenNotice.usedUp.purpose, "allowance_used_up")
         XCTAssertEqual(SpokenNotice.low(minutes: 96).fallbackText, "You have about 96 minutes left this month.")
         XCTAssertEqual(SpokenNotice.low(minutes: 1).fallbackText, "You have about 1 minute left this month.")
-        XCTAssertEqual(SpokenNotice.usedUp.fallbackText, "This month's tutoring hours are used up. Ask Edward for more time.")
+        XCTAssertEqual(SpokenNotice.usedUp.fallbackText, "This month's tutoring hours are used up. They start fresh on the 1st.")
     }
 
     // MARK: - Server refusals become typed errors
@@ -158,7 +158,7 @@ final class AllowanceTests: XCTestCase {
     func testStudentMessagesArePlainWords() {
         XCTAssertEqual(TutorError.unauthorized(reason: "unknown_code").studentMessage, "That code did not work. Check it and try again.")
         XCTAssertEqual(TutorError.codeTurnedOff.studentMessage, "This code has been turned off. Ask Edward.")
-        XCTAssertEqual(TutorError.hoursUsedUp(allowance: nil).studentMessage, "This month's tutoring hours are used up. Ask Edward for more time.")
+        XCTAssertEqual(TutorError.hoursUsedUp(allowance: nil).studentMessage, "This month's tutoring hours are used up. They start fresh on the 1st.")
         XCTAssertEqual(TutorError.freeTutoringFull.studentMessage, "Free tutoring is full this month, it comes back on the 1st.")
         for error in [TutorError.unauthorized(reason: "x"), .codeTurnedOff, .hoursUsedUp(allowance: nil), .liveNotInPlan, .recordingTooShort, .freeTutoringFull, .freeCodeLimit] {
             let text = error.studentMessage.lowercased()

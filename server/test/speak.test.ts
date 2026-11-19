@@ -248,7 +248,7 @@ describe("speak and the monthly hours", () => {
     );
     assert.equal(res.status, 200);
     await drain(res);
-    assert.equal(calls[0]?.text, "This month's tutoring hours are used up. Ask Edward for more time.");
+    assert.equal(calls[0]?.text, "This month's tutoring hours are used up. They start fresh on the 1st.");
   });
 
   it("speaks the low-hours sentence with the minutes left, and needs no text from the app", async () => {

@@ -32,7 +32,7 @@ const SpeakRequestSchema = z.object({
 export const SCRIPTED_PCM: Uint8Array = new Uint8Array(24_000 * 2 * 0.1);
 
 export function noticeText(purpose: string, remainingMinutes: number): string {
-  if (purpose === "allowance_used_up") return "This month's tutoring hours are used up. Ask Edward for more time.";
+  if (purpose === "allowance_used_up") return "This month's tutoring hours are used up. They start fresh on the 1st.";
   if (remainingMinutes < 1) return "You have less than a minute left this month.";
   return `You have about ${remainingMinutes} ${remainingMinutes === 1 ? "minute" : "minutes"} left this month.`;
 }

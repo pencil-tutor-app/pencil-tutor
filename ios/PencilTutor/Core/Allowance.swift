@@ -180,7 +180,7 @@ enum SpokenNotice: Equatable {
 }
 
 enum AllowanceText {
-    static let usedUp = "This month's tutoring hours are used up. Ask Edward for more time."
+    static let usedUp = "This month's tutoring hours are used up. They start fresh on the 1st."
     static let codeTurnedOff = "This code has been turned off. Ask Edward."
     static let wrongCode = "That code did not work. Check it and try again."
     /// All free codes together have used this month's money. Shown kindly; it comes back on the 1st (Vancouver time).

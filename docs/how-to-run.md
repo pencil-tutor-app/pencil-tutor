@@ -104,7 +104,7 @@ question, the tutor looking, live voice talk); a gap longer than 60 seconds coun
 after the last moment. The app sends a heartbeat every 30 seconds only when there is student activity it has not reported yet, so an
 iPad left on the table counts nothing. (This replaced the earlier "2 minutes forward" rule on 2026-11-14; see `docs/plan.md`.) After
 pulling this change, run `server/scripts/codes migrate` once to add the `last_activity_at` column before deploying the server. The month is the calendar month in America/Vancouver and resets
-on the 1st. At 80% the tutor says how much is left; at 100% the tutor says the hours are used up and to ask Edward, watching and
+on the 1st. At 80% the tutor says how much is left; at 100% the tutor says the hours are used up and start fresh on the 1st, watching and
 asking stop, drawing still works. The student sees "N min left" on the problem list and the problem screen.
 
 **Free codes ("Start free", 2026-11-19).** The app is free on the App Store. The code screen has a "Start free" button: the server makes a code (8 hours a month, live voice off, same meter and caps, kept in the Keychain like a typed one) and the student is in. You make nothing by hand and know nobody's code. Codes you make with `codes create` keep working unchanged and are never affected by anything here; `codes list` shows hand-made ones, `codes list --free` the free ones. Plan, review and reasons: `docs/free-launch-plan.md`. Settings (Vercel production; the server needs a redeploy to read a change):

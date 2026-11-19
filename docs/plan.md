@@ -221,7 +221,7 @@ a heartbeat (`POST /api/heartbeat`, every 30 seconds, sent by the app only while
 it has not reported yet). A heartbeat is not activity by itself: it carries `seconds_since_activity`, how long ago the student's
 last real ink or live talk was, and the server charges the gap from that moment. A student who opens a problem and leaves the iPad
 on the table accrues about nothing. The month is the calendar month in America/Vancouver and resets on the 1st. At 80% used, the
-tutor says how much is left (once a month); at 100% the tutor says the month's hours are used up and to ask Edward for more,
+tutor says how much is left (once a month); at 100% the tutor says the month's hours are used up and start fresh on the 1st,
 watching and asking stop (the server refuses with `hours_used_up`), and drawing still works. The app always shows the minutes
 left. A top-up adds time to the current month only.
 
