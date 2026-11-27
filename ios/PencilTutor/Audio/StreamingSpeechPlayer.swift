@@ -36,7 +36,7 @@ final class StreamingSpeechPlayer {
         self.format = format
         engine.attach(node)
         engine.connect(node, to: engine.mainMixerNode, format: format)
-        if LaunchOptions.silent {
+        if LaunchOptions.mutesSound {
             engine.mainMixerNode.outputVolume = 0      // `--silent`: everything still plays, at volume 0
             node.volume = 0
         }
