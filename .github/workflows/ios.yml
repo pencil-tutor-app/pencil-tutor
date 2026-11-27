@@ -3,19 +3,22 @@ name: ios
 # Builds the iPad app for iPadOS 26, runs the unit tests and the UI tests on an iPad simulator, and saves the
 # UI test screenshots as PNG files in the "ios-screenshots" artifact. Nothing here runs on a laptop.
 #
-# Runner: Blacksmith's 6 vCPU Apple M4 macOS 26 machine (blacksmith-6vcpu-macos-26), which follows GitHub's
-# macos-26 image: Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
-# Blacksmith is cheaper per run than GitHub's macos-26 and has a free monthly allowance (2026-11-16).
-# Sources: https://docs.blacksmith.sh/blacksmith-runners/overview
-#          https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
-# Fallback: if Blacksmith is unavailable, set runs-on back to macos-26.
+# Runner: GitHub's macos-26 image: Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
+# The repo is public since 2026-11-28, and GitHub-hosted runners (macOS included) are free and unmetered for public
+# repositories, so this no longer spends Blacksmith's free Mac minutes (one Mac minute counted as 20 of the 3,000).
+# Slower than Blacksmith's M4 machine (blacksmith-6vcpu-macos-26, same image); switch back only if speed matters more than cost.
+# Source: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
 # Xcode 27 is only a public preview on the runner image, so 26.6 is pinned.
 
-# Manual only, to stay inside the free Mac minutes (about 150 a month on Blacksmith). Run it once when a
-# branch is ready to merge, not on every push:  gh workflow run ios.yml --ref <branch>
-# Merge to main only after a green run on that exact commit, so main needs no second run.
+# Runs on pull requests that touch the iPad app (free now), and by hand:  gh workflow run ios.yml --ref <branch>
+# A server-only change never starts it. Merge to main only after a green run on that exact commit.
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "ios/**"
+      - "shared/**"
+      - ".github/workflows/ios.yml"
 
 concurrency:
   group: ios-${{ github.ref }}
@@ -23,7 +26,7 @@ concurrency:
 
 jobs:
   build-and-test:
-    runs-on: blacksmith-6vcpu-macos-26
+    runs-on: macos-26
     timeout-minutes: 60
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
