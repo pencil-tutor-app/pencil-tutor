@@ -62,7 +62,15 @@ final class MarksOverlayHitTestTests: XCTestCase {
         let (controller, window) = await host(MarksOverlay(marks: [mark], viewport: viewport))
         defer { window.isHidden = true }
 
-        let hits = overlayHits(controller)
+        // Wait for SwiftUI to lay the callout out instead of trusting a fixed pause: on GitHub's slower macos-26 runner the
+        // button had no frame yet after 0.4 s (run 46053313003), while Blacksmith's M4 machine was always ready.
+        var hits = overlayHits(controller, step: 8)
+        for _ in 0..<40 where hits.isEmpty {
+            try? await Task.sleep(nanoseconds: 125_000_000)
+            controller.view.layoutIfNeeded()
+            hits = overlayHits(controller, step: 8)
+        }
+        hits = overlayHits(controller)
         let total = Int(screen.width / 4) * Int(screen.height / 4)
         XCTAssertFalse(hits.isEmpty, "the button takes touches")
         XCTAssertLessThan(hits.count, total / 20, "almost every point of the screen falls through to the page (overlay took \(hits.count) of \(total))")
