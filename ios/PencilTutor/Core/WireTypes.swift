@@ -46,6 +46,8 @@ struct WatchRequest: Codable, Equatable {
     var clientTime: String
     /// The typed statement, for the student's own problems only (`problem_id` is `own:<course>`). Left out of the JSON otherwise.
     var problemText: String? = nil
+    /// The sealed reference of a teach-mode practice problem; left out otherwise.
+    var problemRef: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -57,6 +59,7 @@ struct WatchRequest: Codable, Equatable {
         case lines, history
         case clientTime = "client_time"
         case problemText = "problem_text"
+        case problemRef = "problem_ref"
     }
 }
 
@@ -89,8 +92,12 @@ struct AskRequest: Codable, Equatable {
     var drawingRevision: Int
     var audioBase64: String
     var imagePngBase64: String
-    /// Own problems only, like `WatchRequest.problemText`.
     var problemText: String? = nil
+    /// Teach-mode practice problems only: the sealed reference, whether the student has a finished line of their own work on the
+    /// page (`AttemptRule`), and the last 8 turns of the lesson conversation. Each is left out otherwise.
+    var problemRef: String? = nil
+    var attempted: Bool? = nil
+    var recent: [ConsultTurnWire]? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -99,6 +106,8 @@ struct AskRequest: Codable, Equatable {
         case audioBase64 = "audio_base64"
         case imagePngBase64 = "image_png_base64"
         case problemText = "problem_text"
+        case problemRef = "problem_ref"
+        case attempted, recent
     }
 }
 
@@ -148,6 +157,9 @@ struct ConsultRequest: Codable, Equatable {
     var recent: [ConsultTurnWire]
     /// Own problems only, like `WatchRequest.problemText`.
     var problemText: String? = nil
+    /// Teach-mode practice problems only, like `AskRequest.problemRef` and `AskRequest.attempted`.
+    var problemRef: String? = nil
+    var attempted: Bool? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -156,6 +168,8 @@ struct ConsultRequest: Codable, Equatable {
         case imagePngBase64 = "image_png_base64"
         case question, recent
         case problemText = "problem_text"
+        case problemRef = "problem_ref"
+        case attempted
     }
 }
 
@@ -183,12 +197,16 @@ struct LiveSessionRequest: Codable, Equatable {
     var sdp: String
     /// Own problems only, like `WatchRequest.problemText`.
     var problemText: String? = nil
+    /// Teach-mode practice problems only. The voice never receives the solution; the reference tells the server this is a practice
+    /// problem, so the live instructions carry the no-answer rule.
+    var problemRef: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
         case problemId = "problem_id"
         case sdp
         case problemText = "problem_text"
+        case problemRef = "problem_ref"
     }
 }
 

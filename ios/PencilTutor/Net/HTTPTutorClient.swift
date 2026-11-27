@@ -61,6 +61,18 @@ final class HTTPTutorClient: TutorClient {
         try await post(path: "api/heartbeat", body: request, timeout: 15)
     }
 
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
+        try await post(path: "api/teach", body: request, timeout: 45)
+    }
+
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse {
+        try await post(path: "api/teach", body: request, timeout: 45)
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        try await post(path: "api/teach", body: request, timeout: 45)
+    }
+
     func memoryStatus() async throws -> MemoryStatusResponse {
         try await send(path: "api/memory", method: "GET", payload: nil, timeout: 15)
     }
@@ -123,6 +135,11 @@ final class HTTPTutorClient: TutorClient {
     /// Turns a non-2xx reply into the typed error the rest of the app understands. Pure, so it is unit-tested.
     static func error(status: Int, body: ServerErrorBody?) -> TutorError {
         let reason = body?.reason ?? body?.error ?? "no reason given"
+        let labels = [body?.error, body?.reason].compactMap { $0 }
+        if labels.contains("practice_expired") { return .practiceExpired }
+        if labels.contains("teach_too_long") { return .teachTooLong }
+        if labels.contains("teach_unusable") { return .teachUnusable }
+        if labels.contains("teach_unavailable") { return .teachUnavailable }
         switch status {
         case 401:
             return .unauthorized(reason: body?.reason ?? "unknown")

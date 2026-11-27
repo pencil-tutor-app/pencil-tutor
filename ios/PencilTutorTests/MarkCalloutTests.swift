@@ -31,6 +31,27 @@ final class MarkCalloutTests: XCTestCase {
         XCTAssertLessThanOrEqual(origin.y + size.height, screen.maxY - keepOut)
     }
 
+    /// A wide circled line with 240 pt left on its right: the callout narrows to fit beside it rather than dropping onto the next line.
+    func testANarrowGapBesideTheCircleBeatsCoveringTheNextLine() {
+        let usable = CGRect(x: 0, y: 0, width: 810, height: 1000)
+        let circle = CGRect(x: 60, y: 400, width: 500, height: 80)
+        let placed = CalloutPlacement.frame(circle: circle, visible: usable, height: 120)
+        XCTAssertGreaterThanOrEqual(placed.minX, circle.maxX, "beside the circle, not below it")
+        XCTAssertGreaterThanOrEqual(placed.width, 200)
+        XCTAssertLessThan(placed.width, 260, "narrowed to fit")
+        XCTAssertLessThanOrEqual(placed.maxX, usable.maxX - 2, "still wholly on screen")
+    }
+
+    /// No room beside it: below the circle, hugging the right edge, where lines usually end.
+    func testWithNoRoomBesideItTheCalloutGoesBelowAgainstTheRightEdge() {
+        let usable = CGRect(x: 0, y: 0, width: 810, height: 1000)
+        let circle = CGRect(x: 60, y: 400, width: 680, height: 80)
+        let placed = CalloutPlacement.frame(circle: circle, visible: usable, height: 120)
+        XCTAssertGreaterThan(placed.minY, circle.maxY, "below the circle")
+        XCTAssertEqual(placed.maxX, usable.maxX - 2, accuracy: 0.5, "against the right edge")
+        XCTAssertEqual(placed.width, 260)
+    }
+
     func testAMarkKeepsItsIdentityAndInkWhenThePageMoves() {
         let ink = InkIdentity(strokes: [InkStroke(id: 0, bounds: CGRect(x: 10, y: 10, width: 100, height: 20),
                                                   createdAt: Date(timeIntervalSinceReferenceDate: 5))])

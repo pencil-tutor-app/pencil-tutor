@@ -2,6 +2,7 @@ name: ios
 
 # Builds the iPad app for iPadOS 26, runs the unit tests and the UI tests on an iPad simulator, and saves the
 # UI test screenshots as PNG files in the "ios-screenshots" artifact. Nothing here runs on a laptop.
+# A last step builds Release, runs one lesson UI test on it and checks that its session log holds no words.
 #
 # Runner: GitHub's macos-26 image: Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
 # The repo is public since 2026-11-28, and GitHub-hosted runners (macOS included) are free and unmetered for public
@@ -14,6 +15,11 @@ name: ios
 # A server-only change never starts it. Merge to main only after a green run on that exact commit.
 on:
   workflow_dispatch:
+    inputs:
+      release_log_check:
+        description: "Also build Release, run the lesson UI test on it and check its session log holds no words (one more compile)"
+        type: boolean
+        default: true
   pull_request:
     paths:
       - "ios/**"
@@ -136,6 +142,35 @@ jobs:
             echo "no session log found in the simulator container ($APP_DATA)"
           fi
 
+      # Release keeps TutorSession.logsWords false: the session log holds counts and labels, never the concept, the lesson or a
+      # question. The Debug runs above write words on purpose, so they cannot prove that. This step builds the Release
+      # configuration for the simulator, runs one lesson UI test on it (type a concept, read the lesson, ask a follow-up) and
+      # checks the log it wrote with ios/Scripts/check_release_log.py. ENABLE_TESTABILITY=YES only so the unit-test target in the
+      # scheme still compiles (`@testable import`); the app is still the Release configuration (no DEBUG, optimised). The app is
+      # uninstalled first so the Debug logs in the simulator's container are gone. Device signing is a separate issue.
+      - name: Release build, lesson UI test, and a check of its session log
+        if: ${{ github.event_name == 'pull_request' || inputs.release_log_check }}
+        run: |
+          mkdir -p ios/artifacts/release-logs
+          xcrun simctl uninstall "$UDID" com.edwardtran.penciltutor || true
+          if ! xcodebuild test \
+              -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+              -destination "id=$UDID" -derivedDataPath ios/build-release \
+              -only-testing:PencilTutorUITests/LessonUITests/testAFollowUpIsAddedToThePanel \
+              -resultBundlePath ios/results/release-ui.xcresult \
+              -collect-test-diagnostics never \
+              ENABLE_TESTABILITY=YES CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/release-ui-tests.log 2>&1; then
+            echo "RELEASE UI TEST FAILED. Failures:"
+            grep -E "error:|failed|Test Case .* failed" ios/artifacts/logs/release-ui-tests.log | head -n 60 || true
+            echo "--- last 60 lines ---"
+            tail -n 60 ios/artifacts/logs/release-ui-tests.log
+            exit 1
+          fi
+          grep -E "Executed [0-9]+ tests" ios/artifacts/logs/release-ui-tests.log | tail -n 1
+          APP_DATA=$(xcrun simctl get_app_container "$UDID" com.edwardtran.penciltutor data)
+          cp "$APP_DATA"/Documents/session-*.jsonl ios/artifacts/release-logs/
+          python3 ios/Scripts/check_release_log.py ios/artifacts/release-logs
+
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -153,4 +188,5 @@ jobs:
             ios/results
             ios/artifacts/logs
             ios/artifacts/session-logs
+            ios/artifacts/release-logs
           if-no-files-found: warn

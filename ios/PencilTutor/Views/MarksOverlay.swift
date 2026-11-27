@@ -71,10 +71,10 @@ private struct MarkView: View {
     }
 
     /// Beside the circle if it fits on screen, else under it, else above it; always kept inside the visible part of the page.
-    private var calloutOrigin: CGPoint {
+    private var calloutFrame: CGRect {
         var area = visible.intersection(CGRect(origin: .zero, size: pageSize))
         if !area.isNull { area.size.height = max(0, area.height - bottomKeepOut) }
-        return CalloutPlacement.origin(circle: ellipseRect, visible: area, size: CGSize(width: calloutWidth, height: calloutHeight))
+        return CalloutPlacement.frame(circle: ellipseRect, visible: area, height: calloutHeight, preferredWidth: calloutWidth)
     }
 
     var body: some View {
@@ -88,14 +88,15 @@ private struct MarkView: View {
                 .accessibilityIdentifier("interruptEllipse")
                 .allowsHitTesting(false)
 
-            callout
-                .offset(x: calloutOrigin.x, y: calloutOrigin.y)
+            let placed = calloutFrame
+            callout(width: placed.width)
+                .offset(x: placed.minX, y: placed.minY)
         }
     }
 
     /// The hint and, under it, the "Not a mistake" button. Only the button takes touches: the words, the card behind them and
     /// its outline do not, so a pen stroke that starts on them still draws.
-    private var callout: some View {
+    private func callout(width: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(mark.hint)
                 .font(.system(size: 20, weight: .semibold, design: .rounded))
@@ -121,7 +122,7 @@ private struct MarkView: View {
             .accessibilityIdentifier("notAMistakeButton")
         }
         .padding(10)
-        .frame(width: calloutWidth, alignment: .leading)
+        .frame(width: width, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.95)).allowsHitTesting(false))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.red, lineWidth: 2).allowsHitTesting(false))
         .background {
@@ -143,18 +144,34 @@ private struct CalloutHeightKey: PreferenceKey {
 
 /// Where a hint callout goes, as plain arithmetic (tested without UI). All rectangles are in zoomed page points.
 enum CalloutPlacement {
+    /// Where the callout goes and how wide it is. Beside the circle is best: it covers no other line. A narrower callout (down to
+    /// `minWidth`) beside the circle beats a full-width one below it, because below it lands on the student's next line (seen on
+    /// the iPad, 2026-11-28: the hint covered "L(x) = 4 + ..." under a wide circled line). Below or above, it hugs the right edge,
+    /// where written lines usually end, instead of the left, where they all start.
+    static func frame(circle: CGRect, visible: CGRect, height: CGFloat, preferredWidth: CGFloat = 260, minWidth: CGFloat = 200,
+                      margin: CGFloat = 8, inset: CGFloat = 2) -> CGRect {
+        let area = visible.isNull || visible.isEmpty ? circle.insetBy(dx: -preferredWidth, dy: -height) : visible
+        let roomRight = area.maxX - inset - (circle.maxX + margin)
+        if roomRight >= minWidth {
+            let width = min(preferredWidth, roomRight)
+            let minY = area.minY + inset, maxY = max(minY, area.maxY - height - inset)
+            return CGRect(x: circle.maxX + margin, y: min(max(circle.midY - height / 2, minY), maxY), width: width, height: height)
+        }
+        let origin = origin(circle: circle, visible: area, size: CGSize(width: preferredWidth, height: height), margin: margin, inset: inset)
+        return CGRect(origin: origin, size: CGSize(width: preferredWidth, height: height))
+    }
+
     static func origin(circle: CGRect, visible: CGRect, size: CGSize, margin: CGFloat = 8, inset: CGFloat = 2) -> CGPoint {
         let area = visible.isNull || visible.isEmpty ? circle.insetBy(dx: -size.width, dy: -size.height) : visible
         let minX = area.minX + inset, maxX = max(minX, area.maxX - size.width - inset)
         let minY = area.minY + inset, maxY = max(minY, area.maxY - size.height - inset)
-        func clampX(_ x: CGFloat) -> CGFloat { min(max(x, minX), maxX) }
         func clampY(_ y: CGFloat) -> CGFloat { min(max(y, minY), maxY) }
         if circle.maxX + margin + size.width <= area.maxX - inset {
             return CGPoint(x: circle.maxX + margin, y: clampY(circle.midY - size.height / 2))
         }
         if circle.maxY + margin + size.height <= area.maxY - inset {
-            return CGPoint(x: clampX(circle.minX), y: circle.maxY + margin)
+            return CGPoint(x: maxX, y: circle.maxY + margin)
         }
-        return CGPoint(x: clampX(circle.minX), y: clampY(circle.minY - margin - size.height))
+        return CGPoint(x: maxX, y: clampY(circle.minY - margin - size.height))
     }
 }

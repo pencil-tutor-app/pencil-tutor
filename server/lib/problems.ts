@@ -27,6 +27,10 @@ export type Problem = {
   level?: string;
   // True for a problem the student typed on the iPad ("own:<course>"): there is no worked solution and no final answer.
   own?: true;
+  // True for a practice problem made by teach mode (lib/teach.ts) and opened from its sealed reference (lib/teach-ref.ts): it HAS a
+  // worked solution and a final answer, checked by a second model before sealing, so it takes the reference branch of the prompts
+  // and the answer-leak guards (decision.ts, spoken.ts), and its tier comes from its course like a bank problem.
+  teach?: true;
 };
 
 // server/data/problems.json is built from shared/ by `npm run build-courses` (the folder `vercel deploy` uploads is server/).
@@ -70,12 +74,14 @@ export function resolveProblem(id: string, problemText?: string): ResolvedProble
   }
   const slug = id.slice(OWN_PREFIX.length);
   if (!coursesBySlug.has(slug)) return { ok: false, ...unknownCourse };
-  const text = problemText?.replace(/\s+/g, " ").trim() ?? "";
+  const text = cleanProblemText(problemText ?? "");
   if (text.length < 1 || text.length > OWN_TEXT_MAX_CHARS) {
     return { ok: false, status: 422, error: "invalid_request", reason: `problem_text: an own problem needs 1 to ${OWN_TEXT_MAX_CHARS} characters` };
   }
   return { ok: true, problem: { id, prompt_plain: text, worked_solution: [], final_answer: "", course: slug, level: OWN_PROBLEM_LEVEL, own: true } };
 }
+export const findCourse = (slug: string): Course | undefined => coursesBySlug.get(slug);
+export const cleanProblemText = (text: string): string => text.replace(/\s+/g, " ").trim();
 export const courseOf = (problem: Problem): Course | undefined => (problem.course ? coursesBySlug.get(problem.course) : undefined);
 // The model tier for a problem: advanced when its course's tier is advanced or the problem itself says so; standard otherwise.
 export const levelFor = (problem: Problem, course: Course | undefined): Level =>
@@ -83,10 +89,10 @@ export const levelFor = (problem: Problem, course: Course | undefined): Level =>
 export const levelOf = (problem: Problem): Level => levelFor(problem, courseOf(problem));
 export const tierOf = (problem: Problem): "standard" | "advanced" => (levelOf(problem) === "advanced" ? "advanced" : "standard");
 
-// The same four facts on every model endpoint's log line: what kind of problem, its course, the tier, and for an own problem
-// how long the typed text is (a count, never the text).
+// The same four facts on every model endpoint's log line: what kind of problem (bank, own or teach), its course, the tier, and for an
+// own problem how long the typed text is (a count, never the text).
 export const problemFields = (problem: Problem): Record<string, string | number> => ({
-  problem_kind: problem.own ? "own" : "bank",
+  problem_kind: problem.own ? "own" : problem.teach ? "teach" : "bank",
   course: problem.course ?? "none",
   tier: tierOf(problem),
   ...(problem.own ? { problem_text_chars: problem.prompt_plain.length } : {}),

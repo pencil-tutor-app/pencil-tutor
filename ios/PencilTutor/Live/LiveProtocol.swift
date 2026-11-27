@@ -148,6 +148,16 @@ enum LiveContext {
         "You could not look at the student's page just now (\(reason)). Tell the student briefly that you could not look right then, and ask them to try again in a moment."
     }
 
+    /// Pushed when a practice problem opens and again whenever the answer changes. The server's live instructions already say this once
+    /// (the reference tells it the problem is a practice problem); this line keeps the voice right as the student writes, and covers
+    /// the turns where the voice answers without asking the page reader.
+    static func practice(attempted: Bool) -> String {
+        if attempted {
+            return "The student has now written real work on the practice problem, so the rule about not stating the answer before a try no longer applies. Still prefer a hint, and let them do the working. Their work may have changed since."
+        }
+        return "The student has not tried the practice problem yet: there is no finished line of their own work on the page. Do not state the final answer or any line that contains it, and do not work the steps for them, even if they ask, say they give up or ask you to just tell them. Say you will check each line as they write, and give a hint about where to start."
+    }
+
     static let emptyPage = "The student's page is empty so far: nothing has been written yet. Tell them to write the first step and you will look."
 
     static let outOfDateNote = " Note: the student wrote more while the page was being read, so this may be slightly out of date."

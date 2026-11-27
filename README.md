@@ -10,7 +10,7 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 |---|---|
 | `ios/` | the iPad app. `project.yml` is the XcodeGen spec; there is no hand-written `.xcodeproj` |
 | `ios/PencilTutor/` | app source: `Core` (models, line grouping, look policy, log), `Net` (client behind a protocol), `Drawing` (canvas, snapshot), `Audio` (fallback speech and recorder), `Live` (the GPT-Live session: protocol, transcript, WebRTC transport, controller), `Session`, `Views` |
-| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and 2D region, page size and re-anchor, zoom-aware scroll-to-mark, tool rail choices, finger-tap gesture rules and Pencil rules, the student's own problem and `problem_text`, "Not a mistake" (stroke identity, suppression, voice take-back, overlay hit testing) |
+| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and 2D region, page size and re-anchor, zoom-aware scroll-to-mark, tool rail choices, finger-tap gesture rules and Pencil rules, the student's own problem and `problem_text`, "Learn something new" (lesson session, practice page, the attempted rule, teach wire), "Not a mistake" (stroke identity, suppression, voice take-back, overlay hit testing) |
 | `ios/PencilTutorUITests/` | simulator UI tests against the in-process scripted tutor; they attach the screenshots |
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
 | `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |
@@ -23,6 +23,10 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 - "Check my work" looks right away.
 - One request in flight at a time. A response for an older drawing revision is discarded (and logged) unless the line it names is unchanged.
 - Line grouping (vertical overlap, stacked fractions as one line, crossed-out strokes stay in their line, far-right side calculations on their own line) is a **hypothesis**, unit tested but not yet checked against real handwriting.
+
+## Learn something new
+
+The second row of every course's list: the student names a concept, reads a short lesson (up to 4 steps and one worked example, set in type, in a panel that stays until closed), asks follow-ups by typing or tap to talk (the last 8 turns are remembered), then taps Your turn for a practice problem the server checked twice and sealed. The practice page is the normal watched page, with a Lesson button that reopens the panel. The tutor does not give the final answer until the student has written a finished line (geometry only: a line that is not crossed out and has stayed unchanged across one look). Details, the attempted rule and what is not verified: `docs/ipad-teach-mode.md`.
 
 ## My own problem and "Not a mistake"
 

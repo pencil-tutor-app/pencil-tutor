@@ -20,10 +20,13 @@ struct ProblemScreen: View {
     @Environment(\.dismiss) private var dismiss
     /// Shown small at the top of the problem card ("BC Math 5"). Nil shows no heading.
     private let courseTitle: String?
+    /// Set for a practice problem opened from "Learn something new": the lesson stays one tap away and shares its conversation.
+    private let lesson: LessonSession?
 
-    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil) {
+    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil, lesson: LessonSession? = nil) {
         self.courseTitle = courseTitle
-        _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env))
+        self.lesson = lesson
+        _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env, lesson: lesson))
     }
 
     var body: some View {
@@ -35,6 +38,9 @@ struct ProblemScreen: View {
             MarksOverlay(marks: session.marks, viewport: session.viewport, onNotAMistake: { session.markNotAMistake($0) })
                 .ignoresSafeArea()
             chrome
+            if let lesson {
+                LessonSidePanel(lesson: lesson)
+            }
             // The rail keeps to the safe area and sits right under the Back button, left of the problem card.
             ToolRailView(model: rail)
                 .padding(.leading, ChromeMetrics.edge)
@@ -78,6 +84,9 @@ struct ProblemScreen: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .padding(.leading, ChromeMetrics.railGutter)
             }
+            if session.practiceExpired, let lesson {
+                expiredBanner(lesson)
+            }
             if let message = session.statusMessage {
                 HStack {
                     Spacer(minLength: 0)
@@ -109,6 +118,35 @@ struct ProblemScreen: View {
             }
             actionPill(density).frame(maxWidth: .infinity, alignment: .trailing)
         }
+    }
+
+    /// The practice problem's reference timed out: say so and offer a new one. Back goes to the lesson, which makes it.
+    private func expiredBanner(_ lesson: LessonSession) -> some View {
+        HStack(spacing: 12) {
+            Text("This practice problem has timed out.")
+                .font(.system(size: 15))
+                .fixedSize(horizontal: false, vertical: true)
+            Button {
+                lesson.newPractice(reason: "expired")
+                dismiss()
+            } label: {
+                Text("New practice problem")
+                    .font(.body.weight(.semibold))
+                    .lineLimit(1)
+                    .fixedSize()
+                    .padding(.horizontal, 16)
+                    .frame(minHeight: ChromeMetrics.hit)
+                    .background(Capsule().fill(Color.accentColor))
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("newPracticeButton")
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(.leading, ChromeMetrics.railGutter)
+        .accessibilityIdentifier("practiceExpiredBanner")
     }
 
     private func caption(_ message: String) -> some View {
@@ -170,6 +208,16 @@ struct ProblemScreen: View {
             .accessibilityIdentifier("checkMyWorkButton")
 
             voiceControl
+
+            if let lesson {
+                Button {
+                    lesson.openPanel()
+                } label: {
+                    PillLabel(full: "Lesson", short: "Lesson", symbol: "book", fill: Color.gray.opacity(0.18), foreground: .primary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("lessonButton")
+            }
 
             iconButton("Clear marks", symbol: "xmark.circle", id: "clearMarksButton", disabled: session.marks.isEmpty) {
                 session.clearMarks()
@@ -276,6 +324,26 @@ struct ProblemScreen: View {
         .buttonStyle(.plain)
         .disabled(off)
         .accessibilityIdentifier("tapToTalkButton")
+    }
+}
+
+/// The lesson as a 360 pt panel on the right of the practice page, under the action pill. It stays until its close button is
+/// tapped, and only covers the part of the page it is drawn on.
+private struct LessonSidePanel: View {
+    @ObservedObject var lesson: LessonSession
+
+    var body: some View {
+        if lesson.panelOpen {
+            LessonPanel(lesson: lesson, onClose: { lesson.closePanel() }, bodySize: 17)
+                .frame(width: 360)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .shadow(color: .black.opacity(0.18), radius: 8, y: 2)
+                .padding(.top, ChromeMetrics.top + ChromeMetrics.hit + ChromeMetrics.gap)
+                .padding(.trailing, ChromeMetrics.edge)
+                .padding(.bottom, ChromeMetrics.edge)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .accessibilityIdentifier("lessonSidePanel")
+        }
     }
 }
 

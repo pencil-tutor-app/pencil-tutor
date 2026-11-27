@@ -22,6 +22,15 @@ enum TutorError: Error {
     case recordingTooShort
     case recordingFailed(detail: String)
     case problemBankMissing
+    /// HTTP 422 `practice_expired` from watch, ask, consult or live-session: the sealed reference of a practice problem is too old or
+    /// does not match. Never a quiet fall back to an own problem; the screen offers a new practice problem.
+    case practiceExpired
+    /// `teach_too_long`: the lesson came back over its limits and is not shown (nothing is cut mid-explanation).
+    case teachTooLong
+    /// `teach_unusable`: the lesson did not parse or had an empty part.
+    case teachUnusable
+    /// HTTP 503 `teach_unavailable`: the server has no key for sealed practice problems.
+    case teachUnavailable
 
     var studentMessage: String {
         switch self {
@@ -55,6 +64,14 @@ enum TutorError: Error {
             return "I couldn't record that. Try again."
         case .problemBankMissing:
             return "The problems didn't load. Please tell your teacher."
+        case .practiceExpired:
+            return "This practice problem has timed out. Tap New practice problem."
+        case .teachTooLong:
+            return "That came out too long, try again."
+        case .teachUnusable:
+            return "I couldn't put that lesson together. Try again."
+        case .teachUnavailable:
+            return "Practice problems aren't switched on yet. The lesson still works."
         }
     }
 
@@ -76,6 +93,10 @@ enum TutorError: Error {
         case .recordingTooShort: return "recording_too_short"
         case .recordingFailed(let detail): return "recording_failed: \(detail)"
         case .problemBankMissing: return "problem_bank_missing_or_empty"
+        case .practiceExpired: return "practice_expired (HTTP 422)"
+        case .teachTooLong: return "teach_too_long"
+        case .teachUnusable: return "teach_unusable"
+        case .teachUnavailable: return "teach_unavailable (HTTP 503)"
         }
     }
 

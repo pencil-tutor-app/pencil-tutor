@@ -10,6 +10,10 @@ type ProviderRole = Exclude<Role, "speak" | "live">;
 // course.json (see problems.ts levelOf). Each level has its own env variables (see roleConfig).
 export type Level = "high_school" | "advanced";
 export const DEFAULT_LEVEL: Level = "high_school";
+// Which model tier writes teach mode's lessons, practice problems and follow-up answers (TEACH_LEVEL=high_school or advanced).
+// The two-call check of a practice problem always runs on the advanced ask model, whatever this says. Default advanced until the
+// step 0 comparison of the two tiers (docs/evals/2026-11-28-teach-flow.md) says otherwise.
+export const teachLevel = (env: Record<string, string | undefined>): Level => (env.TEACH_LEVEL?.trim() === "high_school" ? "high_school" : "advanced");
 export function parseLevel(value: string | undefined): Level {
   return value === "advanced" ? "advanced" : DEFAULT_LEVEL;
 }

@@ -45,6 +45,9 @@ struct Problem: Identifiable, Hashable, Codable {
     let promptPlain: String
     let promptLatex: String?
     let promptParts: [PromptPart]
+    /// The sealed reference of a teach-mode practice problem (opaque to the app; the server opens it). Never in the bank JSON and
+    /// never encoded: it lives only for the screen that holds the problem.
+    let problemRef: String?
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -53,11 +56,12 @@ struct Problem: Identifiable, Hashable, Codable {
         case promptParts = "prompt_parts"
     }
 
-    init(id: String, promptPlain: String, promptLatex: String? = nil, promptParts: [PromptPart]? = nil) {
+    init(id: String, promptPlain: String, promptLatex: String? = nil, promptParts: [PromptPart]? = nil, problemRef: String? = nil) {
         self.id = id
         self.promptPlain = promptPlain
         self.promptLatex = promptLatex
         self.promptParts = promptParts ?? [.text(promptPlain)]
+        self.problemRef = problemRef
     }
 
     // MARK: - The student's own problem
@@ -70,7 +74,19 @@ struct Problem: Identifiable, Hashable, Codable {
         Problem(id: ownIDPrefix + courseSlug, promptPlain: text)
     }
 
+    /// A practice problem made by "Learn something new": an own-problem id plus the sealed reference that carries its checked answer.
+    /// The statement is `prompt_plain` and is drawn by the same parser as every other prompt (`MathMarkup`).
+    static func practice(courseSlug: String, promptPlain: String, ref: String) -> Problem {
+        Problem(id: ownIDPrefix + courseSlug, promptPlain: promptPlain, problemRef: ref)
+    }
+
     var isOwn: Bool { id.hasPrefix(Self.ownIDPrefix) }
+
+    /// True for a teach-mode practice problem. The tutor holds its worked solution, so the "no answer before an attempt" rule applies.
+    var isPractice: Bool { problemRef != nil }
+
+    /// "bank", "own" or "teach": the `kind` in the session log.
+    var kindLabel: String { isPractice ? "teach" : (isOwn ? "own" : "bank") }
 
     /// The course slug inside an own problem's id; nil for a bank problem.
     var ownCourseSlug: String? { isOwn ? String(id.dropFirst(Self.ownIDPrefix.count)) : nil }
@@ -103,16 +119,33 @@ enum OwnProblemText {
     }
 
     /// The first `maxLength` UTF-16 units, the way the server counts, without cutting a character in half.
-    static func capped(_ text: String) -> String {
-        guard text.utf16.count > maxLength else { return text }
+    static func capped(_ text: String, limit: Int = maxLength) -> String {
+        guard text.utf16.count > limit else { return text }
         var kept = ""
         var units = 0
         for character in text {
             units += character.utf16.count
-            if units > maxLength { break }
+            if units > limit { break }
             kept.append(character)
         }
         return kept
+    }
+}
+
+/// The rules for the concept a student types in "Learn something new". The server enforces the same ones (1 to 200 characters).
+enum LearnConcept {
+    static let maxLength = 200
+
+    /// The concept ready to send, or nil when nothing is typed. Line breaks become spaces; the ends are trimmed.
+    static func cleaned(_ typed: String) -> String? {
+        let oneLine = typed.components(separatedBy: .newlines).joined(separator: " ")
+        let trimmed = oneLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        return capped(trimmed)
+    }
+
+    static func capped(_ text: String) -> String {
+        OwnProblemText.capped(text, limit: maxLength)
     }
 }
 

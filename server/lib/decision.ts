@@ -1,5 +1,6 @@
 import { WatchDecisionSchema, type HistoryEntry, type PageLine } from "./policy.js";
 import type { Problem } from "./problems.js";
+import { leaksAnswer } from "./spoken.js";
 
 export type WatchResult = {
   action: "wait" | "interrupt";
@@ -43,7 +44,7 @@ export function finalizeDecision(raw: unknown, lines: PageLine[], problem: Probl
   const spoken = d.hint_spoken?.trim();
   const written = d.hint_written?.trim();
   if (!spoken || !written) return wait("hint_missing", "The model interrupted without a hint, so waiting.");
-  if (revealsAnswer(`${spoken} ${written}`, problem.final_answer)) {
+  if (revealsAnswer(`${spoken} ${written}`, problem.final_answer) || leaksAnswer(`${spoken} ${written}`, problem)) {
     return wait("hint_reveals_answer", "The hint contained the final answer, so waiting.");
   }
   return { action: "interrupt", line: d.line, reason: d.reason, hint_spoken: spoken, hint_written: written, label: "model_interrupt" };
