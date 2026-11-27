@@ -10,6 +10,7 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
     private var consults: [ConsultRequest] = []
     private var liveSessions: [LiveSessionRequest] = []
     private var holding = false
+    private var watchFailure: Error?
     private var watchAnswerStore: (WatchRequest) -> WatchResponse = { FakeTutorClient.wait($0) }
 
     var watchRequests: [WatchRequest] { locked { watches } }
@@ -18,6 +19,8 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
 
     /// What a look is answered with. Default: wait.
     func answerLooks(_ answer: @escaping (WatchRequest) -> WatchResponse) { locked { watchAnswerStore = answer } }
+    /// Every look fails with this error (nil: looks are answered again).
+    func failLooks(with error: Error?) { locked { watchFailure = error } }
     /// While held, a consult does not return.
     func holdConsults(_ hold: Bool) { locked { holding = hold } }
 
@@ -39,7 +42,8 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
     }
 
     func watch(_ request: WatchRequest) async throws -> WatchResponse {
-        let answer: (WatchRequest) -> WatchResponse = locked { watches.append(request); return watchAnswerStore }
+        let (answer, failure): ((WatchRequest) -> WatchResponse, Error?) = locked { watches.append(request); return (watchAnswerStore, watchFailure) }
+        if let failure { throw failure }
         return answer(request)
     }
 

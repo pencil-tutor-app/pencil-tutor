@@ -5,8 +5,9 @@ import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runWatchModel } from "./models.js";
 import { buildWatchPrompt, HistoryEntrySchema, LineSchema, MAX_HISTORY, MAX_LINES } from "./policy.js";
-import { levelOf, problemFields, resolveProblem } from "./problems.js";
+import { levelOf, problemFields } from "./problems.js";
 import { afterLook } from "./record/runtime.js";
+import { resolveRequestProblem } from "./teach-ref.js";
 import { usageFields } from "./usage.js";
 
 const WatchRequestSchema = z.object({
@@ -14,6 +15,8 @@ const WatchRequestSchema = z.object({
   problem_id: z.string().max(40),
   // The typed statement of an own problem ("own:<course>"); required then, ignored for a bank id (problems.ts resolveProblem).
   problem_text: z.string().optional(),
+  // The sealed reference of a teach practice problem (lib/seal.ts); with it the look is judged against the checked solution.
+  problem_ref: z.string().max(6000).optional(),
   drawing_revision: z.number().int().nonnegative(),
   image_png_base64: z.string().min(1),
   image_width: z.number().optional(),
@@ -44,7 +47,7 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
   }
   ctx.note({ image_bytes: image.image.bytes });
 
-  const resolved = resolveProblem(req.problem_id, req.problem_text);
+  const resolved = resolveRequestProblem(ctx, deps.env, deps.now?.() ?? new Date(), req);
   if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
   const problem = resolved.problem;
   ctx.note(problemFields(problem));

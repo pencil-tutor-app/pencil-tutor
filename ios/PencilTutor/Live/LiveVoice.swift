@@ -52,6 +52,9 @@ final class LiveVoice {
     private let problemID: String
     /// The typed statement of the student's own problem; nil for a bank problem. Sent with the live-session request.
     private let problemText: String?
+    /// The sealed reference of a teach-mode practice problem; nil otherwise. Sent with the live-session request so the server knows
+    /// the problem is a practice one (the voice never receives the solution).
+    private let problemRef: String?
     private let appSessionID: String
     private let transport: LiveTransport
     private let createSession: (LiveSessionRequest) async throws -> LiveSessionResponse
@@ -80,12 +83,13 @@ final class LiveVoice {
     private var connectStartedAt: Date
     private var ending = false
 
-    init(problemID: String, problemText: String? = nil, appSessionID: String, transport: LiveTransport,
+    init(problemID: String, problemText: String? = nil, problemRef: String? = nil, appSessionID: String, transport: LiveTransport,
          createSession: @escaping (LiveSessionRequest) async throws -> LiveSessionResponse,
          ensureMicrophone: @escaping () async -> Bool,
          log: SessionLog, now: @escaping () -> Date = { Date() }, config: Config = Config()) {
         self.problemID = problemID
         self.problemText = problemText
+        self.problemRef = problemRef
         self.appSessionID = appSessionID
         self.transport = transport
         self.createSession = createSession
@@ -118,7 +122,7 @@ final class LiveVoice {
 
         let answer: LiveSessionResponse
         do {
-            answer = try await createSession(LiveSessionRequest(sessionId: appSessionID, problemId: problemID, sdp: offer, problemText: problemText))
+            answer = try await createSession(LiveSessionRequest(sessionId: appSessionID, problemId: problemID, sdp: offer, problemText: problemText, problemRef: problemRef))
         } catch {
             let (_, detail) = TutorError.describe(error)
             log.record("live_server_refused", ["detail": detail, "elapsed_ms": elapsedMs()])

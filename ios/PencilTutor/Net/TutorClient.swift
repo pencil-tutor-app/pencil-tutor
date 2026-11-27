@@ -12,6 +12,25 @@ protocol TutorClient: MemoryAPI {
     func me() async throws -> MeResponse
     /// POST /api/heartbeat: tells the server a problem is open and the student is active.
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse
+    /// "Learn something new" (POST /api/teach): explain a concept, answer a follow-up, make a checked practice problem. Each has a
+    /// default in the extension below that throws, so a client that does not teach (a test fake) still compiles.
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse
+}
+
+extension TutorClient {
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
+        throw TutorError.notConfigured(reason: "this tutor client does not teach")
+    }
+
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse {
+        throw TutorError.notConfigured(reason: "this tutor client does not teach")
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        throw TutorError.notConfigured(reason: "this tutor client does not teach")
+    }
 }
 
 /// Wraps a client so every reply's allowance, and every refusal about codes or hours, reaches the `StudentAccount`.
@@ -39,6 +58,18 @@ struct MeteredTutorClient: TutorClient {
 
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
         try await report { try await inner.heartbeat(request) } allowance: { $0.allowance }
+    }
+
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
+        try await report { try await inner.teachExplain(request) } allowance: { $0.allowance }
+    }
+
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse {
+        try await report { try await inner.teachFollowup(request) } allowance: { $0.allowance }
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        try await report { try await inner.teachPractice(request) } allowance: { $0.allowance }
     }
 
     func memoryStatus() async throws -> MemoryStatusResponse {
@@ -94,6 +125,18 @@ struct UnconfiguredTutorClient: TutorClient {
     }
 
     func heartbeat(_ request: HeartbeatRequest) async throws -> HeartbeatResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
         throw TutorError.notConfigured(reason: reason)
     }
 }
@@ -235,6 +278,56 @@ struct ScriptedTutorClient: TutorClient {
     /// Scripted runs never open a live voice session (no network in UI tests), so this is a refusal with a reason.
     func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
         throw TutorError.notConfigured(reason: "scripted client has no live session")
+    }
+
+    // MARK: "Learn something new" (UI tests): one fixed lesson whatever the concept, like the server's scripted mode.
+
+    /// A concept the scripted tutor treats as outside maths, so a UI test can see the refusal.
+    static let notMathConcept = "baking bread"
+
+    static let scriptedExample = TeachExample(
+        promptPlain: "Solve 2x + 1 = 9", steps: ["Subtract 1 from both sides: 2x = 8", "Divide both sides by 2: x = 4"], finalAnswer: "x = 4"
+    )
+    static let scriptedPracticePrompt = "Solve 3x + 2 = 14"
+    static let scriptedPracticeRef = "scripted-practice-ref"
+
+    func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        if request.concept.lowercased().contains(Self.notMathConcept) {
+            return TeachExplainResponse(isMath: false, fitsCourse: false, message: "I can teach maths topics only.", lesson: nil,
+                                        requestId: "scripted-explain", model: "scripted", latencyMs: 300)
+        }
+        return TeachExplainResponse(
+            isMath: true, fitsCourse: true, message: nil,
+            lesson: TeachLesson(
+                title: "Undoing an operation",
+                steps: ["An equation is a balance: whatever you do to one side, do to the other.",
+                        "To get x alone, undo what was done to it, last operation first.",
+                        "Adding is undone by subtracting; multiplying is undone by dividing.",
+                        "Check by putting your answer back into the equation."],
+                example: Self.scriptedExample,
+                spoken: "An equation is a balance. Undo what was done to x, one step at a time."
+            ),
+            requestId: "scripted-explain", model: "scripted", latencyMs: 300
+        )
+    }
+
+    func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        return TeachFollowupResponse(
+            transcript: request.audioBase64 == nil ? nil : "scripted question",
+            answerText: "Scripted answer. Undo the last operation first, then the one before it.",
+            requestId: "scripted-followup", model: "scripted", latencyMs: 300
+        )
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        return TeachPracticeResponse(
+            problem: TeachPracticeProblem(id: "own:\(request.course)", promptPlain: Self.scriptedPracticePrompt),
+            reason: nil, problemRef: Self.scriptedPracticeRef, exampleChecked: true,
+            requestId: "scripted-practice", model: "scripted", latencyMs: 300
+        )
     }
 
     func ask(_ request: AskRequest) async throws -> AskResponse {

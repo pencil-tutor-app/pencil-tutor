@@ -4,6 +4,7 @@ import type { RoleConfig } from "../config.js";
 import { revealsAnswer } from "../decision.js";
 import { classifyFailure, providerOptionsFor } from "../models.js";
 import type { Problem } from "../problems.js";
+import { leaksAnswer } from "../spoken.js";
 import { reportUsage, type UsageReport } from "../usage.js";
 import type { Note } from "./store.js";
 
@@ -69,7 +70,7 @@ export function acceptReword(candidate: string, problem: Problem): RewordOutcome
   const text = candidate.trim();
   if (!text) return { ok: false, reason: "empty" };
   if (text.length > 400) return { ok: false, reason: "too_long" };
-  if (revealsAnswer(text, problem.final_answer)) return { ok: false, reason: "reveals_answer" };
+  if (revealsAnswer(text, problem.final_answer) || leaksAnswer(text, problem)) return { ok: false, reason: "reveals_answer" };
   if (recallPhrase(text)) return { ok: false, reason: "unsupported_history_claim" };
   return { ok: true, text };
 }

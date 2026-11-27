@@ -4,6 +4,8 @@ import SwiftUI
 enum CourseRoute: Hashable {
     case course(Course)
     case problem(course: Course, problem: Problem)
+    /// "Learn something new": the lesson for a concept the student typed.
+    case lesson(course: Course, concept: String)
 }
 
 /// The home of the app once there is a code: pick a course, then a problem. Opens straight into the course the student used
@@ -23,11 +25,15 @@ struct ProblemListView: View {
                 .navigationDestination(for: CourseRoute.self) { route in
                     switch route {
                     case .course(let course):
-                        CourseProblemsView(course: course, catalog: catalog) { problem in
+                        CourseProblemsView(course: course, catalog: catalog, onOwnProblem: { problem in
                             path.append(.problem(course: course, problem: problem))
-                        }
+                        }, onLearn: { concept in
+                            path.append(.lesson(course: course, concept: concept))
+                        })
                     case .problem(let course, let problem):
                         ProblemScreen(problem: problem, env: env, courseTitle: course.title)
+                    case .lesson(let course, let concept):
+                        LessonScreen(courseSlug: course.slug, courseTitle: course.title, concept: concept, env: env)
                     }
                 }
         }
@@ -139,6 +145,8 @@ struct CourseProblemsView: View {
     @ObservedObject var catalog: CourseCatalog
     /// Opens the problem screen for a problem the student typed (the list owns the navigation path).
     var onOwnProblem: (Problem) -> Void = { _ in }
+    /// Opens the lesson screen for a concept the student typed.
+    var onLearn: (String) -> Void = { _ in }
     @EnvironmentObject private var env: AppEnvironment
     @EnvironmentObject private var account: StudentAccount
     @State private var problems: [Problem] = []
@@ -146,6 +154,9 @@ struct CourseProblemsView: View {
     @State private var showOwnProblemSheet = false
     /// Set by Start inside the sheet; the page opens once the sheet has gone, so one push is not fighting a sheet that is closing.
     @State private var pendingOwnProblem: Problem?
+    @State private var showLearnSheet = false
+    /// Like `pendingOwnProblem`: the lesson opens once the sheet has gone.
+    @State private var pendingConcept: String?
 
     var body: some View {
         List {
@@ -165,6 +176,12 @@ struct CourseProblemsView: View {
                 OwnProblemRow()
             }
             .accessibilityIdentifier("ownProblemRow")
+            Button {
+                showLearnSheet = true
+            } label: {
+                LearnRow()
+            }
+            .accessibilityIdentifier("learnSomethingNewRow")
             ForEach(problems) { problem in
                 NavigationLink(value: CourseRoute.problem(course: course, problem: problem)) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -191,6 +208,20 @@ struct CourseProblemsView: View {
                 env.log.record("own_problem_started", ["course": course.slug, "chars": statement.count])
             }
         }
+        .sheet(isPresented: $showLearnSheet, onDismiss: openPendingLesson) {
+            LearnSheet(courseTitle: course.title) { concept in
+                pendingConcept = concept
+            }
+        }
+    }
+
+    private func openPendingLesson() {
+        guard let concept = pendingConcept else {
+            env.log.record("learn_cancelled", ["course": course.slug])
+            return
+        }
+        pendingConcept = nil
+        onLearn(concept)
     }
 
     private func openPendingOwnProblem() {
@@ -240,6 +271,90 @@ private struct OwnProblemRow: View {
         .padding(.vertical, 6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The second row of a course's list: learn a concept you have not met.
+private struct LearnRow: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "lightbulb")
+                .font(.system(size: 22, weight: .medium))
+                .foregroundStyle(Color.accentColor)
+                .frame(width: 28)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Learn something new")
+                    .font(.system(size: 22, design: .serif))
+                Text("Name a topic you haven't studied. I'll explain it, then give you one to try.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+        .frame(minHeight: 44, alignment: .leading)
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// One field: what do you want to learn? Start stays off while nothing is typed; the field stops at the 200 characters the server
+/// accepts. The concept is sent to the server as the student's words, nothing more.
+struct LearnSheet: View {
+    let courseTitle: String
+    /// Called with the cleaned concept when Start is tapped, just before the sheet closes.
+    let onStart: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var typed = ""
+    @FocusState private var fieldFocused: Bool
+
+    private var concept: String? { LearnConcept.cleaned(typed) }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("What do you want to learn?", text: $typed, axis: .vertical)
+                        .lineLimit(1...4)
+                        .focused($fieldFocused)
+                        .font(.system(size: 22))
+                        .accessibilityIdentifier("learnConceptField")
+                        .onChange(of: typed) { _, now in
+                            let capped = LearnConcept.capped(now)
+                            if capped != now { typed = capped }
+                        }
+                } header: {
+                    Text(courseTitle)
+                } footer: {
+                    Text("\(typed.utf16.count) of \(LearnConcept.maxLength) characters. Pick something from this course.")
+                        .accessibilityIdentifier("learnConceptCount")
+                }
+            }
+            .navigationTitle("Learn something new")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                        .accessibilityIdentifier("learnCancelButton")
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Start") {
+                        guard let concept else { return }
+                        onStart(concept)
+                        dismiss()
+                    }
+                    .disabled(concept == nil)
+                    .accessibilityIdentifier("learnStartButton")
+                }
+            }
+        }
+        .onAppear { fieldFocused = true }
     }
 }
 

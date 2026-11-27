@@ -98,6 +98,8 @@ final class TutorSession: ObservableObject {
         didSet { syncSpeechWithMicrophone() }
     }
     @Published private(set) var isBusy = false
+    /// The server said the practice problem's sealed reference is too old (`practice_expired`). The screen offers a new problem.
+    @Published private(set) var practiceExpired = false
     /// Read by UI tests only (see `LaunchOptions.showTestStatus`).
     @Published private(set) var testStatus = "strokes=0 lines=0 looks=0 last=none"
 
@@ -145,6 +147,11 @@ final class TutorSession: ObservableObject {
     private var lastDecisionLabel = "none"
     private var lastLoggedSkip = ""
     private var history: [HistoryWire] = []
+    /// Practice problems only: what the student has really started (`AttemptRule`), and the last value told to the lesson and to
+    /// the live voice. Nil until first judged.
+    private var attempts = AttemptTracker()
+    private var attemptedNow: Bool?
+    private let lesson: LessonSession?
     /// Ink the student said the tutor was wrong about ("Not a mistake"). Checked before any later circle is drawn.
     private var disputes = DisputeBook()
     /// The line number of every dispute made on this screen, in order. A page report that was being read when one was made is
@@ -167,11 +174,12 @@ final class TutorSession: ObservableObject {
     /// time: a new connection waits for this to finish.
     private static var previousTeardown: Task<Void, Never>?
 
-    init(problem: Problem, env: AppEnvironment, now: @escaping () -> Date = { Date() }) {
+    init(problem: Problem, env: AppEnvironment, lesson: LessonSession? = nil, now: @escaping () -> Date = { Date() }) {
         self.problem = problem
         self.env = env
+        self.lesson = lesson
         self.now = now
-        env.log.record("problem_opened", ["problem_id": problem.id, "kind": problem.isOwn ? "own" : "bank"])
+        env.log.record("problem_opened", ["problem_id": problem.id, "kind": problem.kindLabel])
         // The first value arrives at once; later ones when the hours run out, come back, or the code is turned off.
         blockObserver = env.account.$block.removeDuplicates().sink { [weak self] block in
             self?.accountBlockChanged(block)
@@ -454,6 +462,10 @@ final class TutorSession: ObservableObject {
         }
         canvas?.drawing = PKDrawing()
         marks = []
+        if problem.isPractice {
+            attempts.reset()
+            noteAttempted(false, source: "page_erased")
+        }
         let endedDisputes = disputes.removeAll()
         hintInVoice = nil
         if endedDisputes > 0 { env.log.record("disputes_ended", ["count": endedDisputes, "why": "page_erased", "problem_id": problem.id]) }
@@ -705,7 +717,8 @@ final class TutorSession: ObservableObject {
         env.log.record("live_starting", ["trigger": trigger, "problem_id": problem.id])
 
         let voiceSession = LiveVoice(
-            problemID: problem.id, problemText: problem.problemTextForServer, appSessionID: sessionID, transport: makeTransport(),
+            problemID: problem.id, problemText: problem.problemTextForServer, problemRef: problem.problemRef,
+            appSessionID: sessionID, transport: makeTransport(),
             createSession: { [env] request in try await env.client.createLiveSession(request) },
             ensureMicrophone: env.ensureMicrophone,
             log: env.log
@@ -733,6 +746,7 @@ final class TutorSession: ObservableObject {
                 self.switchToFallback(reason: failure.reason)
             } else {
                 self.voice = .live(micOn: true)
+                self.pushPracticeContext(to: voiceSession, label: "practice_opened")
             }
         }
     }
@@ -841,14 +855,15 @@ final class TutorSession: ObservableObject {
                 let request = ConsultRequest(
                     sessionId: sessionID, problemId: problem.id, drawingRevision: revisionSent,
                     imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent,
-                    problemText: problem.problemTextForServer
+                    problemText: problem.problemTextForServer, problemRef: problem.problemRef,
+                    attempted: practiceFields(for: canvas.drawing).attempted
                 )
                 env.log.record("live_consult_started", [
                     "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
                     "image_bytes": snapshot.png.count, "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
                     "region": Self.regionLabel(snapshot.region),
                     "question_chars": delegation.question.count, "recent_turns": delegation.recent.count
-                ])
+                ].merging(request.attempted.map { ["attempted": $0] } ?? [:]) { current, _ in current })
                 let started = now()
                 let response = try await env.client.consult(request)
                 let latency = Int(now().timeIntervalSince(started) * 1000)
@@ -888,6 +903,7 @@ final class TutorSession: ObservableObject {
                 )
                 return
             } catch {
+                noteIfPracticeExpired(error)
                 let (_, detail) = TutorError.describe(error)
                 env.log.record("error", ["where": "live_consult", "delegation_id": delegation.id, "detail": detail])
                 if live === session, !stopped {
@@ -992,6 +1008,7 @@ final class TutorSession: ObservableObject {
             "revision": revision
         ])
         refreshTestStatus(strokes: strokes.count, lines: lines.count)
+        if problem.isPractice { noteAttempted(attempts.look(strokes), source: "look") }
 
         let lookID = "w\(looksStarted)-r\(revision)"
         Task { await runLook(trigger: trigger, drawing: drawing, size: size, lines: lines, revision: revision, lookID: lookID) }
@@ -1015,7 +1032,8 @@ final class TutorSession: ObservableObject {
                 lines: shownLines.map { LineWire($0, scale: snapshot.scale, regionOrigin: snapshot.region.origin) },
                 history: Array(history.suffix(10)),
                 clientTime: TimeText.iso(started),
-                problemText: problem.problemTextForServer
+                problemText: problem.problemTextForServer,
+                problemRef: problem.problemRef
             )
             env.log.record("look_started", [
                 "trigger": trigger.rawValue, "revision": revision, "lines": lines.count, "lines_sent": shownLines.count,
@@ -1032,6 +1050,7 @@ final class TutorSession: ObservableObject {
                 handle(response, trigger: trigger, sentLines: shownLines, sentRevision: revision, latencyMs: latency)
             }
         } catch {
+            noteIfPracticeExpired(error)
             let (student, detail) = TutorError.describe(error)
             env.log.record("error", ["where": "watch", "trigger": trigger.rawValue, "detail": detail,
                                      "note": "no retry until the drawing changes or Check my work is pressed"])
@@ -1326,6 +1345,7 @@ final class TutorSession: ObservableObject {
         let started = now()
         do {
             let audio = try Data(contentsOf: recording.url)
+            let practice = practiceFields(for: canvas.drawing)
             let lines = grouper.group(Self.inkStrokes(from: canvas.drawing))
             let snapshot = try PageSnapshotter.make(drawing: canvas.drawing, canvasSize: canvas.bounds.size, lines: lines)
             let request = AskRequest(
@@ -1334,12 +1354,18 @@ final class TutorSession: ObservableObject {
                 drawingRevision: drawingRevision,
                 audioBase64: audio.base64EncodedString(),
                 imagePngBase64: snapshot.png.base64EncodedString(),
-                problemText: problem.problemTextForServer
+                problemText: problem.problemTextForServer,
+                problemRef: practice.problemRef,
+                attempted: practice.attempted,
+                recent: practice.recent
             )
-            env.log.record("ask_started", ["audio_bytes": audio.count, "audio_seconds": recording.duration,
-                                           "image_bytes": snapshot.png.count, "lines": lines.count,
-                                           "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
-                                           "region": Self.regionLabel(snapshot.region)])
+            var askFields: [String: Any] = ["audio_bytes": audio.count, "audio_seconds": recording.duration,
+                                            "image_bytes": snapshot.png.count, "lines": lines.count,
+                                            "image_px": "\(snapshot.pixelWidth)x\(snapshot.pixelHeight)",
+                                            "region": Self.regionLabel(snapshot.region)]
+            if let attempted = request.attempted { askFields["attempted"] = attempted }
+            if let recent = request.recent { askFields["recent_turns"] = recent.count }
+            env.log.record("ask_started", askFields)
             let response = try await env.client.ask(request)
             let latency = Int(now().timeIntervalSince(started) * 1000)
             var answered: [String: Any] = ["latency_ms": latency, "answer_chars": response.answerText.count,
@@ -1354,6 +1380,7 @@ final class TutorSession: ObservableObject {
             } else {
                 setStatus(response.answerText, seconds: 20)
                 env.speech.speak(response.answerText, purpose: "answer")
+                if problem.isPractice { lesson?.noteExchange(student: response.transcript, tutor: response.answerText) }
             }
         } catch {
             reportAskError(error)
@@ -1363,9 +1390,57 @@ final class TutorSession: ObservableObject {
     }
 
     private func reportAskError(_ error: Error) {
+        noteIfPracticeExpired(error)
         let (student, detail) = TutorError.describe(error)
         env.log.record("error", ["where": "ask", "detail": detail])
         setStatus(student)
+    }
+
+    // MARK: - Practice problems (teach mode)
+
+    /// What a question about a practice problem carries besides the page: the sealed reference, whether the student has really
+    /// started (judged against the last look, and told to the lesson and to the live voice if it changed), and the last 8 turns of
+    /// the lesson conversation. All nil for a bank or own problem.
+    struct PracticeFields: Equatable {
+        var problemRef: String?
+        var attempted: Bool?
+        var recent: [ConsultTurnWire]?
+    }
+
+    func practiceFields(for drawing: PKDrawing) -> PracticeFields {
+        guard problem.isPractice else { return PracticeFields() }
+        let attempted = attempts.attempted(Self.inkStrokes(from: drawing))
+        noteAttempted(attempted, source: "request")
+        let turns = lesson?.recent ?? []
+        return PracticeFields(problemRef: problem.problemRef, attempted: attempted, recent: turns.isEmpty ? nil : turns)
+    }
+
+    /// Records a change of "attempted", tells the lesson (so follow-ups carry it) and pushes the matching line into the live voice.
+    private func noteAttempted(_ attempted: Bool, source: String) {
+        guard attemptedNow != attempted else { return }
+        let first = attemptedNow == nil
+        attemptedNow = attempted
+        lesson?.notePracticeAttempted(attempted)
+        // The first judgement is "not yet" on a page nobody has written on: nothing changed, so nothing to log or push.
+        if first && !attempted { return }
+        env.log.record("attempt_changed", [
+            "attempted": attempted, "source": source, "work_lines": attempts.workLinesAtLastLook, "problem_id": problem.id
+        ])
+        if let live { pushPracticeContext(to: live, label: attempted ? "practice_attempted" : "practice_not_attempted") }
+    }
+
+    /// The rule for a practice problem, into the live voice: on connect (always "not yet" or the current state) and on every change.
+    private func pushPracticeContext(to session: LiveVoice, label: String) {
+        guard problem.isPractice else { return }
+        session.pushContext(LiveContext.practice(attempted: attemptedNow ?? false), label: label)
+    }
+
+    /// `practice_expired` from watch, ask or consult: the sealed reference is too old. Never retried quietly (that would drop the
+    /// answer guard); the screen offers a new practice problem.
+    private func noteIfPracticeExpired(_ error: Error) {
+        guard case .some(.practiceExpired) = error as? TutorError, !practiceExpired else { return }
+        practiceExpired = true
+        env.log.record("practice_expired", ["problem_id": problem.id])
     }
 
     // MARK: - Small helpers

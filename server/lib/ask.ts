@@ -4,9 +4,11 @@ import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Dep
 import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
-import { buildAskPrompt } from "./policy.js";
-import { levelOf, problemFields, resolveProblem } from "./problems.js";
+import { buildAskPrompt, MAX_TURNS, TurnSchema } from "./policy.js";
+import { levelOf, problemFields } from "./problems.js";
 import { afterQuestion } from "./record/runtime.js";
+import { guardSpokenAnswer } from "./spoken.js";
+import { resolveRequestProblem } from "./teach-ref.js";
 import { usageFields } from "./usage.js";
 
 export const MAX_AUDIO_BYTES = 2_500_000;
@@ -18,6 +20,12 @@ const AskRequestSchema = z.object({
   problem_id: z.string().max(40),
   // The typed statement of an own problem ("own:<course>"); required then, ignored for a bank id (problems.ts resolveProblem).
   problem_text: z.string().optional(),
+  // The sealed reference of a teach practice problem (lib/seal.ts); with it the problem has its checked solution and answer.
+  problem_ref: z.string().max(6000).optional(),
+  // Whether the student has finished a line of their own work on a practice problem. Missing counts as false.
+  attempted: z.boolean().optional(),
+  // The conversation so far (at most 8 turns), so a spoken question can follow the one before it.
+  recent: z.array(TurnSchema).max(MAX_TURNS).default([]),
   drawing_revision: z.number().int().nonnegative().optional(),
   audio_base64: z.string().min(1),
   image_png_base64: z.string().min(1),
@@ -43,7 +51,7 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
     ctx.note({ image_bytes: image.bytes });
     return ctx.fail(422, "invalid_image", image.reason, `invalid_image:${image.reason}`);
   }
-  ctx.note({ image_bytes: image.image.bytes });
+  ctx.note({ image_bytes: image.image.bytes, recent_turns: req.recent.length });
 
   const audio = Buffer.from(req.audio_base64, "base64");
   ctx.note({ audio_bytes: audio.length });
@@ -52,7 +60,7 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
     return ctx.fail(422, "invalid_audio", "audio_over_2_5_MB", "invalid_audio:audio_over_2_5_MB");
   }
 
-  const resolved = resolveProblem(req.problem_id, req.problem_text);
+  const resolved = resolveRequestProblem(ctx, deps.env, deps.now?.() ?? new Date(), req);
   if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
   const problem = resolved.problem;
   ctx.note(problemFields(problem));
@@ -88,11 +96,16 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
   const answered = await runAskModel({
     model: deps.models.language(askCfg, picked.key),
     cfg: askCfg,
-    promptText: buildAskPrompt({ problem, transcript: heard.text }),
+    promptText: buildAskPrompt({ problem, transcript: heard.text, recent: req.recent, attempted: req.attempted }),
     image: image.image,
   });
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
   ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(heard.text, NO_ANSWER_TEXT, askCfg.model, "empty_answer");
+  const guarded = guardSpokenAnswer(problem, answered.text);
+  if (guarded.withheld) {
+    ctx.note({ answer_withheld: true });
+    return done(heard.text, guarded.text, askCfg.model, "answer_withheld");
+  }
   return done(heard.text, answered.text, askCfg.model, "answered");
 }
