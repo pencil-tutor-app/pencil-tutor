@@ -420,12 +420,14 @@ final class LiveVoiceTests: XCTestCase {
     func testActivityKeepsTheSessionFromGoingIdle() async {
         let transport = FakeLiveTransport()
         var config = LiveVoice.Config()
-        config.idleLimit = 0.4
+        // A 1.5 s limit with activity every 0.1 s for 4 s: longer than the limit, so only the resets keep it open, and a 15x margin
+        // per gap so a busy CI runner's late wake-up cannot fake an idle (0.4 s limit flaked on GitHub's macos-26, run 46060115753).
+        config.idleLimit = 1.5
         let voice = makeVoice(transport, config: config)
         await connected(voice)
         var ended: String?
         voice.onEnded = { ended = $0 }
-        for _ in 0..<12 {
+        for _ in 0..<40 {
             try? await Task.sleep(nanoseconds: 100_000_000)
             voice.noteActivity()
         }
