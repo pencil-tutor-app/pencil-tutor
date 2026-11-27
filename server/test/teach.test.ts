@@ -14,7 +14,7 @@ import { acceptReword } from "../lib/record/reword.js";
 import { openReference, sealKeyFor, sealReference, SEAL_TTL_MS } from "../lib/seal.js";
 import { ANSWER_WITHHELD_TEXT, guardSpokenAnswer, revealsAnswerSpoken, spokenForm } from "../lib/spoken.js";
 import { handleTeach, SCRIPTED_FOLLOWUP_ANSWER } from "../lib/teach.js";
-import { MESSAGE_NOT_MATH, MESSAGE_OTHER_COURSE } from "../lib/teach-policy.js";
+import { MESSAGE_BEYOND_COURSE, MESSAGE_NOT_MATH, MESSAGE_OTHER_COURSE } from "../lib/teach-policy.js";
 import { resolveRequestProblem } from "../lib/teach-ref.js";
 import { RequestCtx } from "../lib/http.js";
 import { handleWatch } from "../lib/watch.js";
@@ -452,6 +452,16 @@ describe("POST /api/teach: explain", () => {
     assert.deepEqual([outside.json.is_math, outside.json.fits_course, outside.json.message, outside.json.title, outside.json.steps], [true, false, MESSAGE_OTHER_COURSE, null, null]);
     assert.equal(eventLogs("concept_outside_course").length, 1);
     assert.equal(lastLog().reason, "concept_outside_course");
+  });
+
+  it("maths past the course with a full lesson is taught, with the beyond-the-course line, and still logged", async () => {
+    const { models } = routed({ explain: j({ ...LESSON, is_math: true, fits_course: false }) });
+    const r = await reply(await run(teachBody({ course: "calculus-1", concept: "integration by parts" }), models));
+    assert.deepEqual([r.status, r.json.is_math, r.json.fits_course, r.json.message], [200, true, false, MESSAGE_BEYOND_COURSE]);
+    assert.equal(r.json.title, LESSON.title);
+    assert.deepEqual(r.json.steps, LESSON.steps);
+    assert.equal(eventLogs("concept_outside_course").length, 1);
+    assert.equal(lastLog().reason, "lesson_beyond_course");
   });
 
   it("an answer over a schema limit is a failed call: 502 teach_too_long, nothing trimmed", async () => {

@@ -180,6 +180,19 @@ final class LessonSessionTests: XCTestCase {
         XCTAssertEqual(logRecords("lesson_refused").first?["reason"] as? String, "concept_outside_course")
     }
 
+    func testMathsBeyondTheCourseIsTaughtWithItsNote() async {
+        var reply = FakeTeachClient.lesson()
+        reply.fitsCourse = false
+        reply.message = "This is usually taught in a later course, but here it is."
+        client.answerExplain(.success(reply))
+        lesson.start()
+        await waitUntil("the lesson") { self.lesson.phase != .loading }
+        XCTAssertEqual(lesson.phase, .ready, "a full lesson past the course is taught, not refused")
+        XCTAssertEqual(lesson.notice, "This is usually taught in a later course, but here it is.")
+        XCTAssertTrue(logRecords("lesson_refused").isEmpty)
+        XCTAssertEqual(logRecords("lesson_shown").first?["beyond_course"] as? Bool, true)
+    }
+
     func testTheServersOwnWordsForARefusalAreShown() async {
         client.answerExplain(.success(TeachExplainResponse(isMath: false, fitsCourse: false, message: "Words from the server.", lesson: nil)))
         lesson.start()
