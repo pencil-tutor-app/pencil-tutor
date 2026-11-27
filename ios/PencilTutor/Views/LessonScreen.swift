@@ -38,6 +38,9 @@ struct LessonScreen: View {
         .onAppear { lesson.start() }
         // Pushing the practice page also hides this screen; only a real exit (Back) ends the lesson.
         .onDisappear { if !showPractice { lesson.stop() } }
+        // .contain first: without it this identifier replaces every child's own (CI run 46064329597's hierarchy showed the
+        // refusal text and every button all named "lessonScreen"), so nothing inside could be found by its own name.
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lessonScreen")
     }
 

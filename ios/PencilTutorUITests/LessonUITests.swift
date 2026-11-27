@@ -62,7 +62,10 @@ final class LessonUITests: XCTestCase {
         learnRow.tap()
         XCTAssertTrue(element(app, "learnConceptField").waitForExistence(timeout: 10))
         let start = element(app, "learnStartButton")
-        XCTAssertFalse(start.isEnabled, "Start is disabled while nothing is typed")
+        // Behaviour, not isEnabled (misreported for disabled toolbar buttons on the iPadOS 26.5 simulator): an empty Start does nothing.
+        start.tap()
+        XCTAssertTrue(element(app, "learnConceptField").waitForExistence(timeout: 2), "Start with nothing typed leaves the sheet open")
+        XCTAssertFalse(element(app, "lessonScreen").exists, "and opens no lesson")
         screenshot("51-learn-sheet-empty")
         element(app, "learnCancelButton").tap()
         XCTAssertTrue(learnRow.waitForExistence(timeout: 10))
