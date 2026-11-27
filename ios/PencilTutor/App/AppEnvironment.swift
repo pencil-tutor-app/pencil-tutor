@@ -20,10 +20,38 @@ final class AppEnvironment: ObservableObject {
     let problems: [Problem]
     /// Plain-words notice for the problem list when something is wrong (nil when all is well).
     let notice: String?
+    /// Asks for the microphone before a live voice session opens. A closure so a unit test can answer without a permission prompt.
+    let ensureMicrophone: () async -> Bool
+
+    /// For unit tests: the given tutor client, no network, no Keychain, an account that is ready with a healthy allowance. `livePlan`
+    /// says whether the plan includes live voice; with a `makeLiveTransport` and a microphone that says yes, the problem screen
+    /// opens a live session over that transport.
+    init(forTesting client: TutorClient, log: SessionLog, livePlan: Bool = false,
+         makeLiveTransport: (@MainActor () -> LiveTransport)? = nil, ensureMicrophone: @escaping () async -> Bool = { true }) {
+        self.log = log
+        self.settings = TutorSettings(defaults: UserDefaults(suiteName: "com.edwardtran.penciltutor.unit-tests") ?? .standard,
+                                      useStartingDefaultsOnly: true)
+        let plan = PlanInfo(live: livePlan, capMinutes: 480)
+        let account = StudentAccount(
+            store: InMemoryStudentCodeStore(), holder: StudentCodeHolder(), log: log,
+            fetchMe: { MeResponse(plan: plan, allowance: ScriptedTutorClient.allowance, requestId: "test-me") }
+        )
+        account.startScripted(allowance: ScriptedTutorClient.allowance, plan: plan)
+        self.account = account
+        self.client = MeteredTutorClient(inner: client, account: account)
+        self.speech = SpeechOutput(log: log, remote: nil, deviceOnlyReason: "unit_test")
+        self.makeLiveTransport = makeLiveTransport
+        self.liveOffReason = makeLiveTransport == nil ? "unit_test" : nil
+        self.memory = MemoryStore(api: client, log: log, codeHash: { nil }, defaults: .standard)
+        self.problems = []
+        self.notice = nil
+        self.ensureMicrophone = ensureMicrophone
+    }
 
     init() {
         let log = SessionLog()
         self.log = log
+        self.ensureMicrophone = { await AudioRecorder.requestPermission() }
         self.settings = TutorSettings(useStartingDefaultsOnly: LaunchOptions.scriptedClient)
 
         let holder = StudentCodeHolder()

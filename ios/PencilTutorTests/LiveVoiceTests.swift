@@ -258,6 +258,64 @@ final class LiveVoiceTests: XCTestCase {
         await voice.close(reason: "test_done")
     }
 
+    // MARK: - Taking a hint back ("Not a mistake")
+
+    func testAHintStillHeldBehindAPageReportIsDroppedAndNeverSpoken() async {
+        let transport = FakeLiveTransport()
+        let voice = makeVoice(transport)
+        await connected(voice)
+        voice.onDelegation = { _ in }
+        transport.deliver(#"{"type":"session.delegation.created","delegation":{"id":"item_7","type":"delegation","target":"client"}}"#)
+        XCTAssertTrue(voice.say("Take another look at line two.", purpose: "hint"))
+
+        XCTAssertEqual(voice.retractHint(reason: "disputed"), ["held_dropped"])
+
+        voice.answerDelegation(id: "item_7", text: "Line one is written.")
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        let spoken = transport.sent(ofType: "session.commentary.append").compactMap { $0["content"] as? String }
+        XCTAssertEqual(spoken, ["Line one is written."], "only the page report; the dismissed hint is gone for good")
+        XCTAssertTrue(logTypes().contains("live_hint_dropped"))
+        await voice.close(reason: "test_done")
+    }
+
+    func testAHintAlreadySentCannotBeRecalledAndTheCallerIsToldWhichCaseItWas() async {
+        let transport = FakeLiveTransport()
+        let voice = makeVoice(transport)
+        await connected(voice)
+        XCTAssertTrue(voice.say("Check the sign.", purpose: "hint"))
+
+        XCTAssertEqual(voice.retractHint(reason: "disputed"), ["sent_already_said_context_only"], "no tutor speech since: it was already said")
+        XCTAssertTrue(logTypes().contains("live_hint_retract_after_send"))
+        XCTAssertEqual(voice.retractHint(reason: "disputed"), [], "taken back once")
+
+        XCTAssertTrue(voice.say("Check the sign again.", purpose: "hint"))
+        transport.deliver(#"{"type":"session.output_transcript.delta","delta":"Take another"}"#)
+        XCTAssertEqual(voice.retractHint(reason: "disputed"), ["sent_while_speaking_context_only"], "the tutor is mid-sentence")
+        await voice.close(reason: "test_done")
+    }
+
+    func testOnlyAHintIsTakenBackNotOtherSpeech() async {
+        let transport = FakeLiveTransport()
+        let voice = makeVoice(transport)
+        await connected(voice)
+        XCTAssertTrue(voice.say("Looks good so far.", purpose: "check_ok"))
+        XCTAssertEqual(voice.retractHint(reason: "disputed"), [])
+        await voice.close(reason: "test_done")
+    }
+
+    func testTheLiveSessionRequestCarriesTheTypedProblemOnlyWhenThereIsOne() async {
+        for text in [nil, "7x - 4 = 3x + 16"] as [String?] {
+            let transport = FakeLiveTransport()
+            var request: LiveSessionRequest?
+            let voice = LiveVoice(problemID: text == nil ? "u3-01" : "own:bc-math-9-unit-3", problemText: text, appSessionID: "app-1",
+                                  transport: transport, createSession: { req in request = req; return Self.answer },
+                                  ensureMicrophone: { true }, log: log)
+            _ = await voice.connect(greet: false)
+            XCTAssertEqual(request?.problemText, text)
+            await voice.close(reason: "test_done")
+        }
+    }
+
     func testSayReportsFalseWhenThereIsNoLiveSessionSoTheCallerSpeaksTheOldWay() async {
         let transport = FakeLiveTransport()
         let voice = makeVoice(transport)

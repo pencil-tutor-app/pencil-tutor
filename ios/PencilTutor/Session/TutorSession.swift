@@ -5,7 +5,7 @@ import UIKit
 
 /// A red mark the tutor placed on the page. Lives on an overlay above the canvas, never inside the drawing.
 struct Mark: Identifiable, Equatable {
-    let id = UUID()
+    let id: UUID
     let lineIndex: Int
     /// In canvas points.
     let box: CGRect
@@ -13,6 +13,23 @@ struct Mark: Identifiable, Equatable {
     /// The ink under the mark when it was placed. If it changes and the tutor then sees no problem,
     /// the student fixed the line and the mark comes off (first device run, 2026-11-13: marks stayed forever).
     let inkSignature: String
+    /// The strokes of the flagged line (who they are, not where they sit), so "Not a mistake" can be remembered against that ink.
+    let inkIdentity: InkIdentity
+    /// Which server answer put this mark here, for the dispute log line. Ids only.
+    let requestID: String?
+    let model: String?
+
+    init(id: UUID = UUID(), lineIndex: Int, box: CGRect, hint: String, inkSignature: String,
+         inkIdentity: InkIdentity = .none, requestID: String? = nil, model: String? = nil) {
+        self.id = id
+        self.lineIndex = lineIndex
+        self.box = box
+        self.hint = hint
+        self.inkSignature = inkSignature
+        self.inkIdentity = inkIdentity
+        self.requestID = requestID
+        self.model = model
+    }
 
     static func inkSignature(in box: CGRect, strokes: [InkStroke]) -> String {
         strokes
@@ -31,7 +48,10 @@ struct Mark: Identifiable, Equatable {
             guard parts.count == 4 else { return String(entry) }
             return "\(parts[0] + dx),\(parts[1] + dy),\(parts[2]),\(parts[3])"
         }.sorted().joined(separator: ";")
-        return Mark(lineIndex: lineIndex, box: box.offsetBy(dx: shift.width, dy: shift.height), hint: hint, inkSignature: movedSignature)
+        // Same id (the voice's bookkeeping and the on-screen button follow the mark), same ink identity (strokes do not change
+        // when the whole page moves).
+        return Mark(id: id, lineIndex: lineIndex, box: box.offsetBy(dx: shift.width, dy: shift.height), hint: hint,
+                    inkSignature: movedSignature, inkIdentity: inkIdentity, requestID: requestID, model: model)
     }
 }
 
@@ -125,6 +145,14 @@ final class TutorSession: ObservableObject {
     private var lastDecisionLabel = "none"
     private var lastLoggedSkip = ""
     private var history: [HistoryWire] = []
+    /// Ink the student said the tutor was wrong about ("Not a mistake"). Checked before any later circle is drawn.
+    private var disputes = DisputeBook()
+    /// The line number of every dispute made on this screen, in order. A page report that was being read when one was made is
+    /// marked with the ones made since it started (see `answer`).
+    private var disputedLines: [Int] = []
+    /// The mark whose hint was last handed to a voice, and which route took it. Only that mark's dismissal may stop the voice:
+    /// dismissing an old circle must not cut off the hint of a newer one.
+    private var hintInVoice: (markID: UUID, route: String)?
     private var checkTask: Task<Void, Never>?
     private var statusToken = 0
 
@@ -143,7 +171,7 @@ final class TutorSession: ObservableObject {
         self.problem = problem
         self.env = env
         self.now = now
-        env.log.record("problem_opened", ["problem_id": problem.id])
+        env.log.record("problem_opened", ["problem_id": problem.id, "kind": problem.isOwn ? "own" : "bank"])
         // The first value arrives at once; later ones when the hours run out, come back, or the code is turned off.
         blockObserver = env.account.$block.removeDuplicates().sink { [weak self] block in
             self?.accountBlockChanged(block)
@@ -389,6 +417,7 @@ final class TutorSession: ObservableObject {
         lastStrokeCount = strokes.count
         syncPageSize(reason: "ink_changed")
         removeMarksWhoseInkIsGone(strokes: strokes)
+        endDisputesOnEditedInk(strokes: strokes)
         live?.noteActivity()
         // The caption is a backup for the voice; once the student writes again it is in the way, so it goes.
         if statusMessage != nil {
@@ -425,6 +454,9 @@ final class TutorSession: ObservableObject {
         }
         canvas?.drawing = PKDrawing()
         marks = []
+        let endedDisputes = disputes.removeAll()
+        hintInVoice = nil
+        if endedDisputes > 0 { env.log.record("disputes_ended", ["count": endedDisputes, "why": "page_erased", "problem_id": problem.id]) }
         env.log.record("page_erased", [
             "problem_id": problem.id, "was_scrolled_to": "\(Int(canvas?.contentOffset.x ?? 0)),\(Int(canvas?.contentOffset.y ?? 0))",
             "was_zoom": String(format: "%.2f", canvas?.zoomScale ?? 1)
@@ -673,9 +705,9 @@ final class TutorSession: ObservableObject {
         env.log.record("live_starting", ["trigger": trigger, "problem_id": problem.id])
 
         let voiceSession = LiveVoice(
-            problemID: problem.id, appSessionID: sessionID, transport: makeTransport(),
+            problemID: problem.id, problemText: problem.problemTextForServer, appSessionID: sessionID, transport: makeTransport(),
             createSession: { [env] request in try await env.client.createLiveSession(request) },
-            ensureMicrophone: { await AudioRecorder.requestPermission() },
+            ensureMicrophone: env.ensureMicrophone,
             log: env.log
         )
         voiceSession.onDelegation = { [weak self, weak voiceSession] delegation in
@@ -741,13 +773,15 @@ final class TutorSession: ObservableObject {
 
     /// One place every spoken line goes through, so there is one audio owner: the live voice while it is connected,
     /// the earlier speech path otherwise (fallback, idle close, no live voice in this build).
-    private func tell(_ text: String, purpose: String) {
+    @discardableResult
+    private func tell(_ text: String, purpose: String) -> String {
         if let live, live.say(text, purpose: purpose) {
             env.log.record("speech_route", ["purpose": purpose, "via": "live"])
-            return
+            return "live"
         }
         env.log.record("speech_route", ["purpose": purpose, "via": "speech_output", "voice": Self.voiceLabel(voice)])
         env.speech.speak(text, purpose: purpose)
+        return "speech_output"
     }
 
     private static func voiceLabel(_ mode: VoiceMode) -> String {
@@ -782,6 +816,8 @@ final class TutorSession: ObservableObject {
     /// changed again, the report goes out marked as possibly out of date.
     private func answer(_ delegation: LiveVoice.Delegation, from session: LiveVoice) async {
         var attempt = 0
+        // Disputes made after this point happened while the page was being read; the report must not undo them.
+        let disputesAtStart = disputedLines.count
         while true {
             attempt += 1
             guard live === session, !stopped, session.isStillWaiting(on: delegation.id) else {
@@ -804,7 +840,8 @@ final class TutorSession: ObservableObject {
                 env.log.savePageImage(snapshot.png, kind: "consult", lookID: "d\(delegation.id)-a\(attempt)-r\(revisionSent)")  // Debug builds only
                 let request = ConsultRequest(
                     sessionId: sessionID, problemId: problem.id, drawingRevision: revisionSent,
-                    imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent
+                    imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent,
+                    problemText: problem.problemTextForServer
                 )
                 env.log.record("live_consult_started", [
                     "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
@@ -835,9 +872,18 @@ final class TutorSession: ObservableObject {
                 }
                 if Self.logsWords { fields["page_report"] = response.answerText }
                 env.log.record("live_consult_answered", fields)
+                let disputedMeanwhile = Array(disputedLines.dropFirst(disputesAtStart))
+                if !disputedMeanwhile.isEmpty {
+                    env.log.record("live_consult_dispute_note", [
+                        "delegation_id": delegation.id, "lines": disputedMeanwhile,
+                        "why": "the student dismissed a circle while this page report was being read"
+                    ])
+                }
                 session.answerDelegation(
                     id: delegation.id,
-                    text: response.answerText + (pageChanged ? LiveContext.outOfDateNote : ""),
+                    text: response.answerText
+                        + (disputedMeanwhile.isEmpty ? "" : LiveContext.disputedNote(lines: disputedMeanwhile))
+                        + (pageChanged ? LiveContext.outOfDateNote : ""),
                     stale: pageChanged
                 )
                 return
@@ -968,7 +1014,8 @@ final class TutorSession: ObservableObject {
                 imageHeight: snapshot.pixelHeight,
                 lines: shownLines.map { LineWire($0, scale: snapshot.scale, regionOrigin: snapshot.region.origin) },
                 history: Array(history.suffix(10)),
-                clientTime: TimeText.iso(started)
+                clientTime: TimeText.iso(started),
+                problemText: problem.problemTextForServer
             )
             env.log.record("look_started", [
                 "trigger": trigger.rawValue, "revision": revision, "lines": lines.count, "lines_sent": shownLines.count,
@@ -1012,7 +1059,7 @@ final class TutorSession: ObservableObject {
 
         switch response.action {
         case "interrupt":
-            applyInterrupt(response, fields: fields, sentLines: sentLines, echoedRevision: echoedRevision)
+            applyInterrupt(response, trigger: trigger, fields: fields, sentLines: sentLines, echoedRevision: echoedRevision)
         case "wait":
             env.log.record("decision", fields)
             lastDecisionLabel = "wait"
@@ -1057,7 +1104,7 @@ final class TutorSession: ObservableObject {
                                          "why": "line rewritten and the tutor sees no problem", "remaining": marks.count])
     }
 
-    private func applyInterrupt(_ response: WatchResponse, fields: [String: Any], sentLines: [InkLine], echoedRevision: Int) {
+    private func applyInterrupt(_ response: WatchResponse, trigger: LookTrigger, fields: [String: Any], sentLines: [InkLine], echoedRevision: Int) {
         var fields = fields
         guard let lineNumber = response.line, let sentLine = sentLines.first(where: { $0.index == lineNumber }) else {
             env.log.record("error", ["where": "watch", "detail": "bad_response: interrupt named line \(String(describing: response.line)) but only \(sentLines.count) lines were sent"])
@@ -1088,8 +1135,17 @@ final class TutorSession: ObservableObject {
 
         let box = currentLine?.box ?? sentLine.box
         let strokesNow = canvas.map { Self.inkStrokes(from: $0.drawing) } ?? []
-        marks.append(Mark(lineIndex: lineNumber, box: box, hint: hintWritten,
-                          inkSignature: Mark.inkSignature(in: box, strokes: strokesNow)))
+        // The student already said the tutor was wrong about this very ink. However the lines are numbered now, and however many
+        // looks have passed, it is not circled again; the voice is not told either.
+        let flaggedInk = InkIdentity(line: currentLine ?? sentLine, in: strokesNow)
+        if let dispute = disputes.covering(flaggedInk) {
+            suppressDisputedInterrupt(dispute, lineNumber: lineNumber, trigger: trigger, fields: fields)
+            return
+        }
+        let mark = Mark(lineIndex: lineNumber, box: box, hint: hintWritten,
+                        inkSignature: Mark.inkSignature(in: box, strokes: strokesNow),
+                        inkIdentity: flaggedInk, requestID: response.requestId, model: response.model)
+        marks.append(mark)
         scrollToShow(box, lineIndex: lineNumber)
         lastInterruptionAt = now()
         lastDecisionLabel = "interrupt"
@@ -1101,7 +1157,104 @@ final class TutorSession: ObservableObject {
         appendHistory(action: "interrupt", line: lineNumber, hint: hintWritten)
         // The circle is on the page and the live voice is told about it first, then given the hint to say.
         pushVerdict(lineCount: sentLines.count, flaggedLine: lineNumber, hintWritten: hintWritten)
-        tell(response.hintSpoken ?? hintWritten, purpose: "hint")
+        let route = tell(response.hintSpoken ?? hintWritten, purpose: "hint")
+        hintInVoice = (mark.id, route)
+    }
+
+    // MARK: - "Not a mistake"
+
+    /// The tutor circled ink the student has already dismissed. Nothing is drawn, said or counted as an interruption (so the quiet
+    /// time after a real circle does not start). A look the student asked for still gets an answer: "looks good", because the
+    /// only thing the tutor had left to say was the dismissed line. The history tells the server which line it was this time.
+    private func suppressDisputedInterrupt(_ dispute: Dispute, lineNumber: Int, trigger: LookTrigger, fields: [String: Any]) {
+        var fields = fields
+        fields["reason"] = nil   // the model's own words stay out of this line: it is about a decision the student overruled
+        fields["disputed_line"] = dispute.lineIndex
+        if let id = dispute.requestID { fields["disputed_request_id"] = id }
+        fields["disputes"] = disputes.count
+        fields["problem_id"] = problem.id
+        env.log.record("interrupt_suppressed_disputed", fields)
+        lastDecisionLabel = "suppressed"
+        appendHistory(action: "disputed", line: lineNumber, hint: nil)
+        if trigger == .manual {
+            setStatus(LiveContext.checkLooksGood)
+            tell(LiveContext.checkLooksGood, purpose: "check_ok")
+        }
+    }
+
+    /// The student tapped "Not a mistake" on a circle. The circle comes off at once and the ink it was on is remembered by its
+    /// strokes, so the same ink is never circled again, whatever the line is numbered and wherever the page has moved to. The voice
+    /// is told too: a hint still waiting is dropped, one being spoken on the base voice is stopped, and the live voice gets a
+    /// quiet "do not repeat that" line.
+    func markNotAMistake(_ markID: UUID) {
+        guard let mark = marks.first(where: { $0.id == markID }) else {
+            env.log.record("mark_dispute_ignored", ["why": "mark_already_gone", "problem_id": problem.id])
+            return
+        }
+        let page = canvas.map { Self.inkStrokes(from: $0.drawing) } ?? []
+        let ink = disputedInk(of: mark, page: page)
+        marks.removeAll { $0.id == markID }
+        if ink.isEmpty {
+            env.log.record("mark_dispute_unkeyed", ["line": mark.lineIndex, "why": "no ink under the mark to remember", "problem_id": problem.id])
+        } else {
+            disputes.add(Dispute(lineIndex: mark.lineIndex, requestID: mark.requestID, ink: ink))
+        }
+        disputedLines.append(mark.lineIndex)
+        env.log.record("mark_disputed", [
+            "line": mark.lineIndex, "request_id": mark.requestID ?? "?", "model": mark.model ?? "?",
+            "strokes": ink.strokes.count, "disputes": disputes.count, "marks_left": marks.count, "problem_id": problem.id
+        ])
+        appendHistory(action: "disputed", line: mark.lineIndex, hint: nil)
+        takeBackHint(of: mark)
+        refreshTestStatus()
+    }
+
+    /// The ink to remember for a dismissed mark: the line under the mark now (the student may have added a stroke since the circle
+    /// was drawn, and means the line as they see it); the ink the tutor judged if no line is under it any more.
+    private func disputedInk(of mark: Mark, page: [InkStroke]) -> InkIdentity {
+        let lines = grouper.group(page)
+        func overlap(_ line: InkLine) -> CGFloat {
+            let shared = line.box.intersection(mark.box)
+            return shared.isNull ? 0 : shared.width * shared.height
+        }
+        if let best = lines.max(by: { overlap($0) < overlap($1) }), overlap(best) > 0 {
+            return InkIdentity(line: best, in: page)
+        }
+        return mark.inkIdentity
+    }
+
+    /// A disputed line's ink is gone or redrawn: the dispute ends, and the tutor may circle what is there now.
+    private func endDisputesOnEditedInk(strokes: [InkStroke]) {
+        let ended = disputes.dropEdited(page: strokes)
+        guard !ended.isEmpty else { return }
+        env.log.record("disputes_ended", [
+            "count": ended.count, "lines": ended.map(\.lineIndex), "remaining": disputes.count,
+            "why": "disputed ink was erased or redrawn", "problem_id": problem.id
+        ])
+    }
+
+    /// Ties the dismissal to the hint and the work still pending for it, then says what was done (labels only):
+    ///  - held behind a page report in the live voice: dropped;
+    ///  - already sent to the live voice as commentary: cannot be recalled, so the live voice is told to stop and not repeat it;
+    ///  - being spoken on the base voice (or being fetched for it): stopped;
+    ///  - a page report still being read, whose late answer would go straight to the live voice: marked (see `answer`).
+    /// A dismissal of an older circle leaves the voice alone when a newer hint has taken its place.
+    private func takeBackHint(of mark: Mark) {
+        var paths: [String] = []
+        let ownsVoice = hintInVoice?.markID == mark.id
+        if ownsVoice {
+            paths += live?.retractHint(reason: "disputed") ?? []
+            if env.speech.stopIfSpeaking(purpose: "hint", reason: "hint_disputed") { paths.append("base_voice_stopped") }
+            hintInVoice = nil
+        }
+        let told = live?.pushContext(LiveContext.notAMistake(line: mark.lineIndex), label: "mark_disputed") ?? false
+        let consultsInFlight = delegationTasks.count
+        if consultsInFlight > 0 { paths.append("consult_in_flight_will_carry_a_note") }
+        env.log.record("hint_taken_back", [
+            "line": mark.lineIndex, "voice_still_had_this_hint": ownsVoice,
+            "paths": paths.isEmpty ? "nothing_pending" : paths.joined(separator: ","),
+            "live_told": told, "consults_in_flight": consultsInFlight, "problem_id": problem.id
+        ])
     }
 
     private func appendHistory(action: String, line: Int?, hint: String?) {
@@ -1180,7 +1333,8 @@ final class TutorSession: ObservableObject {
                 problemId: problem.id,
                 drawingRevision: drawingRevision,
                 audioBase64: audio.base64EncodedString(),
-                imagePngBase64: snapshot.png.base64EncodedString()
+                imagePngBase64: snapshot.png.base64EncodedString(),
+                problemText: problem.problemTextForServer
             )
             env.log.record("ask_started", ["audio_bytes": audio.count, "audio_seconds": recording.duration,
                                            "image_bytes": snapshot.png.count, "lines": lines.count,

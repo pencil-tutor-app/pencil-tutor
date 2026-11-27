@@ -83,9 +83,12 @@ enum LaunchOptions {
     /// `--silent`: Debug builds only. The whole voice path still runs (the speech request, the speech log lines with sizes and
     /// latency) but every sound is played at volume 0, and live voice is not opened. For replay runs at night. In Release builds
     /// this is always false, so a student can never end up with a muted tutor by a launch argument.
+    /// Unit and UI tests are always silent too: on 2026-11-28 session tests spoke hints through a simulator, which plays on the
+    /// Mac's speakers, at night. XCTest sets XCTestConfigurationFilePath in the test host's environment.
     static var silent: Bool {
         #if DEBUG
         return ProcessInfo.processInfo.arguments.contains("--silent")
+            || ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         #else
         return false
         #endif

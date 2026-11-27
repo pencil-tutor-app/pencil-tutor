@@ -15,7 +15,7 @@ final class PencilTutorUITests: XCTestCase {
     /// starts on the course picker.
     private func launchApp(extra: [String] = [], lastCourse: String = "") -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--scripted-client", "--any-input", "-lastCourseSlug", lastCourse] + extra
+        app.launchArguments = ["--scripted-client", "--any-input", "--silent", "-lastCourseSlug", lastCourse] + extra
         app.launch()
         return app
     }

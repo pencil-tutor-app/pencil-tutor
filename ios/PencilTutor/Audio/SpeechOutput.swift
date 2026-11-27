@@ -117,6 +117,20 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
         stop(reason: "stopped by app")
     }
 
+    /// Stops what is being said (or fetched, or queued behind the request) only if it has this purpose. A hint the student
+    /// dismissed must not go on talking, but an answer or an allowance notice that happens to be playing must. True if it stopped.
+    @MainActor
+    @discardableResult
+    func stopIfSpeaking(purpose: String, reason: String) -> Bool {
+        guard active?.purpose == purpose else { return false }
+        cancelActive(reason: reason)
+        return true
+    }
+
+    /// The purpose of what is being said right now, nil when quiet. For the log and tests.
+    @MainActor
+    var speakingPurpose: String? { active?.purpose }
+
     // MARK: - Starting and stopping
 
     @MainActor

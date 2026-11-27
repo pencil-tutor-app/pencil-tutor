@@ -50,6 +50,8 @@ final class LiveVoice {
     var onEnded: ((String) -> Void)?
 
     private let problemID: String
+    /// The typed statement of the student's own problem; nil for a bank problem. Sent with the live-session request.
+    private let problemText: String?
     private let appSessionID: String
     private let transport: LiveTransport
     private let createSession: (LiveSessionRequest) async throws -> LiveSessionResponse
@@ -64,6 +66,8 @@ final class LiveVoice {
     private var pendingDelegations: [String: Date] = [:]
     private var held: (text: String, purpose: String, at: Date)?
     private var heldReleaseTask: Task<Void, Never>?
+    /// The last hint that went out as commentary (not the held one). Kept only so a dismissal can say what it could not take back.
+    private var lastSentHint: (eventID: String, at: Date)?
     private var housekeeping: Task<Void, Never>?
     private var sawStarted = false
     private var sawClosedEvent = false
@@ -76,11 +80,12 @@ final class LiveVoice {
     private var connectStartedAt: Date
     private var ending = false
 
-    init(problemID: String, appSessionID: String, transport: LiveTransport,
+    init(problemID: String, problemText: String? = nil, appSessionID: String, transport: LiveTransport,
          createSession: @escaping (LiveSessionRequest) async throws -> LiveSessionResponse,
          ensureMicrophone: @escaping () async -> Bool,
          log: SessionLog, now: @escaping () -> Date = { Date() }, config: Config = Config()) {
         self.problemID = problemID
+        self.problemText = problemText
         self.appSessionID = appSessionID
         self.transport = transport
         self.createSession = createSession
@@ -113,7 +118,7 @@ final class LiveVoice {
 
         let answer: LiveSessionResponse
         do {
-            answer = try await createSession(LiveSessionRequest(sessionId: appSessionID, problemId: problemID, sdp: offer))
+            answer = try await createSession(LiveSessionRequest(sessionId: appSessionID, problemId: problemID, sdp: offer, problemText: problemText))
         } catch {
             let (_, detail) = TutorError.describe(error)
             log.record("live_server_refused", ["detail": detail, "elapsed_ms": elapsedMs()])
@@ -170,6 +175,35 @@ final class LiveVoice {
             return true
         }
         return sendCommentary(text, delegationID: nil, purpose: purpose)
+    }
+
+    /// The student dismissed the circle this hint belonged to ("Not a mistake"): the hint must not be said. Three cases, each logged
+    /// and each returned as a label:
+    ///  - `held_dropped`: it was waiting behind a page report; it is dropped and its release timer cancelled.
+    ///  - `sent_while_speaking_context_only` / `sent_already_said_context_only`: it already went out as commentary. The five
+    ///    client event types (`LiveClientEvent`) have no way to cancel speech, so it cannot be recalled; the caller follows with a
+    ///    quiet context line (`LiveContext.notAMistake`) that tells the model to stop and not repeat it.
+    /// Nothing to take back returns an empty list.
+    @discardableResult
+    func retractHint(reason: String) -> [String] {
+        var paths: [String] = []
+        if let hint = held, hint.purpose == "hint" {
+            heldReleaseTask?.cancel()
+            heldReleaseTask = nil
+            held = nil
+            log.record("live_hint_dropped", ["purpose": hint.purpose, "reason": reason, "age_ms": Int(now().timeIntervalSince(hint.at) * 1000)])
+            paths.append("held_dropped")
+        }
+        if let sent = lastSentHint {
+            lastSentHint = nil
+            let stillTalking = lastTutorFragmentAt.map { now().timeIntervalSince($0) < config.quietBeforeHeldHint } ?? false
+            log.record("live_hint_retract_after_send", [
+                "event_id": sent.eventID, "reason": reason, "age_ms": Int(now().timeIntervalSince(sent.at) * 1000),
+                "tutor_still_talking": stillTalking, "next": "context only: audio already sent cannot be cancelled"
+            ])
+            paths.append(stillTalking ? "sent_while_speaking_context_only" : "sent_already_said_context_only")
+        }
+        return paths
     }
 
     /// Facts for the model to know without saying them (the latest page check).
@@ -423,6 +457,7 @@ final class LiveVoice {
     private func sendCommentary(_ text: String, delegationID: String?, purpose: String) -> Bool {
         let id = nextEventID()
         let ok = send(.commentary(eventID: id, delegationID: delegationID, text: text))
+        if ok, purpose == "hint" { lastSentHint = (id, now()) }
         var fields: [String: Any] = ["purpose": purpose, "chars": text.count, "event_id": id, "sent": ok, "for_delegation": delegationID != nil]
         if TutorSession.logsWords { fields["text"] = text }
         log.record("live_commentary_sent", fields)
