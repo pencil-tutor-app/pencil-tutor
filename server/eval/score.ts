@@ -19,6 +19,10 @@ export type Row = {
   page: string;
   rep: number;
   status: number;
+  // The model and level the handler really used for this look, and whether the problem was a bank one or an own one.
+  model?: string;
+  level?: string;
+  problem_kind?: string;
   outcome: string;
   reason: string | null;
   action: string | null;
@@ -82,6 +86,8 @@ export type Summary = {
   downgraded: number;
   errors: number;
   leaks: number;
+  // Rows whose recorded model differs from the candidate's name (the candidate did not really run).
+  otherModel: number;
   p50: number | null;
   p90: number | null;
   costPerLook: number | null;
@@ -100,7 +106,7 @@ export function summarize(rows: Row[], pages: Map<string, Page>): Summary[] {
     const [spec, role] = k.split("|") as [string, string];
     const s: Summary = {
       spec, role, looks: rs.length, wrongPages: 0, hits: 0, wrongLine: 0, misses: 0, hitsLatest: 0, wrongPagesLatest: 0,
-      correctPages: 0, falseAlarms: 0, schemaFailures: 0, downgraded: 0, errors: 0, leaks: 0,
+      correctPages: 0, falseAlarms: 0, schemaFailures: 0, downgraded: 0, errors: 0, leaks: 0, otherModel: 0,
       p50: null, p90: null, costPerLook: null, costKnown: 0, reasoningMean: null,
     };
     for (const r of rs) {
@@ -108,6 +114,7 @@ export function summarize(rows: Row[], pages: Map<string, Page>): Summary[] {
       if (!page) continue;
       const v = classify(r, page);
       if (v === "error") s.errors += 1;
+      if (r.model && r.model !== spec.split(":")[1]) s.otherModel += 1;
       if (v === "schema_failure") s.schemaFailures += 1;
       if (r.reason && DOWNGRADE_LABELS.has(r.reason)) s.downgraded += 1;
       if (r.judge?.reveals_answer) s.leaks += 1;
@@ -141,11 +148,11 @@ const usd = (x: number | null, digits = 5) => (x === null ? "n/a" : `$${x.toFixe
 const secs = (ms: number | null) => (ms === null ? "n/a" : `${(ms / 1000).toFixed(1)}s`);
 
 export function table(summaries: Summary[]): string {
-  const head = "| role | model | first-wrong-line exact | (wrong line is latest) | false alarms | schema failures | errors | p50 | p90 | cost per look |";
-  const sep = "|---|---|---|---|---|---|---|---|---|---|";
+  const head = "| role | model | first-wrong-line exact | (wrong line is latest) | wrong line | silent | false alarms | schema failures | errors | other model ran | p50 | p90 | cost per look |";
+  const sep = "|---|---|---|---|---|---|---|---|---|---|---|---|---|";
   const rows = summaries.map(
     (s) =>
-      `| ${s.role} | ${s.spec} | ${s.hits}/${s.wrongPages} | ${s.hitsLatest}/${s.wrongPagesLatest} | ${s.falseAlarms}/${s.correctPages} | ${s.schemaFailures} | ${s.errors} | ${secs(s.p50)} | ${secs(s.p90)} | ${usd(s.costPerLook)} |`,
+      `| ${s.role} | ${s.spec} | ${s.hits}/${s.wrongPages} | ${s.hitsLatest}/${s.wrongPagesLatest} | ${s.wrongLine} | ${s.misses} | ${s.falseAlarms}/${s.correctPages} | ${s.schemaFailures} | ${s.errors} | ${s.otherModel} | ${secs(s.p50)} | ${secs(s.p90)} | ${usd(s.costPerLook)} |`,
   );
   return [head, sep, ...rows].join("\n");
 }
@@ -174,7 +181,8 @@ export function loadPages(manifestPath: string): Map<string, Page> {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const results = process.argv[2];
-  if (!results) throw new Error("usage: tsx server/eval/score.ts <results.jsonl>");
-  const pages = loadPages(new URL("./fixtures/manifest.json", import.meta.url).pathname);
+  if (!results) throw new Error("usage: tsx server/eval/score.ts <results.jsonl> [manifest.json]");
+  // The answer key defaults to the BC Math 9 set; pass the manifest of the page set the run used (fixtures/courses/manifest.json ...).
+  const pages = loadPages(process.argv[3] ?? new URL("./fixtures/manifest.json", import.meta.url).pathname);
   console.log(table(summarize(loadRows(results), pages)));
 }

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
-import { findProblem } from "./problems.js";
+import { checkProblemId } from "./problems.js";
 
 // How old a reported activity may be. An app that was in the background or offline can report a stale moment; anything older
 // than an hour is treated as "no activity reported" rather than trusted.
@@ -39,7 +39,9 @@ export async function handleHeartbeat(request: Request, deps: Deps = defaultDeps
 
   const parsed = HeartbeatSchema.safeParse(body.value);
   if (!parsed.success) return ctx.fail(422, "invalid_request", issueReason(parsed.error), "invalid_request");
-  if (!findProblem(parsed.data.problem_id)) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
+  // A bank id or "own:<course>"; no problem_text here because no model runs, the beat only meters time.
+  const bad = checkProblemId(parsed.data.problem_id);
+  if (bad) return ctx.fail(bad.status, bad.error, bad.reason, bad.error);
 
   const activity = reportedActivity(opened.now, parsed.data.seconds_since_activity);
   ctx.note({ heartbeat_activity: activity.label });

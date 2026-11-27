@@ -1,7 +1,7 @@
 import { generateText, NoObjectGeneratedError, NoOutputGeneratedError, Output, type LanguageModel } from "ai";
 import { z } from "zod";
 import type { RoleConfig } from "../config.js";
-import { squash } from "../decision.js";
+import { revealsAnswer } from "../decision.js";
 import { classifyFailure, providerOptionsFor } from "../models.js";
 import type { Problem } from "../problems.js";
 import { reportUsage, type UsageReport } from "../usage.js";
@@ -69,7 +69,7 @@ export function acceptReword(candidate: string, problem: Problem): RewordOutcome
   const text = candidate.trim();
   if (!text) return { ok: false, reason: "empty" };
   if (text.length > 400) return { ok: false, reason: "too_long" };
-  if (squash(text).includes(squash(problem.final_answer))) return { ok: false, reason: "reveals_answer" };
+  if (revealsAnswer(text, problem.final_answer)) return { ok: false, reason: "reveals_answer" };
   if (recallPhrase(text)) return { ok: false, reason: "unsupported_history_claim" };
   return { ok: true, text };
 }

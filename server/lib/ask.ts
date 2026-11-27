@@ -5,7 +5,7 @@ import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runAskModel, runTranscription } from "./models.js";
 import { buildAskPrompt } from "./policy.js";
-import { findProblem, levelOf, tierOf } from "./problems.js";
+import { levelOf, problemFields, resolveProblem } from "./problems.js";
 import { afterQuestion } from "./record/runtime.js";
 import { usageFields } from "./usage.js";
 
@@ -16,6 +16,8 @@ const NO_ANSWER_TEXT = "I couldn't come up with an answer. Please ask again.";
 const AskRequestSchema = z.object({
   session_id: z.string().max(100).optional(),
   problem_id: z.string().max(40),
+  // The typed statement of an own problem ("own:<course>"); required then, ignored for a bank id (problems.ts resolveProblem).
+  problem_text: z.string().optional(),
   drawing_revision: z.number().int().nonnegative().optional(),
   audio_base64: z.string().min(1),
   image_png_base64: z.string().min(1),
@@ -50,9 +52,10 @@ export async function handleAsk(request: Request, deps: Deps = defaultDeps()): P
     return ctx.fail(422, "invalid_audio", "audio_over_2_5_MB", "invalid_audio:audio_over_2_5_MB");
   }
 
-  const problem = findProblem(req.problem_id);
-  if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
-  ctx.note({ course: problem.course ?? "none", tier: tierOf(problem) });
+  const resolved = resolveProblem(req.problem_id, req.problem_text);
+  if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
+  const problem = resolved.problem;
+  ctx.note(problemFields(problem));
 
   // A valid question is student activity.
   await meterActivity(ctx, opened, "question");

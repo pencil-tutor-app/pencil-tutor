@@ -282,6 +282,8 @@ python3 server/eval/report_courses.py server/eval/results/courses-my-run.jsonl -
 
 `--max-calls` is a hard cap on looks (rows in the results file). The findings are in `docs/evals/2026-11-15-courses-watch-eval.md`.
 
+**Own problems (no answer key).** `--no-reference` sends every page as `own:<its course>` with the fixture's `prompt_plain` as `problem_text`, so the model gets no worked solution or final answer; `--fixtures-dir <absolute folder>` reads a page set outside the repo (`manifest.json` plus pictures, an entry may carry `own_problem: {course, text}`; use it for real handwriting, which must not be copied into this public repo); `--pages` takes several substrings separated by commas. The runner sets the candidate model for both the high school and the advanced level and records the model that answered in every row; `score.ts` prints wrong line, silent and "other model ran" columns, and takes the answer key as a second argument (`tsx server/eval/score.ts <results.jsonl> <manifest.json>`). The findings and the tier choice are in `docs/evals/2026-11-28-no-reference-eval.md`.
+
 **Pulling Edward's real handwriting for the next eval.** Debug builds only (same gate as `TutorSession.logsWords`; Release never
 writes them) save each page picture sent to watch or consult in the app's Documents folder, next to the session log, as
 `page-<time>-<session>-watch-w<N>-r<revision>.png` or `...-consult-d<id>-a<attempt>-r<revision>.png`. The session log's

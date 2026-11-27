@@ -3,7 +3,7 @@ import { liveSettings } from "./config.js";
 import { defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
 import { buildLiveInstructions, LIVE_GREETING } from "./policy.js";
-import { findProblem } from "./problems.js";
+import { problemFields, resolveProblem } from "./problems.js";
 
 // The only client events the iPad may send on the data channel. All five are named in OpenAI's Live guides
 // (live-conversations: mute/unmute, thinking/commentary append, close). Anything else is refused by OpenAI, so a
@@ -23,6 +23,8 @@ const LIVE_TIMEOUT_MS = 15_000;
 const LiveSessionRequestSchema = z.object({
   session_id: z.string().max(100).optional(),
   problem_id: z.string().max(40),
+  // The typed statement of an own problem ("own:<course>"); required then, ignored for a bank id (problems.ts resolveProblem).
+  problem_text: z.string().optional(),
   sdp: z
     .string()
     .min(1, "sdp must be the WebRTC offer")
@@ -113,9 +115,10 @@ export async function handleLiveSession(request: Request, deps: Deps = defaultDe
   const req = parsed.data;
   ctx.note({ sdp_chars: req.sdp.length });
 
-  const problem = findProblem(req.problem_id);
-  if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
-  ctx.note({ course: problem.course ?? "none" });
+  const resolved = resolveProblem(req.problem_id, req.problem_text);
+  if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
+  const problem = resolved.problem;
+  ctx.note(problemFields(problem));
 
   // Opening a live session is not work by itself, so it charges nothing (reason no_activity_reported); the student's talk is
   // reported later by the app's heartbeat. This still settles the allowance and its notices for the reply.
