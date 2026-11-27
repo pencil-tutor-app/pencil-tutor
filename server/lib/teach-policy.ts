@@ -60,6 +60,9 @@ const BE_RIGHT = "Check every number and every line twice before you write it: a
 
 export const MESSAGE_NOT_MATH = "I can teach maths topics only.";
 export const MESSAGE_OTHER_COURSE = "That belongs to another course; pick it there.";
+// Said with a lesson that goes past the chosen course. Edward's goal (2026-11-28) is to learn brand-new ideas, and the app has no
+// course past Calculus I, Linear Algebra or Discrete Math, so real maths beyond the course is taught, not refused.
+export const MESSAGE_BEYOND_COURSE = "This is usually taught in a later course, but here it is.";
 
 export function explainSystem(course: Course): string {
   const { who, words } = audienceFor(course);
@@ -69,7 +72,7 @@ ${words}
 
 Decide first:
 - is_math: true only when the concept is a topic in mathematics.
-- fits_course: true when the concept is part of the course "${course.title}" or a basic idea that course builds on. False when it belongs to a different course (for example a calculus idea in a Grade 5 course). When is_math is false, fits_course is false too.
+- fits_course: true when the concept is part of the course "${course.title}" or a basic idea that course builds on. False when it belongs to a different course (for example a calculus idea in a Grade 5 course). When is_math is false, fits_course is false too. When is_math is true, always write the full lesson, even when fits_course is false: pitch it at this student's level.
 When either is false, leave the lesson empty: title "", steps [], example with an empty prompt_plain, no steps and an empty final_answer, spoken "".
 
 When both are true, write:

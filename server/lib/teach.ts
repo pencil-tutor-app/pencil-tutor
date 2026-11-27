@@ -26,6 +26,7 @@ import {
   FollowupOutputSchema,
   LIMITS,
   MESSAGE_NOT_MATH,
+  MESSAGE_BEYOND_COURSE,
   MESSAGE_OTHER_COURSE,
   PracticeOutputSchema,
   practiceSystem,
@@ -206,11 +207,20 @@ async function explain(ctx: RequestCtx, deps: Deps, opened: GateOpen, course: Co
   const lesson = out.value;
   ctx.note({ is_math: lesson.is_math, fits_course: lesson.fits_course });
   if (!lesson.is_math) return respond({ is_math: false, fits_course: false, message: MESSAGE_NOT_MATH, ...NO_LESSON }, picked.cfg.model, "not_math");
+  const complete = lesson.title.trim() && lesson.steps.length > 0 && lesson.example.prompt_plain.trim() && lesson.example.steps.length > 0 && lesson.example.final_answer.trim() && lesson.spoken.trim();
   if (!lesson.fits_course) {
-    logEvent(ctx, "concept_outside_course", { course: course.slug });
+    logEvent(ctx, "concept_outside_course", { course: course.slug, taught: Boolean(complete) });
+    // Maths past the course is still taught when the model wrote a full lesson; only an empty one falls back to the refusal.
+    if (complete) {
+      ctx.note({ steps: lesson.steps.length, example_lines: lesson.example.steps.length });
+      return respond(
+        { is_math: true, fits_course: false, message: MESSAGE_BEYOND_COURSE, title: lesson.title, steps: lesson.steps, example: lesson.example, spoken: lesson.spoken },
+        picked.cfg.model,
+        "lesson_beyond_course",
+      );
+    }
     return respond({ is_math: true, fits_course: false, message: MESSAGE_OTHER_COURSE, ...NO_LESSON }, picked.cfg.model, "concept_outside_course");
   }
-  const complete = lesson.title.trim() && lesson.steps.length > 0 && lesson.example.prompt_plain.trim() && lesson.example.steps.length > 0 && lesson.example.final_answer.trim() && lesson.spoken.trim();
   if (!complete) return ctx.fail(502, "teach_unusable", "lesson_incomplete", "teach_unusable");
 
   ctx.note({ steps: lesson.steps.length, example_lines: lesson.example.steps.length });

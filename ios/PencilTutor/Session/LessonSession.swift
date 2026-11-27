@@ -146,7 +146,10 @@ final class LessonSession: ObservableObject {
             env.log.record("lesson_refused", ["reason": "not_math", "latency_ms": latency])
             return
         }
-        guard response.fitsCourse ?? true else {
+        // Past the course: the server teaches real maths anyway and says so in `message` (2026-11-28); only a reply without a
+        // lesson is a refusal. The line is shown as the screen's notice above the lesson.
+        let beyondCourse = !(response.fitsCourse ?? true)
+        if beyondCourse && Lesson(response) == nil {
             phase = .refused(response.message ?? "That belongs to another course; pick it there.")
             env.log.record("lesson_refused", ["reason": "concept_outside_course", "latency_ms": latency])
             return
@@ -159,10 +162,11 @@ final class LessonSession: ObservableObject {
         self.lesson = lesson
         exampleState = .pending
         phase = .ready
+        if beyondCourse { notice = response.message }
         env.log.record("lesson_shown", [
             "latency_ms": latency, "steps": lesson.steps.count, "example_lines": lesson.exampleLines,
             "model": response.model ?? "?", "request_id": response.requestId ?? "?",
-            "server_latency_ms": response.latencyMs ?? -1
+            "server_latency_ms": response.latencyMs ?? -1, "beyond_course": beyondCourse
         ])
         if let spoken = lesson.spoken, !spoken.isEmpty { env.speech.speak(spoken, purpose: "lesson") }
         requestPractice(reason: "prefetch")
