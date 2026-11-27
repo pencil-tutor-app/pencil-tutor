@@ -73,9 +73,9 @@ ${words}
 Decide first:
 - is_math: true only when the concept is a topic in mathematics.
 - fits_course: true when the concept is part of the course "${course.title}" or a basic idea that course builds on. False when it belongs to a different course (for example a calculus idea in a Grade 5 course). When is_math is false, fits_course is false too. When is_math is true, always write the full lesson, even when fits_course is false: pitch it at this student's level.
-When either is false, leave the lesson empty: title "", steps [], example with an empty prompt_plain, no steps and an empty final_answer, spoken "".
+When is_math is false, leave the lesson empty: title "", steps [], example with an empty prompt_plain, no steps and an empty final_answer, spoken "".
 
-When both are true, write:
+When is_math is true (whether or not fits_course is true), write:
 - title: the concept's name, at most 6 words.
 - steps: 2 to ${LIMITS.steps} short steps that build the idea, one idea per step, at most 2 sentences each. Plain words first; give the official term once, at the end of the step that needs it.
 - example: one worked example of the concept. prompt_plain is the problem statement (at most ${LIMITS.statement} characters). steps are 2 to ${LIMITS.exampleLines} short lines of working, one step per line, every line true and following from the line before. final_answer is written in full (for example "x = 4", not "4"). The example must have exactly one correct final answer: when the answer could be written several ways (a remainder, an angle, a number to round), say which in the statement.
