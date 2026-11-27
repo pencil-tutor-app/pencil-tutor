@@ -32,7 +32,7 @@ struct ProblemScreen: View {
             // Both ignore the safe area, so their frames are identical and a mark stays on its line.
             InkCanvas(session: session, rail: rail)
                 .ignoresSafeArea()
-            MarksOverlay(marks: session.marks, viewport: session.viewport)
+            MarksOverlay(marks: session.marks, viewport: session.viewport, onNotAMistake: { session.markNotAMistake($0) })
                 .ignoresSafeArea()
             chrome
             // The rail keeps to the safe area and sits right under the Back button, left of the problem card.

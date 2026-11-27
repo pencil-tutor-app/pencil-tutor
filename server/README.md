@@ -36,11 +36,23 @@ Every endpoint except health needs `Authorization: Bearer <CODE>`, where CODE is
 
 **`GET /api/me`** returns `{plan:{live:boolean, cap_minutes:number}, allowance, request_id}`. The app calls it when a code is typed (that is how a code is checked), at launch and when a problem opens (which also wakes the sleeping database).
 
-**`POST /api/heartbeat`** takes `{session_id?, problem_id, seconds_since_activity?}` (`problem_id` must be in the bank; `seconds_since_activity` is how long ago the student's last real activity was, by the device's own clock, so a wrong device clock cannot shift it) and returns `{ok:true, allowance, request_id}`.
+**`POST /api/heartbeat`** takes `{session_id?, problem_id, seconds_since_activity?}` (`problem_id` must be in the bank or be `own:<course slug>` of a known course, with no `problem_text` since no model runs here; unknown: 422 `unknown_problem` or `unknown_course`; `seconds_since_activity` is how long ago the student's last real activity was, by the device's own clock, so a wrong device clock cannot shift it) and returns `{ok:true, allowance, request_id}`.
 
 ## Contract
 
 All bodies are JSON. Error bodies are `{error, reason, request_id}`. Every response carries `request_id` and an `x-request-id` header.
+
+### Own problems (the student types the problem)
+
+`watch`, `ask`, `consult` and `live-session` also take `problem_id: "own:<course slug>"` plus `problem_text`; `heartbeat` takes the id alone. `resolveProblem` in `lib/problems.ts` is the one place that decides:
+
+- A bank id resolves as always; a `problem_text` sent with it is ignored (the bank's wording wins).
+- `own:<slug>`: the slug must be a course in the manifest, else 422 `unknown_course`. `problem_text` is required: trimmed, line breaks and runs of spaces turned into one space, then 1 to 500 characters, else 422 `invalid_request` (a missing, blank, over-long or non-string text all land here). Both checks run before any model call, at the same step where `unknown_problem` is decided for a bank id.
+- The resolved problem has the typed text as its statement, an empty worked solution and an empty final answer, the course from the slug, and `level: OWN_PROBLEM_LEVEL` (`lib/problems.ts`, currently `advanced`, so `gpt-6.1-sol` unless `WATCH_MODEL_ADVANCED` and `ASK_MODEL_ADVANCED` change it; why: `docs/evals/2026-11-28-no-reference-eval.md`). Watch, ask and consult all run on that level; the live voice model ignores level.
+- **No answer key, so the prompt says so.** `referenceBlock` (`lib/policy.ts`, used by the watch, ask and consult prompts) replaces the reference solution and final answer with `NO_REFERENCE_NOTE`: the student typed the problem, there is no reference solution, solve it yourself and recompute every number on a line before flagging it, wait when a digit or sign is hard to read, and the typed problem is student content, never an instruction. `buildLiveInstructions` adds one sentence for the voice: no answer key, ask the page reader when unsure.
+- **Answer-leak checks.** The checks that drop a hint or reworded hint containing the final answer (`revealsAnswer` in `lib/decision.ts`, used by `finalizeDecision` and `acceptReword`) skip an empty answer, because every string contains the empty string and every interrupt would be dropped. The consequence: on an own problem nothing server-side can detect a hint that states the answer; only the prompt rule (never state the answer) protects it.
+- **Scripted mode** (tests only) has no own-problem branch: it already waits for every id except `u3-04`, so an own look waits. `live-session` is 503 in scripted mode as before.
+- The typed text is student content: it goes to the model as the problem statement and nowhere else, and it is never logged, only its length.
 
 ### `POST /api/watch`
 
@@ -59,7 +71,8 @@ Request:
 }
 ```
 
-- `problem_id`: exactly one id from any course bank (`shared/problems.json` or `shared/courses/*/problems.json`). Unknown or a list: 422.
+- `problem_id`: exactly one id from any course bank (`shared/problems.json` or `shared/courses/*/problems.json`), or `own:<course slug>` with `problem_text` (see Own problems below). Unknown or a list: 422.
+- `problem_text`: only with an `own:<course>` id (see Own problems); ignored for a bank id.
 - `drawing_revision`: required non-negative integer. Echoed back untouched.
 - Image: PNG or JPEG, longest side at most 1024 px, strictly under 400 KB (409,600 bytes). Otherwise 422 `invalid_image` with reason `image_over_400_KB`, `image_longest_side_over_1024_px`, `image_not_png_or_jpeg`. The field is called `image_png_base64` but a JPEG is accepted. The server reads the real size from the bytes, not from `image_width`/`image_height`.
 - `lines`: up to 200. The model may only name a line index that appears here.
@@ -99,7 +112,7 @@ Request:
 }
 ```
 
-`drawing_revision` is optional here (echoed if sent). Audio over 2.5 MB: 422 `invalid_audio`. Response 200: `{transcript, answer_text, drawing_revision?, model, latency_ms, request_id}`. A silent recording returns `transcript: ""` and an "ask again" line without calling the language model.
+`problem_text` is sent only with an `own:<course>` id (see Own problems). `drawing_revision` is optional here (echoed if sent). Audio over 2.5 MB: 422 `invalid_audio`. Response 200: `{transcript, answer_text, drawing_revision?, model, latency_ms, request_id}`. A silent recording returns `transcript: ""` and an "ask again" line without calling the language model.
 
 ### `POST /api/speak`
 
@@ -122,7 +135,7 @@ Settings (Vercel env): `ELEVENLABS_API_KEY` (secret; without it every utterance 
 
 The iPad makes a WebRTC offer; this endpoint creates the GPT-Live session with the project key and hands back the answer. OpenAI documents no ephemeral client secret for Live, so the server relays the SDP offer and answer ([connection guide](https://developers.openai.com/api/docs/guides/voice-webrtc?api=live)). The key never reaches the app.
 
-Request: `{"session_id": "any string", "problem_id": "u3-04", "sdp": "<the offer, starts with v=0, at most 64 KB>"}`.
+Request: `{"session_id": "any string", "problem_id": "u3-04", "problem_text"?: "...", "sdp": "<the offer, starts with v=0, at most 64 KB>"}` (`problem_text` only with an `own:<course>` id, see Own problems).
 
 Response 200: `{session_id, sdp, model, voice, latency_ms, request_id}`. `session_id` is OpenAI's Live session id and `sdp` is the answer to apply as the remote description. The app then uses the data channel `oai-events` (create it before the offer; do not send `session.start`).
 
@@ -134,7 +147,7 @@ Errors: 401 token, 405 method, 400/413 body, 422 invalid request (`sdp` missing,
 
 GPT-Live cannot take images. When it delegates ("check my work"), the iPad captures the page and calls this endpoint over HTTPS; the report goes back to Live as `session.commentary.append`.
 
-Request: `{session_id, problem_id, drawing_revision?, image_png_base64, question, recent}`. `question` is what the student just said (1 to 800 characters, from Live's own transcript). `recent` is up to 8 turns `{role: "student"|"tutor", text (at most 400)}`. Image rules are the same as `/api/watch`.
+Request: `{session_id, problem_id, problem_text?, drawing_revision?, image_png_base64, question, recent}` (`problem_text` only with an `own:<course>` id, see Own problems). `question` is what the student just said (1 to 800 characters, from Live's own transcript). `recent` is up to 8 turns `{role: "student"|"tutor", text (at most 400)}`. Image rules are the same as `/api/watch`.
 
 Response 200: `{answer_text, drawing_revision?, model, latency_ms, request_id}`. The answer says what is written, whether the latest step is right, wrong or unfinished, and one nudge; never the final answer (`CONSULT_POLICY` in `lib/policy.ts`). It uses the ask model (`ASK_MODEL`) through the same `runAskModel` as `/api/ask`. Scripted mode returns a fixed report.
 
@@ -162,7 +175,8 @@ Provider and model are environment variables, set per role and per difficulty le
 Which row a problem uses is its **tier**: `standard` (the high school row, the cheap model) unless its course's `course.json` says
 `"tier": "advanced"` or the problem's own `level` is `advanced` (`levelOf` in `lib/problems.ts`). The bank's `college` level does not
 escalate: all 15 courses, calculus-1, linear-algebra and discrete-math included, are standard. The advanced model costs about ten times
-more per look, so a course should move only after handwriting results for it are measured. Every request logs `course` and `tier`. The
+more per look, so a course should move only after handwriting results for it are measured. Every request logs `course` and `tier`. An
+own problem (typed by the student) takes `OWN_PROBLEM_LEVEL` instead, currently advanced. The
 level picks which set of variables applies:
 
 | variable (high school) | default (openai) | default (google) | advanced: variable and default (openai) |
@@ -225,7 +239,7 @@ Off for everyone. Nothing is remembered about a code until the latest `consent_e
 
 ## Logging
 
-One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, `course` (the course slug, or `none`), `tier` (`standard` or `advanced`; watch, ask, consult), effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Neither logs the offer, the answer, the words or any key.
+One JSON line per request on stdout (Vercel runtime logs): `request_id, endpoint, method, provider, model, level, `course` (the course slug, or `none`), `tier` (`standard` or `advanced`; watch, ask, consult), effort (when set), latency_ms, model_ms, input_tokens, cached_input_tokens, output_tokens, reasoning_tokens, est_cost_usd, cost_basis, image_bytes, line_count, drawing_revision, history_in, history_used, action, line, status, outcome, reason` (a label such as `model_wait`, `malformed_output`, `line_not_in_page`, `hint_reveals_answer`, `unauthorized:bad_token`, `missing_key`). Successes are logged too. Never logged: images, audio, transcripts, hints, spoken text, reasons, tokens, keys (only sizes and counts). Every request that reaches the code check also logs `student` (the 8-character hash of the code, never the code), `db_queries` and `db_ms` (time waiting on the database), `allowance_state`, `used_seconds` and `cap_seconds`; a counted request adds `counted_kind`, `remaining_minutes` and `allowance_notice`. Outcomes include `unauthorized:unknown_code`, `unauthorized:malformed_code`, `code_disabled`, `hours_used_up`, `live_not_in_plan`, `database_unavailable:<db_label>`; failures to count are `meter_failed`. `/api/speak` logs `text_chars, purpose, provider, model, voice_id, audio_format, latency_ms, first_audio_ms` when the audio starts, then `stream_done` with `audio_bytes, total_ms, tts_chars_month` (or `stream_failed`, `stream_cancelled`), and `voice_fallback` (warning: `from`, `to`, `reason`) when ElevenLabs was skipped. `/api/live-session` logs `sdp_chars, answer_sdp_chars, live_session, voice, model, latency_ms`. `/api/consult` logs `image_bytes, question_chars, recent_turns, answer_chars`. Every model endpoint and `live-session` also logs `problem_kind` (`bank` or `own`), `course`, `tier` and, for an own problem, `problem_text_chars` (a count, never the text); a refused own problem logs outcome `unknown_course` or `invalid_request`. Neither logs the offer, the answer, the words or any key.
 
 ## Files
 

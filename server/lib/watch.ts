@@ -5,13 +5,15 @@ import { RequestCtx, readJson } from "./http.js";
 import { checkImage } from "./image.js";
 import { runWatchModel } from "./models.js";
 import { buildWatchPrompt, HistoryEntrySchema, LineSchema, MAX_HISTORY, MAX_LINES } from "./policy.js";
-import { findProblem, levelOf, tierOf } from "./problems.js";
+import { levelOf, problemFields, resolveProblem } from "./problems.js";
 import { afterLook } from "./record/runtime.js";
 import { usageFields } from "./usage.js";
 
 const WatchRequestSchema = z.object({
   session_id: z.string().max(100).optional(),
   problem_id: z.string().max(40),
+  // The typed statement of an own problem ("own:<course>"); required then, ignored for a bank id (problems.ts resolveProblem).
+  problem_text: z.string().optional(),
   drawing_revision: z.number().int().nonnegative(),
   image_png_base64: z.string().min(1),
   image_width: z.number().optional(),
@@ -42,9 +44,10 @@ export async function handleWatch(request: Request, deps: Deps = defaultDeps()):
   }
   ctx.note({ image_bytes: image.image.bytes });
 
-  const problem = findProblem(req.problem_id);
-  if (!problem) return ctx.fail(422, "unknown_problem", "problem_id is not in the bank", "unknown_problem");
-  ctx.note({ course: problem.course ?? "none", tier: tierOf(problem) });
+  const resolved = resolveProblem(req.problem_id, req.problem_text);
+  if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
+  const problem = resolved.problem;
+  ctx.note(problemFields(problem));
 
   // A valid look is student activity: ink was drawn, and the tutor is looking at it. This keeps the meter running.
   await meterActivity(ctx, opened, "look");

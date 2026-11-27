@@ -23,7 +23,9 @@ struct ProblemListView: View {
                 .navigationDestination(for: CourseRoute.self) { route in
                     switch route {
                     case .course(let course):
-                        CourseProblemsView(course: course, catalog: catalog)
+                        CourseProblemsView(course: course, catalog: catalog) { problem in
+                            path.append(.problem(course: course, problem: problem))
+                        }
                     case .problem(let course, let problem):
                         ProblemScreen(problem: problem, env: env, courseTitle: course.title)
                     }
@@ -135,10 +137,15 @@ private struct CourseRow: View {
 struct CourseProblemsView: View {
     let course: Course
     @ObservedObject var catalog: CourseCatalog
+    /// Opens the problem screen for a problem the student typed (the list owns the navigation path).
+    var onOwnProblem: (Problem) -> Void = { _ in }
     @EnvironmentObject private var env: AppEnvironment
     @EnvironmentObject private var account: StudentAccount
     @State private var problems: [Problem] = []
     @State private var notice: String?
+    @State private var showOwnProblemSheet = false
+    /// Set by Start inside the sheet; the page opens once the sheet has gone, so one push is not fighting a sheet that is closing.
+    @State private var pendingOwnProblem: Problem?
 
     var body: some View {
         List {
@@ -152,6 +159,12 @@ struct CourseProblemsView: View {
                     .font(.body.weight(.medium))
                     .accessibilityIdentifier("problemListBlocked")
             }
+            Button {
+                showOwnProblemSheet = true
+            } label: {
+                OwnProblemRow()
+            }
+            .accessibilityIdentifier("ownProblemRow")
             ForEach(problems) { problem in
                 NavigationLink(value: CourseRoute.problem(course: course, problem: problem)) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -172,6 +185,21 @@ struct CourseProblemsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .appToolbar()
         .onAppear(perform: load)
+        .sheet(isPresented: $showOwnProblemSheet, onDismiss: openPendingOwnProblem) {
+            OwnProblemSheet(courseTitle: course.title) { statement in
+                pendingOwnProblem = Problem.own(courseSlug: course.slug, text: statement)
+                env.log.record("own_problem_started", ["course": course.slug, "chars": statement.count])
+            }
+        }
+    }
+
+    private func openPendingOwnProblem() {
+        guard let problem = pendingOwnProblem else {
+            env.log.record("own_problem_cancelled", ["course": course.slug])
+            return
+        }
+        pendingOwnProblem = nil
+        onOwnProblem(problem)
     }
 
     private func load() {
@@ -182,5 +210,89 @@ struct CourseProblemsView: View {
         } catch {
             notice = TutorError.describe(error).student
         }
+    }
+}
+
+/// The first row of a course's list: type your own problem.
+private struct OwnProblemRow: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "square.and.pencil")
+                .font(.system(size: 22, weight: .medium))
+                .foregroundStyle(Color.accentColor)
+                .frame(width: 28)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("My own problem")
+                    .font(.system(size: 22, design: .serif))
+                Text("Type a problem from your homework and I'll check your work as you write.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+        .frame(minHeight: 44, alignment: .leading)
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// One text field for the statement of the student's own problem. Start stays off while nothing is typed; the field stops at the
+/// 500 characters the server accepts, and says how many are left.
+struct OwnProblemSheet: View {
+    let courseTitle: String
+    /// Called with the cleaned statement when Start is tapped, just before the sheet closes.
+    let onStart: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var typed = ""
+    @FocusState private var fieldFocused: Bool
+
+    private var statement: String? { OwnProblemText.cleaned(typed) }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Type the problem", text: $typed, axis: .vertical)
+                        .lineLimit(3...8)
+                        .focused($fieldFocused)
+                        .font(.system(size: 22))
+                        .accessibilityIdentifier("ownProblemField")
+                        .onChange(of: typed) { _, now in
+                            let capped = OwnProblemText.capped(now)
+                            if capped != now { typed = capped }
+                        }
+                } header: {
+                    Text(courseTitle)
+                } footer: {
+                    Text("\(typed.utf16.count) of \(OwnProblemText.maxLength) characters. There is no answer key for a problem you type, so the tutor works it out as you go and may miss things.")
+                        .accessibilityIdentifier("ownProblemCount")
+                }
+            }
+            .navigationTitle("My own problem")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                        .accessibilityIdentifier("ownProblemCancelButton")
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Start") {
+                        guard let statement else { return }
+                        onStart(statement)
+                        dismiss()
+                    }
+                    .disabled(statement == nil)
+                    .accessibilityIdentifier("ownProblemStartButton")
+                }
+            }
+        }
+        .onAppear { fieldFocused = true }
     }
 }

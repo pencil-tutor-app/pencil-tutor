@@ -9,9 +9,14 @@
 //     --models openai:gpt-6.1-sol,openai:gpt-6-luna,google:gemini-4-argon --roles watch,consult --reps 1
 //
 // Options: --models a,b (provider:model[:effort], effort none|low|medium|high)   --roles watch,consult
-//          --reps N   --run <name>   --pages <substring filter>   --concurrency N   --budget <usd, stop when the estimate passes it>
+//          --reps N   --run <name>   --pages <substring filter, or several separated by commas>   --concurrency N   --budget <usd, stop when the estimate passes it>
 //          --fixtures <subfolder of fixtures/>   (default: the BC Math 9 set; "courses" is the 14 new courses)
 //          --max-calls N   (hard cap on rows in the results file, counted across resumed runs)
+//          --no-reference   judge every page as an OWN problem: problem_id "own:<the problem's course>" and problem_text = the
+//                           fixture's prompt_plain, so the model gets no worked solution and no final answer (how the app
+//                           sends a problem the student typed). A manifest entry may carry its own  own_problem: {course, text}.
+//          --fixtures-dir <absolute folder>   a page set outside the repo (manifest.json plus the pictures, same shape as
+//                           fixtures/). Used for real iPad pages, which must not be copied into this public repo.
 // Results go to server/eval/results/<run>.jsonl (appended, so a rerun with the same --run resumes) and a table prints at the end.
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -31,7 +36,9 @@ import { loadRows, perMinute, summarize, table, type Page, type Row } from "./sc
 const HERE = new URL(".", import.meta.url).pathname;
 // --fixtures <subfolder> picks another page set inside fixtures/ (for example "courses", built by make_course_fixtures.py).
 const FIXTURE_SET = process.argv.includes("--fixtures") ? process.argv[process.argv.indexOf("--fixtures") + 1] : undefined;
-const FIXTURES = FIXTURE_SET ? `${HERE}fixtures/${FIXTURE_SET}/` : `${HERE}fixtures/`;
+const FIXTURES_DIR = process.argv.includes("--fixtures-dir") ? process.argv[process.argv.indexOf("--fixtures-dir") + 1] : undefined;
+const FIXTURES = FIXTURES_DIR ? `${FIXTURES_DIR.replace(/\/$/, "")}/` : FIXTURE_SET ? `${HERE}fixtures/${FIXTURE_SET}/` : `${HERE}fixtures/`;
+const NO_REFERENCE = process.argv.includes("--no-reference");
 // A student code held in an in-memory store (no database), with a cap far above any eval.
 const TOKEN = "K7MQ2XAB";
 const evalStudents = new MemoryStudentStore();
@@ -44,6 +51,7 @@ type Manifest = Page & {
   height: number;
   rows: string[];
   lines: { index: number; box: { x: number; y: number; w: number; h: number } }[];
+  own_problem?: { course: string; text: string };
 };
 
 function arg(name: string, fallback?: string): string | undefined {
@@ -58,6 +66,10 @@ export function parseSpec(text: string): Spec {
   return { provider, model, effort, label: text };
 }
 
+// Sets the candidate for BOTH levels. The handler reads WATCH_MODEL for high_school problems and WATCH_MODEL_ADVANCED for advanced
+// ones (config.ts roleConfig), and a problem can resolve to either (an own problem takes OWN_PROBLEM_LEVEL), so setting only the
+// unsuffixed names could silently run the default advanced model under the candidate's name. Every row records the model the
+// handler really used (row.model), and score.ts counts a row whose model differs from the candidate's name.
 function envFor(spec: Spec, role: "watch" | "consult"): Env {
   const stem = role === "watch" ? "WATCH" : "ASK";
   return {
@@ -66,7 +78,21 @@ function envFor(spec: Spec, role: "watch" | "consult"): Env {
     [`${stem}_PROVIDER`]: spec.provider,
     [`${stem}_MODEL`]: spec.model,
     [`${stem}_EFFORT`]: spec.effort,
+    [`${stem}_PROVIDER_ADVANCED`]: spec.provider,
+    [`${stem}_MODEL_ADVANCED`]: spec.model,
+    [`${stem}_EFFORT_ADVANCED`]: spec.effort,
   };
+}
+
+// What the page says about its problem on the wire: the bank id, or with --no-reference the own id and the typed statement.
+// A bank problem without a course is the original BC Math 9 set.
+function problemFor(page: Manifest): { problem_id: string; problem_text?: string } {
+  if (!NO_REFERENCE) return { problem_id: page.problem_id };
+  const bank = findProblem(page.problem_id);
+  const course = page.own_problem?.course ?? bank?.course ?? "bc-math-9";
+  const text = page.own_problem?.text ?? bank?.prompt_plain;
+  if (!text) throw new Error(`page ${page.id}: no statement for --no-reference (unknown problem and no own_problem)`);
+  return { problem_id: `own:${course}`, problem_text: text };
 }
 
 function request(path: string, body: unknown): Request {
@@ -125,7 +151,7 @@ async function runOne(spec: Spec, role: "watch" | "consult", page: Manifest, rep
     res = await handleWatch(
       request("/api/watch", {
         session_id: `eval-${rep}`,
-        problem_id: page.problem_id,
+        ...problemFor(page),
         drawing_revision: rep,
         image_png_base64: imageB64,
         image_width: page.width,
@@ -140,7 +166,7 @@ async function runOne(spec: Spec, role: "watch" | "consult", page: Manifest, rep
     res = await handleConsult(
       request("/api/consult", {
         session_id: `eval-${rep}`,
-        problem_id: page.problem_id,
+        ...problemFor(page),
         drawing_revision: rep,
         image_png_base64: imageB64,
         question: CONSULT_QUESTION,
@@ -158,6 +184,10 @@ async function runOne(spec: Spec, role: "watch" | "consult", page: Manifest, rep
     page: page.id,
     rep,
     status: res.status,
+    // The model and level the handler really used (the reply has the model; a failed call may only have it in the log line).
+    model: typeof body.model === "string" ? body.model : typeof log.model === "string" ? log.model : undefined,
+    level: typeof log.level === "string" ? log.level : undefined,
+    problem_kind: typeof log.problem_kind === "string" ? log.problem_kind : undefined,
     outcome: String(log.outcome ?? body.error ?? ""),
     reason: typeof log.reason === "string" ? log.reason : null,
     action: typeof body.action === "string" ? body.action : null,
@@ -215,7 +245,7 @@ async function main() {
   }
   if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not set (the consult judge needs it)");
 
-  const manifest = (JSON.parse(readFileSync(`${FIXTURES}manifest.json`, "utf8")) as Manifest[]).filter((p) => !filter || p.id.includes(filter));
+  const manifest = (JSON.parse(readFileSync(`${FIXTURES}manifest.json`, "utf8")) as Manifest[]).filter((p) => !filter || filter.split(",").some((f) => p.id.includes(f)));
   const pages = new Map<string, Page>(manifest.map((p) => [p.id, p]));
   mkdirSync(`${HERE}results`, { recursive: true });
   const resultsPath = `${HERE}results/${runName}.jsonl`;
@@ -229,7 +259,7 @@ async function main() {
     const key = `${spec.label}|${role}|${page.id}|${rep}`;
     if (!done.has(key)) jobs.push({ spec, role, page, rep, key });
   }
-  console.error(`run ${runName}: ${jobs.length} calls to make (${done.size} already saved), estimated spend so far $${spent.toFixed(3)}`);
+  console.error(`run ${runName}: ${jobs.length} calls to make (${done.size} already saved), estimated spend so far $${spent.toFixed(3)}${NO_REFERENCE ? ", no-reference (own problems)" : ""}`);
 
   // --max-calls is a hard cap on rows in the results file (every look, failed or not, is one row), counted across resumed runs.
   const maxCalls = Number(arg("max-calls", "0"));

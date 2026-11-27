@@ -44,6 +44,8 @@ struct WatchRequest: Codable, Equatable {
     /// Last 10 decisions only (plan amendment 5).
     var history: [HistoryWire]
     var clientTime: String
+    /// The typed statement, for the student's own problems only (`problem_id` is `own:<course>`). Left out of the JSON otherwise.
+    var problemText: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -54,6 +56,7 @@ struct WatchRequest: Codable, Equatable {
         case imageHeight = "image_height"
         case lines, history
         case clientTime = "client_time"
+        case problemText = "problem_text"
     }
 }
 
@@ -86,6 +89,8 @@ struct AskRequest: Codable, Equatable {
     var drawingRevision: Int
     var audioBase64: String
     var imagePngBase64: String
+    /// Own problems only, like `WatchRequest.problemText`.
+    var problemText: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -93,6 +98,7 @@ struct AskRequest: Codable, Equatable {
         case drawingRevision = "drawing_revision"
         case audioBase64 = "audio_base64"
         case imagePngBase64 = "image_png_base64"
+        case problemText = "problem_text"
     }
 }
 
@@ -140,6 +146,8 @@ struct ConsultRequest: Codable, Equatable {
     var imagePngBase64: String
     var question: String
     var recent: [ConsultTurnWire]
+    /// Own problems only, like `WatchRequest.problemText`.
+    var problemText: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -147,6 +155,7 @@ struct ConsultRequest: Codable, Equatable {
         case drawingRevision = "drawing_revision"
         case imagePngBase64 = "image_png_base64"
         case question, recent
+        case problemText = "problem_text"
     }
 }
 
@@ -172,11 +181,14 @@ struct LiveSessionRequest: Codable, Equatable {
     var sessionId: String
     var problemId: String
     var sdp: String
+    /// Own problems only, like `WatchRequest.problemText`.
+    var problemText: String? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
         case problemId = "problem_id"
         case sdp
+        case problemText = "problem_text"
     }
 }
 

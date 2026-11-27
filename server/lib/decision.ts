@@ -22,6 +22,13 @@ const wait = (label: string, reason: string): WatchResult => ({
 
 export const squash = (s: string) => s.toLowerCase().replace(/[−–]/g, "-").replace(/\s+/g, "");
 
+// True when the text contains the problem's final answer. An own problem has no final answer (empty string), and every string
+// "contains" the empty string, so without this guard every hint on an own problem would be dropped as a leak.
+export const revealsAnswer = (text: string, finalAnswer: string): boolean => {
+  const answer = squash(finalAnswer);
+  return answer !== "" && squash(text).includes(answer);
+};
+
 // Validates what the model said. Anything unusable becomes a wait with a labelled reason; this never throws.
 export function finalizeDecision(raw: unknown, lines: PageLine[], problem: Problem): WatchResult {
   const parsed = WatchDecisionSchema.safeParse(raw);
@@ -36,7 +43,7 @@ export function finalizeDecision(raw: unknown, lines: PageLine[], problem: Probl
   const spoken = d.hint_spoken?.trim();
   const written = d.hint_written?.trim();
   if (!spoken || !written) return wait("hint_missing", "The model interrupted without a hint, so waiting.");
-  if (squash(`${spoken} ${written}`).includes(squash(problem.final_answer))) {
+  if (revealsAnswer(`${spoken} ${written}`, problem.final_answer)) {
     return wait("hint_reveals_answer", "The hint contained the final answer, so waiting.");
   }
   return { action: "interrupt", line: d.line, reason: d.reason, hint_spoken: spoken, hint_written: written, label: "model_interrupt" };

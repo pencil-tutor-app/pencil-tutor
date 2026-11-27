@@ -91,6 +91,17 @@ enum LaunchOptions {
         #endif
     }
 
+    /// Every sound plays at volume 0: `--silent`, or any test run. On 2026-11-28 session unit tests spoke hints through a simulator,
+    /// which plays on the Mac's speakers, at night. Unlike `silent`, this does not skip the live voice, so live-voice unit tests
+    /// still exercise it (they use a fake transport and never open audio). XCTest sets XCTestConfigurationFilePath in the test host.
+    static var mutesSound: Bool {
+        #if DEBUG
+        return silent || ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        #else
+        return false
+        #endif
+    }
+
     /// The small status line UI tests read. Only visible in scripted runs.
     static var showTestStatus: Bool { scriptedClient }
 }

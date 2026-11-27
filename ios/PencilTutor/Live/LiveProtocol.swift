@@ -131,6 +131,18 @@ enum LiveContext {
 
     static let checkLooksGood = "Looks good so far. Keep going."
 
+    /// The student tapped "Not a mistake" on the circle round `line`. Quiet context, never to be said. The hint's own words are left
+    /// out on purpose: the model must not have them handed to it again.
+    static func notAMistake(line: Int) -> String {
+        "The student marked line \(line) as not a mistake: the page watcher's circle there was wrong and the student dismissed it. Do not repeat or paraphrase that hint, do not say line \(line) is wrong, and if you were in the middle of saying it, stop. If the student asks about that line, ask the page reader to look again."
+    }
+
+    /// Added to a page report that was being read when the student dismissed a circle, so the report cannot bring the dismissed hint back.
+    static func disputedNote(lines: [Int]) -> String {
+        let named = lines.count == 1 ? "line \(lines[0])" : "lines " + lines.map(String.init).joined(separator: ", ")
+        return " Note: while the page was being read, the student marked \(named) as not a mistake. Do not tell them \(named) is wrong."
+    }
+
     /// What GPT-Live is told to say when the page reader could not answer a delegation.
     static func consultFailed(reason: String) -> String {
         "You could not look at the student's page just now (\(reason)). Tell the student briefly that you could not look right then, and ask them to try again in a moment."

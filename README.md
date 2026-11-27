@@ -10,7 +10,7 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 |---|---|
 | `ios/` | the iPad app. `project.yml` is the XcodeGen spec; there is no hand-written `.xcodeproj` |
 | `ios/PencilTutor/` | app source: `Core` (models, line grouping, look policy, log), `Net` (client behind a protocol), `Drawing` (canvas, snapshot), `Audio` (fallback speech and recorder), `Live` (the GPT-Live session: protocol, transcript, WebRTC transport, controller), `Session`, `Views` |
-| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and 2D region, page size and re-anchor, zoom-aware scroll-to-mark, tool rail choices, finger-tap gesture rules and Pencil rules |
+| `ios/PencilTutorTests/` | unit tests: line grouping (fractions, crossed-out work, side calculation), look policy, stale responses, wire format, snapshot size and 2D region, page size and re-anchor, zoom-aware scroll-to-mark, tool rail choices, finger-tap gesture rules and Pencil rules, the student's own problem and `problem_text`, "Not a mistake" (stroke identity, suppression, voice take-back, overlay hit testing) |
 | `ios/PencilTutorUITests/` | simulator UI tests against the in-process scripted tutor; they attach the screenshots |
 | `ios/Config/` | `Secrets.example.xcconfig` (committed), `Secrets.xcconfig` (git-ignored, yours) |
 | `server/` | Vercel functions: `/api/watch`, `/api/ask`, `/api/speak`, `/api/consult`, `/api/live-session`, `/api/health` |
@@ -24,9 +24,13 @@ Plan: `docs/plan.md` (the "Amendments after plan review" section wins over the s
 - One request in flight at a time. A response for an older drawing revision is discarded (and logged) unless the line it names is unchanged.
 - Line grouping (vertical overlap, stacked fractions as one line, crossed-out strokes stay in their line, far-right side calculations on their own line) is a **hypothesis**, unit tested but not yet checked against real handwriting.
 
+## My own problem and "Not a mistake"
+
+The first row of every course's list is "My own problem": the student types a problem (1 to 500 characters), and the page opens with it as the problem card. Requests for it carry the typed text as `problem_text`; bank problems never do. Each hint callout has a 44 pt "Not a mistake" button. Tapping it takes the circle off, remembers that ink by its strokes (not by line number, so it holds after more looks, a line written above, or a page re-anchor), stops that hint being said, and the tutor does not circle the same ink again until the student really edits it. Details, the voice cases and what is not verified: `docs/ipad-own-problem-and-dispute.md`.
+
 ## Session log
 
-Every launch writes `session-*.jsonl` in the app's Documents folder: looks, line counts, decisions, latencies, discards and errors. Export it from the share button on the problem list. It never contains the access token, page images or audio.
+Every launch writes `session-*.jsonl` in the app's Documents folder: looks, line counts, decisions, latencies, discards and errors (and, for own problems and dismissals, `own_problem_started`, `mark_disputed`, `interrupt_suppressed_disputed`, `disputes_ended`, `hint_taken_back`: ids, counts and labels only). Export it from the share button on the problem list. It never contains the access token, page images or audio.
 
 ## CI
 

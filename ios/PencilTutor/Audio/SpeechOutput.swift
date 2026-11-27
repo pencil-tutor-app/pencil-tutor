@@ -89,7 +89,7 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
         self.session = URLSession(configuration: configuration)
         super.init()
         synthesizer.delegate = self
-        if LaunchOptions.silent {
+        if LaunchOptions.mutesSound {
             log.record("voice_muted_for_test", ["why": "--silent launch argument", "paths": "server_audio,device_voice,live_skipped"])
         }
     }
@@ -116,6 +116,20 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
     func stop() {
         stop(reason: "stopped by app")
     }
+
+    /// Stops what is being said (or fetched, or queued behind the request) only if it has this purpose. A hint the student
+    /// dismissed must not go on talking, but an answer or an allowance notice that happens to be playing must. True if it stopped.
+    @MainActor
+    @discardableResult
+    func stopIfSpeaking(purpose: String, reason: String) -> Bool {
+        guard active?.purpose == purpose else { return false }
+        cancelActive(reason: reason)
+        return true
+    }
+
+    /// The purpose of what is being said right now, nil when quiet. For the log and tests.
+    @MainActor
+    var speakingPurpose: String? { active?.purpose }
 
     // MARK: - Starting and stopping
 
@@ -370,7 +384,7 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
         let speech = AVSpeechUtterance(string: utterance.fallbackText)
         speech.voice = bestDeviceVoice()
         speech.rate = AVSpeechUtteranceDefaultSpeechRate * 0.95
-        if LaunchOptions.silent { speech.volume = 0 }      // `--silent`: spoken to nobody
+        if LaunchOptions.mutesSound { speech.volume = 0 }      // `--silent`: spoken to nobody
         playback = Playback(purpose: utterance.purpose, chars: utterance.chars, source: "device", bytes: 0,
                             requestMs: requestMs, firstAudioMs: nil, provider: nil, fallbackHeader: nil, startedAt: Date())
         active = (utterance.purpose, utterance.chars)
@@ -417,7 +431,7 @@ final class SpeechOutput: NSObject, AVSpeechSynthesizerDelegate {
 
     @MainActor
     private func activateAudioSession(purpose: String) {
-        if LaunchOptions.silent { return }       // `--silent`: do not even duck whatever else the iPad is playing
+        if LaunchOptions.mutesSound { return }       // `--silent`: do not even duck whatever else the iPad is playing
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
