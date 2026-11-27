@@ -295,7 +295,7 @@ async function lunaGeneration() {
     const cfg = roleConfig("ask", ENV, "high_school");
     const model = deps.models.language(cfg, ENV.OPENAI_API_KEY as string);
     const e = await runStructured({ model, cfg, system: explainSystem(course), prompt: buildExplainPrompt(m.concept), schema: ExplainOutputSchema });
-    const p = await runStructured({ model, cfg, system: practiceSystem(course), prompt: buildPracticePrompt({ concept: m.concept, title: m.lesson.title, steps: m.lesson.steps, example: m.lesson.example }), schema: PracticeOutputSchema });
+    const p = await runStructured({ model, cfg, system: practiceSystem(course), prompt: buildPracticePrompt({ concept: m.concept, lessonText: [m.lesson.title, ...m.lesson.steps].join("\n"), example: m.lesson.example }), schema: PracticeOutputSchema });
     for (const [step, r] of [["luna:explain", e], ["luna:practice_generation", p]] as const) {
       const row: Row = { step: `${step}:${m.course}`, kind: r.kind, ...("usage" in r ? { ...r.usage } : {}) };
       rows.push(row);
