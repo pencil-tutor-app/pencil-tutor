@@ -87,7 +87,11 @@ final class OwnProblemUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         let start = element(app, "ownProblemStartButton")
         XCTAssertTrue(start.exists)
-        XCTAssertFalse(start.isEnabled, "Start is disabled while the field is empty")
+        // Behaviour, not the isEnabled flag: on the iPadOS 26.5 simulator XCUITest reports a disabled toolbar button as enabled
+        // (run 46057345095). Tapping Start with nothing typed must keep the sheet up and open no page.
+        start.tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 2), "Start with an empty field leaves the sheet open")
+        XCTAssertFalse(element(app, "drawingCanvas").exists, "and opens no page")
         field.tap()
         field.typeText("7x - 4 = 3x + 16")
         XCTAssertTrue(start.isEnabled, "Start turns on once there is a problem")
