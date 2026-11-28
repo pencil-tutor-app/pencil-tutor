@@ -133,6 +133,8 @@ function unusable(ctx: RequestCtx, r: Exclude<StructuredResult<unknown>, { kind:
 export type Verdict = "agree" | "disagree" | "not_single" | "wrong_step" | "malformed" | "same_as_example" | "no_example" | "error";
 
 type CompareFlags = z.infer<typeof ComparerOutputSchema>;
+// Show me how's acceptance rule (decision 6 of docs/show-me-plan.md): the answers are equivalent and no step is wrong, whatever single_answer says.
+export const solveAccepts = (flags: CompareFlags | undefined): boolean => flags !== undefined && flags.equivalent && flags.first_wrong_step === null;
 // `flags` is the comparer's own answer, kept whole so solve can accept an answer set with several answers (not_single) but never a wrong step.
 type Checked = { verdict: Verdict; flags?: CompareFlags; solve?: UsageReport; compare?: UsageReport; failure?: ModelFailure };
 
@@ -473,8 +475,7 @@ async function solve(ctx: RequestCtx, deps: Deps, opened: GateOpen, course: Cour
   });
   if (checked.failure) return failModel(ctx, checked.failure);
 
-  const accepted = checked.flags !== undefined && checked.flags.equivalent && checked.flags.first_wrong_step === null;
-  if (!accepted) {
+  if (!solveAccepts(checked.flags)) {
     logEvent(ctx, "solve_not_checked", { checker: checked.verdict });
     return respond(null, "not_checked", picked.cfg.model, "solve_not_checked");
   }

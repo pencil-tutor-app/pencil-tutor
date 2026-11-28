@@ -818,6 +818,22 @@ describe("POST /api/teach: solve (Show me how)", () => {
     assert.deepEqual([failed.status, failed.json.solution], [502, undefined]);
   });
 
+  it("an answer that asks several things may run to 200 characters, and 201 is teach_too_long", async () => {
+    const long = "b".repeat(200);
+    const ok = await reply(await run(solveBody(), routed({ ...agree, solve: j({ ...OWN_SOLUTION, final_answer: long }) }).models));
+    assert.deepEqual([ok.status, (ok.json.solution as { final_answer: string }).final_answer.length], [200, 200]);
+    const over = await reply(await run(solveBody(), routed({ ...agree, solve: j({ ...OWN_SOLUTION, final_answer: long + "x" }) }).models));
+    assert.deepEqual([over.status, over.json.error], [502, "teach_too_long"]);
+  });
+
+  it("the solve prompt tells the writer to return nothing for a problem with no equation, so it is not_checked and never a request for input", async () => {
+    const { models, calls } = routed({ ...agree, solve: j({ steps: [], final_answer: "" }) });
+    const r = await reply(await run(solveBody({ problem_text: "Solve for x." }), models));
+    assert.deepEqual([r.status, r.json.solution, r.json.reason], [200, null, "not_checked"]);
+    assert.match(calls.find((c) => c.role === "solve")!.system, /missing what is needed to solve it/);
+    assert.equal(calls.filter((c) => c.role !== "solve").length, 0, "nothing to check, so no check was paid for");
+  });
+
   it("a step over 200 characters is teach_too_long (502), never trimmed", async () => {
     const { models } = routed({ ...agree, solve: j({ steps: ["x".repeat(201)], final_answer: "x = 4" }) });
     const r = await reply(await run(solveBody(), models));
