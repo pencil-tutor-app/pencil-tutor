@@ -13,12 +13,12 @@ import { findProblem, levelOf, resolveProblem, type Problem } from "../lib/probl
 import { acceptReword } from "../lib/record/reword.js";
 import { openReference, sealKeyFor, sealReference, SEAL_TTL_MS } from "../lib/seal.js";
 import { ANSWER_WITHHELD_TEXT, guardSpokenAnswer, revealsAnswerSpoken, spokenForm } from "../lib/spoken.js";
-import { handleTeach, SCRIPTED_FOLLOWUP_ANSWER } from "../lib/teach.js";
+import { handleTeach, SCRIPTED_FOLLOWUP_ANSWER, SCRIPTED_SOLUTION } from "../lib/teach.js";
 import { MESSAGE_BEYOND_COURSE, MESSAGE_NOT_MATH, MESSAGE_OTHER_COURSE } from "../lib/teach-policy.js";
 import { resolveRequestProblem } from "../lib/teach-ref.js";
 import { RequestCtx } from "../lib/http.js";
 import { handleWatch } from "../lib/watch.js";
-import { askBody, captureLogs, deps, FIXED_NOW, fakeModels, liveEnv, makePng, post, reply, TEST_MONTH, testStore, watchBody } from "./helpers.js";
+import { askBody, captureLogs, deps, FIXED_NOW, fakeModels, liveEnv, makePng, post, reply, TEST_MONTH, TOKEN, testStore, watchBody } from "./helpers.js";
 
 let logs: ReturnType<typeof captureLogs>;
 beforeEach(() => {
@@ -45,6 +45,7 @@ function routed(answers: Partial<Record<string, string | (() => string)>>) {
     system.includes("You are a careful mathematician") ? "solver"
     : system.includes("You check a worked solution") ? "comparer"
     : system.includes("You write one practice problem") ? "practice"
+    : system.includes("You write the full worked solution") ? "solve"
     : system.includes("answering a follow-up question") ? "followup"
     : system.includes("asked to learn a concept") ? "explain"
     : system.includes("page reader behind a voice math tutor") ? "consult"
@@ -400,7 +401,8 @@ describe("live-session on a practice problem", () => {
     for (const secret of [ANSWER, "2x = 8", "2x = 11 - 3", "Reference worked solution"]) assert.ok(!text.includes(secret), secret);
     assert.match(LIVE_TEACH_NOTE, /Never say its final answer/);
     assert.match(LIVE_TEACH_NOTE, /in digits or in words/);
-    assert.match(LIVE_TEACH_NOTE, /Until the page reader tells you/);
+    assert.match(LIVE_TEACH_NOTE, /Until a look at the page shows/);
+    assert.match(LIVE_TEACH_NOTE, /worked solution is on their screen/);
     assert.deepEqual([lastLog().problem_kind, lastLog().reference], ["teach", "accepted"]);
     assert.ok(!buildLiveInstructions(teachProblem()).includes(ANSWER));
   });
@@ -731,6 +733,111 @@ describe("POST /api/teach: practice and the two-call check", () => {
     );
     assert.equal(watch.status, 200);
     assert.equal(lastLog().reference, "accepted");
+  });
+});
+
+describe("POST /api/teach: solve (Show me how)", () => {
+  const solveBody = (overrides: Record<string, unknown> = {}) => ({ action: "solve", session_id: "s1", course: COURSE, problem_id: `own:${COURSE}`, problem_text: STATEMENT, ...overrides });
+  const OWN_SOLUTION = { steps: ["Subtract 3 from both sides: 2x = 8", "Divide both sides by 2: x = 4"], final_answer: "x = 4" };
+  const agree = { solve: j(OWN_SOLUTION), solver: SOLVED, comparer: AGREE };
+  const comparer = (equivalent: boolean, single_answer: boolean, first_wrong_step: number | null) => j({ equivalent, single_answer, first_wrong_step });
+  const noModel = () => deps(env());
+
+  it("a bank problem returns its stored worked solution and answer, every step, with no model call", async () => {
+    const bank = findProblem("la-02")!;
+    assert.ok(bank.worked_solution.length > 6, "la-02 has more steps than ExampleSchema allows");
+    const r = await reply(await handleTeach(post("/api/teach", solveBody({ course: "linear-algebra", problem_id: "la-02", problem_text: undefined })), noModel()));
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json.solution, { steps: bank.worked_solution, final_answer: bank.final_answer });
+    assert.deepEqual([r.json.reason, r.json.model], [null, "stored"]);
+    assert.deepEqual([lastLog().kind, lastLog().problem_kind, lastLog().reason, lastLog().steps], ["bank", "bank", "solution_bank", bank.worked_solution.length]);
+  });
+
+  it("a practice problem returns the sealed reference's steps and answer with no model call; an expired or damaged reference is 422 practice_expired", async () => {
+    const r = await reply(await handleTeach(post("/api/teach", solveBody({ problem_ref: sealed() })), noModel()));
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json.solution, { steps: STEPS, final_answer: ANSWER });
+    assert.deepEqual([lastLog().kind, lastLog().reference], ["practice", "accepted"]);
+    const old = sealed(STATEMENT, COURSE, new Date(FIXED_NOW.getTime() - SEAL_TTL_MS - 5000));
+    for (const ref of [old, "junk"]) {
+      const bad = await reply(await handleTeach(post("/api/teach", solveBody({ problem_ref: ref })), noModel()));
+      assert.deepEqual([bad.status, bad.json.error, bad.json.solution], [422, "practice_expired", undefined]);
+    }
+  });
+
+  it("an own problem: generated by the advanced model, checked by the blind solver and the comparer, then returned; the check never sees the generator's steps in call 1", async () => {
+    const { models, calls } = routed(agree);
+    const r = await reply(await run(solveBody(), models));
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json.solution, OWN_SOLUTION);
+    assert.deepEqual([r.json.reason, r.json.model], [null, "gpt-6.1-sol"]);
+    assert.deepEqual(calls.map((c) => c.role).sort(), ["comparer", "solve", "solver"]);
+    assert.equal(calls.find((c) => c.role === "solver")!.user, `Problem: ${STATEMENT}`);
+    assert.match(calls.find((c) => c.role === "comparer")!.user, /1\. Subtract 3 from both sides/);
+    const entry = lastLog();
+    assert.deepEqual([entry.kind, entry.checker, entry.reason, entry.checker_equivalent, entry.checker_single_answer, entry.checker_wrong_step], ["own", "agree", "solution_checked", true, true, false]);
+    assert.ok(typeof entry.est_cost_usd === "number" && entry.est_cost_usd > 0);
+    const text = logs.raw.join("\n");
+    for (const secret of [STATEMENT, "Subtract 3", "x = 4"]) assert.ok(!text.includes(secret), secret);
+  });
+
+  it("disagreement is 200 solution null, not_checked, with one event and no regeneration", async () => {
+    const { models, calls } = routed({ ...agree, comparer: comparer(false, true, null) });
+    const r = await reply(await run(solveBody(), models));
+    assert.deepEqual([r.status, r.json.solution, r.json.reason], [200, null, "not_checked"]);
+    assert.equal(calls.filter((c) => c.role === "solve").length, 1);
+    assert.equal(eventLogs("solve_not_checked").length, 1);
+    assert.deepEqual([lastLog().checker, lastLog().reason], ["disagree", "solve_not_checked"]);
+  });
+
+  it("an answer set that is not single (several answers, or none) is accepted when no step is wrong", async () => {
+    const { models } = routed({ solve: j({ steps: ["Subtract 3: 2x = 8", "x = 4 or x = -4"], final_answer: "x = 4 or x = -4" }), solver: j({ final_answer: "x = 4 or x = -4" }), comparer: comparer(true, false, null) });
+    const r = await reply(await run(solveBody({ problem_text: "x^2 = 16" }), models));
+    assert.equal(r.status, 200);
+    assert.equal((r.json.solution as { final_answer: string }).final_answer, "x = 4 or x = -4");
+    assert.deepEqual([lastLog().checker, lastLog().checker_single_answer, lastLog().reason], ["not_single", false, "solution_checked"]);
+  });
+
+  it("several answers combined with a wrong step is rejected: the flags are kept, not collapsed into not_single", async () => {
+    const { models } = routed({ ...agree, comparer: comparer(true, false, 2) });
+    const r = await reply(await run(solveBody(), models));
+    assert.deepEqual([r.status, r.json.solution, r.json.reason], [200, null, "not_checked"]);
+    assert.deepEqual([lastLog().checker, lastLog().checker_wrong_step], ["not_single", true]);
+    const single = await reply(await run(solveBody(), routed({ ...agree, comparer: comparer(true, true, 1) }).models));
+    assert.deepEqual([single.json.solution, single.json.reason], [null, "not_checked"]);
+  });
+
+  it("a closing full stop on the answer is dropped, an empty step list is not_checked, and a provider failure is a failed request, not a rejection", async () => {
+    const dotted = await reply(await run(solveBody(), routed({ ...agree, solve: j({ ...OWN_SOLUTION, final_answer: "x = 4." }) }).models));
+    assert.equal((dotted.json.solution as { final_answer: string }).final_answer, "x = 4");
+    const empty = await reply(await run(solveBody(), routed({ ...agree, solve: j({ steps: [], final_answer: "x = 4" }) }).models));
+    assert.deepEqual([empty.status, empty.json.solution, empty.json.reason], [200, null, "not_checked"]);
+    assert.equal(lastLog().checker, "malformed");
+    const { models } = routed({ ...agree, solver: () => { throw new Error("provider down"); } });
+    const failed = await reply(await run(solveBody(), models));
+    assert.deepEqual([failed.status, failed.json.solution], [502, undefined]);
+  });
+
+  it("a step over 200 characters is teach_too_long (502), never trimmed", async () => {
+    const { models } = routed({ ...agree, solve: j({ steps: ["x".repeat(201)], final_answer: "x = 4" }) });
+    const r = await reply(await run(solveBody(), models));
+    assert.deepEqual([r.status, r.json.error], [502, "teach_too_long"]);
+    assert.equal(eventLogs("teach_too_long").length, 1);
+  });
+
+  it("scripted mode answers a typed problem from the script with no key, and a bank problem from the bank", async () => {
+    const scripted = { APP_ACCESS_TOKEN: TOKEN, TUTOR_SCRIPTED: "1" };
+    const own = await reply(await handleTeach(post("/api/teach", solveBody()), deps(scripted)));
+    assert.deepEqual([own.status, own.json.solution, own.json.model], [200, SCRIPTED_SOLUTION, "scripted"]);
+    const bank = await reply(await handleTeach(post("/api/teach", solveBody({ course: "linear-algebra", problem_id: "la-04", problem_text: undefined })), deps(scripted)));
+    assert.equal((bank.json.solution as { final_answer: string }).final_answer, findProblem("la-04")!.final_answer);
+  });
+
+  it("rejects a missing problem id, an unknown problem and an own problem with no text with 422", async () => {
+    for (const overrides of [{ problem_id: undefined }, { problem_id: "nope" }, { problem_text: undefined }, { problem_text: "x".repeat(501) }]) {
+      const r = await reply(await handleTeach(post("/api/teach", solveBody(overrides)), noModel()));
+      assert.equal(r.status, 422, JSON.stringify(overrides).slice(0, 40));
+    }
   });
 });
 
