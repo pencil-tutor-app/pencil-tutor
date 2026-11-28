@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { handleHealth } from "../lib/health.js";
 import { ALLOWED_CLIENT_EVENTS, handleLiveSession, type LiveCreateResult, type LiveGateway, type LiveSessionConfig } from "../lib/live.js";
+import { LIVE_OWN_PROBLEM_NOTE, LIVE_TEACH_NOTE } from "../lib/policy.js";
 import { captureLogs, deps, liveEnv, post, reply, testStore, TOKEN } from "./helpers.js";
 
 let logs: ReturnType<typeof captureLogs>;
@@ -120,6 +121,22 @@ describe("live-session creates the session", () => {
     assert.ok(instructions.includes(problem.prompt_plain));
     assert.ok(!instructions.includes(problem.final_answer), "the final answer must not reach the voice model");
     for (const step of problem.worked_solution) assert.ok(!instructions.includes(step), `solution step leaked: ${step}`);
+  });
+
+  it("the voice never hears of a page reader or a watcher, says things plainly first, does not read the page back, and routes 'no idea' to a look", async () => {
+    const { live, calls } = fakeLive();
+    await handleLiveSession(post("/api/live-session", body()), withLive(liveEnv(), live));
+    const instructions = calls[0]!.session.instructions;
+    assert.match(instructions, /You can look at their page when you need to/);
+    assert.match(instructions, /Never mention a page reader, a watcher, a helper or anyone else/);
+    assert.match(instructions, /Say the idea in everyday words first; give the maths term once, after\./);
+    assert.match(instructions, /Do not read back what is on the page unless the student asks or it matters for the point/);
+    assert.match(instructions, /verdict plus one next step/);
+    assert.match(instructions, /no idea where to start, ask you to show them how, or ask for the solution/);
+    assert.match(instructions, /worked solution is on their screen, walk them through it/);
+    for (const banned of [/page reader can look/i, /ask the page reader/i, /the page watcher/i, /a watcher can/i]) assert.doesNotMatch(instructions, banned);
+    const everyNote = [LIVE_OWN_PROBLEM_NOTE, LIVE_TEACH_NOTE].join("\n");
+    assert.doesNotMatch(everyNote, /page reader|watcher/i);
   });
 
   it("answers 502 or 504 with a label and no provider message when OpenAI fails", async () => {

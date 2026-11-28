@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { configForLevel, defaultDeps, gate, issueReason, meterActivity, type Deps } from "./gate.js";
 import { RequestCtx, readJson } from "./http.js";
+import { logLine } from "./log.js";
 import { checkImage } from "./image.js";
 import { runAskModel } from "./models.js";
-import { buildConsultPrompt, CONSULT_POLICY, MAX_TURNS, TurnSchema } from "./policy.js";
+import { buildConsultPrompt, consultSystem, MAX_TURNS, SHOW_ME_MARKER, TurnSchema } from "./policy.js";
 import { levelOf, problemFields } from "./problems.js";
 import { afterQuestion } from "./record/runtime.js";
 import { guardSpokenAnswer } from "./spoken.js";
@@ -22,6 +23,8 @@ const ConsultRequestSchema = z.object({
   problem_ref: z.string().max(6000).optional(),
   // Whether the student has finished a line of their own work on a practice problem. Missing counts as false.
   attempted: z.boolean().optional(),
+  // True only from an app that can open the Show me how panel. Without it the answer is always words, as before (decision 7 of the plan).
+  show_me_ok: z.boolean().optional(),
   drawing_revision: z.number().int().nonnegative().optional(),
   image_png_base64: z.string().min(1),
   // What the student just said, from the Live session's own transcript (no audio crosses this endpoint).
@@ -78,11 +81,17 @@ export async function handleConsult(request: Request, deps: Deps = defaultDeps()
     cfg,
     promptText: buildConsultPrompt({ problem, question: req.question, recent: req.recent, attempted: req.attempted }),
     image: image.image,
-    system: CONSULT_POLICY,
+    system: consultSystem(req.show_me_ok === true),
   });
   if (answered.kind === "failed") return ctx.fail(answered.status, answered.error, answered.label, `${answered.error}:${answered.label}`);
   ctx.note(usageFields(answered.usage));
   if (!answered.text) return done(NO_ANSWER_TEXT, cfg.model, "empty_answer");
+  // The one answer that is not words: the student asked to be shown. Checked before the answer guard (there is no text to guard).
+  if (req.show_me_ok === true && answered.text.trim() === SHOW_ME_MARKER) {
+    ctx.note({ show_me: true, answer_chars: 0 });
+    logLine("info", { request_id: ctx.id, endpoint: ctx.endpoint, event: "consult_show_me", problem_kind: problem.own ? "own" : problem.teach ? "teach" : "bank" });
+    return ctx.respond(200, { answer_text: "", show_me: true, ...echo, model: cfg.model, latency_ms: Date.now() - ctx.startedAt }, "ok", "show_me");
+  }
   const guarded = guardSpokenAnswer(problem, answered.text);
   if (guarded.withheld) {
     ctx.note({ answer_withheld: true });
