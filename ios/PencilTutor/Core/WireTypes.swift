@@ -160,6 +160,9 @@ struct ConsultRequest: Codable, Equatable {
     /// Teach-mode practice problems only, like `AskRequest.problemRef` and `AskRequest.attempted`.
     var problemRef: String? = nil
     var attempted: Bool? = nil
+    /// True when this app can open the Show me how panel: only then may the page reader answer `SHOW_ME` (an older app never sends it,
+    /// so it never gets an empty answer).
+    var showMeOk: Bool? = nil
 
     private enum CodingKeys: String, CodingKey {
         case sessionId = "session_id"
@@ -170,6 +173,7 @@ struct ConsultRequest: Codable, Equatable {
         case problemText = "problem_text"
         case problemRef = "problem_ref"
         case attempted
+        case showMeOk = "show_me_ok"
     }
 }
 
@@ -180,9 +184,12 @@ struct ConsultResponse: Codable, Equatable {
     var model: String?
     var latencyMs: Int?
     var allowance: Allowance? = nil
+    /// True when the student asked to be shown how (`answerText` is then empty). Missing means no.
+    var showMe: Bool? = nil
 
     private enum CodingKeys: String, CodingKey {
         case model, allowance
+        case showMe = "show_me"
         case answerText = "answer_text"
         case drawingRevision = "drawing_revision"
         case requestId = "request_id"

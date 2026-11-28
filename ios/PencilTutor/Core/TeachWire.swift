@@ -163,6 +163,54 @@ struct TeachPracticeRequest: Codable, Equatable {
     }
 }
 
+/// "Show me how" (action `solve`): the full worked solution of the problem on the page. A bank problem and a practice problem are
+/// answered from what the server stores; a problem the student typed is solved and checked first (docs/show-me-plan.md).
+struct TeachSolveRequest: Codable, Equatable {
+    var action = "solve"
+    var sessionId: String
+    var course: String
+    var problemId: String
+    /// The typed statement of an own problem, like `WatchRequest.problemText`.
+    var problemText: String? = nil
+    /// The sealed reference of a practice problem.
+    var problemRef: String? = nil
+
+    private enum CodingKeys: String, CodingKey {
+        case action, course
+        case sessionId = "session_id"
+        case problemId = "problem_id"
+        case problemText = "problem_text"
+        case problemRef = "problem_ref"
+    }
+}
+
+/// The steps (one line each, any number of them) and the final answer, written in the notation `MathMarkup` reads.
+struct TeachSolution: Codable, Equatable {
+    var steps: [String]
+    var finalAnswer: String
+
+    private enum CodingKeys: String, CodingKey {
+        case steps
+        case finalAnswer = "final_answer"
+    }
+}
+
+struct TeachSolveResponse: Codable, Equatable {
+    /// Nil with `reason: "not_checked"` when the check did not accept what was written. The app never shows an unchecked solution.
+    var solution: TeachSolution?
+    var reason: String?
+    var requestId: String?
+    var model: String?
+    var latencyMs: Int?
+    var allowance: Allowance? = nil
+
+    private enum CodingKeys: String, CodingKey {
+        case solution, reason, model, allowance
+        case requestId = "request_id"
+        case latencyMs = "latency_ms"
+    }
+}
+
 /// The practice problem: the statement only. Its solution and answer stay on the server inside the sealed reference.
 struct TeachPracticeProblem: Codable, Equatable {
     var id: String?

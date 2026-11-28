@@ -73,6 +73,10 @@ final class HTTPTutorClient: TutorClient {
         try await post(path: "api/teach", body: request, timeout: 45)
     }
 
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
+        try await post(path: "api/teach", body: request, timeout: 70)
+    }
+
     func memoryStatus() async throws -> MemoryStatusResponse {
         try await send(path: "api/memory", method: "GET", payload: nil, timeout: 15)
     }
