@@ -31,7 +31,7 @@ struct ProblemListView: View {
                             path.append(.lesson(course: course, concept: concept))
                         })
                     case .problem(let course, let problem):
-                        ProblemScreen(problem: problem, env: env, courseTitle: course.title)
+                        ProblemScreen(problem: problem, env: env, courseTitle: course.title, courseSlug: course.slug)
                     case .lesson(let course, let concept):
                         LessonScreen(courseSlug: course.slug, courseTitle: course.title, concept: concept, env: env)
                     }

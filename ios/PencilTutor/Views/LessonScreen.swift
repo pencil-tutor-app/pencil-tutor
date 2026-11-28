@@ -32,7 +32,7 @@ struct LessonScreen: View {
         }
         .navigationDestination(isPresented: $showPractice) {
             if let problem = lesson.practiceProblem {
-                ProblemScreen(problem: problem, env: env, courseTitle: courseTitle, lesson: lesson)
+                ProblemScreen(problem: problem, env: env, courseTitle: courseTitle, courseSlug: lesson.courseSlug, lesson: lesson)
             }
         }
         .onAppear { lesson.start() }

@@ -10,12 +10,20 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
     private var consults: [ConsultRequest] = []
     private var liveSessions: [LiveSessionRequest] = []
     private var holding = false
+    private var consultShowsMe = false
+    private var solves: [TeachSolveRequest] = []
+    private var practices: [TeachPracticeRequest] = []
+    private var solveReply: Result<TeachSolveResponse, Error> = .success(FakeTutorClient.solved())
+    private var practiceReply: Result<TeachPracticeResponse, Error> = .success(FakeTutorClient.madeProblem())
+    private var holdingSolve = false
     private var watchFailure: Error?
     private var watchAnswerStore: (WatchRequest) -> WatchResponse = { FakeTutorClient.wait($0) }
 
     var watchRequests: [WatchRequest] { locked { watches } }
     var consultRequests: [ConsultRequest] { locked { consults } }
     var liveSessionRequests: [LiveSessionRequest] { locked { liveSessions } }
+    var solveRequests: [TeachSolveRequest] { locked { solves } }
+    var practiceRequests: [TeachPracticeRequest] { locked { practices } }
 
     /// What a look is answered with. Default: wait.
     func answerLooks(_ answer: @escaping (WatchRequest) -> WatchResponse) { locked { watchAnswerStore = answer } }
@@ -23,6 +31,26 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
     func failLooks(with error: Error?) { locked { watchFailure = error } }
     /// While held, a consult does not return.
     func holdConsults(_ hold: Bool) { locked { holding = hold } }
+    /// Every consult answers `show_me` with an empty answer, the way the server does when the student asked to be shown.
+    func consultAnswersShowMe(_ shows: Bool) { locked { consultShowsMe = shows } }
+    func answerSolve(_ reply: Result<TeachSolveResponse, Error>) { locked { solveReply = reply } }
+    func answerPractice(_ reply: Result<TeachPracticeResponse, Error>) { locked { practiceReply = reply } }
+    /// While held, a solve does not return.
+    func holdSolves(_ hold: Bool) { locked { holdingSolve = hold } }
+
+    static func solved(steps: [String] = ["Subtract 4 from both sides: 7x = 3x + 20", "Subtract 3x from both sides: 4x = 20", "Divide both sides by 4: x = 5"],
+                       finalAnswer: String = "x = 5", model: String = "stored") -> TeachSolveResponse {
+        TeachSolveResponse(solution: TeachSolution(steps: steps, finalAnswer: finalAnswer), reason: nil, requestId: "fake-solve", model: model, latencyMs: 1)
+    }
+
+    static func notChecked() -> TeachSolveResponse {
+        TeachSolveResponse(solution: nil, reason: "not_checked", requestId: "fake-solve", model: "fake-model", latencyMs: 1)
+    }
+
+    static func madeProblem(prompt: String = "Solve 5x - 3 = 2x + 9") -> TeachPracticeResponse {
+        TeachPracticeResponse(problem: TeachPracticeProblem(id: "own:bc-math-9-unit-3", promptPlain: prompt), reason: nil, problemRef: "sealed-like-it",
+                              exampleChecked: false, requestId: "fake-practice", model: "fake-model", latencyMs: 1)
+    }
 
     private func locked<T>(_ body: () -> T) -> T {
         lock.lock()
@@ -54,8 +82,22 @@ final class FakeTutorClient: TutorClient, @unchecked Sendable {
     func consult(_ request: ConsultRequest) async throws -> ConsultResponse {
         locked { consults.append(request) }
         while locked({ holding }) { try? await Task.sleep(nanoseconds: 10_000_000) }
+        if locked({ consultShowsMe }) {
+            return ConsultResponse(answerText: "", drawingRevision: request.drawingRevision, requestId: "fake-consult", model: "fake-model", latencyMs: 1, showMe: true)
+        }
         return ConsultResponse(answerText: "Line two has a sign slip.", drawingRevision: request.drawingRevision,
                                requestId: "fake-consult", model: "fake-model", latencyMs: 1)
+    }
+
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
+        locked { solves.append(request) }
+        while locked({ holdingSolve }) { try? await Task.sleep(nanoseconds: 10_000_000) }
+        return try locked { solveReply }.get()
+    }
+
+    func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        locked { practices.append(request) }
+        return try locked { practiceReply }.get()
     }
 
     func createLiveSession(_ request: LiveSessionRequest) async throws -> LiveSessionResponse {
@@ -297,11 +339,50 @@ final class TutorSessionDisputeTests: XCTestCase {
         XCTAssertEqual(session.marks.map(\.lineIndex), [2], "an extended line is different ink")
     }
 
-    func testAManualLookOnlyHasTheDismissedLineToSayAnswersLooksGood() async throws {
+    func testAManualLookOnlyHasTheDismissedLineToSayAnswersLooksGoodWhenTheStudentWroteMoreSinceTheLastLook() async throws {
+        await makeSession()
+        _ = try await circleLineTwoAndDismissIt()
+        setPage(page() + [penStroke(x: 3100, y: 3400, at: newStrokeTime())])   // a new line 4: the page changed
+        await look(line: 2)
+        XCTAssertEqual(session.statusMessage, LiveContext.checkLooksGood, "the student pressed Check my work: silence would read as broken")
+        XCTAssertEqual(logRecords("interrupt_suppressed_disputed").last?["page_unchanged"] as? Bool, false)
+    }
+
+    func testAManualLookOnAPageThatDidNotChangeNeverSaysLooksGoodItOffersToShowHow() async throws {
         await makeSession()
         _ = try await circleLineTwoAndDismissIt()
         await look(line: 2)
-        XCTAssertEqual(session.statusMessage, LiveContext.checkLooksGood, "the student pressed Check my work: silence would read as broken")
+        XCTAssertEqual(session.statusMessage, LiveContext.checkNothingNew)
+        XCTAssertNotEqual(session.statusMessage, LiveContext.checkLooksGood)
+        XCTAssertEqual(logRecords("interrupt_suppressed_disputed").last?["page_unchanged"] as? Bool, true)
+    }
+
+    // MARK: - Check my work: a page that changed and a page that did not
+
+    func testALookWithNothingWrongSaysLooksGoodOnceThenOffersToShowHowUntilThePageChanges() async throws {
+        await makeSession()
+        setPage(threeLinePage())
+        await look(line: nil)
+        XCTAssertEqual(session.statusMessage, LiveContext.checkLooksGood, "the first look at new work")
+        XCTAssertEqual(logRecords("decision").last?["page_unchanged"] as? Bool, false)
+
+        await look(line: nil)
+        XCTAssertEqual(session.statusMessage, LiveContext.checkNothingNew, "the same page again: not 'looks good', the way out")
+        XCTAssertEqual(logRecords("decision").last?["page_unchanged"] as? Bool, true)
+
+        setPage(page() + [penStroke(x: 3100, y: 3400, at: newStrokeTime())])
+        await look(line: nil)
+        XCTAssertEqual(session.statusMessage, LiveContext.checkLooksGood, "new ink since the last look")
+    }
+
+    func testTheNothingNewLineGoesToTheLiveVoiceToo() async throws {
+        await makeSession(live: true)
+        setPage(threeLinePage())
+        await look(line: nil)
+        await look(line: nil)
+        let said = transport.sent(ofType: "session.commentary.append").compactMap { $0["content"] as? String }
+        XCTAssertEqual(said.filter { $0 == LiveContext.checkNothingNew }.count, 1)
+        XCTAssertEqual(said.filter { $0 == LiveContext.checkLooksGood }.count, 1)
     }
 
     func testErasingThePageForgetsTheDisputes() async throws {

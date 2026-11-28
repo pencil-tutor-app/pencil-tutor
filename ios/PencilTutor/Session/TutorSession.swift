@@ -86,7 +86,9 @@ final class TutorSession: ObservableObject {
     }
 
     let problem: Problem
-    let sessionID = UUID().uuidString
+    let sessionID: String
+    /// Show me how for this page: the solution panel's state, the request, and "Try one like it". The voice is told by this session.
+    let showMe: ShowMeSession
 
     @Published private(set) var voice: VoiceMode = .notStarted
     @Published private(set) var marks: [Mark] = []
@@ -124,6 +126,9 @@ final class TutorSession: ObservableObject {
 
     private var drawingRevision = 0
     private var lastLookRevision = 0
+    /// The look in flight started on the very revision of the previous look: the page has not changed since. Read when the student
+    /// asked and nothing is wrong, so "looks good so far" is never said about a page nobody touched.
+    private var lookStartedOnUnchangedPage = false
     private var lastInkAt: Date?
     private var lastInterruptionAt: Date?
     private var penDown = false
@@ -174,11 +179,14 @@ final class TutorSession: ObservableObject {
     /// time: a new connection waits for this to finish.
     private static var previousTeardown: Task<Void, Never>?
 
-    init(problem: Problem, env: AppEnvironment, lesson: LessonSession? = nil, now: @escaping () -> Date = { Date() }) {
+    init(problem: Problem, env: AppEnvironment, lesson: LessonSession? = nil, courseSlug: String? = nil, now: @escaping () -> Date = { Date() }) {
+        let sessionID = UUID().uuidString
         self.problem = problem
+        self.sessionID = sessionID
         self.env = env
         self.lesson = lesson
         self.now = now
+        self.showMe = ShowMeSession(problem: problem, courseSlug: courseSlug, sessionID: sessionID, env: env, now: now)
         env.log.record("problem_opened", ["problem_id": problem.id, "kind": problem.kindLabel])
         // The first value arrives at once; later ones when the hours run out, come back, or the code is turned off.
         blockObserver = env.account.$block.removeDuplicates().sink { [weak self] block in
@@ -539,6 +547,7 @@ final class TutorSession: ObservableObject {
         blockObserver = nil
         delegationTasks.values.forEach { $0.cancel() }
         delegationTasks = [:]
+        showMe.stop()
         env.speech.stop()
         if isRecording {
             _ = recorder.stop()
@@ -844,10 +853,9 @@ final class TutorSession: ObservableObject {
             }
             let revisionSent = drawingRevision
             let lines = grouper.group(Self.inkStrokes(from: canvas.drawing))
-            guard !lines.isEmpty else {
-                env.log.record("live_consult_skipped", ["delegation_id": delegation.id, "why": "no ink on the page"])
-                session.answerDelegation(id: delegation.id, text: LiveContext.emptyPage)
-                return
+            // A blank page still goes to the page reader: "I have no idea where to start" is said on an empty page most of all.
+            if lines.isEmpty {
+                env.log.record("live_consult_blank_page", ["delegation_id": delegation.id, "attempt": attempt, "why": "no ink on the page, asked anyway"])
             }
             do {
                 let snapshot = try PageSnapshotter.make(drawing: canvas.drawing, canvasSize: canvas.bounds.size, lines: lines)
@@ -856,7 +864,7 @@ final class TutorSession: ObservableObject {
                     sessionId: sessionID, problemId: problem.id, drawingRevision: revisionSent,
                     imagePngBase64: snapshot.png.base64EncodedString(), question: delegation.question, recent: delegation.recent,
                     problemText: problem.problemTextForServer, problemRef: problem.problemRef,
-                    attempted: practiceFields(for: canvas.drawing).attempted
+                    attempted: practiceFields(for: canvas.drawing).attempted, showMeOk: true
                 )
                 env.log.record("live_consult_started", [
                     "delegation_id": delegation.id, "attempt": attempt, "revision": revisionSent, "lines": lines.count,
@@ -871,6 +879,10 @@ final class TutorSession: ObservableObject {
                     env.log.record("live_delegation_dropped", [
                         "delegation_id": delegation.id, "reason": "late_result_after_close", "latency_ms": latency
                     ])
+                    return
+                }
+                if response.showMe == true {
+                    await showMeFromVoice(delegation, from: session, consultMs: latency, response: response)
                     return
                 }
                 let pageChanged = drawingRevision != revisionSent
@@ -912,6 +924,72 @@ final class TutorSession: ObservableObject {
                 return
             }
         }
+    }
+
+    // MARK: - Show me how
+
+    /// The "Show me how" button. The panel opens at once (loading); the voice is told once the steps are on screen, never before.
+    func showMeHow() {
+        lesson?.closePanel()
+        Task { [weak self] in
+            guard let self else { return }
+            let outcome = await self.showMe.open(source: .button)
+            guard !self.stopped, case .shown(let solution) = outcome else { return }
+            self.giveSolutionToVoice(solution)
+        }
+    }
+
+    /// The page reader answered `show_me`: the student asked to be shown. The panel opens, and only once the steps are on screen is the
+    /// delegation answered, once. While the solution loads the voice says nothing; a solution that could not be checked, or a failure,
+    /// is answered as that and never as "on screen".
+    private func showMeFromVoice(_ delegation: LiveVoice.Delegation, from session: LiveVoice, consultMs: Int, response: ConsultResponse) async {
+        env.log.record("show_me_voice_routed", [
+            "delegation_id": delegation.id, "consult_ms": consultMs, "model": response.model ?? "?", "request_id": response.requestId ?? "?"
+        ])
+        lesson?.closePanel()
+        let outcome = await showMe.open(source: .voice)
+        guard live === session, !stopped, session.isStillWaiting(on: delegation.id) else {
+            env.log.record("live_delegation_dropped", ["delegation_id": delegation.id, "reason": "ended_while_showing"])
+            return
+        }
+        let label: String
+        switch outcome {
+        case .shown(let solution):
+            pushSolution(solution, to: session)
+            session.answerDelegation(id: delegation.id, text: LiveContext.showMeWalkthrough)
+            label = "shown"
+        case .notChecked:
+            session.answerDelegation(id: delegation.id, text: LiveContext.showMeNotChecked)
+            label = "not_checked"
+        case .failed:
+            session.answerDelegation(id: delegation.id, text: LiveContext.showMeFailed)
+            label = "failed"
+        case .stopped:
+            label = "stopped"
+        }
+        env.log.record("show_me_voice_answered", ["delegation_id": delegation.id, "outcome": label])
+    }
+
+    /// Button path: the steps go to the live voice as quiet context and one line tells it to walk through them; with no live voice the
+    /// base voice says one short line.
+    private func giveSolutionToVoice(_ solution: TeachSolution) {
+        if let live, live.state == .connected {
+            pushSolution(solution, to: live)
+            live.say(LiveContext.showMeWalkthrough, purpose: "show_me_walkthrough")
+            env.log.record("show_me_voice", ["via": "live", "problem_id": problem.id])
+        } else {
+            env.speech.speak(LiveContext.showMeBaseVoiceLine, purpose: "show_me")
+            env.log.record("show_me_voice", ["via": "speech_output", "problem_id": problem.id])
+        }
+    }
+
+    /// The shown solution as quiet context, split between steps so every append stays under the clip.
+    private func pushSolution(_ solution: TeachSolution, to session: LiveVoice) {
+        let parts = LiveContext.solution(steps: solution.steps, finalAnswer: solution.finalAnswer)
+        for (index, part) in parts.enumerated() {
+            session.pushContext(part, label: "show_me_steps_\(index + 1)_of_\(parts.count)")
+        }
+        env.log.record("show_me_steps_pushed", ["parts": parts.count, "steps": solution.steps.count, "chars": parts.reduce(0) { $0 + $1.count }])
     }
 
     private static func plainReason(_ error: Error) -> String {
@@ -997,6 +1075,7 @@ final class TutorSession: ObservableObject {
         }
 
         let revision = drawingRevision
+        lookStartedOnUnchangedPage = revision == lastLookRevision
         lastLookRevision = revision
         activity.note(.look, at: now())
         lookInFlight = true
@@ -1075,6 +1154,7 @@ final class TutorSession: ObservableObject {
         if let model = response.model { fields["model"] = model }
         if let serverMs = response.latencyMs { fields["server_latency_ms"] = serverMs }
         if let requestId = response.requestId { fields["request_id"] = requestId }
+        fields["page_unchanged"] = lookStartedOnUnchangedPage
 
         switch response.action {
         case "interrupt":
@@ -1087,8 +1167,9 @@ final class TutorSession: ObservableObject {
             pushVerdict(lineCount: sentLines.count, flaggedLine: nil, hintWritten: nil)
             if trigger == .manual {
                 // The student asked, so answer out loud as well: silence after a button press reads as broken.
-                setStatus(LiveContext.checkLooksGood)
-                tell(LiveContext.checkLooksGood, purpose: "check_ok")
+                let line = allClearLine()
+                setStatus(line)
+                tell(line, purpose: "check_ok")
             }
         default:
             fields["problem"] = "unknown action"
@@ -1196,9 +1277,16 @@ final class TutorSession: ObservableObject {
         lastDecisionLabel = "suppressed"
         appendHistory(action: "disputed", line: lineNumber, hint: nil)
         if trigger == .manual {
-            setStatus(LiveContext.checkLooksGood)
-            tell(LiveContext.checkLooksGood, purpose: "check_ok")
+            let line = allClearLine()
+            setStatus(line)
+            tell(line, purpose: "check_ok")
         }
+    }
+
+    /// What a student-asked look says when nothing is wrong: "looks good" for a page that changed since the last look, an offer to show
+    /// how for a page that did not.
+    private func allClearLine() -> String {
+        lookStartedOnUnchangedPage ? LiveContext.checkNothingNew : LiveContext.checkLooksGood
     }
 
     /// The student tapped "Not a mistake" on a circle. The circle comes off at once and the ink it was on is remembered by its

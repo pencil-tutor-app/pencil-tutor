@@ -1,6 +1,34 @@
 import SwiftUI
 
-/// The problem screen: the page fills the whole screen, edge to edge, and everything else floats over it on see-through
+/// The problem screen. It holds the problem on the page and swaps it when Show me how's "Try one like it" has a checked practice
+/// problem ready: the page is then a new page (a new `ProblemPage`, so a new session, canvas and voice), like any practice page. A
+/// swapped page has no lesson: the lesson's follow-ups guard the lesson's own practice problem, not this one.
+struct ProblemScreen: View {
+    @State private var problem: Problem
+    @State private var lesson: LessonSession?
+    private let env: AppEnvironment
+    private let courseTitle: String?
+    private let courseSlug: String?
+
+    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil, courseSlug: String? = nil, lesson: LessonSession? = nil) {
+        _problem = State(initialValue: problem)
+        _lesson = State(initialValue: lesson)
+        self.env = env
+        self.courseTitle = courseTitle
+        self.courseSlug = courseSlug
+    }
+
+    var body: some View {
+        ProblemPage(problem: problem, env: env, courseTitle: courseTitle, courseSlug: courseSlug, lesson: lesson, onSwap: { next in
+            env.log.record("problem_swapped", ["from": problem.id, "kind": next.kindLabel])
+            lesson = nil
+            problem = next
+        })
+        .id(problem)
+    }
+}
+
+/// The page fills the whole screen, edge to edge, and everything else floats over it on see-through
 /// material (2026-11-14): the Back button and the problem as a small card top-left (the card folds to a one-line pill), the
 /// actions as one slim pill top-right, and the tool rail docked on the left edge under the Back button. There is no navigation
 /// bar. Nothing floating is large or opaque, so it never hides ink for long: the card folds away, the caption goes when the
@@ -13,7 +41,7 @@ import SwiftUI
 /// wider than its capsule. When the row runs out of width it tries, in order, a shorter label, the pill under the card, and
 /// icon-only buttons (their words stay as the accessibility label). A label's width is held at its longest wording so a tap that
 /// swaps "Tap to ask" for "Listening..." moves nothing, and the busy spinner replaces the Check icon instead of adding width.
-struct ProblemScreen: View {
+private struct ProblemPage: View {
     @StateObject private var session: TutorSession
     @StateObject private var rail = ToolRailModel()
     @EnvironmentObject private var account: StudentAccount
@@ -22,11 +50,14 @@ struct ProblemScreen: View {
     private let courseTitle: String?
     /// Set for a practice problem opened from "Learn something new": the lesson stays one tap away and shares its conversation.
     private let lesson: LessonSession?
+    /// Show me how's Try one like it: the page becomes this problem.
+    private let onSwap: (Problem) -> Void
 
-    init(problem: Problem, env: AppEnvironment, courseTitle: String? = nil, lesson: LessonSession? = nil) {
+    init(problem: Problem, env: AppEnvironment, courseTitle: String?, courseSlug: String?, lesson: LessonSession?, onSwap: @escaping (Problem) -> Void) {
         self.courseTitle = courseTitle
         self.lesson = lesson
-        _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env, lesson: lesson))
+        self.onSwap = onSwap
+        _session = StateObject(wrappedValue: TutorSession(problem: problem, env: env, lesson: lesson, courseSlug: courseSlug))
     }
 
     var body: some View {
@@ -41,6 +72,7 @@ struct ProblemScreen: View {
             if let lesson {
                 LessonSidePanel(lesson: lesson)
             }
+            ShowMeSidePanel(showMe: session.showMe, statement: session.problem.promptParts, onRetry: { session.showMeHow() })
             // The rail keeps to the safe area and sits right under the Back button, left of the problem card.
             ToolRailView(model: rail)
                 .padding(.leading, ChromeMetrics.edge)
@@ -50,7 +82,10 @@ struct ProblemScreen: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
-        .onAppear { session.begin() }
+        .onAppear {
+            session.showMe.onPractice = onSwap
+            session.begin()
+        }
         .onDisappear { session.stop() }
     }
 
@@ -209,8 +244,18 @@ struct ProblemScreen: View {
 
             voiceControl
 
+            Button {
+                session.showMeHow()
+            } label: {
+                PillLabel(full: "Show me how", short: "Show me", symbol: "lightbulb", fill: Color.orange.opacity(0.22), foreground: .primary)
+            }
+            .buttonStyle(.plain)
+            .disabled(account.isBlocked)
+            .accessibilityIdentifier("showMeHowButton")
+
             if let lesson {
                 Button {
+                    session.showMe.close()
                     lesson.openPanel()
                 } label: {
                     PillLabel(full: "Lesson", short: "Lesson", symbol: "book", fill: Color.gray.opacity(0.18), foreground: .primary)
