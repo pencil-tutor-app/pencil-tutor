@@ -89,7 +89,7 @@ async function call(step: string, handler: (r: Request, d: Deps) => Promise<Resp
   const json = (await res.json()) as Record<string, unknown>;
   const log = logsByRequest.get(String(json.request_id)) ?? {};
   if (typeof log.est_cost_usd === "number") spent += log.est_cost_usd;
-  const row = { step, http: res.status, ...Object.fromEntries(Object.entries(log).filter(([k]) => METRIC.test(k))), providerCallsSoFar: providerCalls, spentSoFar: Math.round(spent * 1e4) / 1e4 };
+  const row: Record<string, unknown> = { step, http: res.status, ...Object.fromEntries(Object.entries(log).filter(([k]) => METRIC.test(k))), providerCallsSoFar: providerCalls, spentSoFar: Math.round(spent * 1e4) / 1e4 };
   rows.push(row);
   appendFileSync(OUT!, JSON.stringify(row) + "\n");
   console.error(`${step}: http ${res.status} ${json.error ?? (json.solution === null ? json.reason : json.show_me ? "SHOW_ME" : "ok")} calls=${providerCalls} spent=${spent.toFixed(4)}`);
