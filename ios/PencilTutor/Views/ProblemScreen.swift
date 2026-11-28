@@ -84,6 +84,9 @@ private struct ProblemPage: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             session.showMe.onPractice = onSwap
+            #if DEBUG
+            QAShowMe.current = session
+            #endif
             session.begin()
         }
         .onDisappear { session.stop() }

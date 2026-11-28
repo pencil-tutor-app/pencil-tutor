@@ -61,4 +61,46 @@ enum UISnapshot {
         }
     }
 }
+
+/// Debug builds only. Presses Show me how and Try one like it on whatever problem page is open, at set times after launch, so the
+/// flow can be checked on a real iPad with nobody tapping: `--qa-show-me "show@10,like@25,show@70"` (action, then seconds after
+/// launch; actions: `show`, `like`). Each press is logged as `qa_show_me_pressed`, a press with no page open as `qa_show_me_skipped`.
+@MainActor
+enum QAShowMe {
+    /// The page on screen now; set by the problem page when it appears, so a press after Try one like it reaches the new page.
+    static weak var current: TutorSession?
+
+    private static func requested() -> [(action: String, seconds: Double)] {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--qa-show-me"), arguments.indices.contains(index + 1) else { return [] }
+        return arguments[index + 1].split(separator: ",").compactMap { item in
+            let parts = item.split(separator: "@")
+            guard parts.count == 2, let seconds = Double(parts[1]) else { return nil }
+            return (String(parts[0]), seconds)
+        }
+    }
+
+    static func scheduleIfRequested(log: SessionLog) {
+        let presses = requested()
+        guard !presses.isEmpty else { return }
+        log.record("qa_show_me_scheduled", ["count": presses.count])
+        for (number, press) in presses.enumerated() {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: UInt64(press.seconds * 1_000_000_000))
+                guard let session = current else {
+                    log.record("qa_show_me_skipped", ["n": number, "action": press.action, "reason": "no_page_open"])
+                    return
+                }
+                switch press.action {
+                case "show": session.showMeHow()
+                case "like": session.showMe.tryOneLikeIt()
+                default:
+                    log.record("qa_show_me_skipped", ["n": number, "action": press.action, "reason": "unknown_action"])
+                    return
+                }
+                log.record("qa_show_me_pressed", ["n": number, "action": press.action, "problem_id": session.problem.id])
+            }
+        }
+    }
+}
 #endif

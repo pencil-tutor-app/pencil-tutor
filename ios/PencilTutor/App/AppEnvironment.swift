@@ -118,6 +118,7 @@ final class AppEnvironment: ObservableObject {
         speech.onServerError = { [weak account] error in account?.handle(serverError: error) }
         #if DEBUG
         UISnapshot.scheduleIfRequested(log: log)
+        QAShowMe.scheduleIfRequested(log: log)
         #endif
 
         // Scripted runs use the same real, bundled problem bank; the UI tests open u3-04 (planted) and u3-01 (clean).
