@@ -69,7 +69,7 @@ The voice cannot send the app a marker: a delegation carries only an id and a ta
 ## Rollout
 
 1. Merge on green; deploy the server (`vercel deploy --prod` from `server/`), check `/api/health` version.
-2. One signed Debug device build on the Mac and install. Overruling review point 3 with evidence: the free Apple ID's personal-team signing identity lives in this Mac's keychain (`docs/own-problem-plan.md:56`); the incremental build took about a minute with 58 to 70 percent memory free on 2026-11-28; Edward was told and did not object. Full test runs stay on CI.
+2. The CI artifact `PencilTutor-iphoneos-Debug-unsigned`, re-signed on the Mac and installed with `devicectl` (Decision 1; done 2026-11-28, no local build). The side panel is being replaced by tutor ink on the page: `docs/tutor-ink-plan.md`.
 3. Silent device QA with screenshots and the session log: `la-02` via the button, the panel, Try one like it, ink on the new page, a look. Silent mode skips live (`TutorSession.swift:596`), and no audio may play through the Mac, so the spoken path is proved on device only by Edward's own session; the agent's receipts cover the button path and the unit test covers the voice routing.
 
 ## Docs to update with the code
