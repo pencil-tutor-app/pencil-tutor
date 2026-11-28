@@ -3,6 +3,8 @@ name: ios
 # Builds the iPad app for iPadOS 26, runs the unit tests and the UI tests on an iPad simulator, and saves the
 # UI test screenshots as PNG files in the "ios-screenshots" artifact. Nothing here runs on a laptop.
 # A last step builds Release, runs one lesson UI test on it and checks that its session log holds no words.
+# One step also builds an unsigned iphoneos Debug app and uploads it as the "PencilTutor-iphoneos-Debug-unsigned" artifact: the Mac only
+# re-signs and installs it (docs/how-to-run.md), so no iPad build is compiled on the laptop.
 #
 # Runner: GitHub's macos-26 image: Xcode 26.6 (SDK iOS 26.5) and iPad simulators on iOS 26.2, 26.4 and 26.5.
 # The repo is public since 2026-11-28, and GitHub-hosted runners (macOS included) are free and unmetered for public
@@ -84,6 +86,37 @@ jobs:
           echo "build ok"
           grep -E "bundle_problems:" ios/artifacts/logs/build.log || echo "note: bundle_problems output not found in log"
 
+      # Compile on CI, sign on the Mac (docs/show-me-plan.md, decision 1). An unsigned device (iphoneos) Debug app, zipped with ditto so the
+      # executable bits survive the artifact upload. ENABLE_DEBUG_DYLIB=NO keeps the code in the one main executable (no
+      # PencilTutor.debug.dylib or __preview.dylib beside it), so re-signing is a single codesign of the bundle. Same derived data folder as
+      # the simulator build, so the Swift packages are reused. SERVER_URL is the production address from Secrets.example.xcconfig (public).
+      - name: Unsigned device build (iphoneos, Debug)
+        run: |
+          if ! xcodebuild build \
+              -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+              -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath ios/build \
+              ENABLE_DEBUG_DYLIB=NO CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/device-build.log 2>&1; then
+            echo "DEVICE BUILD FAILED. Errors:"
+            grep -E "error:|\*\* BUILD" ios/artifacts/logs/device-build.log | head -n 60 || true
+            echo "--- last 80 lines ---"
+            tail -n 80 ios/artifacts/logs/device-build.log
+            exit 1
+          fi
+          APP=ios/build/Build/Products/Debug-iphoneos/PencilTutor.app
+          test -d "$APP"
+          mkdir -p ios/artifacts/device
+          ditto -c -k --keepParent "$APP" ios/artifacts/device/PencilTutor-iphoneos-Debug-unsigned.zip
+          ls -l ios/artifacts/device
+          codesign -dv "$APP" 2>&1 | head -n 3 || true
+          echo "device build ok: $(du -sh "$APP" | cut -f1)"
+
+      - name: Upload the unsigned device build
+        uses: actions/upload-artifact@v4
+        with:
+          name: PencilTutor-iphoneos-Debug-unsigned
+          path: ios/artifacts/device
+          if-no-files-found: error
+
       # -collect-test-diagnostics never: on a failure xcodebuild otherwise spends ~10 minutes trying to pull a
       # sysdiagnose from the simulator and then times out (run 43849954749). The xcresult and logs still upload.
       - name: Unit tests
@@ -144,11 +177,11 @@ jobs:
 
       # Release keeps TutorSession.logsWords false: the session log holds counts and labels, never the concept, the lesson or a
       # question. The Debug runs above write words on purpose, so they cannot prove that. This step builds the Release
-      # configuration for the simulator, runs one lesson UI test on it (type a concept, read the lesson, ask a follow-up) and
-      # checks the log it wrote with ios/Scripts/check_release_log.py. ENABLE_TESTABILITY=YES only so the unit-test target in the
+      # configuration for the simulator, runs one lesson UI test on it (type a concept, read the lesson, ask a follow-up) and one
+      # Show me how UI test (the steps, then Try one like it), and checks the logs they wrote with ios/Scripts/check_release_log.py. ENABLE_TESTABILITY=YES only so the unit-test target in the
       # scheme still compiles (`@testable import`); the app is still the Release configuration (no DEBUG, optimised). The app is
       # uninstalled first so the Debug logs in the simulator's container are gone. Device signing is a separate issue.
-      - name: Release build, lesson UI test, and a check of its session log
+      - name: Release build, lesson and Show me how UI tests, and a check of their session logs
         if: ${{ github.event_name == 'pull_request' || inputs.release_log_check }}
         run: |
           mkdir -p ios/artifacts/release-logs
@@ -157,6 +190,7 @@ jobs:
               -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
               -destination "id=$UDID" -derivedDataPath ios/build-release \
               -only-testing:PencilTutorUITests/LessonUITests/testAFollowUpIsAddedToThePanel \
+              -only-testing:PencilTutorUITests/ShowMeUITests/testShowMeHowThenTryOneLikeItSwapsThePageToAPracticeProblemThatTakesInkAndGetsALook \
               -resultBundlePath ios/results/release-ui.xcresult \
               -collect-test-diagnostics never \
               ENABLE_TESTABILITY=YES CODE_SIGNING_ALLOWED=NO > ios/artifacts/logs/release-ui-tests.log 2>&1; then

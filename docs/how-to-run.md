@@ -206,6 +206,16 @@ problem at once, so the code is checked, the heartbeat and the allowance chip st
 (`devicectl device copy from ... Documents/session-*.jsonl`) shows the checks, `speech_*` events, and (only for a live plan) `live_connected` or the fallback reason.
 The iPad must be unlocked or the launch is refused ("device was not, or could not be, unlocked").
 
+**Install a build CI made (compile on CI, sign on the Mac).** A pull request that touches the app makes `ios.yml` build an **unsigned iphoneos Debug app** (`CODE_SIGNING_ALLOWED=NO`, `ENABLE_DEBUG_DYLIB=NO` so the code is one executable) and upload it as the artifact `PencilTutor-iphoneos-Debug-unsigned` (one zip made with `ditto`, so the executable bit survives). The Mac compiles nothing:
+
+1. `gh run download <run id> -R pencil-tutor-app/pencil-tutor -n PencilTutor-iphoneos-Debug-unsigned -D <empty folder>`, then `ditto -x -k <folder>/PencilTutor-iphoneos-Debug-unsigned.zip <folder>/app` gives `PencilTutor.app`. `SERVER_URL` in it is the production address (`Config/Secrets.example.xcconfig`, public).
+2. Re-sign it with the free Apple ID's identity (`security find-identity -v -p codesigning`, the "Apple Development" one) and an Xcode-made profile for `com.edwardtran.penciltutor` (one earlier Xcode build with `-allowProvisioningUpdates` leaves it in `~/Library/Developer/Xcode/UserData/Provisioning Profiles`): copy the profile to `PencilTutor.app/embedded.mobileprovision`, take its entitlements (`security cms -D -i <profile> > p.plist`, then `PlistBuddy -x -c 'Print :Entitlements' p.plist > ent.plist`), `codesign --force --sign <identity> --entitlements ent.plist PencilTutor.app`.
+3. `xcrun devicectl device install app --device <id> PencilTutor.app`. If re-signing cannot be made to work, one incremental local build is the fallback, and the report says why.
+
+This recipe is what the plan prescribes; it has not been run end to end (the artifact is produced by CI, the re-sign happens on the Mac).
+
+**Silent QA of Show me how** (`docs/show-me-plan.md`; no sound, so no live voice): launch with `--silent --student-code <code> --open-problem la-02`, tap **Show me how** (the panel shows all 7 steps and the answer), tap **Try one like it** (the page becomes a practice problem), write two lines (the look runs), tap **Show me how** again. Screenshots and `devicectl device copy from ... Documents/session-*.jsonl` are the receipts: `show_me_requested {source: button}`, `show_me_shown {steps: 7, stored: true}`, `like_it_ready`, `problem_swapped`. A typed problem shows the "I couldn't work this one out with confidence" state only when the check refuses it. **The voice path** (say "I have no idea, show me": delegation, the consult's `show_me`, the panel, the spoken walkthrough) cannot be silent QA; it needs a real session, and the log shows `live_delegation_requested`, `live_consult_started` (`blank page` too), `show_me_voice_routed`, `show_me_shown {source: voice}`, `show_me_voice_answered {outcome: shown}`, then `tutor_said` for the walkthrough. Deploy the server first (`vercel deploy --prod` from `server/`, check `/api/health`), or the button gets a 422 for `solve`.
+
 ## What was measured (2026-11-13, synthetic pages, not real handwriting)
 
 Pages were rendered in handwriting-style fonts, one new line every 7 seconds.

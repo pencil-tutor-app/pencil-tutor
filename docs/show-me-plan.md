@@ -26,7 +26,7 @@ Session `844b4264` on Edward's iPad, 2026-11-28 13:33 UTC, bank problem `la-02`,
 - The voice said "let me ask the page watcher" and "the page watcher just looked". The words come from our context lines (`ios/PencilTutor/Live/LiveProtocol.swift:127`, `:129`, `:137`) and from "a page reader can look at the page for you" in `LIVE_TUTOR_TEMPLATE`.
 - A manual check at revision 45, the same revision as the previous look, said "Looks good so far. Keep going." (`LiveProtocol.swift:132`) while the student was stuck.
 - Jargon first: "pivot", "leading one", "back-substitution"; the student asked what back-substitution is.
-- Out of scope, traced separately: 14 to 16 s from `live_consult_answered` to the voice speaking.
+- The 14 to 16 s from `live_consult_answered` to the voice speaking is not latency. `tutor_said` is logged when a turn ENDS (`ios/PencilTutor/Live/LiveVoice.swift:491-496`), and those two turns were 273 and 217 characters, about 15 s of speech each: the voice read the whole matrix back from the page report. This is a read of the log code, not a measurement of first-audio latency, which the logs cannot show.
 
 ## What the student gets
 
@@ -56,6 +56,7 @@ The voice cannot send the app a marker: a delegation carries only an id and a ta
 - The voice speaks as if it looks itself. `LIVE_TUTOR_TEMPLATE`: "you cannot see their page... a page reader can look at the page for you" becomes "you can look at their page when you need to (that is your backend tool)"; add "Never mention a page reader, a watcher, a helper or anyone else; say 'let me look', and talk about the page as something you saw." The three context lines lose "the page watcher".
 - Plain words first: "Say the idea in everyday words first; give the maths term once, after."
 - `LIVE_TEACH_NOTE` and the practice context line (`LiveContext.practice`) gain one exception: once the worked solution is on screen, walk through it. The server's pre-attempt answer guard stays for hints and asks.
+- No read-back. `LIVE_TUTOR_TEMPLATE` tells the voice not to read back what is on the page unless the student asks or it matters for the point, and to keep spoken page results to the verdict plus one next step (the page report itself still names what it saw, so the voice has the evidence).
 - Manual check on an unchanged page with nothing wrong: "Nothing new since I last looked. Want me to show you how?" instead of "Looks good so far. Keep going."
 
 ## Tests

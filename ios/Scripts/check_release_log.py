@@ -24,6 +24,8 @@ FORBIDDEN_TEXT = [
     "Solve 3x + 2 = 14",              # the scripted practice problem
     "scripted-practice-ref",          # the scripted sealed reference
     "Scripted answer. Undo the last", # the scripted follow-up answer
+    "Subtract 1 from both sides",     # the scripted Show me how solution (its steps and its answer are words, never logged)
+    "Divide both sides by 2",
 ]
 
 # Field names that only Debug builds may write (TutorSession.logsWords).
@@ -35,6 +37,8 @@ REQUIRED_EVENTS = {
     "lesson_shown": ["latency_ms", "steps"],
     "practice_ready": ["reference", "latency_ms"],
     "lesson_followup": ["chars", "recent_turns", "latency_ms"],
+    "show_me_shown": ["latency_ms", "steps"],
+    "like_it_ready": ["latency_ms", "prompt_chars"],
 }
 
 
