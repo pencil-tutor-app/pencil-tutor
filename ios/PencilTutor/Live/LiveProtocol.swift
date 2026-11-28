@@ -125,7 +125,7 @@ enum LiveContext {
         if let flaggedLine {
             let note = (hintWritten ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             let noteText = note.isEmpty ? "" : " with the note \"\(note)\""
-            return "Page check just now: the student's page has \(lines). Line \(flaggedLine) was circled in red\(noteText) and the student has been given a hint. The student may have written more since."
+            return "Page check just now: the student's page has \(lines). A red circle was put round line \(flaggedLine)\(noteText) and the student has been given a hint. The student may have written more since."
         }
         return "Page check just now: the student's page (\(lines)) looks fine so far. The student may have written more since."
     }
