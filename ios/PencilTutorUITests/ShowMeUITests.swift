@@ -65,7 +65,8 @@ final class ShowMeUITests: XCTestCase {
         screenshot("60-show-me-how-button")
         button.tap()
 
-        XCTAssertTrue(element(app, "showMePanel").waitForExistence(timeout: 10), "the panel opens")
+        // The close button (its own identifier) marks the panel: the container's own identifier is not exposed under the side panel's.
+        XCTAssertTrue(element(app, "showMeCloseButton").waitForExistence(timeout: 10), "the panel opens")
         XCTAssertTrue(element(app, "showMeStep-1").waitForExistence(timeout: 15), "the steps appear")
         XCTAssertTrue(element(app, "showMeStep-2").exists)
         XCTAssertTrue(element(app, "showMeAnswer").exists, "and the answer")
@@ -81,7 +82,7 @@ final class ShowMeUITests: XCTestCase {
         let swapped = NSPredicate(format: "label CONTAINS %@", "3x + 2 = 14")
         XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: swapped, object: prompt)], timeout: 20), .completed,
                        "the page becomes the practice problem; the card says: \(prompt.label)")
-        XCTAssertFalse(element(app, "showMePanel").exists, "a new page starts without the old panel")
+        XCTAssertFalse(element(app, "showMeCloseButton").exists, "a new page starts without the old panel")
         screenshot("62-practice-page-after-try-one-like-it")
 
         let page = element(app, "drawingCanvas")
@@ -118,7 +119,7 @@ final class ShowMeUITests: XCTestCase {
         screenshot("64-show-me-how-not-checked")
         element(app, "showMeCloseButton").tap()
         let gone = NSPredicate(format: "exists == false")
-        XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: gone, object: element(app, "showMePanel"))], timeout: 5), .completed,
+        XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: gone, object: element(app, "showMeCloseButton"))], timeout: 5), .completed,
                        "the panel stays until the close button is tapped, then goes")
     }
 }
