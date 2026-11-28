@@ -182,7 +182,7 @@ final class PencilTutorUITests: XCTestCase {
             XCTAssertGreaterThanOrEqual(rail.minY, back.maxY, "\(name): rail under the Back button")
             XCTAssertLessThanOrEqual(rail.maxY, window.maxY, "\(name): rail fully on screen, rail \(rail) window \(window)")
             XCTAssertLessThanOrEqual(rail.maxX, prompt.minX, "\(name): rail clear of the problem card")
-            for id in ["checkMyWorkButton", "tapToTalkButton", "clearMarksButton", "erasePageButton"] {
+            for id in ["checkMyWorkButton", "tapToTalkButton", "showMeHowButton", "clearMarksButton", "erasePageButton"] {
                 let button = element(app, id)
                 XCTAssertTrue(button.waitForExistence(timeout: 10), "\(name): \(id) on the page")
                 let frame = button.frame

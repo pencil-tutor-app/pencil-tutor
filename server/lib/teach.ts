@@ -7,7 +7,7 @@ import { logLine, type LogFields } from "./log.js";
 import { runTranscription } from "./models.js";
 import { MAX_AUDIO_BYTES } from "./ask.js";
 import { MAX_TURNS, TurnSchema } from "./policy.js";
-import { cleanProblemText, findCourse, OWN_PREFIX, problemFields, type Course, type Problem } from "./problems.js";
+import { cleanProblemText, courseOf, findCourse, OWN_PREFIX, problemFields, type Course, type Problem } from "./problems.js";
 import { sealKeyFor, sealReference } from "./seal.js";
 import { guardSpokenAnswer, stripSentenceEnd } from "./spoken.js";
 import { resolveRequestProblem } from "./teach-ref.js";
@@ -16,6 +16,7 @@ import {
   buildExplainPrompt,
   buildFollowupPrompt,
   buildPracticePrompt,
+  buildSolvePrompt,
   buildSolverPrompt,
   COMPARER_SYSTEM,
   ComparerOutputSchema,
@@ -31,6 +32,8 @@ import {
   PracticeOutputSchema,
   practiceSystem,
   SOLVER_SYSTEM,
+  SolveOutputSchema,
+  solveSystem,
   SolverOutputSchema,
   type Example,
 } from "./teach-policy.js";
@@ -38,11 +41,12 @@ import { runStructured, type StructuredResult } from "./teach-models.js";
 import type { ModelFailure } from "./models.js";
 import { usageFields, type UsageReport } from "./usage.js";
 
-// POST /api/teach: learn a new concept, then try one yourself. Three actions, one gate, one log line each:
+// POST /api/teach: learn a new concept, then try one yourself. Four actions, one gate, one log line each:
 //   explain   the concept in, a short lesson (steps, one worked example, a spoken summary) out
 //   followup  a question about the lesson (typed or spoken) with the last 8 turns, an answer out
 //   practice  one problem on the concept, checked by a blind solver and a comparer, sealed so the watch path can use its solution
-// Design: docs/teach-mode-plan.md (Revision 2 wins).
+//   solve     Show me how: the full worked solution of a problem the student is on (stored, or written and checked for an own problem)
+// Design: docs/teach-mode-plan.md (Revision 2 wins), docs/show-me-plan.md (Revision 3 wins).
 
 const EMPTY_TRANSCRIPT_ANSWER = "I didn't catch that. Please hold the button and ask again.";
 
@@ -56,6 +60,7 @@ export const SCRIPTED_LESSON = {
 const NO_LESSON = { title: null, steps: null, example: null, spoken: null };
 
 export const SCRIPTED_PRACTICE = { prompt_plain: "2x + 3 = 11", steps: ["2x = 8", "x = 4"], final_answer: "x = 4" };
+export const SCRIPTED_SOLUTION = { steps: ["Subtract 1 from both sides: 2x = 8", "Divide both sides by 2: x = 4"], final_answer: "x = 4" };
 export const SCRIPTED_FOLLOWUP_ANSWER = "This is a scripted answer. Undo the adding first, then the multiplying.";
 
 const Common = { session_id: z.string().max(100).optional(), course: z.string().max(60) };
@@ -78,6 +83,8 @@ const TeachRequestSchema = z.discriminatedUnion("action", [
   // The lesson as text (what the student read) and, when it has passed its way to the screen, its worked example. An absent example is
   // simply not checked: example_checked comes back false and nothing is withheld.
   z.object({ action: z.literal("practice"), ...Common, concept: Concept, lesson_text: z.string().max(LIMITS.lessonText), example: ExampleSchema.optional() }),
+  // Show me how: resolved like consult resolves its problem (a bank id, an own problem with its text, or a sealed practice reference).
+  z.object({ action: z.literal("solve"), ...Common, problem_id: z.string().max(40), problem_text: z.string().optional(), problem_ref: z.string().max(6000).optional() }),
 ]);
 type TeachRequest = z.infer<typeof TeachRequestSchema>;
 
@@ -125,7 +132,11 @@ function unusable(ctx: RequestCtx, r: Exclude<StructuredResult<unknown>, { kind:
 
 export type Verdict = "agree" | "disagree" | "not_single" | "wrong_step" | "malformed" | "same_as_example" | "no_example" | "error";
 
-type Checked = { verdict: Verdict; solve?: UsageReport; compare?: UsageReport; failure?: ModelFailure };
+type CompareFlags = z.infer<typeof ComparerOutputSchema>;
+// Show me how's acceptance rule (decision 6 of docs/show-me-plan.md): the answers are equivalent and no step is wrong, whatever single_answer says.
+export const solveAccepts = (flags: CompareFlags | undefined): boolean => flags !== undefined && flags.equivalent && flags.first_wrong_step === null;
+// `flags` is the comparer's own answer, kept whole so solve can accept an answer set with several answers (not_single) but never a wrong step.
+type Checked = { verdict: Verdict; flags?: CompareFlags; solve?: UsageReport; compare?: UsageReport; failure?: ModelFailure };
 
 // Call 1 (blind): the solver sees only the statement and returns its own final answer.
 // Call 2: the comparer sees the statement, the proposed steps and answer, and the solver's answer, and returns
@@ -147,7 +158,7 @@ export async function checkStatement(deps: Deps, checker: { cfg: RoleConfig; key
   if (compared.kind !== "object") return { verdict: "malformed", solve: solved.usage, compare: compared.usage };
   const { equivalent, single_answer, first_wrong_step } = compared.value;
   const verdict: Verdict = !equivalent ? "disagree" : !single_answer ? "not_single" : first_wrong_step !== null ? "wrong_step" : "agree";
-  return { verdict, solve: solved.usage, compare: compared.usage };
+  return { verdict, flags: compared.value, solve: solved.usage, compare: compared.usage };
 }
 
 // ---------------------------------------------------------------- the handler
@@ -168,10 +179,11 @@ export async function handleTeach(request: Request, deps: Deps = defaultDeps()):
   const course = findCourse(req.course);
   if (!course) return ctx.fail(422, "unknown_course", "course is not in the bank", "unknown_course");
   // Sizes and labels only. The concept, the lesson, the problem and the answers are never logged.
-  ctx.note({ action: req.action, course: course.slug, concept_chars: req.concept.trim().length });
+  ctx.note({ action: req.action, course: course.slug, ...(req.action === "solve" ? {} : { concept_chars: req.concept.trim().length }) });
 
   if (req.action === "explain") return explain(ctx, deps, opened, course, req);
   if (req.action === "followup") return followup(ctx, deps, opened, course, req);
+  if (req.action === "solve") return solve(ctx, deps, opened, course, req);
   return practice(ctx, deps, opened, course, req);
 }
 
@@ -401,4 +413,71 @@ async function practice(ctx: RequestCtx, deps: Deps, opened: GateOpen, course: C
     generator.cfg.model,
     "practice_checked",
   );
+}
+
+// ---------------------------------------------------------------- solve (Show me how)
+
+// The student is lost and asked to be shown: the full worked solution of THEIR problem, however many steps it has.
+//  - A bank problem: the stored worked solution and answer, as they are. No model call.
+//  - A practice problem (sealed reference): the reference's checked steps and answer. No model call.
+//  - An own problem: written by the advanced model, then checked by the same blind solver and comparer as practice. Accepted when the
+//    comparer says the answers are equivalent and no step is wrong, whatever single_answer says: an own problem may have several
+//    answers or none, and the solver already returns every answer in one string. Anything else is 200 solution null, not_checked;
+//    there is no unchecked fallback.
+// Logs: kind (bank | practice | own), the check verdict and flags as labels, the cost. Never the statement, the steps or the answer.
+async function solve(ctx: RequestCtx, deps: Deps, opened: GateOpen, course: Course, req: Of<"solve">): Promise<Response> {
+  const resolved = resolveRequestProblem(ctx, deps.env, deps.now?.() ?? new Date(), { problem_id: req.problem_id, problem_text: req.problem_text, problem_ref: req.problem_ref });
+  if (!resolved.ok) return ctx.fail(resolved.status, resolved.error, resolved.reason, resolved.error);
+  const problem = resolved.problem;
+  const kind = problem.own ? "own" : problem.teach ? "practice" : "bank";
+  ctx.note({ ...problemFields(problem), kind });
+
+  await meterActivity(ctx, opened, "question");
+  const respond = (solution: { steps: string[]; final_answer: string } | null, reason: string | null, model: string, label: string) =>
+    ctx.respond(200, { solution, reason, model, latency_ms: Date.now() - ctx.startedAt }, "ok", label);
+
+  if (!problem.own) {
+    ctx.note({ steps: problem.worked_solution.length, stored: true });
+    return respond({ steps: problem.worked_solution, final_answer: problem.final_answer }, null, "stored", `solution_${kind}`);
+  }
+  if (opened.scripted) {
+    ctx.note({ steps: SCRIPTED_SOLUTION.steps.length, checker: "agree" });
+    return respond(SCRIPTED_SOLUTION, null, "scripted", "scripted_solution");
+  }
+
+  const picked = pick(deps.env, "advanced");
+  if (!picked.ok) return ctx.fail(picked.status, picked.error, picked.reason, picked.error);
+  ctx.note({ level: picked.cfg.level, provider: picked.cfg.provider, model: picked.cfg.model, ...(picked.cfg.effort ? { effort: picked.cfg.effort } : {}) });
+
+  const generated = await runStructured({
+    model: deps.models.language(picked.cfg, picked.key),
+    cfg: picked.cfg,
+    system: solveSystem(courseOf(problem) ?? course),
+    prompt: buildSolvePrompt(problem.prompt_plain),
+    schema: SolveOutputSchema,
+  });
+  if (generated.kind === "failed") return failModel(ctx, generated);
+  ctx.note(prefixed("gen_", generated.usage));
+  if (generated.kind !== "object") return unusable(ctx, generated);
+
+  const solution = { steps: generated.value.steps.map((s) => s.trim()), final_answer: stripSentenceEnd(generated.value.final_answer) };
+  const usable = solution.steps.length >= 1 && solution.steps.every((s) => s) && solution.final_answer.trim();
+  const checked: Checked = usable
+    ? await checkStatement(deps, picked, { statement: problem.prompt_plain, steps: solution.steps, finalAnswer: solution.final_answer })
+    : { verdict: "malformed" };
+  ctx.note({
+    ...prefixed("check_solve_", checked.solve),
+    ...prefixed("check_compare_", checked.compare),
+    checker: checked.verdict,
+    ...(checked.flags ? { checker_equivalent: checked.flags.equivalent, checker_single_answer: checked.flags.single_answer, checker_wrong_step: checked.flags.first_wrong_step !== null } : {}),
+    steps: solution.steps.length,
+    est_cost_usd: totalCost([generated.usage, checked.solve, checked.compare]),
+  });
+  if (checked.failure) return failModel(ctx, checked.failure);
+
+  if (!solveAccepts(checked.flags)) {
+    logEvent(ctx, "solve_not_checked", { checker: checked.verdict });
+    return respond(null, "not_checked", picked.cfg.model, "solve_not_checked");
+  }
+  return respond(solution, null, picked.cfg.model, "solution_checked");
 }

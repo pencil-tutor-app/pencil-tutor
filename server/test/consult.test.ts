@@ -94,6 +94,50 @@ describe("consult answers", () => {
   });
 });
 
+describe("consult: show me how", () => {
+  const ask = (answer: string, overrides: Record<string, unknown> = {}) => {
+    const { models, prompts } = fakeModels(answer);
+    return handleConsult(post("/api/consult", consultBody({ question: "I have no idea, show me", ...overrides })), deps(liveEnv(), models)).then(async (res) => ({ ...(await reply(res)), prompts }));
+  };
+
+  it("maps an answer that is SHOW_ME after trimming to show_me true and an empty answer, and logs the event with labels only", async () => {
+    for (const answer of ["SHOW_ME", "  SHOW_ME\n"]) {
+      logs.lines.length = 0;
+      const r = await ask(answer, { show_me_ok: true });
+      assert.deepEqual([r.status, r.json.show_me, r.json.answer_text, r.json.model, r.json.drawing_revision], [200, true, "", "gpt-6-luna", 4]);
+      assert.equal(logs.lines.filter((l) => l.event === "consult_show_me").length, 1);
+      assert.deepEqual([logs.lines.at(-1)?.reason, logs.lines.at(-1)?.show_me], ["show_me", true]);
+    }
+    const text = logs.raw.join("\n");
+    for (const secret of ["no idea", "SHOW_ME"]) assert.ok(!text.includes(secret), `log must not contain ${secret}`);
+  });
+
+  it("the SHOW_ME rule is in the system prompt only when the request says show_me_ok", async () => {
+    const withIt = await ask("Line one is written.", { show_me_ok: true });
+    const without = await ask("Line one is written.");
+    const falsy = await ask("Line one is written.", { show_me_ok: false });
+    assert.match(withIt.prompts[0]!, /answer with exactly SHOW_ME/);
+    for (const r of [without, falsy]) assert.doesNotMatch(r.prompts[0]!, /SHOW_ME/);
+  });
+
+  it("an older app (no show_me_ok) never gets an empty answer: a model that says SHOW_ME anyway is passed through as words", async () => {
+    const r = await ask("SHOW_ME");
+    assert.deepEqual([r.status, r.json.answer_text, "show_me" in r.json], [200, "SHOW_ME", false]);
+  });
+
+  it("any other answer goes through as before, with no show_me field, even when the app can show", async () => {
+    for (const answer of ["Line two has a sign slip.", "SHOW_ME is what I would say, but first look at line two.", "show_me"]) {
+      const r = await ask(answer, { show_me_ok: true });
+      assert.deepEqual([r.status, r.json.answer_text, "show_me" in r.json], [200, answer, false], answer);
+    }
+  });
+
+  it("a bad show_me_ok is a 422", async () => {
+    const r = await ask("x", { show_me_ok: "yes" });
+    assert.deepEqual([r.status, r.json.error], [422, "invalid_request"]);
+  });
+});
+
 describe("consult logging", () => {
   it("writes one line with sizes and counts, never the student's words, the answer, the token or the key", async () => {
     const { models } = fakeModels("SECRET-ANSWER about the minus sign");

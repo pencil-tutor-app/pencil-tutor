@@ -17,9 +17,15 @@ protocol TutorClient: MemoryAPI {
     func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse
     func teachFollowup(_ request: TeachFollowupRequest) async throws -> TeachFollowupResponse
     func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse
+    /// "Show me how": the full worked solution of the problem on the page.
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse
 }
 
 extension TutorClient {
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
+        throw TutorError.notConfigured(reason: "this tutor client does not teach")
+    }
+
     func teachExplain(_ request: TeachExplainRequest) async throws -> TeachExplainResponse {
         throw TutorError.notConfigured(reason: "this tutor client does not teach")
     }
@@ -70,6 +76,10 @@ struct MeteredTutorClient: TutorClient {
 
     func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
         try await report { try await inner.teachPractice(request) } allowance: { $0.allowance }
+    }
+
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
+        try await report { try await inner.teachSolve(request) } allowance: { $0.allowance }
     }
 
     func memoryStatus() async throws -> MemoryStatusResponse {
@@ -137,6 +147,10 @@ struct UnconfiguredTutorClient: TutorClient {
     }
 
     func teachPractice(_ request: TeachPracticeRequest) async throws -> TeachPracticeResponse {
+        throw TutorError.notConfigured(reason: reason)
+    }
+
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
         throw TutorError.notConfigured(reason: reason)
     }
 }
@@ -328,6 +342,22 @@ struct ScriptedTutorClient: TutorClient {
             reason: nil, problemRef: Self.scriptedPracticeRef, exampleChecked: true,
             requestId: "scripted-practice", model: "scripted", latencyMs: 300
         )
+    }
+
+    // MARK: "Show me how" (UI tests): the same two-step solution for any problem, and no confident one for a statement that says so.
+
+    static let scriptedSolution = TeachSolution(
+        steps: ["Subtract 1 from both sides: 2x = 8", "Divide both sides by 2: x = 4"], finalAnswer: "x = 4"
+    )
+    /// A typed statement containing this makes the scripted tutor answer `not_checked`, so a UI test can see that state.
+    static let notCheckedStatement = "no confident answer"
+
+    func teachSolve(_ request: TeachSolveRequest) async throws -> TeachSolveResponse {
+        try await Task.sleep(nanoseconds: Self.latencyNanoseconds)
+        if (request.problemText ?? "").lowercased().contains(Self.notCheckedStatement) {
+            return TeachSolveResponse(solution: nil, reason: "not_checked", requestId: "scripted-solve", model: "scripted", latencyMs: 300)
+        }
+        return TeachSolveResponse(solution: Self.scriptedSolution, reason: nil, requestId: "scripted-solve", model: "scripted", latencyMs: 300)
     }
 
     func ask(_ request: AskRequest) async throws -> AskResponse {
